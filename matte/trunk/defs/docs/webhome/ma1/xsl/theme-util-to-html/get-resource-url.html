@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Media Album: XSL Template Reference: get-resource-url</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<link rel="stylesheet" type="text/css" href="../../global.css"/>
+	<link rel="stylesheet" type="text/css" href="../../dev.css"/>
+</head>
+<body>
+	<h1>ger-resource-url</h1>
+
+	<div class="function-info">
+		<table>
+			<tbody>
+				<tr>
+					<th>Type</th>
+					<td>Named</td>
+				</tr>
+				<tr>
+					<th>Parameters</th>
+					<td>
+						<table>
+							<tbody>
+								<tr>
+									<th>theme</th>
+									<td>The <a class="code"
+									href="../../schema-ref/table/album-theme.html">ma:album-theme</a>
+									to render the URL for.
+									</td>
+								</tr>
+								<tr>
+									<th>resource</th>
+									<td>The relative path to the resource file.</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<th>Globals</th>
+					<td>
+						<ol>
+							<li>web-context</li>
+						</ol>
+					</td>
+				</tr>
+				<tr>
+					<th>Result</th>
+					<td>string (URL)</td>
+				</tr>
+				<tr>
+					<th>Referenced By</th>
+					<td>
+						<ol>
+							<li><a href="get-css-link.html">get-css-link</a></li>
+						</ol>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<div>
+	Get a theme resource URL, i.e. a CSS, JavaScript, image, or any other
+	supported theme file.
+	</div>
+
+	<h2>Example usage</h2>
+
+	<div class="function-example"><span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">call-template</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;get-resource-url&quot;</span><span class="synIdentifier">&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">with-param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;theme&quot;</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;$theme&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">with-param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;resource&quot;</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">'browse.css'</span><span class="synIdentifier">/&gt;</span>
+<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">call-template</span><span class="synIdentifier">&gt;</span></div>
+
+	<h2>Example output</h2>
+
+	<div class="function-example-out">/ma/theme/1/1029809801/browse.css</div>
+	
+	<h2>Source</h2>
+  
+  <div class="function-source"><span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">template</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;get-resource-url&quot;</span><span class="synIdentifier">&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;theme&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;resource&quot;</span><span class="synIdentifier">/&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">value-of</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;$web-context&quot;</span><span class="synIdentifier">/&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>/theme/<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">value-of</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;$theme/ma:base-dir&quot;</span><span class="synIdentifier">/&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">value-of</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;$resource&quot;</span><span class="synIdentifier">/&gt;</span>
+<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">template</span><span class="synIdentifier">&gt;</span></div>
+
+<hr>
+<div>
+	<div class="float-r">
+		<a href="http://sourceforge.net"><img
+			src="http://sourceforge.net/sflogo.php?group_id=103583&amp;type=2" 
+			width="125" height="37" alt="SourceForge.net Logo" /></a>
+	</div>
+	<small>$Id: get-resource-url.html,v 1.1 2007/01/08 04:39:04 matt Exp $</small>
+</div>
+</body>
+</html>
+

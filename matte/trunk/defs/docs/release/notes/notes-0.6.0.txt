@@ -1,0 +1,46 @@
+Matte Release Notes
+
+@VERSION@ @BUILD_DATE@
+
+Note: the database schema has changed from the previous 0.5 release.
+To update a 0.5 release database to 0.6, see the setup/sql/release
+directory included in this package. Run the appropriate setup script
+for your database type.
+
+- Several bug fixes with Lucene search index support (deleting from
+  index when deleting items, updating index when importing items).
+
+- Generate theme.properties when exporting a theme (if one does not
+  already exist).
+
+- Implement support for setting album poster in main UI (for 
+  specifying which album item appears in the browse UI and Atom feed).
+  
+- Delete generated cache files (e.g. thumbnails) when delete media 
+  items.
+  
+- Add periodic job to clean out stale user registrations (users that
+  registered but did not confirm their registration).
+
+- Initial support for nested albums. Main UI for album drag & drop
+  still buggy.
+  
+- Much improved handling of media item time zones.
+
+- Fix bug in album sort-by-date handling to sort by correct item date
+  instead of database creation date.
+
+- Fix handling of non-ASCII characters by forcing UTF-8 HTTP
+  request/response encoding. Now correctly store, process, and display
+  text as UTF-8.
+  
+- Update to Scriptaculous 1.7 / Prototype 1.5.
+
+- Redirect to logon page during Ajax requests that were redirected to
+  the logon page.
+  
+- Don't thrown exception if sMeta throws MetadataNotSupportedException
+  when importing items; allow the import and there just won't be any
+  metadata for those items.
+  
+- Several front-end JavaScript bug fixes.
