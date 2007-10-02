@@ -1,0 +1,51 @@
+<p class="intro">You can download Matte for free and run it on your own web server. Matte has been tested extensively on Linux 
+and Mac OS X. It also runs on Windows, and should run on any platform with a Java 5 runtime.</p>
+
+<h2><a name="requirements"></a>Requirements</h2>
+<p>Matte is a 100% Java web application that requires a relational database. Currently the requirements are as follows:</p>
+
+<dl>
+	<dt>Java 5</dt>
+	<dd>
+		<p>Get the appropriate Java SDK/JDK for your server platform. You can get this 
+		from <a title="Sun's Java" href="http://java.sun.com/">Sun</a>, 
+		<a title="IBM's Java" href="http://www-106.ibm.com/developerworks/java/jdk/">IBM</a>, 
+		or <a title="Blackdown's Java" href="http://www.blackdown.org/">Blackdown</a>.</p>
+
+		<p class="note">A bug in the Java 6 JAXP XSLT implementation prevents Matte from
+		running. This is Sun bug <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6537167">6537167</a>.
+		Until this bug is fixed, Matte will only work in a Java 5 runtime.</p>
+
+	</dd>
+
+	<dt>Database</dt>
+	<dd>
+		<p>Matte has been tested with both the 7.4 and 8.1 series of PostgreSQL. 
+		You can download PostgreSQL from <a href="http://www.postgresql.org/">postgresql.org</a>.</p>
+		
+		<p>Matte has also been tested with MySQL 4.1. You can download MySQL from 
+		<a href="http://mysql.com/">mysql.com</a>.</p>
+
+		<p><b>Note</b> Matte can easily run in other databases. If you are familiar with Hibernate then you should be 
+		able to alter the Matte configuration to use any database system Hibernate supports.</p>
+	</dd>
+
+	<dt>Java servlet container</dt>
+	<dd>
+		Matte is distributed as a Java web application (WAR). To use this you'll need a servlet container to deploy it into. Matte has been extensively tested with the <a href="http://tomcat.apache.org/">Tomcat</a> 5.5 server. Any J2EE servlet container should work, however.
+	</dd>
+
+</dl>
+
+<h2><a name="download"></a>Download</h2>
+<p>You can <a href="http://sourceforge.net/project/showfiles.php?group_id=103583&package_id=217254">download Matte from
+SourceForge</a>. The binary package (named like <em>matte-1.0.0.tbz2</em>) contains the Matte WAR along with instructions for getting your installation going for the first time. The source package (named like <em>matte-1.0.0-src.tbz2</em>) contains all of Matte source code.</p>
+
+<p>For installation instructions look in the <code>README</code> file that comes in each distribution.</p>
+
+<h2><a name="live-demo"></a>Live Demo</h2>
+<p>Alternatively, if you just want to try out Matte, you can download Live Demo package that requires only you have
+a Java 5 Runtime Environment (i.e. version 1.5) installed. The Live Demo uses an embedded database to store data, and acts as a 
+fully-functional deployment of Matte. Visit the 
+<a href="http://sourceforge.net/project/showfiles.php?group_id=103583&package_id=219716">Live Demo</a> 
+download page to download.</p>

@@ -1,0 +1,26 @@
+<p class="intro">There are many ways to contribute to the development of Matte, 
+including Java, XSLT, HTML/CSS, documentation, and localization.</p>
+
+<p>If you're interested in helping out in any way, please email 
+<a href="mailto:msqr@users.sourceforge.net">msqr@users.sourceforge.net</a>. 
+If you've developed a theme you'd like to contibute to be part of the core
+distribution of Matte, email 
+<a href="mailto:msqr@users.sourceforge.net">msqr@users.sourceforge.net</a>.</p>
+
+<p>Here are some links to some Matte developer resources.</p>
+
+<dl>
+	<dt>Matte JavaDocs</dt>
+	<dd>For developers wishing to extend or customize Matte, the 
+	current <a href="api/index.html" title="Matte JavaDocs">JavaDocs</a>
+	are available here.</dd>
+	
+	<dt>Theme HOWTO</dt>
+	<dd>The <a href="theme-howto.html" title="Theme HOWTO">Theme HOWTO</a> provides
+	information about developing a Matte theme to customize the look
+	and feel of Matte.</dd>
+	
+	<dt>Extending media support</dt>
+	<dd>The <a href="extending.html" title="Extending media support">Extending media support</a> 
+	document provides information about developing your own media type handler for Matte.</dd>
+</dl>
