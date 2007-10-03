@@ -81,7 +81,7 @@
 	<property name="svn.tag" value="1.0"/>
 	<property name="svn.path" value="/tags/${svn.tag}"/>
 	<property name="svn.url" 
-		value="https://malbum.svn.sourceforge.net/svnroot/malbum${svn.path}"/>
+		value="https://malbum.svn.sourceforge.net/svnroot/malbum/matte${svn.path}"/>
 	<property name="svn.username" value=""/>
 	<property name="svn.password" value=""/>
 	<property name="svn.revision" value="HEAD"/>
@@ -709,14 +709,10 @@
 		<echo />
 		<echo message="Building application version ${svn.tag} (${svn.revision})..."/>
 
-		<ant dir="${svn.dir.build}" target="jar" inheritall="true">
-			<property name="dir.build" value="${svn.dir.build}/build"/>
-			<property name="app.name" value="${app.name}-${svn.tag}"/>
-		</ant>
 		<ant dir="${svn.dir.build}" target="war" inheritall="true">
 			<property name="build.version" value="${svn.tag}"/>
 			<property name="dir.build" value="${dir.build}"/>
-			<property name="app.name" value="${app.archive.name}"/>
+			<property name="app.name" value="${app.name}-${svn.tag}"/>
 			<property name="env.src" value="${svn.env.src}"/>
 		</ant>
 	</target>
