@@ -73,6 +73,21 @@
 	<property name="cvs.module.name" value="ma"/>
 	<property name="cvs.env.src" value="example"/>
 	
+	<path id="path.svn">
+		<fileset dir="${dir.lib}/svn" includes="*.jar"/>
+	</path>
+	
+	<taskdef resource="svntask.properties" classpathref="path.svn"/>
+	<property name="svn.tag" value="1.0"/>
+	<property name="svn.path" value="/tags/${svn.tag}"/>
+	<property name="svn.url" 
+		value="https://malbum.svn.sourceforge.net/svnroot/malbum${svn.path}"/>
+	<property name="svn.username" value=""/>
+	<property name="svn.password" value=""/>
+	<property name="svn.revision" value="HEAD"/>
+	<property name="svn.dir.build" value="${dir.build}/svn"/>
+	<property name="svn.env.src" value="example"/>
+	
 	<tstamp>
 		<format property="build.time" pattern="MM/dd/yyyy hh:mm aa z" />
 	</tstamp>
@@ -671,6 +686,39 @@
 		</ant>
 	
 		<echo message="JavaDocs built to ${dir.javadoc}"/>
+	</target>
+	
+	<!-- Subversion build targets -->
+
+	<target name="svn-checkout">
+		<delete dir="${svn.dir.build}"/>
+		<mkdir dir="${svn.dir.build}"/>
+		<svn username="${svn.username}" password="${svn.password}">
+			<checkout url="${svn.url}" destPath="${svn.dir.build}"
+				revision="${svn.revision}"/>
+		</svn>
+	</target>
+	
+	<target name="svn-update">
+		<svn username="${svn.username}" password="${svn.password}">
+			<update dir="${svn.dir.build}" revision="${svn.revision}"/>
+		</svn>
+	</target>
+	
+	<target name="svn-build" depends="clean" description="Build from SVN tag versions">
+		<echo />
+		<echo message="Building application version ${svn.tag} (${svn.revision})..."/>
+
+		<ant dir="${svn.dir.build}" target="jar" inheritall="true">
+			<property name="dir.build" value="${svn.dir.build}/build"/>
+			<property name="app.name" value="${app.name}-${svn.tag}"/>
+		</ant>
+		<ant dir="${svn.dir.build}" target="war" inheritall="true">
+			<property name="build.version" value="${svn.tag}"/>
+			<property name="dir.build" value="${dir.build}"/>
+			<property name="app.name" value="${app.archive.name}"/>
+			<property name="env.src" value="${svn.env.src}"/>
+		</ant>
 	</target>
 	
 	<target name="demo" description="Create the Live Demo">
