@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2002-2006 Matt Magoffin
+  
+  This program is free software; you can redistribute it and/or 
+  modify it under the terms of the GNU General Public License as 
+  published by the Free Software Foundation; either version 2 of 
+  the License, or (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful, 
+  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+  General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License 
+  along with this program; if not, write to the Free Software 
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
+  02111-1307 USA
+
+  $Id: web.xml,v 1.58 2007/08/27 04:04:21 matt Exp $
+-->
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+    version="2.4">
+
+	<display-name>Matte</display-name>
+    <description>
+		Dynamic photo/movie/audio album web application.
+    </description>
+
+	<!--context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>ieat.root.dir</param-value>
+	</context-param-->
+	
+	<!--
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>log4j.properties</param-value>
+	</context-param>
+	-->
+	
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			/WEB-INF/*Context.xml
+			classpath:/environmentContext.xml
+		</param-value>
+	</context-param>
+	
+	<!-- 
+		Static content client-side cache headers filter
+	-->
+	<filter>
+		<filter-name>Client-side Cache Headers Filter</filter-name>
+		<filter-class>magoffin.matt.xweb.util.ResponseHeaderFilter</filter-class>
+		<init-param>
+			<param-name>Cache-Control</param-name>
+			<param-value>max-age=86400</param-value>
+		</init-param>
+	</filter>
+	<filter>
+		<filter-name>No-Client-side Cache Headers Filter</filter-name>
+		<filter-class>magoffin.matt.xweb.util.ResponseHeaderFilter</filter-class>
+		<init-param>
+			<param-name>Cache-Control</param-name>
+			<param-value>max-age=0</param-value>
+		</init-param>
+	</filter>
+	
+	<!-- 
+		Special response header for logon, to help views when
+		redirected to logon.
+	-->
+	<filter>
+		<filter-name>Logon Header</filter-name>
+		<filter-class>magoffin.matt.xweb.util.ResponseHeaderFilter</filter-class>
+		<init-param>
+			<param-name>X-Matte-Logon</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	
+	<!-- Compression filter -->
+	<filter>
+		<filter-name>Compression Filter</filter-name>
+		<filter-class>compressionFilters.CompressionFilter</filter-class>
+		<init-param>
+			<param-name>compressionThreshold</param-name>
+			<param-value>10</param-value>
+		</init-param>
+		<init-param>
+			<param-name>debug</param-name>
+			<param-value>0</param-value>
+		</init-param>
+	</filter>
+	
+	<filter>		<filter-name>Set Character Encoding</filter-name>
+		<filter-class>filters.SetCharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	
+	<!-- Cache filter -->
+	<filter-mapping>
+		<filter-name>Client-side Cache Headers Filter</filter-name>
+		<url-pattern>*.js</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Client-side Cache Headers Filter</filter-name>
+		<url-pattern>*.css</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Client-side Cache Headers Filter</filter-name>
+		<url-pattern>*.gif</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Client-side Cache Headers Filter</filter-name>
+		<url-pattern>*.jpg</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Client-side Cache Headers Filter</filter-name>
+		<url-pattern>*.png</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Client-side Cache Headers Filter</filter-name>
+		<url-pattern>*.html</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Client-side Cache Headers Filter</filter-name>
+		<url-pattern>/messages.xml</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Client-side Cache Headers Filter</filter-name>
+		<url-pattern>/messages.json</url-pattern>
+	</filter-mapping>
+	
+	<!-- No cache filters -->
+	<filter-mapping>
+		<filter-name>No-Client-side Cache Headers Filter</filter-name>
+		<url-pattern>/mediaItems.json</url-pattern>
+	</filter-mapping>
+	
+	<!-- Compression filter -->
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
+		<url-pattern>*.js</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
+		<url-pattern>*.css</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
+		<url-pattern>*.html</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
+		<url-pattern>*.json</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
+		<url-pattern>*.xml</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
+		<url-pattern>/browse.do</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
+		<url-pattern>/album.do</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
+		<url-pattern>/themeCss.do</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
+		<url-pattern>/themeJavaScript.do</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
+		<url-pattern>/themeResource.do</url-pattern>
+	</filter-mapping>
+	
+	<!-- Define filter mappings for the defined filters -->
+	<filter-mapping>
+		<filter-name>Set Character Encoding</filter-name>
+		<servlet-name>matte</servlet-name>
+	</filter-mapping>
+	
+	<!-- Logon filter -->
+	<filter-mapping>
+		<filter-name>Logon Header</filter-name>
+		<url-pattern>/logon.do</url-pattern>
+	</filter-mapping>
+	
+	<!--
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+	-->
+	
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<servlet>
+		<servlet-name>matte</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>matte</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>matte</servlet-name>
+		<url-pattern>*.json</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>matte</servlet-name>
+		<url-pattern>*.xml</url-pattern>
+	</servlet-mapping>
+	
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<resource-ref>
+		<description>Matte JDBC DataSource</description>
+		<res-ref-name>jdbc/matte</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+		<res-sharing-scope>Shareable</res-sharing-scope>
+	</resource-ref>
+
+	<resource-ref>
+		<description>Matte JavaMail Session</description>
+		<res-ref-name>mail/matte</res-ref-name>
+		<res-type>javax.mail.Session</res-type>
+		<res-auth>Container</res-auth>
+		<res-sharing-scope>Shareable</res-sharing-scope>
+	</resource-ref>
+	
+</web-app>

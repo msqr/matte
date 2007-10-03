@@ -1,0 +1,31 @@
+#edit-theme-form label {
+	min-width: 80px !important;
+}
+
+.theme-view div.label {
+	min-width: 10em !important;
+}
+
+img.theme-thumbnail {
+	padding-right: 1em;
+}
+
+.user-view div.label {
+	min-width: 10em !important;
+}
+
+/* ========================= USER INDEX ====================== */
+
+#user-list > li > span {
+	text-transform: uppercase;
+}
+
+/* provide padding after the user index keys to display count */
+#user-list li span.a {
+	margin-right: 0.5em;
+}
+#user-list li ol {
+	font-weight: normal;
+}
+
+

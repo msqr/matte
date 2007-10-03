@@ -1,0 +1,157 @@
+<p class="intro">Here is a collection of frequently asked questions about Matte:</p>
+
+<dl>
+	<dt>Images take forever to be resized. How can I speed this up?</dt>
+	<dd>
+		<p>The default handler for images uses built-in Java classes to transform the images
+		into other sizes. This approach can be very slow. A much faster approach is to use
+		<a href="http://www.imagemagick.org/">ImageMagick</a> to transform images. Matte 
+		can be configured to use ImageMagick by way of 
+		<a href="http://www.yeo.id.au/jmagick/">JMagick</a>, a Java-wrapper around the
+		ImageMagick library. You'll need to have both installed in order to use this 
+		approach.</p>
+	</dd>
+	
+	<dt>How do I configure JMagick?</dt>
+	<dd>
+		<p>Once you have ImageMagick and JMagick installed you'll need to configure 
+		your application server to support them. For Tomcat, an easy approach is to 
+		copy the <code>jmagick.jar</code> from JMagick into <code>TOMCAT_HOME/common/lib</code>
+		and then add <code>-Djmagick.systemclassloader=no</code> to the <code>CATALINA_OPTS</code>
+		environment variable when starting Tomcat. For example, here is a sample shell
+		script to setup the required environment and then start Tomcat:</p>
+		
+		<div class="code">#!/bin/sh
+
+export JAVA_HOME=/opt/java/jdk-1.5
+export CATALINA_HOME=/opt/tomcat
+export CATALINA_OPTS="-Djmagick.systemclassloader=no"
+${CATALINA_HOME}/bin/catalina.sh start</div>
+
+		<p>If you have JMagick and/or ImageMagick installed in a non-standard location,
+		you may need to tell Java where to find them by adding a <code>-Djava.library.path</code>
+		parameter to your <code>CATALINA_OPTS</code> enviornment variable:</p>
+		
+		<div class="code">#!/bin/sh
+
+export JAVA_HOME=/opt/java/jdk-1.5
+export JMAGICK_HOME=/opt/ImageMagick-6.2.6
+export CATALINA_HOME=/opt/tomcat
+export CATALINA_OPTS="-Djmagick.systemclassloader=no -Djava.library.path=$JMAGICK_HOME/lib"
+${CATALINA_HOME}/bin/catalina.sh start</div>
+
+		<div class="note">Note in this example, JMagick has been installed into the ImageMagick
+		library directory. This is not a bad approach for installing JMagick, as it depends on 
+		the version of ImageMagick you compile it against so you might as well keep them 
+		together.</div>
+		
+		<p>Finally, you have to configure Matte to use JMagick versions of the image 
+		media handlers it uses. This is configured in the 
+		<code>WEB-INF/classes/environmentContext.xml</code> file located in the 
+		Matte WAR file. An example of using JMagick is included in the binary distribution
+		of Matte, as <code>setup/environmentContext-jmagick.xml</code>. Use this as a guide
+		to update your <code>WEB-INF/classes/environmentContext.xml</code> copy.</p>
+	</dd>
+	
+	<dt>How do I configure JPEG-2000 images?</dt>
+	<dd>
+		<p>JPEG-2000 support requires you to be using ImageMagick/JMagick, as described above. 
+		ImageMagick also needs to have been compiled with JPEG-2000 support. The open-source
+		<a href="http://www.ece.uvic.ca/~mdadams/jasper/">Jasper</a> library provides an 
+		implementation that ImageMagick can use.</p>
+		
+		<p>Once you have ImageMagick configured with JPEG-2000 support, then you just need
+		to configure Matte to use JMagick, as described above. Then make sure the 
+		<code>jpegMediaHandler</code> is configured to return JPEG-2000, like this:</p>
+		
+		<pre class="code"><code>
+<span style="color: #00C;">&lt;bean</span><span style="color: #906;">&nbsp;id</span><span style="color: #906;">=</span><span style="color: #930;">"jpegMediaHandler"</span><span style="color: #906;">&nbsp;class</span><span style="color: #906;">=</span><span style="color: #930;">"magoffin.matt.ma2.image.jmagick.JpegMediaHandler"</span><span style="color: #00C;">&gt;</span><span style="color: #000;">
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #00C;">&lt;property</span><span style="color: #906;">&nbsp;name</span><span style="color: #906;">=</span><span style="color: #930;">"domainObjectFactory"</span><span style="color: #906;">&nbsp;ref</span><span style="color: #906;">=</span><span style="color: #930;">"domainObjectFactory"</span><span style="color: #00C;">/&gt;</span><span style="color: #000;">
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #00C;">&lt;property</span><span style="color: #906;">&nbsp;name</span><span style="color: #906;">=</span><span style="color: #930;">"mediaBiz"</span><span style="color: #906;">&nbsp;ref</span><span style="color: #906;">=</span><span style="color: #930;">"mediaBizTarget"</span><span style="color: #00C;">/&gt;</span><span style="color: #000;">
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #00C;">&lt;property</span><span style="color: #906;">&nbsp;name</span><span style="color: #906;">=</span><span style="color: #930;">"jmagickMediaEffectMap"</span><span style="color: #906;">&nbsp;ref</span><span style="color: #906;">=</span><span style="color: #930;">"jmagickEffectMap"</span><span style="color: #00C;">/&gt;</span><span style="color: #000;">
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #00C;">&lt;property</span><span style="color: #906;">&nbsp;name</span><span style="color: #906;">=</span><span style="color: #930;">"useJpeg2000"</span><span style="color: #906;">&nbsp;value</span><span style="color: #906;">=</span><span style="color: #930;">"true"</span><span style="color: #00C;">/&gt;</span><span style="color: #000;">
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #00C;">&lt;property</span><span style="color: #906;">&nbsp;name</span><span style="color: #906;">=</span><span style="color: #930;">"jpeg2000UserAgentRegExp"</span><span style="color: #00C;">&gt;</span><span style="color: #000;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #00C;">&lt;list</span><span style="color: #00C;">&gt;</span><span style="color: #000;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #00C;">&lt;value</span><span style="color: #00C;">&gt;</span><span style="color: #000;">WebKit</span><span style="color: #00C;">&lt;/value&gt;</span><span style="color: #000;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #00C;">&lt;/list&gt;</span><span style="color: #000;">
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #00C;">&lt;/property&gt;</span><span style="color: #000;">
+</span><span style="color: #00C;">&lt;/bean&gt;</span><span style="color: #000;">
+</span></code></pre>
+
+		<p>The <b>useJpeg2000</b> property should be set to <code>true</code>. Also the 
+		<b>jpeg2000UserAgentRegExp</b> list should be configured to match the browser 
+		<code>User-Agent</code> HTTP header values you want to serve JPEG-2000 images 
+		to (since not all browsers support JPEG-2000 images natively). This list is 
+		composed of Java regular expressions, and if any of them match JPEG-2000 will be
+		returned, otherwise normal JPEG images will be returned. In the example above, 
+		the text <code>WebKit</code> will match Apple's Safari browser, which supports
+		JPEG-2000 images.</p>
+		
+	</dd>
+	
+	<dt>How do I configure support for video files?</dt>
+	<dd>
+		<p>Matte can use either of two libraries to support video files: 
+		<a href="http://java.sun.com/products/java-media/jmf/">Java Media Framework</a> (JMF)
+		or <a href="http://developer.apple.com/quicktime/qtjava/">QuickTime for Java</a> (QTJ). 
+		Similarly to how JMagick is configured (see above), once either (or both) of these
+		are installed on your server then you need to configure your application server 
+		to support them, and then configure Matte to use them for video files.</p>
+		
+		<p>For example in Tomcat to support JMF, copy the <code>jmf.jar</code> into 
+		<code>TOMCAT_HOME/common/lib</code>. If JMF is installed in a non-standard location, you
+		may need to add the location to Java's library path. For example, here is a shell 
+		script that configures the environment for Tomcat to start:</p>
+		
+		<div class="code">#!/bin/sh
+
+export JAVA_HOME=/opt/java/jdk-1.5
+export JMF_HOME=/opt/java/JMF-2.1.1e
+export CATALINA_HOME=/opt/tomcat
+export CATALINA_OPTS="-Djava.library.path=$JMF_HOME/lib"
+${CATALINA_HOME}/bin/catalina.sh start</div>
+		
+		<p>Similarly for QuickTime, copy the <code>QTJava.zip</code> and <code>QTJSupport.jar</code>
+		files into <code>TOMCAT_HOME/common/lib</code>.</p>
+		
+		<p>Finally, Matte must be configured to handle the video media types. This is configured in the 
+		<code>WEB-INF/classes/environmentContext.xml</code> file located in the 
+		Matte WAR file. An example of using JMF and QuickTime is included in the binary distribution
+		of Matte, as <code>setup/environmentContext-video.xml</code>. Use this as a guide
+		to update your <code>WEB-INF/classes/environmentContext.xml</code> copy.</p>
+	</dd>
+	
+	<dt>I see an error "Can't connect to X11 window server using ':0'" -- how do I fix that?</dt>
+	<dd>
+		<p>Most likely this occurs on a Unix-like server where the user the application server
+		is running as does not have access to X Windows (perhaps the server is started up without
+		X Windows). One solution is to pass <code>-Djava.awt.headless=true</code> to Java when
+		you start your application server. For example a shell script to start Tomcat might 
+		look like this:</p>
+		
+		<div class="code">#!/bin/sh
+
+export JAVA_HOME=/opt/java/jdk-1.5
+export CATALINA_HOME=/opt/tomcat
+export CATALINA_OPTS="-Djava.awt.headless=true"
+${CATALINA_HOME}/bin/catalina.sh start</div>
+
+		<p>Another solution is to make sure the user the application server runs as has
+		access to an X Windows server. If you do have an X Server running, but Java still 
+		complains that it cannot connect to it, you might need to grant access to it for 
+		the user the application server runs as, for example</p>
+		
+		<div class="code">$ xhost +localhost</div>
+		
+		<p>Another solution would be to run a virtual X Server, such as 
+		<a href="http://en.wikipedia.org/wiki/Xvfb">Xvfb</a>. With 
+		this approach you probably need to specify the <code>DISPLAY</code> environment 
+		variable when starting your application server if it is not already set. For example
+		a shell script to start Tomcat might look like:</p>
+		
+		<div class="code">#!/bin/sh
+export DISPLAY=:0
+export CATALINA_HOME=/opt/tomcat
+${CATALINA_HOME}/bin/catalina.sh start</div>
+	</dd>
+</dl>
