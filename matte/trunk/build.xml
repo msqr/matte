@@ -89,7 +89,7 @@
 	<property name="svn.env.src" value="example"/>
 	
 	<tstamp>
-		<format property="build.time" pattern="MM/dd/yyyy hh:mm aa z" />
+		<format property="build.time" pattern="dd MMM, yyyy hh:mm aa z" />
 	</tstamp>
 	<property name="version.properties" value="version.properties" />
 	<property name="version.txt.name" value="version.txt" />
@@ -978,6 +978,7 @@
 		<mkdir dir="${dir.build}/${app.name}-demo/matte/cache"/>
 		<mkdir dir="${dir.build}/${app.name}-demo/matte/collections/demo/default"/>
 		<mkdir dir="${dir.build}/${app.name}-demo/matte/lucene-index"/>
+		<mkdir dir="${dir.build}/${app.name}-demo/matte/resources"/>
 		
 		<!-- fix file permissions -->
 		<chmod perm="755">
