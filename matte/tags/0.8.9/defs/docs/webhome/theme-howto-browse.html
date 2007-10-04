@@ -1,0 +1,579 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Matte: Theme HOWTO: Browse View</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" type="text/css" href="whoosh-matte.css" />
+	<link type="text/css" rel="stylesheet" href="css/SyntaxHighlighter.css"></link>
+	<script type="text/javascript" src="js/shCore.js"></script>
+	<script type="text/javascript" src="js/shBrushJScript.js"></script>
+	<script type="text/javascript" src="js/shBrushXml.js"></script>
+</head>
+<body class="full">
+
+<h1><a name="top"></a>Matte: Theme HOWTO: Browse View</h1>
+
+<div class="pagenav">
+	<ul>
+		<li><a href="theme-howto.html">Overview</a></li>
+		<li>Browse View</li>
+		<li><a href="theme-howto-album.html">Album View</a></li>
+		<li><a href="theme-howto-detail.html">Detail View</a></li>
+	</ul>
+</div>
+
+<p>The first component of a Matte theme is the browse theme. This theme allows people to view all shared
+albums of a particular user. The browse theme can be thought of as an album-centric blog, and in fact 
+this view can be published as an Atom RSS feed (more on that later).</p>
+
+<div class="screenshot">
+	<img src="img/th2-browse-example-full.png" alt="Woosh Browse Theme" width="805" height="672" />
+	<div>An album listing in the Woosh browse view.</div>
+</div>
+
+
+<p>This view is accessed using the <code>/matte/browse.do</code> URL, and requires
+a <code>userKey</code> parameter for the user whose albums you want to browse. 
+When you log into Matte, you can find your own <code>userKey</code> value by 
+selecting <b>Actions &gt; Matte Settings</b>. This will show you the browse URL
+with your own <code>userKey</code> next to the <b>Shared Albums</b> label.</p>
+
+<p>The Matte XML model for this view contains a list of <code>&lt;m:search-album&gt;</code>
+elements, which is an extension of the <code>&lt;m:album&gt;</code> element geared 
+towards browsing large sets of shared albums. The albums
+will be sorted chronologically in reverse, so the most-recent album appears first.
+You can, of course, sort them any way you like in the theme's XSLT.</p>
+
+<h2>Sample browse data model</h2>
+
+<p>Here is a sample of the browse data model:</p>
+
+<textarea name="code" class="xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;m:model xmlns:m="http://msqr.us/xsd/matte"&gt;
+	&lt;m:search-results returned-results="2" search-time="31" total-results="2"&gt;
+		&lt;m:pagination/&gt;
+		&lt;m:index/&gt;
+		&lt;m:album item-count="2" item-max-date="2007-06-25T00:00:00+12:00"
+			item-min-date="2003-01-26T00:00:00+13:00" album-date="2007-06-25T00:00:00+12:00"
+			album-id="4394" anonymous-key="wif0pqjIEEntKPluVpLrk64n4G/k"
+			creation-date="2007-06-25T21:28:32.125+12:00"
+			modify-date="2007-06-30T11:16:11.828+12:00" name="New Zealand"&gt;
+			&lt;m:comment&gt;This is New Zealand. Oh yes. Really.&lt;/m:comment&gt;
+			&lt;m:search-poster item-id="2138" name="IMG_4684.JPG"/&gt;
+			&lt;m:search-album item-count="29" item-max-date="2007-06-25T00:00:00+12:00"
+				item-min-date="2002-12-28T00:00:00+13:00" album-date="2007-06-25T00:00:00+12:00"
+				album-id="4758" anonymous-key="sFu8FzrDiUPPR12unCtyeiPlpi4"
+				creation-date="2007-06-25T21:29:13.171+12:00"
+				modify-date="2007-07-08T07:47:37.375+12:00"
+				name="02 Blomfield Spa With A Long Name That Goes On And On"&gt;
+				&lt;m:comment/&gt;
+				&lt;m:search-poster item-id="2166" name="IMG_1084.JPG"/&gt;
+			&lt;/m:search-album&gt;
+			&lt;m:search-album item-count="10" item-max-date="2003-02-04T00:00:00+13:00"
+				item-min-date="2003-01-24T00:00:00+13:00" album-date="2007-06-25T21:29:20.765+12:00"
+				album-id="5013" anonymous-key="Ap1wOi0R2iqgx1USRf6ok0By6DQ"
+				creation-date="2007-06-25T21:29:20.765+12:00" name="03-auckland"&gt;
+				&lt;m:search-poster item-id="2449" name="IMG_4667.JPG"/&gt;
+			&lt;/m:search-album&gt;
+		&lt;/m:album&gt;
+		&lt;m:album item-count="48" item-max-date="2002-11-01T00:00:00+13:00"
+			item-min-date="2002-10-31T00:00:00+13:00" album-date="2002-10-31T00:00:00+13:00"
+			album-id="11025" anonymous-key="mCmQAYDrarPfuDL/mmVBCwI4fzc"
+			creation-date="2004-01-09T16:30:56+13:00" modify-date="2007-07-08T07:54:27.203+12:00"
+			name="Halloween 2002"&gt;
+			&lt;m:comment&gt;2002 version of the annual Castro event! With some related holiday events,
+				too.&lt;/m:comment&gt;
+			&lt;m:search-poster item-id="11055" name="IMG_0666.JPG"/&gt;
+		&lt;/m:album&gt;
+	&lt;/m:search-results&gt;
+	&lt;m:media-size height="1200" size="BIGGEST" width="1600"/&gt;
+	&lt;m:media-size height="768" size="BIGGER" width="1024"/&gt;
+	&lt;m:media-size height="600" size="BIG" width="800"/&gt;
+	&lt;m:media-size height="480" size="NORMAL" width="640"/&gt;
+	&lt;m:media-size height="320" size="SMALL" width="480"/&gt;
+	&lt;m:media-size height="240" size="TINY" width="320"/&gt;
+	&lt;m:media-size height="180" size="THUMB_BIGGER" width="240"/&gt;
+	&lt;m:media-size height="135" size="THUMB_BIG" width="180"/&gt;
+	&lt;m:media-size height="90" size="THUMB_NORMAL" width="120"/&gt;
+	&lt;m:media-size height="48" size="THUMB_SMALL" width="64"/&gt;
+	&lt;m:theme author="Matte Development Team" author-email="matte@noplace" base-path="/core/woosh"
+		creation-date="2007-03-31T18:46:33.250+12:00" name="Woosh" theme-id="1"&gt;
+		&lt;m:description&gt;Default theme.&lt;/m:description&gt;
+	&lt;/m:theme&gt;
+	&lt;m:user access-level="1" anonymous-key="test" country="US"
+		creation-date="2007-03-31T18:46:33.453+12:00" email="matte-admin@localhost.localdomain"
+		language="en" login="matte-admin" name="Admin" password="{SHA}W6ph5Mm5Pz8GgiULbPgzG37mj9g="
+		quota="0" user-id="2"&gt;
+		&lt;m:tz code="Pacific/Auckland" name="Pacific/Auckland" offset="43200000" ordering="569"/&gt;
+		&lt;m:thumbnail-setting quality="GOOD" size="THUMB_NORMAL"/&gt;
+		&lt;m:view-setting quality="GOOD" size="NORMAL"/&gt;
+		&lt;m:default-theme author="Matte Development Team" author-email="matte@noplace"
+			base-path="/core/woosh" creation-date="2007-03-31T18:46:33.250+12:00" name="Woosh"
+			theme-id="1"&gt;
+			&lt;m:description&gt;Default theme.&lt;/m:description&gt;
+		&lt;/m:default-theme&gt;
+		&lt;m:browse-theme author="Matte Development Team" author-email="matte@noplace"
+			base-path="/core/woosh" creation-date="2007-03-31T18:46:33.250+12:00" name="Woosh"
+			theme-id="1"&gt;
+			&lt;m:description&gt;Default theme.&lt;/m:description&gt;
+		&lt;/m:browse-theme&gt;
+	&lt;/m:user&gt;
+&lt;/m:model&gt;
+</textarea>
+
+<p>From this model you can see that an <code>&lt;m:search-results&gt;</code> element is 
+returned (line 3), populated with two <code>&lt;m:album&gt;</code> elements
+(lines 6 and 29). Notice also that the first album has two child 
+<code>&lt;m:search-album&gt;</code> elements inside of it 
+(lines 13 and 22). These elements are discussed in detail here:</p>
+
+<h2>&lt;m:search-results&gt;</h2>
+<div>
+	<p>This element represents a container for all the results returned by a search. 
+	In the case of the browse view, the search results will be populated with 
+	<code>&lt;m:search-album&gt;</code> elements, one for each album the specified 
+	user has shared.</p>
+	
+	<dl>
+		<dt>@returned-results</dt>
+		<dd>The total number of search results returned in the response, for the
+		given pagination criteria specified for the request. In this case the 
+		total number of top-level shared albums available for the specified user.
+		</dd>
+		
+		<dt>@search-time</dt>
+		<dd>The number of milliseconds the search took to execute.</dd>
+		
+		<dt>@total-results</dt>
+		<dd>The total number of search results available, for all pages available.
+		In this case this is the total number of top-level shared albums available
+		for the specified user.</dd>
+
+		<dt>&lt;m:pagination&gt;</dt>
+		<dd>TODO</dd>
+		
+		<dt>&lt;m:index&gt;</dt>
+		<dd>TODO</dd>
+		
+		<dt>&lt;m:album&gt;</dt>
+		<dd>An album search result. Album search result elements are an extension 
+		of the normal <code>&lt;m:album&gt;</code> elements discussed earlier. They
+		include additional data elements to help in the browsing of album data.</dd>
+	</dl>
+</div>
+
+<h2>&lt;m:album&gt; and &lt;m:search-album&gt;</h2>
+<div>
+	<p>Within a <code>&lt;m:search-results&gt;</code> element, the 
+	<code>&lt;m:alubm&gt;</code>
+	element represents a top-level album, and the <code>&lt;m:search-album&gt;</code> 
+	element represents a nested child album. They are the same data type, so they 
+	will have the same data elements available. The following items are available
+	in addition to those detailed by the normal <code>&lt;m:album&gt;</code>
+	element previously:</p>
+	
+	<dl>
+		<dt>@item-count</dt>
+		<dd>The total number of media items within this album, not including items in  
+		any nested child albums.</dd>
+		
+		<dt>@item-max-date</dt>
+		<dd>The date of the media item within this album with a date greater than or 
+		equal to all other items within the album.</dd>
+		
+		<dt>@item-min-date</dt>
+		<dd>The date of the media item within this album with a date less than or 
+		equal to all other media items within the album.</dd>
+		
+		<dt>&lt;m:search-poster&gt;</dt>
+		<dd>The media item to use as the poster for the album. This element will 
+		have only an <strong>@item-id</strong> and a <strong>@name</strong> 
+		parameters specified, so the theme is able to display a poster image 
+		for the album if desired.</dd>
+	</dl>
+</div>
+
+<h2>Linking to shared albums</h2>
+<div>
+	<p>In the browse view you'll need to provide links to the album view
+	for each shared album. Use the <code>render-shared-album-url</code> XSLT
+	template to generate URLs to the shared albums. This template takes the 
+	following parameters:</p>
+	
+	<dl>
+		<dt>album</dt>
+		<dd>A &lt;m:album&gt; element (or &lt;m:search-album&gt;) for the 
+		album to link to.</dd>
+		
+		<dt>web-context</dt>
+		<dd>Matte's servlet context path, normally <code>/matte</code>. This is 
+		also pre-defined as the helper variable <code>$web-context</code>.</dd>
+	</dl>
+	
+	<p>For example, to generate an HTML &lt;a&gt; tag to link to the album, 
+	you'd have something like this (here the XSLT context node is a
+	<code>&lt;m:album&gt;</code> element):</p>
+	
+<textarea name="code" class="xslt">
+&lt;a&gt;
+  &lt;xsl:attribute name="title"&gt;
+    &lt;xsl:value-of select="key('i18n','browse.album.view')"/&gt;
+    &lt;xsl:text&gt; &lt;/xsl:text&gt;
+    &lt;xsl:value-of select="@name"/&gt;
+  &lt;/xsl:attribute&gt;
+  &lt;xsl:attribute name="href"&gt;
+    &lt;xsl:call-template name="render-shared-album-url"&gt;
+      &lt;xsl:with-param name="album" select="."/&gt;
+      &lt;xsl:with-param name="web-context" select="$web-context"/&gt;
+    &lt;/xsl:call-template&gt;
+  &lt;/xsl:attribute&gt;
+  &lt;xsl:value-of select="key('i18n','browse.album.view')"/&gt;
+  &lt;xsl:text&gt; &lt;/xsl:text&gt;
+  &lt;xsl:value-of select="@name"/&gt;
+&lt;/a&gt;
+</textarea>
+	
+	<p class="note">Notice the use of <code>key('i18n','browse.album.view')</code>.
+	This shows the use of the built-in Matte message bundle, for displaying 
+	internationalized values of various messages. Look in the 
+	<code>WEB-INF/classes/messages.properties</code> file inside the Matte WAR
+	file for the complete listing of available message resource keys.</p>
+</div>
+
+<h2>Woosh - Dissection</h2>
+<div>
+	<p>Here is a dissection of the Woosh browse theme so you can see where the elements come from
+	the Matte XML data model.</p>
+	
+	<div class="screenshot">
+		<img src="img/th2-browse-album.png" alt="Woosh Browse Theme" width="628" height="226" />
+		<div>An album listing in the Woosh browse view.</div>
+	</div>
+	
+	<p>Here is what the final rendered XHTML for this snippet looks like:</p>
+	
+<textarea name="code" class="html">	
+<div class="browse-album-frame">
+	<div class="browse-odd">
+		<h2>
+			More John Muir Trail
+		</h2>
+		<div class="browse-album-info">
+			1 Jun 2006 - 6 items
+			<div class="browse-album-info">
+				Items ranging from 17 Dec 2006 to 18 Dec 2006
+			</div>
+		</div>
+		<div class="browse-album-text">
+			These are photos from the John Muir Trail.
+		</div>
+	</div>
+	<div class="poster">
+		<a title="View album More John Muir Trail" 
+			href="/matte-stage/album.do?key=2XlxVfKHja3CFGtMlyG57ofbchw">
+			<img class="poster" alt="_6A_1392.jpg" 
+				onload="setShadow(this)" 
+				title="_6A_1392.jpg" 
+				src="http://localhost:8080/matte/media.do?id=8&amp;size=THUMB_BIGGER&amp;quality=GOOD" />
+		</a>
+	</div>
+</div>
+</textarea>
+
+	<p>Let's take a look at the numbered items from this snippet in more detail:</p>
+
+	<ol>
+		<li>
+			<p><b>Image thumbnail:</b> here the poster image for the album is shown as a thumbnail.
+			An album will have a poster image specified via the &lt;m:search-poster&gt; element. If 
+			the album does not specify the poster itslef, then &lt;m:search-poster&gt; will be set to
+			the first available media item in the album. Then it uses the media size <b>THUMB_BIGGER</b> 
+			for the thumbnail.</p>
+			
+			<p>The XSLT to render the album thumbnail looks like this:</p>
+			
+<textarea name="code" class="xslt">
+&lt;xsl:template match="m:search-poster"&gt;
+	&lt;div class="poster"&gt;
+		&lt;a&gt;
+			&lt;xsl:attribute name="title"&gt;
+				&lt;xsl:value-of select="key('i18n','browse.album.view')"/&gt;
+				&lt;xsl:text&gt; &lt;/xsl:text&gt;
+				&lt;xsl:value-of select="../@name"/&gt;
+			&lt;/xsl:attribute&gt;
+			&lt;xsl:attribute name="href"&gt;
+				&lt;xsl:call-template name="render-shared-album-url"&gt;
+					&lt;xsl:with-param name="album" select=".."/&gt;
+					&lt;xsl:with-param name="web-context" select="$web-context"/&gt;
+				&lt;/xsl:call-template&gt;
+			&lt;/xsl:attribute&gt;
+			&lt;img class="poster" alt="{@name}" onload="setShadow(this)" 
+				title="{@name}"&gt;
+				&lt;xsl:attribute name="src"&gt;
+					&lt;xsl:call-template name="server-url"/&gt;
+					&lt;xsl:call-template name="render-media-server-url"&gt;
+						&lt;xsl:with-param name="item" select="."/&gt;
+						&lt;xsl:with-param name="size" select="'THUMB_BIGGER'"/&gt;
+						&lt;xsl:with-param name="quality" select="$thumb-quality"/&gt;
+						&lt;xsl:with-param name="web-context" select="$web-context"/&gt;
+					&lt;/xsl:call-template&gt;
+				&lt;/xsl:attribute&gt;
+			&lt;/img&gt;
+		&lt;/a&gt;
+	&lt;/div&gt;
+&lt;/xsl:template&gt;
+</textarea>
+			
+			<p>This all generates XHTML like the following:</p>
+			
+<textarea name="code" class="html">
+&lt;div class="poster"&gt;
+  &lt;a title="View album More John Muir Trail"
+    href="/matte/album.do?key=2XlxVfKHja3CFGtMlyG57ofbchw"&gt;
+    &lt;img class="poster" alt="_6A_1392.jpg" onload="setShadow(this)" title="_6A_1392.jpg"
+      src="/matte/media.do?id=8&amp;size=THUMB_BIGGER&amp;quality=GOOD"
+    /&gt;
+  &lt;/a&gt;
+&lt;/div&gt;
+</textarea>
+			
+		</li>
+		<li>
+			<p><b>Image thumbnail shadow:</b> Matte includes a URL you can call to generate shadows. 
+			The shadows are sized according to the dimensions you pass and therefor can scale to any
+			size image. In Woosh, the shadows are set as CSS background images on the album poster
+			thumbnails. Since they need to be sized dynamically, Woosh uses JavaScript to set the 
+			CSS property after the browser loads the image so it can know what the size of the image
+			is. In the previous dissection point, you can see it includes an 
+			<code>onload="setShadow(this)"</code> attribute. This is the JavaScript call to set the
+			shadow image. The JavaScript function looks like this:</p>
+			
+<textarea name="code" class="javascript">
+function setShadow(el) {
+  var dim = Element.getDimensions(el);
+  var width = dim.width;
+  var height = dim.height;
+  if ( width &gt; 0 &amp;&amp; height &gt; 0 ) {
+    var bgUrl = webContext+'/shadow.do?w=' +width 
+      +'&amp;h=' +height +'&amp;b=6&amp;r=3&amp;c=3289650';
+    Element.setStyle(el.parentNode.parentNode, {
+      'background-image' : 'url('+bgUrl+')',
+      'background-repeat' : 'no-repeat',
+      'background-position' : '-3px -3px'
+    });
+  }
+}
+</textarea>
+			
+		<p>Note that Woosh uses the <a href="http://www.prototypejs.org/">Prototype</a> JavaScript library.</p>
+		
+		<p>Here the important part is the <code>bgUrl</code> variable which is the URL set on the 
+		<code>background-image</code> CSS property. The URL must refernce 
+		<code>/shadow.do</code> and pass the following parameters:</p>
+		
+		<dl>
+			<dt>w</dt>
+			<dd>The desired width, in pixels.</dd>
+			
+			<dt>h</dt>
+			<dd>The desired height, in pixels.</dd>
+			
+			<dt>b</dt>
+			<dd>The amount of blur to apply to the shadow, in pixels.</dd>
+			
+			<dt>r</dt>
+			<dd>A corner radius to apply to the shadow, in pixels.</dd>
+			
+			<dt>c</dt>
+			<dd>An 8-bit RGB color triplet value encoded as a 24-bit integer, 
+			eg. R&lt;&lt;16 + G&lt;&lt;8 + B.</dd>
+		</dl>
+		
+		</li>
+		
+		<li>
+			<p><b>Album name:</b> here Woosh is simply displaying the &lt;m:album&gt;
+		<code>@name</code> attribute, like this:</p>
+
+<textarea name="code" class="xslt">
+&lt;h2&gt;
+  &lt;xsl:value-of select="@name"/&gt;
+&lt;/h2&gt;
+</textarea>
+			
+		</li>
+		
+		<li>
+			<p><b>Album date:</b> the album date is stored as the <code></code> attribute.
+			Woosh uses the <a href="http://www.exslt.org/">EXSLT</a> 
+			<code>date:format-date()</code> extension functions (included with the
+			Java 5 built-in XSLT engine) to render the date into a display-friendly format:</p>
+			
+<textarea name="code" class="xslt">
+&lt;xsl:variable name="album.date"&gt;
+  &lt;xsl:choose&gt;
+    &lt;xsl:when test="@album-date"&gt;
+      &lt;xsl:value-of select="@album-date"/&gt;
+    &lt;/xsl:when&gt;
+    &lt;xsl:otherwise&gt;
+      &lt;xsl:value-of select="@creation-date"/&gt;
+    &lt;/xsl:otherwise&gt;
+  &lt;/xsl:choose&gt;
+&lt;/xsl:variable&gt;
+&lt;xsl:value-of select="date:format-date(substring($album.date,1,19),$date.format)"/&gt;
+</textarea>
+			
+			<div class="note">This XSLT uses the <code>substring()</code> function to use just 
+			the date's first 19 characters, because the EXSLT <code>date:format-date()</code> 
+			function does not parse xs:dateTime values with precision greater than seconds. Thus, 
+			if the date contains milliseconds, they would start at character 20 of the date string, 
+			so we only want the first 19 characters here.</div>
+		</li>
+		
+		<li>
+			<p><b>Album item count:</b> here Woosh is displaying the total number of media
+			items that the album contains. This is accomplished by counting the number of 
+			&lt;m:item&gt; elements in the &gt;m:album&gt;, like this:</p>
+			
+<textarea name="code" class="xslt">
+&lt;xsl:value-of select="count(m:item)"/&gt;
+&lt;xsl:text&gt; &lt;/xsl:text&gt;
+&lt;xsl:choose&gt;
+  &lt;xsl:when test="count(m:item) = 1"&gt;
+    &lt;xsl:value-of select="key('i18n','browse.items.count.single')"/&gt;
+  &lt;/xsl:when&gt;
+  &lt;xsl:otherwise&gt;
+    &lt;xsl:value-of select="key('i18n','browse.items.count')"/&gt;
+  &lt;/xsl:otherwise&gt;
+&lt;/xsl:choose&gt;
+</textarea>
+			
+			<p>Woosh is making use of the <code>browse.items.count.single</code>
+			and <code>browse.items.count</code> message resource keys to correctly 
+			display <em>item</em> or <em>items</em> (in English) if there is only one or more 
+			than one item in the album.</p>
+		</li>
+		
+		<li>
+			<p><b>Items date range:</b> here Woosh displays the <code>@item-min-date</code> 
+			and <code>@item-max-date</code> album attributes, if available and they differ 
+			from each other. It looks for the minimum/maximum dates within the entire album hierarchy, 
+			using some XSLT sorting to accomplish, like this:</p>
+
+<textarea name="code" class="xslt">
+&lt;xsl:variable name="min-date"&gt;
+  &lt;xsl:for-each select=".//@item-min-date"&gt;
+    &lt;xsl:sort select="." order="ascending"/&gt;
+    &lt;xsl:if test="position() = 1"&gt;
+      &lt;xsl:value-of select="."/&gt;
+    &lt;/xsl:if&gt;
+  &lt;/xsl:for-each&gt;
+&lt;/xsl:variable&gt;
+&lt;xsl:variable name="max-date"&gt;
+  &lt;xsl:for-each select=".//@item-max-date"&gt;
+    &lt;xsl:sort select="." order="descending"/&gt;
+    &lt;xsl:if test="position() = 1"&gt;
+      &lt;xsl:value-of select="."/&gt;
+    &lt;/xsl:if&gt;
+  &lt;/xsl:for-each&gt;
+&lt;/xsl:variable&gt;
+&lt;xsl:if test="@item-count &gt; 0 and $min-date != $max-date"&gt;
+  &lt;div class="browse-album-info"&gt;
+    &lt;xsl:value-of select="key('i18n', 'browse.items.itemrange')"/&gt;
+    &lt;xsl:text&gt; &lt;/xsl:text&gt;
+    &lt;xsl:value-of select="date:format-date(
+      substring($min-date, 1, 19), $date.format)"/&gt;
+    &lt;xsl:text&gt; &lt;/xsl:text&gt;
+    &lt;xsl:value-of select="key('i18n', 'to')"/&gt;
+    &lt;xsl:text&gt; &lt;/xsl:text&gt;
+    &lt;xsl:value-of select="date:format-date(
+      substring($max-date, 1, 19), $date.format)"/&gt;
+  &lt;/div&gt;
+&lt;/xsl:if&gt;
+</textarea>
+			
+		</li>
+		
+		<li>
+			<p><b>Album comments:</b> here Woosh displays the album's comments, which 
+			are stored in the child &lt;m:comment&gt; element. If the 
+			album does not have any comments, Woosh uses the 
+			<code>browse.album.nocomments</code> message resource key to display the 
+			message <em>No comments.</em> (in English):</p>
+			
+<textarea name="code" class="xslt">
+&lt;div class="browse-album-text"&gt;
+  &lt;xsl:choose&gt;
+    &lt;xsl:when test="string-length(m:comment) &gt; 0"&gt;
+      &lt;xsl:value-of select="m:comment"/&gt;
+    &lt;/xsl:when&gt;
+    &lt;xsl:otherwise&gt;
+      &lt;xsl:value-of select="key('i18n','browse.album.nocomments')"/&gt;
+    &lt;/xsl:otherwise&gt;
+  &lt;/xsl:choose&gt;
+&lt;/div&gt;
+</textarea>
+			
+		</li>
+	</ol>
+</div>
+
+<h2>Publishing RSS album feed</h2>
+
+<p>Matte provides an album RSS feed URL for publishing shared albums with. This is something 
+you can easily provide a link to from the browse view, and many modern web browsers will recognize
+the feed and allow users to subscribe to it.</p>
+
+<p>Matte supports the Atom 1.0 feed format. The Matte-relative URL for accessing the feed for
+a particular user is</p>
+
+<div class="code">/feed/atom-1.0.do?userKey=<em>key</em></div>
+
+<p>where <em>key</em> is the user's anonymous key.</p>
+
+<p>To add a link to this feed from the browse view, you need to generate an HTML &lt;link&gt; element,
+like this</p>
+
+<textarea name="code" class="html">
+&lt;link rel="alternate" 
+	type="application/atom+xml" lang="en-US" 
+	title="Matt's Photo Album Feed" 
+	href="http://localhost:8080/matte/feed/atom-1.0.do?userKey=XYZ"/&gt;
+</textarea>
+	
+<p>The way Woosh accomplishes this is with this XSLT:</p>
+
+<textarea name="code" class="xslt">
+&lt;xsl:variable name="author" select="/x:x-data/x:x-model[1]/m:model[1]/m:user[1]"/&gt;
+&lt;link rel="alternate" type="application/atom+xml" lang="en-US"&gt;
+  &lt;xsl:attribute name="title"&gt;
+    &lt;xsl:value-of select="$author/@name"/&gt;
+    &lt;xsl:value-of select="key('i18n','feed.author.posessive.suffix')"/&gt;
+    &lt;xsl:text&gt; &lt;/xsl:text&gt;
+    &lt;xsl:value-of select="key('i18n','feed.album.title')"/&gt;
+  &lt;/xsl:attribute&gt;
+  &lt;xsl:attribute name="href"&gt;
+    &lt;xsl:call-template name="server-url"/&gt;
+    &lt;xsl:value-of select="$web-context"/&gt;
+    &lt;xsl:text&gt;/feed/atom-1.0.do?userKey=&lt;/xsl:text&gt;
+    &lt;xsl:value-of select="$author/@anonymous-key"/&gt;
+  &lt;/xsl:attribute&gt;
+&lt;/link&gt;
+</textarea>
+
+<h2>Next: Album View</h2>
+
+<p>Continue next with <a href="theme-howto-album.html">details on the Album View</a>.</p>
+
+<div>
+<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=103583&amp;type=1" 
+	width="88" height="31" alt="SourceForge.net Logo" /></a>
+</div>
+<script type="text/javascript">
+	dp.SyntaxHighlighter.ClipboardSwf = 'js/clipboard.swf';
+	dp.SyntaxHighlighter.HighlightAll('code');
+</script>
+</body>
+</html>

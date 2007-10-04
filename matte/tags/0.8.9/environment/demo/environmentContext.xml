@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	
+	<!-- 
+		sqlFunctionsMap
+		
+		A mapping of custom Hibernate SQL functions. This might vary between 
+		different database flavors.
+	-->
+	<bean id="sqlFunctionsMap" class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="bitwise_and">
+					<bean class="magoffin.matt.ma2.dao.hbm.BitwiseAndFunctionSQLFunction"/>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<!--
+		mediaHandlerFileExtensionMap
+		
+		A mapping of file extensions to media handlers.
+	-->
+	<bean id="mediaHandlerFileExtensionMap" 
+		class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="jpg" value-ref="jpegMediaHandler"/>
+				<entry key="png" value-ref="pngMediaHandler"/>
+				<entry key="mp3" value-ref="mp3MediaHandler"/>
+				<entry key="svg" value-ref="svgMediaHandler"/>
+			</map>
+		</property>
+	</bean>
+	
+	<!--
+		mediaHandlerMimeMap
+		
+		A mapping of MIME types to media handlers.
+	-->
+	<bean id="mediaHandlerMimeMap"
+		class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="image/jpeg" value-ref="jpegMediaHandler"/>
+				<entry key="image/png" value-ref="pngMediaHandler"/>
+				<entry key="audio/mpeg" value-ref="mp3MediaHandler"/>
+				<entry key="image/svg+xml" value-ref="svgMediaHandler"/>
+			</map>
+		</property>
+	</bean>
+	
+	<!--
+		mediaHandlerDelegateMimeMap
+		
+		A mapping of MIME types to media handlers, for use in delegate handlers.
+	-->
+	<bean id="mediaHandlerDelegateMimeMap"
+		class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="image/jpeg" value-ref="jpegMediaHandler"/>
+				<entry key="image/png" value-ref="pngMediaHandler"/>
+			</map>
+		</property>
+	</bean>
+	
+		
+	<!--======================================================================
+		SVG image media handler implementation
+		======================================================================-->
+	
+	<bean id="svgMediaHandler" class="magoffin.matt.ma2.image.SvgMediaHandler">
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="mediaBiz" ref="mediaBizTarget"/>
+		<property name="userBiz" ref="userBizTarget"/>
+		<property name="transcoderClass" value="org.apache.batik.transcoder.image.PNGTranscoder"/>
+		<property name="transcoderHints">
+			<map>
+				<entry key-ref="org.apache.batik.transcoder.image.ImageTranscoder.KEY_BACKGROUND_COLOR"
+					value-ref="java.awt.Color.WHITE"/>
+				<entry key-ref="org.apache.batik.transcoder.image.ImageTranscoder.KEY_FORCE_TRANSPARENT_WHITE">
+					<bean class="java.lang.Boolean" factory-method="valueOf">
+						<constructor-arg value="true"/>
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="org.apache.batik.transcoder.image.ImageTranscoder.KEY_BACKGROUND_COLOR" 
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+	
+	<bean id="org.apache.batik.transcoder.image.ImageTranscoder.KEY_FORCE_TRANSPARENT_WHITE" 
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+	
+	<bean id="java.awt.Color.WHITE"
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+	
+	
+	<!--======================================================================
+		MP3 media handler implementation
+		======================================================================-->
+	
+	<bean id="mp3MediaHandler" class="magoffin.matt.ma2.audio.BasicAudioMediaHandler">
+		<constructor-arg index="0" value="audio/mpeg"/>
+		<constructor-arg index="1" value="mp3"/>
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="mediaBiz" ref="mediaBizTarget"/>
+		<property name="userBiz" ref="userBizTarget"/>
+		<property name="imageMediaRequestDelegate">
+			<bean class="magoffin.matt.ma2.support.MimeTypeMediaHandlerDelegate">
+				<property name="delegateMap" ref="mediaHandlerDelegateMimeMap"/>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<!--======================================================================
+		ImageIO media handler implementations
+		======================================================================-->
+	
+	<!-- ImageIO JPEG handler -->
+	<bean id="jpegMediaHandler" class="magoffin.matt.ma2.image.iio.JpegMediaHandler">
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="mediaBiz" ref="mediaBizTarget"/>
+		<property name="userBiz" ref="userBizTarget"/>
+		<property name="imageMediaHelper" ref="imageMediaHelper"/>
+		<property name="awtMediaEffectMap" ref="awtEffectMap"/>
+		<property name="smetaPropertyMap">
+			<map>
+				<entry key="creationDateKey" value="DATE_TAKEN"/>
+			</map>
+		</property>
+	</bean>
+
+	<!-- ImageIO PNG handler -->
+	<bean id="pngMediaHandler" class="magoffin.matt.ma2.image.iio.PngMediaHandler"
+		parent="jpegMediaHandler"/>
+	
+	<!--
+		awtEffectMap
+		
+		A mapping of MediaEffect handlers.
+	-->
+	<bean id="awtEffectMap"
+		class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="scale">
+					<bean class="magoffin.matt.ma2.image.awt.ScaleEffect">
+						<property name="mediaBiz" ref="mediaBizTarget"/>
+					</bean>
+				</entry>
+				<entry key="rotate">
+					<bean class="magoffin.matt.ma2.image.awt.RotateEffect">
+						<property name="mediaBiz" ref="mediaBizTarget"/>
+					</bean>
+				</entry>
+				<entry key="watermark">
+					<bean class="magoffin.matt.ma2.image.awt.BumpMapEffect">
+						<property name="mediaBiz" ref="mediaBizTarget"/>
+						<property name="imageMediaHelper" ref="imageMediaHelper"/>
+					</bean>
+				</entry>
+				<!-- alternative watermark method entry key="watermark">
+					<bean class="magoffin.matt.ma2.image.awt.CompositeEffect">
+						<property name="mediaBiz" ref="mediaBizTarget"/>
+						<property name="imageMediaHelper" ref="imageMediaHelper"/>
+					</bean>
+				</entry-->
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="imageMediaHelper" 
+		class="magoffin.matt.ma2.image.ImageMediaHelper"/>
+	
+	
+</beans>

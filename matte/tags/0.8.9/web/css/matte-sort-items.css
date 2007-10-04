@@ -1,0 +1,23 @@
+#sort-items-form div.label {
+	font-weight: bold;
+}
+
+#sort-items-container {
+	/*width: 720px;*/
+}
+
+#sort-items-container div {
+	display: block;
+	float: left;
+	border: 1px solid #ccc;
+	background-color: white;
+	color: inherit;
+	width: 120px;
+	height: 100px;
+	padding: 5px;
+	margin: 5px;
+	text-align: center;
+	vertical-align: middle;
+	cursor: move;
+	font-size: 10px;
+}
