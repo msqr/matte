@@ -250,7 +250,7 @@
 	</tr>
 	<tr>
 		<td>
-			<strong>Watermark:</strong> Matt can apply a "watermark" to your images, to discourage
+			<strong>Watermark:</strong> Matte can apply a "watermark" to your images, to discourage
 			people from using your images without permission. The watermark can be any image you 
 			create, and Matte can be configured to create a 3-D "bump map" or simply "stamp" the 
 			watermark image onto your items.
