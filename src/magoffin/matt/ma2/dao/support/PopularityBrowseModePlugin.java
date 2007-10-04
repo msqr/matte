@@ -74,7 +74,7 @@ import org.springframework.util.StringUtils;
  *     <li>User ID (long) - the user to display the browsable items for</li>
  *     <li>allow anonymous flag (boolean) - will be set to <em>true</em></li>
  *     <li>allow browse flag (boolean) - will be set to <em>true</em></li>
- *   <ol>
+ *   </ol>
  *   
  *   <p>The boolean flags are set as positional parameters for cross-database
  *   support for boolean values.</p></dd>
@@ -91,7 +91,7 @@ import org.springframework.util.StringUtils;
  *     <li>allow browse flag (boolean) - will be set to <em>true</em></li>
  *     <li>bucket lower range (integer) - the lower hits range, inclusive, to display</li>
  *     <li>bucket upper range (integer) - the upper hits range, exclusive, to display</li>
- *   <ol>
+ *   </ol>
  *   
  *   <p>The SQL must return the following columns:</p>
  *   
