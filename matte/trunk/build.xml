@@ -691,7 +691,7 @@
 	
 	<!-- Subversion build targets -->
 
-	<target name="svn-checkout">
+	<target name="svn-checkout" description="Checkout sources from SVN">
 		<delete dir="${svn.dir.build}"/>
 		<mkdir dir="${svn.dir.build}"/>
 		<svn username="${svn.username}" password="${svn.password}">
@@ -700,9 +700,16 @@
 		</svn>
 	</target>
 	
-	<target name="svn-update">
+	<target name="svn-update" description="Update sources previously checked out from SVN">
 		<svn username="${svn.username}" password="${svn.password}">
 			<update dir="${svn.dir.build}" revision="${svn.revision}"/>
+		</svn>
+	</target>
+	
+	<target name="svn-switch" 
+		description="Switch sources previously checked out from SVN to another branch">
+		<svn username="${svn.username}" password="${svn.password}">
+			<switch path="${svn.dir.build}" url="${svn.url}" revision="${svn.revision}"/>
 		</svn>
 	</target>
 	
