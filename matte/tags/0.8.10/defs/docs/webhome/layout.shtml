@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<title><!--#echo var="pageTitle"--></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<link rel="stylesheet" type="text/css" href="whoosh-matte.css"/>
+</head>
+<body>
+
+	<!--#include virtual="page-nav.shtml"-->
+	
+	<h1><!--#echo var="pageTitle"--></h1>
+	
+	
+	<!--#include virtual="${currPage}-content.shtml"-->
+	
+	<div>
+	<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=103583&amp;type=1" 
+		width="88" height="31" alt="SourceForge.net Logo" /></a>
+	</div>
+</body>
+</html>

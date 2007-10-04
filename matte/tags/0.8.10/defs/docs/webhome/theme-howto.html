@@ -1,0 +1,675 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Matte: Theme HOWTO: Overview</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" type="text/css" href="whoosh-matte.css" />
+	<link type="text/css" rel="stylesheet" href="css/SyntaxHighlighter.css"></link>
+	<script type="text/javascript" src="js/shCore.js"></script>
+	<script type="text/javascript" src="js/shBrushJScript.js"></script>
+	<script type="text/javascript" src="js/shBrushXml.js"></script>
+</head>
+<body class="full">
+
+<h1><a name="top"></a>Matte: Theme HOWTO: Overview</h1>
+
+<div class="pagenav">
+	<ul>
+		<li>Overview</li>
+		<li><a href="theme-howto-browse.html">Browse View</a></li>
+		<li><a href="theme-howto-album.html">Album View</a></li>
+		<li><a href="theme-howto-detail.html">Detail View</a></li>
+	</ul>
+</div>
+
+<p class="intro">The look and feel of shared albums can be completely customized in Matte
+by way of <em>themes</em>. This document describes how web-heads can write customized
+themes for Matte.</p>
+
+<h2>XSLT</h2>
+
+<p>In Matte themes are rendered by transforming XML with <a href="http://www.w3.org/TR/xslt">XSLT 1.0</a>. 
+Therefore you must be comfortable with the XSLT language in order to write a Matte theme. There are 
+good and not-so-good consequences for using XSLT:</p>
+
+<ol>
+	<li>
+		<p><b>No coding required.</b> When using some rendering technologies, such as JSP, PHP, etc.
+		you must be comfortable with writing code in that particular language, which can be
+		overwhelming to some, powerful to others, and generally messy. XSLT, on the other hand,
+		is a relatively simple language designed exactly for this type of job: transforming 
+		XML into other markup languages (e.g. XHTML, HTML, WML, other XML, etc). We will concentrate
+		here on transforming into XHTML, as this is the language used for normal web pages and 
+		most themes will focus in this area.</p>
+	</li>
+	
+	<li>
+		<p><b>Less-known language.</b> Of course you might say that XSLT is, in fact, 
+		coding. That is true. The language is very high-level and focused on the specific task at 
+		hand, turning XML into XHTML. The only major down side of XSLT is that not a lot of 
+		web-heads are familiar with XSLT, at least not as many as familiar with JSP, PHP, etc.</p>
+	</li>
+	
+	<li>
+		<p><b>Guaranteed well-formed XML results.</b> Using XSLT to generate XHTML ensures 
+		you will generate well-formed results. It will not be possible to generate an un-closed
+		<code>&lt;br&gt;</code> tag, for example.</p>
+		
+		<div class="note">You can, in fact, generate HTML results with XSLT that are not valid 
+		XML documents, by setting the output method to <code>html</code> (or <code>text</code>. 
+		When the output method is set to <code>xml</code>, however, you are guaranteed to 
+		generate well-formed XML
+		results.</div>
+	</li>
+	
+	<li>
+		<p><b>Isolated code.</b> By using XSLT for the rendering
+		language, the themes are nicely isolated from the main Matte Java code, and generally
+		don't have access to Matte, or Java, internals. This helps keep themes clean, focused, 
+		and provides some relief to administers of Matte systems that themes are not going to 
+		run off and do something naughty.</p>
+	</li>
+</ol>
+
+<p>For help getting started with XSLT, check out the 
+<a href="http://en.wikipedia.org/wiki/XSLT">XSLT article Wikipedia</a> which contains many links at the 
+bottom to tutorials and more information on XSLT.</p>
+
+<h2>Theme-able UIs</h2>
+
+<p>In Matte there are three main user interfaces that are theme-able. Think of these as unique URLs which
+are accessible by users:</p>
+
+<ol>
+	<li>
+		<p><b>Browse:</b> a view of all of a single user's shared albums, generally designed to 
+	display each album as a link to that album's slide show (see Album next).</p>
+		<div class="screenshot">
+			<img src="img/th2-browse-example.png" alt="Woosh Browse Theme" width="400" height="359" />
+			<div>The built-in Woosh browse view.</div>
+		</div>
+	</li>
+
+	<li>
+		<p><b>Album:</b> a single shared album, generally designed to display all the media items
+	contained in the album as a slide show.</p>
+		<div class="screenshot">
+			<img src="img/th2-album-example.png" alt="Woosh Album Theme" width="424" height="350" />
+			<div>The built-in Woosh album view.</div>
+		</div>
+	</li>
+	
+	<li>
+		<p><b>Item detail:</b> information about a single media item, generally designed to display 
+	all available information about that item, such as metadata, comments, ratings, etc. This is
+	usually used in album themes to dynamically show this information when viewing a specific
+	media item. The built-in Woosh theme uses AJAX to display this information, for example.</p>
+		<div class="screenshot">
+			<img src="img/th2-detail-example.png" alt="Woosh Item Detail Theme" width="354" height="323" />
+			<div>The built-in Woosh item detail view.</div>
+		</div>
+	</li>
+	
+</ol>
+
+<p>Going forward we will refer to these UIs as unique views, e.g. "browse view", "album view", 
+and "detail view".</p>
+
+<h2>ThemePak</h2>
+
+<p>Themes are installed and managed in the form of ThemePaks, which are zip archives following certain 
+conventions:</p>
+
+<ol>
+	<li>An album view XSLT file, named <b>theme.xsl</b>. This is required.</li>
+	
+	<li>A browse view XSLT file, named <b>browse.xsl</b>. This is required if
+	the theme is to be used for album browsing.</li>
+
+	<li>A detail view XSLT file, named <b>info.xsl</b>. This is optional and
+	can be used by the theme for dynamically displaying detailed information 
+	about selected media items.</li>
+	
+	<li>The theme thumbnail PNG image, named <b>thumbnail.png</b>. 
+	This is optional, but recommended. This thumbnail should be designed 
+	as a small icon for the theme, sized to about 160x120 pixels.</li>
+	
+	<li>The theme preview PNG image, named <b>preview.png</b>.
+	This is optional, but recommended. This preview shold be designed 
+	as a showcase for what the theme features are, sized to about 
+	1024x768 pixels.</li>
+	
+	<li><div>The theme metadata properties file, named <b>theme.properties</b>.
+	This is optional, but recommended. It allows the ThemePak to define 
+	the following properties:</div>
+	
+		<dl>
+			<dt>theme.name</dt>
+			<dd>The name of the theme.</dd>
+			
+			<dt>theme.author</dt>
+			<dd>The name of the theme's author(s).</dd>
+			
+			<dt>theme.authoremail</dt>
+			<dd>The email address of the theme's author(s).</dd>
+			
+			<dt>theme.created</dt>
+			<dd>The creation date of the theme, in the format 
+			<code>yyyy-mm-dd</code> (eg. 2006-09-26).</dd>
+		</dl>
+	
+	</li>
+	
+	<li>The theme messages resource bundle, named 
+	<b>theme-messages<em>[_lang]</em>.properties</b>. These are optional. They can be 
+	used to provide localized messages to make the theme work in different 
+	languages. One of the bundles can omit the <code>_lang</code> portion of the file name
+	to be used as the default message bundle.</li>
+	
+	<li>Any other resources required by the theme, such as CSS files, images, 
+	JavaScript, etc.</li>
+</ol>
+
+
+<h2>Starting a new theme</h2>
+
+<p>Administrators of Matte systems can manage themes by going to the Admin page after logging into Matte.
+From there you can view, install, update, and remove themes.</p>
+
+<div class="screenshot">
+	<img src="img/th2-admin-ui.png" alt="Matte theme administration" width="891" height="211" />
+	<div>The Matte administration screen, showing the built-in Woosh theme.</div>
+</div>
+
+<p>A great way to get started on a new theme is to modify an existing theme. You can copy an existing
+theme, create a test album and share it using the new theme, configure Matte to reload the theme XSLT 
+on each request, and then interactively make changes to the XSLT to work on changes.</p>
+
+<p>The built-in Woosh theme is thus a good place to start. Follow these steps:</p>
+
+<ol>
+	<li>
+		<p>Start up Matte and log in as an administrator (Matte creates an administrator for 
+		you the first time it runs, the login is <code>matte-admin</code> and the password
+		is <code>password</code>). Then use the Setup Wizard to update the <b>XSLT cache</b>
+		property to <b>No</b>. The SetupWizard can be loaded by typing in the URL
+		<code>/matte/setupWizard.do</code> (leaving your server name, etc.).</p>
+		
+		<p>Also note the value of your <b>Themes</b> directory path, on the 
+		<b>Filesystem</b> setup page. This is where your uploaded themes will go later on.</p>
+	</li>
+	
+	<li>Restart Matte for the XSLT setting to take effect.</li>
+	
+	<li>Log back into Matte as an administrator, and from the Admin screen in Matte, click on 
+	the "Woosh" theme from the list on the left. Then choose the "Download theme" action to 
+	download the entire Theme as a Matte ThemePak.</li>
+	
+	<li>Unzip the ThemePak and create a new <code>theme.properties</code> file (as described previously) to give this
+	theme a new name, author, etc.</li>
+	
+	<li>Zip up all the theme contents (not the theme's top-level folder, but just all the files/folders 
+	inside that) into a new ThemePak.</li>
+	
+	<li>Use the Matte Admin screen to upload the new ThemePak as a new theme. Now you have copied the Woosh
+	theme into a new theme. The new theme's files will be located in your <b>theme directory</b> that 
+	you specified in the Setup Wizard. Inside the theme directory there will be another
+	directory named <em>themes</em> and inside that will be a directory of the Matte-assigned
+	unique ID for your new theme. For example if your theme directory is 
+	<code>/var/matte/themes</code> and Matte assigns your new theme an ID of <code>382</code>
+	then the theme resources will be located in <code>/var/matte/themes/themes/382</code>.
+	Note the duplicate "themes" directory, this is not a mistake.</li>
+	
+	<li>The Woosh theme makes use of an XSLT templates file called <code>theme-util.xsl</code>. This file
+	exists in the Matte WAR at <code>/WEB-INF/themes/theme-util.xsl</code>. In order
+	for the new custom theme to make use of this file, copy it to the root of your
+	custom theme directory (the one specified in the Setup Wizard). This XSLT templates
+	file provide handy and oft-used functionality required by themes.</li>
+	
+	<li>Go back to the Home screen now, and create a test album. Add some items into the album and
+	then share the album using the new theme (go to <b>Actions &gt; Album Sharing</b>, choosing 
+	your new theme from the Theme menu.</li>
+	
+</ol>
+
+<p>You should now be able to view your shared album using your new copy of the Woosh theme
+by clicking on the link provided after you save the album's sharing settings. You are 
+now ready to start modifying your new theme however you see fit!</p>
+
+
+<h2>XWeb XML Data Model</h2>
+
+<p>Matte uses an XML data model based on a view platform called XWeb. XWeb provides an XML data model
+that includes web elements that web-heads will be familiar with. Here is a sample XWeb XML document
+with all Matte-specific XML removed:</p>
+
+<textarea name="code" class="xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<x:x-data xmlns:x="http://msqr.us/xsd/jaxb-web">
+  <x:x-context>
+    <x:server-name>localhost</x:server-name>
+    <x:server-port>8484</x:server-port>
+    <x:user-agent>Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en) 
+    	AppleWebKit/418.9.1 Safari/419.3</x:user-agent>
+    <x:user-locale>en</x:user-locale>
+    <x:web-context>/matte</x:web-context>
+    <x:path>/viewMediaItemInfo.do</x:path>
+  </x:x-context>
+  <x:x-session>
+    <x:x-param key="magoffin.matt.ma2.ViewedItems">[8260]</x:x-param>
+  </x:x-session>
+  <x:x-request>
+    <x:param key="themeId">1</x:param>
+    <x:param key="itemId">8260</x:param>
+    <x:param key="_"/>
+    <x:param key="albumKey">OfPl7RxidbzpUMyry331j6shLO4M</x:param>
+  </x:x-request>
+  <x:x-request-headers>
+    <x:param key="accept">*/*</x:param>
+    <x:param key="accept-language">en</x:param>
+    <x:param key="accept-encoding">gzip, deflate</x:param>
+    <x:param key="cookie">JSESSIONID=CB2EE17213B8707DFA824F68FEC36178; cookies=true</x:param>
+    <x:param key="referer">http://localhost:8484/matte/album.do?key=OfPl7RxidbzpUMyry331j6shLO4M</x:param>
+    <x:param key="user-agent">Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en) 
+    	AppleWebKit/418.9.1 Safari/419.3</x:param>
+    <x:param key="x-prototype-version">1.4.0</x:param>
+    <x:param key="x-requested-with">XMLHttpRequest</x:param>
+    <x:param key="connection">keep-alive</x:param>
+    <x:param key="host">localhost:8484</x:param>
+  </x:x-request-headers>
+  <x:x-model>
+  </x:x-model>
+</x:x-data>
+</textarea>
+
+<p>Note the use of the XWeb namespace <code>http://msqr.us/xsd/jaxb-web</code>, mapped to the <code>x</code> 
+prefix. These elements provide you with all the data elements needed to be able to see what was requested
+by the person's browser, what parameters were provided, the person's language settings, etc. The elements 
+you see are:</p>
+
+<dl>
+	<dt>&lt;x:x-data&gt;</dt>
+	<dd>The root XML element.</dd>
+	
+	<dt>&lt;x:x-context&gt;</dt>
+	<dd>
+		<p>Some specialized information about the web request, which will include:</p>
+		<dl>
+			<dt>&lt;x:x-server-name&gt;</dt>
+			<dd>The name of the server hosting Matte. This is usually only needed when constructing
+			full URLs, such as when constructing the URL for the Atom RSS link from the browse view.</dd>
+			
+			<dt>&lt;x:server-port&gt;</dt>
+			<dd>The port the server hosting Matte is running on.</dd>
+			
+			<dt>&lt;x:user-agent&gt;</dt>
+			<dd>The browser client requesting the page. This can be used for browser-sniffing style
+			code in the XSLT where you want to return different content based on the browser making
+			the request.</dd>
+			
+			<dt>&lt;x:user-locale&gt;</dt>
+			<dd>The browser client's locale settings, for internationalization support.</dd>
+			
+			<dt>&lt;x:web-context&gt;</dt>
+			<dd>The URL path to the Matte web application. By default this is <code>/matte</code>
+			but can be changed to anything.</dd>
+			
+			<dt>&lt;x:path&gt;</dt>
+			<dd>The URL path, after the web context, of the current request.</dd>
+		</dl>
+	</dd>
+	
+	<dt>&lt;x:x-session&gt;</dt>
+	<dd>A list of <code>&lt;x:x-param&gt;</code> elements, one for each item in the current user's
+	web session. The Matte session will contain information like the currently logged in user details.</dd>
+	
+	<dt>&lt;x:x-request&gt;</dt>
+	<dd>A list of <code>&lt;x:param&gt;</code> elements, one for each request parameter provided on 
+	the current request.</dd>
+	
+	<dt>&lt;x:x-request-headers&gt;</dt>
+	<dd>A list of <code>&lt;x:param&gt;</code> elements, one for each HTTP header provided on the
+	current request. These are not usually needed in Matte themes, but can be handy in some 
+	situations.</dd>
+	
+	<dt>&lt;x:x-model&gt;</dt>
+	<dd>This element will hold the Matte data model XML tree, such as the selected album, item, etc.</dd>
+</dl>
+
+<p>If you are familiar with Java servlets, these data elements will be very familiar to you. The formal
+definition of XWeb is in the form of an XML Schema, located <a href="jaxb-web.xsd">here</a>.</p>
+
+
+<h2>Matte XML Data Model</h2>
+
+<p>Inside the <code>&lt;x:x-model&gt;</code> XWeb element (listed above) Matte will generate a Matte-specific 
+XML tree in the form of a <code>&lt;m:model&gt;</code> element. Note the namespace for Matte XML elements: 
+<code>http://msqr.us/xsd/matte</code>. Internally Matte uses the <code>m</code> namespace prefix for this 
+namespace, which we'll use in this document as well. This element is a container for 
+<code>&lt;m:album&gt;</code> and <code>&lt;m:item&gt;</code> elements. Here is an example Matte XML model 
+document, this one from a detail view request:</p>
+
+<textarea name="code" class="xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<m:model xmlns:m="http://msqr.us/xsd/matte">
+  <m:album album-date="2007-01-02T00:00:00+13:00" album-id="1727"
+    allow-anonymous="true" allow-feed="true" allow-original="true"
+    anonymous-key="3psrM7WNN1IxivJyU66zYnuzrOw"
+    creation-date="2007-01-03T10:59:46.525+13:00"
+    modify-date="2007-01-09T16:47:57.036+13:00" name="My Album"
+    sort-mode="1">
+    <m:comment>This is a test album. And look how cool it is!</m:comment>
+    <m:owner access-level="1"
+      anonymous-key="617518b954c6126dfc34fa1e6ad13e4b" country="US"
+      creation-date="2007-01-03T08:30:52.685+13:00"
+      email="matte-admin@localhost.localdomain" language="en"
+      login="matte-admin" name="Admin"
+      password="{SHA}W6ph5Mm5Pz8GgiULbPgzG37mj9g=" quota="0" user-id="2">
+      <m:tz code="Pacific/Auckland" name="Pacific/Auckland"
+        offset="43200000" ordering="559"/>
+      <m:thumbnail-setting quality="GOOD" size="THUMB_NORMAL"/>
+      <m:view-setting quality="GOOD" size="NORMAL"/>
+    </m:owner>
+    <m:theme author="Matte Development Team" author-email="matte@noplace"
+      base-path="/core/woosh"
+      creation-date="2007-01-03T08:30:52.534+13:00" name="Woosh"
+      theme-id="1">
+      <m:description>Default theme.</m:description>
+    </m:theme>
+  </m:album>
+  <m:item creation-date="2006-11-24T19:57:56+13:00" custom-date="false"
+    display-order="0" file-size="3375256" height="2336" hits="8"
+    icon-height="0" icon-width="0" item-id="1729" mime="image/jpeg"
+    name="IMG_4398.jpg" path="Goodbye 2006/IMG_4398.jpg" use-icon="false"
+    width="3504">
+    <m:tz code="Pacific/Auckland" name="Pacific/Auckland" offset="43200000"
+      ordering="559"/>
+    <m:tz-display code="Pacific/Auckland" name="Pacific/Auckland"
+      offset="43200000" ordering="559"/>
+    <m:metadata key="APERTURE">4.9708557</m:metadata>
+    <m:metadata key="CAMERA_MAKE">Canon</m:metadata>
+    <m:metadata key="CAMERA_MODEL">Canon EOS 20D</m:metadata>
+    <m:metadata key="EXPOSURE_BIAS">0</m:metadata>
+    <m:metadata key="EXPOSURE_TIME">1/6</m:metadata>
+    <m:metadata key="F_STOP">F5.6</m:metadata>
+    <m:metadata key="FLASH">true</m:metadata>
+    <m:metadata key="FOCAL_LENGTH">135.0</m:metadata>
+    <m:metadata key="FOCAL_LENGTH_35MM_EQUIV">216</m:metadata>
+    <m:metadata key="ORIENTATION">1</m:metadata>
+    <m:metadata key="SHUTTER_SPEED">1/6</m:metadata>
+  </m:item>
+  <m:theme author="Matte Development Team" author-email="matte@noplace"
+    base-path="/core/woosh" creation-date="2007-01-03T08:30:52.534+13:00"
+    name="Woosh" theme-id="1">
+    <m:description>Default theme.</m:description>
+  </m:theme>
+</m:model>
+</textarea>
+
+<p>This provides a good example of the Matte XML elements you'll work with in a theme.</p>
+
+<p class="note">By default you can view the source XML document for any Matte 
+URL by passing an <strong>xml=true</strong> parameter with the request. For example
+a Browse View URL might look like <code>http://myserver.com/matte/browse.do?user=XYZ</code>.
+To view the XML source used for this page, you can add <code>&amp;xml=true</code> to 
+the URL, like this: <code>http://myserver.com/matte/browse.do?user=XYZ&amp;xml=true</code></p>
+
+<p>The elements in more detail are listed here:</p>
+
+<h3>&lt;m:album&gt;</h3>
+<div>
+	<p>This element represents an album, which is a collection of items. In themes, the following 
+	components of this element are especially important:</p>
+	
+	<dl>
+		<dt>@album-date</dt>
+		<dd>The date assigned to the album. This date is optional, and if not provided
+		the <code>@creation-date</code> attribute can be used, which is the date the album
+		was created.</dd>
+		
+		<dt>@anonymous-key</dt>
+		<dd>This key is used in the URL for the album view to display the album.</dd>
+		
+		<dt>@modify-date</dt>
+		<dd>The date the album was last modified. This will not be present if the album has
+		never been modified after its initial creation.</dd>
+		
+		<dt>@name</dt>
+		<dd>The name of the album.</dd>
+		
+		<dt>&lt;m:comment&gt;</dt>
+		<dd>A description or comment about the album.</dd>
+		
+		<dt>&lt;m:item&gt; (list)</dt>
+		<dd>Any number of of these elements can appear in an album, and represent the items
+		in the album.</dd>
+		
+		<dt>&lt;m:owner&gt;</dt>
+		<dd>The user that created this album.</dd>
+		
+		<dt>&lt;m:poster&gt;</dt>
+		<dd>An optional "poster" item to be used as the album's thumbnail.</dd>
+		
+		<dt>&lt;m:theme&gt;</dt>
+		<dd>The theme assigned to this album. This is needed in the album and detail views
+		in order to render links to theme resources such as images, JavaScript, etc.</dd>
+	</dl>
+</div>
+
+<h3>&lt;m:item&gt;</h3>
+<div>
+	<p>This element represents a media item, such as a photo, audio file, video file, etc.
+	In themes, the following components of this element are especially important:</p>
+	
+	<dl>
+		<dt>@creation-date</dt>
+		<dd>The date the item was created. This may be the date the item was added to Matte,
+		or for some media types the date the item was originally created. For example JPEG
+		photos taken with digital cameras come with the date the photo was taken embedded in 
+		the image file, and Matte will extract that date and use that for the item's
+		creation date. Note that the time zone associated here is generally the time
+		zone that Matte is running in, not the time zone of the media item. See the 
+		<code>&lt;m:tz&gt;</code> and <code>&lt;m:tz-display&gt;</code> elements below.</dd>
+		
+		<dt>@file-size</dt>
+		<dd>The size of the original media item's file, in bytes.</dd>
+		
+		<dt>@height</dt>
+		<dd>For media types with a height, such as photos or videos, the original height
+		of the media, in pixels.</dd>
+		
+		<dt>@hits</dt>
+		<dd>The number of times this media item has been viewed (not as a thumbnail).</dd>
+		
+		<dt>@item-id</dt>
+		<dd>The unique ID of this item, required when rendering the URLs to link to the 
+		item.</dd>
+		
+		<dt>@mime</dt>
+		<dd>The MIME type of this media item.</dd>
+		
+		<dt>@name</dt>
+		<dd>The name of the item, defined by the user. For some media types Matte will extract
+		the name embedded in the file, such as the song title from MP3 files. For all 
+		others this is set initially to the name of the media item's file. Users can replace
+		this with anything they like, however.</dd>
+		
+		<dt>@path</dt>
+		<dd>A file path for the original media item in Matte. This path is always relative from
+		the user's collection directory.</dd>
+		
+		<dt>@width</dt>
+		<dd>For media types with a width, such as photos or videos, the original width of
+		the media, in pixels.</dd>
+		
+		<dt>&lt;m:metadata&gt; (list)</dt>
+		<dd>Any number of these elements can be associated with an item. They represent
+		metadata extracted from the item's file. For example for digital photos this 
+		list will be populated with EXIF data. They key names are fairly self-explainatory,
+		and the element's content will contain the associated metadata value.</dd>
+		
+		<dt>&lt;m:tz&gt;</dt>
+		<dd>The time zone of the media item's <code>@creation-date</code>. This is mostly
+		useful for photos from digital cameras, which do not store a time zone with 
+		the dates they add to the photos. Generally you set a time zone on the camera, and
+		then it uses that time zone for the dates and times it embedds in the photos you 
+		take.</dd>
+		
+		<dt>&lt;m:tz-display&gt;</dt>
+		<dd>A time zone to display the <code>@creation-date</code> of this item in. This is
+		used in conjunction with the <code>&lt;m:tz&gt;</code> value to translate the 
+		time zone of the item into a different time zone. Again this is mostly useful for
+		photos from digital cameras, where the camera's time zone is set to a different
+		time zone than the location the photo was taken. This time zone represents the 
+		time zone the photo was taken in, or the "local time" of the photo, and can be 
+		used to display the local time of the photo rather than the time zone that the 
+		camera is set to.</dd>
+	</dl>
+</div>
+
+
+<h2>Linking to theme resources</h2>
+
+<p>In order to generate links to theme resources, such as HTML &lt;link&gt; tags for 
+your theme's CSS, or HTML &lt;script&gt; tags for your theme's JavaScript, you should
+call the <code>get-resource-url</code> XSLT template. This template takes the following
+parameters:</p>
+
+<dl>
+	<dt>resource</dt>
+	<dd>The path of your theme resource, relative to the root of your theme's 
+	directory. For example <code>my-javascript.js</code>.</dd>
+	
+	<dt>theme</dt>
+	<dd>The ID of the currently running theme. This is available via the 
+	<code>/x:x-data/x:x-model[1]/m:model[1]/m:theme[1]</code> XPath, or you
+	can use the pre-defined helper variable <code>$theme</code>.</dd>
+	
+	<dt>web-context</dt>
+	<dd>Matte's servlet context path, normally <code>/matte</code>. This is 
+	also pre-defined as the helper variable <code>$web-context</code>.</dd>
+</dl>
+
+<p>For example, here's how you would generate an HTML JavaScript &lt;script&gt; tag
+for the <code>behaviour.js</code> theme resource:</p>
+
+<textarea name="code" class="xslt">
+&lt;script type="text/javascript"&gt;
+  <xsl:attribute name="src">
+    <xsl:call-template name="get-resource-url">
+      <xsl:with-param name="resource" select="'behaviour.js'"/>
+      <xsl:with-param name="theme" select="$theme"/>
+      <xsl:with-param name="web-context" select="$web-context"/>
+    </xsl:call-template>
+  </xsl:attribute>
+  <xsl:text> </xsl:text>
+&lt;/script&gt;
+</textarea>
+
+<h2>Linking to media images</h2>
+
+<p>In order to link to thumbnail images or full-size images, for example to generate 
+an HTML &lt;img&gt; tag, call the <code>render-media-server-url</code> XSLT template. 
+This template takes the following parameters:</p>
+
+<dl>
+	<dt>item</dt>
+	<dd>A <code>&lt;m:item&gt;</code> XML element.</dd>
+	
+	<dt>album-key</dt>
+	<dd>The <code>@anonymous-key</code> attribute of the <code>&lt;m:album&gt;</code>
+	element that the item is shared with.</dd>
+	
+	<dt>size</dt>
+	<dd>
+		<p>One of the predefined Matte size constants, defined as one of the following:</p>
+		<ul>
+			<li><strong>BIGGEST</strong> <em>(1600x1200)</em></li>
+			<li><strong>BIGGER</strong> <em>(1024x768)</em></li>
+			<li><strong>BIG</strong> <em>(800x600)</em></li>
+			<li><strong>NORMAL</strong> <em>(640x480)</em></li>
+			<li><strong>SMALL</strong> <em>(480x320)</em></li>
+			<li><strong>TINY</strong> <em>(320x240)</em></li>
+			<li><strong>THUMB_BIGGER</strong> <em>(240x180)</em></li>
+			<li><strong>THUMB_BIG</strong> <em>(180x135)</em></li>
+			<li><strong>THUMB_NORMAL</strong> <em>(120x90)</em></li>
+			<li><strong>THUMB_SMALL</strong> <em>(64x48)</em></li>
+		</ul>
+		<p>These pixel dimenstions listed here are the defaults provided by Matte, 
+		but the sizes are configurable by the system administrator so may be different
+		than what is listed here. When in doubt, choose <b>NORMAL</b> for 
+		full-size viewing and <b>THUMB_NORMAL</b> for thumbnails.</p>
+		
+		<p class="note">Generally you will not want to hard-code the values
+		for full-size images into your theme, however, since users visiting 
+		your shared albums will be given the opportunity to specify the desired
+		image size themeselves. You would thus want to allow for your theme
+		to be able to display any of these sizes.</p>
+	</dd>
+	
+	<dt>quality</dt>
+	<dd>
+		<p>One of the predefined Matte quality constants, which represent how 
+		much Matte will attempt to compress images to achieve smaller file sizes
+		at the expense of image quality. The constants are defined as one of the 
+		following:</p>
+		<ul>
+			<li><strong>HIGHEST</strong> <em>(little or no compression)</em></li>
+			<li><strong>HIGH</strong> <em>(small amount of compression)</em></li>
+			<li><strong>GOOD</strong> <em>(decent amount of compression, 
+				suitable for online viewing</em></li>
+			<li><strong>AVERAGE</strong> <em>(fairly high amount of compression, 
+				visibly lower image quality but much smaller file size)</em></li>
+			<li><strong>LOW</strong> <em>(very high amount of compression, very poor
+				image quality, but very small file sizes, suiteable for 
+				very slow internet connections or thumbnail images)</em></li>
+		</ul>
+		
+		<p>When in doubt, use <b>GOOD</b> for full-size viewing, and either
+		<b>GOOD</b> or <b>AVERAGE</b> for thumbnails.</p>
+
+		<p class="note">Generally you will not want to hard-code the value
+		for full-size images into your theme, however, since users visiting 
+		your shared albums will be given the opportunity to specify the desired
+		image quality themeselves.</p>
+	</dd>
+
+	<dt>web-context</dt>
+	<dd>Matte's servlet context path, normally <code>/matte</code>. This is 
+	also pre-defined as the helper variable <code>$web-context</code>.</dd>
+</dl>
+
+<p>For example, here's how you would generate an HTML &lt;img&gt; tag for a thumbnail
+image (where <code>$display-image</code> is a variable holding a <code>&lt;m:item&gt;</code>
+element and <code>$display-album</code> is a variable holding a <code>&lt;m:album&gt;</code>
+element):</p>
+
+<textarea name="code" class="xslt">
+&lt;img alt="{$display-item/@name}"&gt;
+  <xsl:attribute name="src">
+    <xsl:call-template name="render-media-server-url">
+      <xsl:with-param name="item" select="$display-item"/>
+      <xsl:with-param name="album-key" select="$display-album/@anonymous-key"/>
+      <xsl:with-param name="size" select="THUMB_NORMAL"/>
+      <xsl:with-param name="quality" select="GOOD"/>
+      <xsl:with-param name="web-context" select="$web-context"/>
+    </xsl:call-template>
+  </xsl:attribute>
+&lt;/img&gt;
+</textarea>
+
+<h2>Next: Browse View</h2>
+
+<p>Continue next with <a href="theme-howto-browse.html">details on the Browse View</a>.</p>
+
+<div>
+<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=103583&amp;type=1" 
+	width="88" height="31" alt="SourceForge.net Logo" /></a>
+</div>
+<script type="text/javascript">
+	dp.SyntaxHighlighter.ClipboardSwf = 'js/clipboard.swf';
+	dp.SyntaxHighlighter.HighlightAll('code');
+</script>
+</body>
+</html>
