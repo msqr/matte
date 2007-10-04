@@ -71,7 +71,7 @@ import org.springframework.util.StringUtils;
  *     <li>User ID (long) - the user to display the browsable items for</li>
  *     <li>allow anonymous flag (boolean) - will be set to <em>true</em></li>
  *     <li>allow browse flag (boolean) - will be set to <em>true</em></li>
- *   <ol>
+ *   </ol>
  *   
  *   <p>The boolean flags are set as positional parameters for cross-database
  *   support for boolean values.</p></dd>
@@ -88,7 +88,7 @@ import org.springframework.util.StringUtils;
  *     <li>allow browse flag (boolean) - will be set to <em>true</em></li>
  *     <li>average rating section (float) - the average rating section to display</li>
  *     <li>average rating section (float) - the average rating section to display</li>
- *   <ol>
+ *   </ol>
  *   
  *   <p>The average rating section is set twice to allow the SQL to set lower and 
  *   upper bounds for that section.</p>
