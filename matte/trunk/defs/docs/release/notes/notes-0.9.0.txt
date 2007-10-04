@@ -41,3 +41,5 @@ Other Updates
 - Added UI setting for user locale in preferences form.
 
 - Add UI setting for "allow original" in share album form.
+
+- Switch to Subversion source code repository at Sourceforge.
