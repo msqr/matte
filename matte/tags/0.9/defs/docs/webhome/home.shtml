@@ -1,0 +1,3 @@
+<!--#set var="currPage" value="home"-->
+<!--#set var="pageTitle" value="Matte: share your photos, movies, and more"-->
+<!--#include virtual="layout.shtml"-->
