@@ -55,11 +55,14 @@ dl.class-properties + p {
 	margin-top: 2em;
 }
 
-dl.class-properties dt {
+dl.class-properties > dt {
+	color:#5D88A8;
+	background-color: inherit;
+}
+
+dl.class-properties  dt {
 	font-size: 10pt;
 	font-weight: bold;
 	font-family: verdana, helvetica, sans-serif;
 	margin-bottom: 0.2em;
-	color:#5D88A8;
-	background-color: inherit;
 }
