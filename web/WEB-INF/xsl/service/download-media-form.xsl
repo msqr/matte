@@ -17,7 +17,7 @@
 	
 	<xsl:variable name="mediaspec.view" select="$acting-user/m:view-setting"/>
 	<xsl:variable name="album" select="$mod/m:model/m:album[1]"/>
-
+	
 	<!-- Entry point -->
 	<xsl:template match="x:x-data">
 		<form id="item-download-form" action="{$web-context}{$ctx/x:path}" method="post" 
@@ -115,6 +115,12 @@
 				</xsl:if>
 				<xsl:if test="$req[@key='albumId']">
 					<input type="hidden" name="albumId" value="{$req[@key='albumId']}"/>
+				</xsl:if>
+				<xsl:if test="$req[@key='mode']">
+					<input type="hidden" name="mode" value="{$req[@key='mode']}"/>
+				</xsl:if>
+				<xsl:if test="$req[@key='userKey']">
+					<input type="hidden" name="userKey" value="{$req[@key='userKey']}"/>
 				</xsl:if>
 				<xsl:if test="$req[@key='direct']">
 					<input type="hidden" name="direct" value="{$req[@key='direct']}"/>

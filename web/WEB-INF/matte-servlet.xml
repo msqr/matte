@@ -580,6 +580,7 @@
 		<property name="bindOnNewForm" value="true"/>
 		<property name="ioBiz" ref="ioBiz"/>
 		<property name="mediaBiz" ref="mediaBiz"/>
+		<property name="searchBiz" ref="searchBiz"/>
 		<property name="workBiz" ref="workBiz"/>
 		<property name="formView" value="download-media-form"/>
 		<property name="successView" value="xml-service"/>

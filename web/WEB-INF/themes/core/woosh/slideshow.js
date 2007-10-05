@@ -810,6 +810,9 @@ function centerWidget(element) {
 
 function showDownloadAlbumDialog() {
 	var itemParameters = 'albumKey=' +albumKey +'&direct=true';
+	if ( userKey && browseMode ) {
+		itemParameters += '&userKey=' +userKey +'&mode=' +browseMode;
+	}
 	showServiceDialog('item-download-form',
 		webContext +'/downloadItems.do',
 		itemParameters, handleDownloadItemsSubmit);

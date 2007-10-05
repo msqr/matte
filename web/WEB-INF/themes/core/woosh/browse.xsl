@@ -21,8 +21,8 @@
 	<xsl:variable name="time.format" select="'H:MM'"/>
 	<xsl:variable name="mode">
 		<xsl:choose>
-			<xsl:when test="x:x-data/x:x-request[1]/x:param[@key='mode']">
-				<xsl:value-of select="x:x-data/x:x-request[1]/x:param[@key='mode']"/>
+			<xsl:when test="$req[@key='mode']">
+				<xsl:value-of select="$req[@key='mode']"/>
 			</xsl:when>
 			<xsl:otherwise>albums</xsl:otherwise>
 		</xsl:choose>
@@ -30,7 +30,7 @@
 	<xsl:variable name="years">
 		<xsl:if test="$mode = 'albums'">
 			<xsl:call-template name="browse-years">
-				<xsl:with-param name="albums" select="x:x-data/x:x-model[1]/m:model[1]/m:search-results/m:album"/>
+				<xsl:with-param name="albums" select="$mod/m:model[1]/m:search-results/m:album"/>
 			</xsl:call-template>
 		</xsl:if>
 	</xsl:variable>
