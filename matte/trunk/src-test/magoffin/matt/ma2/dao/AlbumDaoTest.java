@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
+import magoffin.matt.ma2.TestConstants;
 import magoffin.matt.ma2.biz.DomainObjectFactory;
 import magoffin.matt.ma2.domain.Album;
 import magoffin.matt.ma2.domain.Collection;
@@ -78,6 +79,12 @@ public class AlbumDaoTest extends AbstractSpringEnabledTransactionalTest {
 	public AlbumDaoTest() {
 		super();
 		setPopulateProtectedVariables(true);
+	}
+
+	@Override
+	protected void onSetUpInTransaction() throws Exception {
+		super.onSetUpInTransaction();
+		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);
 	}
 
 	// save a new album

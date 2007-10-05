@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
+import magoffin.matt.ma2.TestConstants;
 import magoffin.matt.ma2.biz.DomainObjectFactory;
 import magoffin.matt.ma2.dao.AlbumDao;
 import magoffin.matt.ma2.dao.TimeZoneDao;
@@ -68,6 +69,12 @@ public class AlbumsByDateBrowseModePluginTest extends
 	
 	private int albumCounter = 1;
 
+	@Override
+	protected void onSetUpInTransaction() throws Exception {
+		super.onSetUpInTransaction();
+		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);
+	}
+	
 	/**
 	 * Test finding for a user by date.
 	 */
