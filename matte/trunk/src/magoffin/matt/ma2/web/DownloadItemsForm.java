@@ -25,6 +25,8 @@
 package magoffin.matt.ma2.web;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,13 +39,19 @@ import magoffin.matt.ma2.MediaSize;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.IOBiz;
 import magoffin.matt.ma2.biz.MediaBiz;
+import magoffin.matt.ma2.biz.SearchBiz;
 import magoffin.matt.ma2.biz.WorkBiz;
 import magoffin.matt.ma2.biz.IOBiz.TwoPhaseExportRequest;
 import magoffin.matt.ma2.biz.WorkBiz.WorkInfo;
 import magoffin.matt.ma2.domain.Album;
+import magoffin.matt.ma2.domain.AlbumSearchResult;
 import magoffin.matt.ma2.domain.JobInfo;
+import magoffin.matt.ma2.domain.MediaItem;
 import magoffin.matt.ma2.domain.Model;
+import magoffin.matt.ma2.domain.PaginationCriteria;
+import magoffin.matt.ma2.domain.SearchResults;
 import magoffin.matt.ma2.support.BasicMediaRequest;
+import magoffin.matt.ma2.support.BrowseAlbumsCommand;
 import magoffin.matt.ma2.support.ExportItemsCommand;
 import magoffin.matt.ma2.web.util.WebConstants;
 import magoffin.matt.ma2.web.util.WebMediaResponse;
@@ -66,6 +74,7 @@ public class DownloadItemsForm extends AbstractForm {
 	private IOBiz ioBiz;
 	private WorkBiz workBiz;
 	private MediaBiz mediaBiz;
+	private SearchBiz searchBiz;
 	
 	@Override
 	protected boolean isFormSubmission(HttpServletRequest request) {
@@ -83,7 +92,7 @@ public class DownloadItemsForm extends AbstractForm {
 		Map<String,Object> viewModel = new LinkedHashMap<String,Object>();
 		Model model = getDomainObjectFactory().newModelInstance();
 		ExportItemsCommand cmd = (ExportItemsCommand)command;
-		Album album = getRequestAlbum(cmd, context);
+		Album album = getRequestAlbum(request, cmd, context);
 		if ( album != null ) {
 			model.getAlbum().add(album);
 		}
@@ -98,10 +107,10 @@ public class DownloadItemsForm extends AbstractForm {
 			throws Exception {
 		BizContext context = getWebHelper().getBizContext(request, false);
 		ExportItemsCommand cmd = (ExportItemsCommand)command;
-		Album album = getRequestAlbum(cmd, context); // for album based requests
+		Album album = getRequestAlbum(request, cmd, context); // for album based requests
 		String filename = null;
 		if ( album != null ) {
-			filename = album.getName();
+			filename = sanatizeFilename(album.getName());
 		} else {
 			filename = getMessageSourceAccessor().getMessage(
 					"download.selected.items.zip.name");
@@ -136,6 +145,17 @@ public class DownloadItemsForm extends AbstractForm {
 		}
 		mediaRequest.setOriginal(cmd.isOriginal());
 		
+		if ( album instanceof AlbumSearchResult ) {
+			// add item IDs directly to cmd
+			Long[] mediaItemIds = getAlbumItemIds(album);
+
+			ExportItemsCommand newCmd = new ExportItemsCommand();
+			newCmd.setDirect(cmd.isDirect());
+			newCmd.setDownload(cmd.isDownload());
+			newCmd.setItemIds(mediaItemIds);
+			cmd = newCmd;
+		}
+		
 		// set the user-agent parameter
 		String ua = request.getHeader(HTTP_USER_AGENT_HEADER);
 		if ( StringUtils.hasText(ua) ) {
@@ -162,15 +182,43 @@ public class DownloadItemsForm extends AbstractForm {
 		return new ModelAndView(getSuccessView(), viewModel);
 	}
 	
-	private Album getRequestAlbum(ExportItemsCommand cmd, BizContext context) {
+	@SuppressWarnings("unchecked")
+	private Long[] getAlbumItemIds(Album album) {
+		List<Long> itemIds = new LinkedList<Long>();
+		for ( MediaItem item : (List<MediaItem>)album.getItem() ) {
+			itemIds.add(item.getItemId());
+		}
+		return itemIds.toArray(new Long[itemIds.size()]);
+	}
+
+	@SuppressWarnings("unchecked")
+	private Album getRequestAlbum(HttpServletRequest request, ExportItemsCommand cmd, 
+			BizContext context) {
 		Album album = null;
 		if ( cmd.getAlbumId() != null ) {
 			album = mediaBiz.getAlbum(cmd.getAlbumId(), context);
+		} else if ( cmd.getUserKey() != null && cmd.getMode() != null ) {
+			// virtual search results album
+			BrowseAlbumsCommand baCmd = new BrowseAlbumsCommand();
+			baCmd.setMode(cmd.getMode());
+			baCmd.setLocale(request.getLocale());
+			baCmd.setUserKey(cmd.getUserKey());
+			PaginationCriteria pc = getDomainObjectFactory().newPaginationCriteriaInstance();
+			pc.setIndexKey(cmd.getAlbumKey());
+			SearchResults sr = searchBiz.findAlbumsForBrowsing(baCmd, pc, context);
+			List<AlbumSearchResult> searchAlbums = sr.getAlbum();
+			if ( searchAlbums.size() > 0 ) {
+				album = searchAlbums.get(0);
+			}
 		} else if ( cmd.getAlbumKey() != null ) {
 			album = mediaBiz.getSharedAlbum(cmd.getAlbumKey(), 
 					context);
 		}
 		return album;
+	}
+	
+	private String sanatizeFilename(String name) {
+		return name.replaceAll("[\\/:*?\"<>|]", "_");
 	}
 
 	/**
@@ -213,6 +261,20 @@ public class DownloadItemsForm extends AbstractForm {
 	 */
 	public void setMediaBiz(MediaBiz mediaBiz) {
 		this.mediaBiz = mediaBiz;
+	}
+
+	/**
+	 * @return the searchBiz
+	 */
+	public SearchBiz getSearchBiz() {
+		return searchBiz;
+	}
+
+	/**
+	 * @param searchBiz the searchBiz to set
+	 */
+	public void setSearchBiz(SearchBiz searchBiz) {
+		this.searchBiz = searchBiz;
 	}
 
 }

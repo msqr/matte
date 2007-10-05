@@ -150,6 +150,9 @@
 		</xsl:choose>
 	</xsl:variable>
 	
+	<xsl:variable name="browse-mode" select="string($req[@key='mode'])"/>
+	<xsl:variable name="user-key"  select="string($req[@key='userKey'])"/>
+	
 	<!--xsl:variable name="selected-item-id" select="$req[@key='item']"/>
 	<xsl:variable name="displayItemId">
 		<xsl:choose>
@@ -818,6 +821,8 @@
 			var offscreenLeft = '0px';
 			
 			var albumKey = '<xsl:value-of select="$root-album/@anonymous-key"/>';
+			var browseMode = '<xsl:value-of select="$browse-mode"/>';
+			var userKey = '<xsl:value-of select="$user-key"/>';
 			var imgSize = '<xsl:value-of select="$single-size"/>';
 			var imgCompress = '<xsl:value-of select="$single-quality"/>';
 			var cancelAddComment = false;

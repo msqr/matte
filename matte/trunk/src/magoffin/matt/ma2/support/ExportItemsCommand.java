@@ -42,6 +42,8 @@ public class ExportItemsCommand {
 	private Long[] itemIds;
 	private Long albumId;
 	private String albumKey;
+	private String userKey;
+	private String mode;
 	private String size;
 	private String quality;
 	private boolean download;
@@ -199,6 +201,34 @@ public class ExportItemsCommand {
 	 */
 	public void setDirect(boolean direct) {
 		this.direct = direct;
+	}
+
+	/**
+	 * @return the userKey
+	 */
+	public String getUserKey() {
+		return userKey;
+	}
+
+	/**
+	 * @param userKey the userKey to set
+	 */
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
+	}
+
+	/**
+	 * @return the mode
+	 */
+	public String getMode() {
+		return mode;
+	}
+
+	/**
+	 * @param mode the mode to set
+	 */
+	public void setMode(String mode) {
+		this.mode = mode;
 	}
 	
 }

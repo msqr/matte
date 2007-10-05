@@ -29,6 +29,7 @@
 	<!-- standard data vars -->
 	<xsl:variable name="aux" select="x:x-data/x:x-auxillary"/>
 	<xsl:variable name="ctx" select="x:x-data/x:x-context"/>
+	<xsl:variable name="mod" select="x:x-data/x:x-model"/>
 	<xsl:variable name="err" select="x:x-data/x:x-errors/x:error[@field]"/>
 	<xsl:variable name="req" select="x:x-data/x:x-request/x:param"/>
 	<xsl:variable name="ses" select="x:x-data/x:x-session"/>
