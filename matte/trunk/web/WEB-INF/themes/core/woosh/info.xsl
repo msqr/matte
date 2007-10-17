@@ -235,6 +235,9 @@
 						</xsl:call-template>
 						<xsl:text>)</xsl:text>
 					-->
+					<li id="item-rating-container">
+						<span id="item-rating"/>
+					</li>
 				</ul>
 			</div>
 			

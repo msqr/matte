@@ -267,7 +267,29 @@
 					<xsl:text> </xsl:text>
 				</script>
 				
+				<script type="text/javascript">
+					<xsl:attribute name="src">
+						<xsl:call-template name="get-resource-url">
+							<xsl:with-param name="resource" select="'builder.js'"/>
+							<xsl:with-param name="theme" select="$theme"/>
+							<xsl:with-param name="web-context" select="$web-context"/>
+						</xsl:call-template>
+					</xsl:attribute>
+					<xsl:text> </xsl:text>
+				</script>
+				
 				<xsl:apply-templates select="." mode="head-common"/>
+				
+				<script type="text/javascript">
+					<xsl:attribute name="src">
+						<xsl:call-template name="get-dynamic-js-url">
+							<xsl:with-param name="theme" select="$theme"/>
+							<xsl:with-param name="web-context" select="$web-context"/>
+						</xsl:call-template>
+					</xsl:attribute>	
+					<xsl:text> </xsl:text>					
+				</script>
+
 				<script type="text/javascript">
 					<xsl:attribute name="src">
 						<xsl:call-template name="get-resource-url">
@@ -832,6 +854,9 @@
 			<xsl:apply-templates select="$display-album/m:item" mode="album-data"/>
 			];
 			
+			var xmlMode = <xsl:value-of select="contains(
+				/x:x-data/x:x-request-headers/x:param[@key='accept'],
+				'application/xhtml+xml')"/>;
 			var mediaSizes = new Object();
 			<xsl:for-each select="m:media-size">
 				mediaSizes.<xsl:value-of select="@size"/> = {
