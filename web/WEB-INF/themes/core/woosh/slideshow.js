@@ -845,42 +845,131 @@ function handleAddCommentSubmit() {
 
 var WorkingPeriodicalExecuter = Class.create();
 WorkingPeriodicalExecuter.prototype = {
-	initialize: function(callback, frequency) {
-	this.callback = callback;
-	this.frequency = frequency;
-	this.currentlyExecuting = false;
-	this.working = $('system-working');
-	this.originalWorkingValue = this.working.firstChild.nodeValue;
-	this.registerCallback();
+		initialize: function(callback, frequency) {
+		this.callback = callback;
+		this.frequency = frequency;
+		this.currentlyExecuting = false;
+		this.working = $('system-working');
+		this.originalWorkingValue = this.working.firstChild.nodeValue;
+		this.registerCallback();
 	},
 
 	registerCallback: function() {
-	this.timer = setInterval(this.onTimerEvent.bind(this), this.frequency * 1000);
+		this.timer = setInterval(this.onTimerEvent.bind(this), this.frequency * 1000);
 	},
 	
 	start: function() {
 		if ( !this.timer ) {
-		this.registerCallback();
-	}
+			this.registerCallback();
+		}
 	},
 
 	stop: function() {
 		clearTimeout(this.timer);
 		this.timer = null;
-	Element.update(this.working,this.originalWorkingValue);
+		Element.update(this.working,this.originalWorkingValue);
 	},
 
 	onTimerEvent: function() {
-	if (!this.currentlyExecuting) {
-		try {
-		this.currentlyExecuting = true;
-		this.callback();
-		} finally {
-		this.currentlyExecuting = false;
+		if (!this.currentlyExecuting) {
+			try {
+			this.currentlyExecuting = true;
+			this.callback();
+			} finally {
+			this.currentlyExecuting = false;
+			}
 		}
 	}
-	}
 }
+
+function isAjaxLogonRedirect(request) {
+	if ( request.getResponseHeader("X-Matte-Logon") == "true" ) {
+		return true;
+	}
+	return false;
+}
+
+var StarRating = Class.create();
+StarRating.prototype = {
+	initialize: function(container, currentRating, objectId, imagePath, maxRating) {
+		this.container = container;
+		this.currentRating = currentRating;
+		this.objectId = objectId;
+		this.maxRating = maxRating || 5;
+		this.imgArray = new Array();
+		this.wsUrl = webContext+'/setMediaItemRating.do';
+		this.imagePath = webContext+'/img/';
+		
+		var me = this;
+		for ( var i = 0; i < this.maxRating; i++ ) {
+			var myRating = i+1;
+			var starImg = Builder.node('img',{
+				alt: myRating,
+				src: this.imagePath+'star-off.png',
+				'class': 'star-rating'});
+				
+			starImg.onmouseover = function() {
+				me.highlightRating(this.alt);
+			}
+			
+	    	starImg.onmouseout = function() {
+	    		me.resetRating();
+	    	}
+	    	starImg.onclick = function() {
+	    		me.setRating(this.alt);
+	    	}
+
+			this.imgArray.push(starImg);
+			this.container.appendChild(starImg);
+		}
+		
+		this.resetRating();
+		this.container.starRating = this;
+	},
+	
+	setRating: function(rating) {
+		this.currentRating = rating;
+		var requestData = 'rating='+rating
+			+imageData[currentImage][0];
+		var me = this;
+		new Ajax.Request(this.wsUrl, {
+			parameters: requestData, 
+			onSuccess: function(t) {
+				if ( isAjaxLogonRedirect(t) ) {
+					me.resetRating(0);
+					alert(i18n['woosh.setrating.mustlogin']);
+				}
+			}, 
+			onFailure: function(t) {
+				alert('[i18n]error setting rating: '
+					+t.status +' -- ' +t.statusText +': ' 
+					+t.responseText);
+			}});
+	},
+	
+	highlightRating: function(rating) {
+		for ( var i = 0; i < rating; i++ ) {
+			this.imgArray[i].src = this.imagePath + 'star-active.png';
+		}
+		for ( var i = rating; i < this.maxRating; i++ ) {
+			this.imgArray[i].src = this.imagePath + 'star-off.png';
+		}
+	},
+	
+	resetRating: function(rating) {
+		if ( typeof rating == 'number' ) {
+			this.currentRating = rating;
+		}
+		for ( var i = 0; i < this.currentRating; i++ ) {
+			this.imgArray[i].src = this.imagePath + 'star-on.png';
+		}
+		for ( var i = this.currentRating; i < this.maxRating; i++ ) {
+			this.imgArray[i].src = this.imagePath + 'star-off.png';
+		}
+	}
+
+}
+
 
 var workingUpdater = null;
 var workingUpdaterAjaxHandler = {
@@ -1033,6 +1122,14 @@ var wooshBehaviours = {
 		el.onclick = function() {
 			toggleDialog('help-dialog');
 		}
+	},
+	
+	'#item-rating' : function(el) {
+		if ( typeof Builder == 'object' ) {
+			Builder.xmlMode = xmlMode;
+		}
+		new StarRating(el,0);
+		$('item-rating-container').show();
 	}
 	
 }

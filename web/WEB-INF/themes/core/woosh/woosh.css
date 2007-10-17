@@ -498,6 +498,14 @@ body.ii-content, div.ii-content {
 	border: 1px solid #999;
 }*/
 
+#item-rating-container {
+	margin-top: 2pt;
+}
+
+#item-rating-container img {
+	cursor: pointer;
+}
+
 /* Generic Frame classes */
 .frame-t {
 	width: 100%;
