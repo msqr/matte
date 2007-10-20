@@ -49,6 +49,7 @@
 				<prop key="/home.do">home</prop>
 				<prop key="/logoff.do">logoff</prop>
 				<prop key="/logon.do">logonForm</prop>
+				<prop key="/logonPop.do">logonPopForm</prop>
 				<prop key="/media.do">media</prop>
 				<prop key="/moveItems.do">moveItemsForm</prop>
 				<prop key="/preferences.do">preferencesForm</prop>
@@ -657,6 +658,9 @@
 		<property name="validator" ref="logonValidator"/>
 		<property name="formView" value="logon"/>
 		<property name="successView" value="home-redirect"/>
+	</bean>
+	<bean id="logonPopForm" parent="logonForm">
+		<property name="successView" value="popup-close"/>
 	</bean>
 	
 	<!-- Logoff -->

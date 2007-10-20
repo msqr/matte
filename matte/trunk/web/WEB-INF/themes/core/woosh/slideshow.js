@@ -889,6 +889,48 @@ function isAjaxLogonRedirect(request) {
 	return false;
 }
 
+function popup(url,winName,w,h) {
+	if ( !winName ) {
+		winName = "woosh_popup";
+	}
+	var opts = "";
+	if ( w ) {
+		opts += 'width='+w;
+	}
+	if ( h ) {
+		if ( opts.length > 0 ) {
+			opts += ',';
+		}
+		opts += 'height='+h;
+	}
+	if ( opts.length > 0 ) {
+		opts += ',';
+	}
+	opts += ',menubar=no,scrollbars=yes,resizable=yes,toolbar=no';
+	return window.open(url,winName,opts);
+}
+
+var PopupHandlerClass = Class.create();
+PopupHandlerClass.prototype = {
+	initialize: function() {
+		// nothing
+	},
+	
+	complete: function(win) {
+		if ( win && win.name == 'rating_logon' ) {
+			if ( CurrStarRating != null ) {
+				win.close();
+				
+				setTimeout('CurrStarRating.setRatingAfterLogin()', 250);
+			} else {
+				alert("Error: CurrStarRating is null");
+			}
+		}
+	}
+}
+
+var PopupHandler = new PopupHandlerClass();
+
 var StarRating = Class.create();
 StarRating.prototype = {
 	initialize: function(container, currentRating, objectId, imagePath, maxRating) {
@@ -899,6 +941,7 @@ StarRating.prototype = {
 		this.imgArray = new Array();
 		this.wsUrl = webContext+'/setMediaItemRating.do';
 		this.imagePath = webContext+'/img/';
+		this.loggedOutRating = -1;
 		
 		var me = this;
 		for ( var i = 0; i < this.maxRating; i++ ) {
@@ -930,14 +973,15 @@ StarRating.prototype = {
 	setRating: function(rating) {
 		this.currentRating = rating;
 		var requestData = 'rating='+rating
-			+imageData[currentImage][0];
+			+'&itemIds=' +imageData[currentImage][0];
 		var me = this;
 		new Ajax.Request(this.wsUrl, {
 			parameters: requestData, 
 			onSuccess: function(t) {
 				if ( isAjaxLogonRedirect(t) ) {
+					me.loggedOutRating = me.currentRating;
 					me.resetRating(0);
-					alert(i18n['woosh.setrating.mustlogin']);
+					popup(webContext+'/logonPop.do', 'rating_logon', 450, 200);
 				}
 			}, 
 			onFailure: function(t) {
@@ -945,6 +989,15 @@ StarRating.prototype = {
 					+t.status +' -- ' +t.statusText +': ' 
 					+t.responseText);
 			}});
+	},
+	
+	setRatingAfterLogin: function() {
+		if ( this.loggedOutRating > 0 ) {
+			var theRating = this.loggedOutRating;
+			this.loggedOutRating = -1;
+			this.highlightRating(theRating);
+			this.setRating(theRating);
+		}
 	},
 	
 	highlightRating: function(rating) {
@@ -1128,12 +1181,23 @@ var wooshBehaviours = {
 		if ( typeof Builder == 'object' ) {
 			Builder.xmlMode = xmlMode;
 		}
-		new StarRating(el,0);
+		// get rating data... my,total,count
+		var data = el.firstChild.nodeValue.split(',',3);
+		el.removeChild(el.firstChild);
+		CurrStarRating = new StarRating(el,0);
+		if ( Number(data[0]) != Number.NaN ) {
+			CurrStarRating.resetRating(Number(data[0]));
+		}
+		/*if ( Number(data[1]) > 0 ) {
+			el.appendChild(document.createTextNode(
+				' (' +new Number(data[1] / data[2]).toFixed(1) + ' - ' +data[2] +')'));
+		}*/
 		$('item-rating-container').show();
 	}
 	
 }
 
+var CurrStarRating = null;
 Ajax.Responders.register(workingUpdaterAjaxHandler);
 Behaviour.register(wooshBehaviours);
 Event.observe(window, 'load', init);
