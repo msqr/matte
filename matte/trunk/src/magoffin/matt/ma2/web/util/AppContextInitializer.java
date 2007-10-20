@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AppContextInitializer.java,v 1.1 2007/07/21 10:20:14 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -41,7 +41,7 @@ import org.springframework.web.context.WebApplicationContext;
  * Initialzie the application {@link AppContextSupport} instance.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.1 $ $Date: 2007/07/21 10:20:14 $
+ * @version $Revision$ $Date$
  */
 public class AppContextInitializer implements ApplicationContextAware {
 	

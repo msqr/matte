@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: BaseAwtImageMediaHandler.java,v 1.8 2007/07/29 08:42:43 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -36,7 +36,7 @@ import magoffin.matt.ma2.image.BaseImageMediaHandler;
  * for image processing.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.8 $ $Date: 2007/07/29 08:42:43 $
+ * @version $Revision$ $Date$
  */
 public abstract class BaseAwtImageMediaHandler extends BaseImageMediaHandler {
 	

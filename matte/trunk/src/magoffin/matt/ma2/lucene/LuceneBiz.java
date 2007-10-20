@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: LuceneBiz.java,v 1.18 2007/09/04 01:11:29 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -66,7 +66,7 @@ import org.springframework.context.MessageSource;
  * Lucene implementation of SearchBiz and IndexBiz.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.18 $ $Date: 2007/09/04 01:11:29 $
+ * @version $Revision$ $Date$
  */
 public class LuceneBiz extends AbstractSearchBiz implements SearchBiz, IndexBiz {
 	

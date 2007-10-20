@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MediaSize.java,v 1.5 2007/07/29 08:42:43 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -39,7 +39,7 @@ import magoffin.matt.ma2.support.Geometry;
  * if desired.</p>
  * 
  * @author matt.magoffin
- * @version $Revision: 1.5 $ $Date: 2007/07/29 08:42:43 $
+ * @version $Revision$ $Date$
  */
 public enum MediaSize {
 	

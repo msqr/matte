@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: PngMediaHandler.java,v 1.4 2007/02/01 05:30:40 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -39,7 +39,7 @@ import magoffin.matt.ma2.image.ImageConstants;
  * requested, in which case the original PNG image is returned.</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.4 $ $Date: 2007/02/01 05:30:40 $
+ * @version $Revision$ $Date$
  */
 public class PngMediaHandler extends JpegMediaHandler {
 

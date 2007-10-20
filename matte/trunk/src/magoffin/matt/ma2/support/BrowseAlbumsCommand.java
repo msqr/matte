@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: BrowseAlbumsCommand.java,v 1.6 2007/09/29 21:24:11 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -33,7 +33,7 @@ import java.util.Locale;
  * Command object for supporing browsing of media items.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.6 $ $Date: 2007/09/29 21:24:11 $
+ * @version $Revision$ $Date$
  */
 public class BrowseAlbumsCommand {
 	

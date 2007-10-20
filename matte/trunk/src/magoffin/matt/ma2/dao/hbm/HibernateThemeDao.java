@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: HibernateThemeDao.java,v 1.6 2006/11/19 06:57:22 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -36,7 +36,7 @@ import magoffin.matt.ma2.domain.Theme;
  * Hibernate impolementation of ThemeDao.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.6 $ $Date: 2006/11/19 06:57:22 $
+ * @version $Revision$ $Date$
  */
 public class HibernateThemeDao extends GenericIndexableHibernateDao<Theme, Long> 
 implements ThemeDao {

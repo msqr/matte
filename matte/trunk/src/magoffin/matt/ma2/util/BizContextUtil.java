@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: BizContextUtil.java,v 1.2 2007/09/02 05:58:31 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -32,7 +32,7 @@ import magoffin.matt.ma2.biz.BizContext;
  * Utility API for dealing with BizContext instances.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2007/09/02 05:58:31 $
+ * @version $Revision$ $Date$
  */
 public class BizContextUtil {
 	

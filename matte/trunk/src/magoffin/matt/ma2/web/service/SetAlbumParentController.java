@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: SetAlbumParentController.java,v 1.2 2007/04/14 09:50:06 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -49,7 +49,7 @@ import magoffin.matt.ma2.web.util.WebConstants;
  * as a child to another album).
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2007/04/14 09:50:06 $
+ * @version $Revision$ $Date$
  */
 public class SetAlbumParentController extends AbstractCommandController {
 

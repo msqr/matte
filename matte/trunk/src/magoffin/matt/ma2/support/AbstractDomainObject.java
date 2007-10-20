@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AbstractDomainObject.java,v 1.1 2006/05/30 01:08:01 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -33,7 +33,7 @@ import magoffin.matt.lucene.SearchMatch;
  * implement useful Matte interfaces.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.1 $ $Date: 2006/05/30 01:08:01 $
+ * @version $Revision$ $Date$
  */
 public abstract class AbstractDomainObject implements SearchMatch {
 	// nothing to add

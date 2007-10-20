@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MediaSearchCommand.java,v 1.3 2007/09/07 08:34:09 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -30,7 +30,7 @@ package magoffin.matt.ma2.support;
  * Command object for media searches.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.3 $ $Date: 2007/09/07 08:34:09 $
+ * @version $Revision$ $Date$
  */
 public class MediaSearchCommand extends BasicMediaItemSearchCriteria {
 

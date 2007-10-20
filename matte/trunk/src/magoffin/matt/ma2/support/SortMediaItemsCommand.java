@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: SortMediaItemsCommand.java,v 1.3 2007/08/20 00:07:33 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -30,7 +30,7 @@ package magoffin.matt.ma2.support;
  * Command class to sort media items within an album.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.3 $ $Date: 2007/08/20 00:07:33 $
+ * @version $Revision$ $Date$
  */
 public class SortMediaItemsCommand {
 

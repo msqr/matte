@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: BaseImageMediaHandler.java,v 1.13 2007/08/20 00:07:33 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -48,7 +48,7 @@ import magoffin.matt.meta.image.ImageMetadataType;
  * orientation values by default.</p>
  * 
  * @author matt.magoffin
- * @version $Revision: 1.13 $ $Date: 2007/08/20 00:07:33 $
+ * @version $Revision$ $Date$
  */
 public abstract class BaseImageMediaHandler extends AbstractMediaHandler {
 	

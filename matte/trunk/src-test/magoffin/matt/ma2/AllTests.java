@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AllTests.java,v 1.7 2007/09/29 07:55:34 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -49,7 +49,7 @@ import junit.framework.TestSuite;
  * Test suite for all unit tests.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.7 $ $Date: 2007/09/29 07:55:34 $
+ * @version $Revision$ $Date$
  */
 public class AllTests {
 

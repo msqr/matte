@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: IndexBiz.java,v 1.2 2006/10/08 20:23:05 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -32,7 +32,7 @@ import magoffin.matt.ma2.biz.WorkBiz.WorkInfo;
  * API for search index indexing methods.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2006/10/08 20:23:05 $
+ * @version $Revision$ $Date$
  */
 public interface IndexBiz {
 	

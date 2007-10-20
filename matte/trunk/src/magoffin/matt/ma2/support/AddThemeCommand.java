@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AddThemeCommand.java,v 1.1 2006/10/29 01:32:50 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -33,7 +33,7 @@ import magoffin.matt.util.TemporaryFile;
  * Command object for adding (or modifying) Theme resources.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2006/10/29 01:32:50 $
+ * @version $Revision$ $Date$
  */
 public class AddThemeCommand {
 	

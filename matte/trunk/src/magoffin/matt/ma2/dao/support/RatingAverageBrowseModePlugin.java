@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: RatingAverageBrowseModePlugin.java,v 1.9 2007/09/30 22:00:00 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -116,7 +116,7 @@ import org.springframework.util.StringUtils;
  *   <dd>The plugin message resources.</dd>
  * </dl>
  * @author matt.magoffin
- * @version $Revision: 1.9 $ $Date: 2007/09/30 22:00:00 $
+ * @version $Revision$ $Date$
  */
 public class RatingAverageBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 	

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MediaHandlerDelegate.java,v 1.2 2007/07/29 08:42:43 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -46,7 +46,7 @@ import magoffin.matt.ma2.domain.MediaItem;
  * request processing functions.</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2007/07/29 08:42:43 $
+ * @version $Revision$ $Date$
  */
 public interface MediaHandlerDelegate {
 

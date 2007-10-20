@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AlbumDaoTest.java,v 1.15 2007/09/20 05:05:35 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -43,7 +43,7 @@ import magoffin.matt.ma2.domain.User;
  * Test case for AlbumDao.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.15 $ $Date: 2007/09/20 05:05:35 $
+ * @version $Revision$ $Date$
  */
 public class AlbumDaoTest extends AbstractSpringEnabledTransactionalTest {
 

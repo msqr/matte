@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AbstractSpringEnabledTransactionalTest.java,v 1.12 2007/07/24 08:45:13 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -60,7 +60,7 @@ import org.springframework.util.StringUtils;
  * with helper methods for the Media Album project.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.12 $ $Date: 2007/07/24 08:45:13 $
+ * @version $Revision$ $Date$
  */
 public abstract class AbstractSpringEnabledTransactionalTest extends
 		AbstractTransactionalDataSourceSpringContextTests {

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: GenericIndexableHibernateDao.java,v 1.1 2006/07/13 09:09:56 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -55,7 +55,7 @@ import org.springframework.jdbc.core.RowMapper;
  * @param <T> the domain objec type
  * @param <PK> the primary key type
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2006/07/13 09:09:56 $
+ * @version $Revision$ $Date$
  */
 public abstract class GenericIndexableHibernateDao<T, PK extends Serializable> 
 extends GenericHibernateDao<T,PK> implements IndexableDao<PK> {

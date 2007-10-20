@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MatteNamespaceContext.java,v 1.2 2007/07/13 22:17:51 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -37,7 +37,7 @@ import javax.xml.namespace.NamespaceContext;
  * {@link NamespaceContext} implementation for Matte.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2007/07/13 22:17:51 $
+ * @version $Revision$ $Date$
  */
 public class MatteNamespaceContext implements NamespaceContext {
 

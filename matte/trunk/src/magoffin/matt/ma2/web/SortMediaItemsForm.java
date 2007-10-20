@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: SortMediaItemsForm.java,v 1.3 2007/08/27 03:13:17 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -55,7 +55,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Controller to save the ordering of child albums within an album.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.3 $ $Date: 2007/08/27 03:13:17 $
+ * @version $Revision$ $Date$
  */
 public class SortMediaItemsForm extends AbstractForm {
 	

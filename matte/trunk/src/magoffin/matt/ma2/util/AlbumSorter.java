@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AlbumSorter.java,v 1.1 2007/06/29 05:35:26 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -35,7 +35,7 @@ import magoffin.matt.ma2.domain.Album;
  * Comparator for Album objects.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2007/06/29 05:35:26 $
+ * @version $Revision$ $Date$
  */
 public class AlbumSorter implements Comparator<Album> {
 

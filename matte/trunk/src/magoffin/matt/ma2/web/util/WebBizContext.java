@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: WebBizContext.java,v 1.5 2007/01/28 19:46:29 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -35,7 +35,7 @@ import magoffin.matt.xweb.util.AppContextSupport;
  * BizContext for web layer.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.5 $ $Date: 2007/01/28 19:46:29 $
+ * @version $Revision$ $Date$
  */
 public class WebBizContext extends BasicBizContext {
 	

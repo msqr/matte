@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: ExportItemsCommand.java,v 1.1 2007/08/06 09:48:12 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -34,7 +34,7 @@ package magoffin.matt.ma2.support;
  * progress display of the download.</p>
  * 
  * @author matt.magoffin
- * @version $Revision: 1.1 $ $Date: 2007/08/06 09:48:12 $
+ * @version $Revision$ $Date$
  */
 public class ExportItemsCommand {
 

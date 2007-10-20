@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: UserCommentCommand.java,v 1.1 2007/09/09 01:58:47 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -28,7 +28,7 @@ package magoffin.matt.ma2.support;
  * Command class for managing user comments.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.1 $ $Date: 2007/09/09 01:58:47 $
+ * @version $Revision$ $Date$
  */
 public class UserCommentCommand {
 

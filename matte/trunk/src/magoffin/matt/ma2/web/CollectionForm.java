@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: CollectionForm.java,v 1.1 2006/11/30 09:00:10 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -49,7 +49,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Form controller for administering collection details.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2006/11/30 09:00:10 $
+ * @version $Revision$ $Date$
  */
 public class CollectionForm extends AbstractForm {
 	

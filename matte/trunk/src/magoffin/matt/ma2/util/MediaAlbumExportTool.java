@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MediaAlbumExportTool.java,v 1.7 2007/06/24 23:37:32 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -61,7 +61,7 @@ import org.springframework.util.StringUtils;
  * be created but may have incorrect archive paths set.</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.7 $ $Date: 2007/06/24 23:37:32 $
+ * @version $Revision$ $Date$
  */
 public class MediaAlbumExportTool {
 	

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: UserIndexInterceptor.java,v 1.1 2006/05/27 05:41:32 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -43,7 +43,7 @@ import magoffin.matt.ma2.domain.User;
  * method to index the user.</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2006/05/27 05:41:32 $
+ * @version $Revision$ $Date$
  */
 public class UserIndexInterceptor extends AbstractIndexInterceptor {
 

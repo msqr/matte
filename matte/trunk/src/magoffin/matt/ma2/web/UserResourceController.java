@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: UserResourceController.java,v 1.1 2007/09/10 00:49:48 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -41,7 +41,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Controller for returning Matte user resources.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.1 $ $Date: 2007/09/10 00:49:48 $
+ * @version $Revision$ $Date$
  */
 public class UserResourceController extends AbstractCommandController {
 

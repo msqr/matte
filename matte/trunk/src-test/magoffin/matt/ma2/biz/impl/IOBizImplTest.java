@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: IOBizImplTest.java,v 1.26 2007/08/18 10:48:52 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -74,7 +74,7 @@ import org.springframework.util.FileCopyUtils;
  * Test the {@link magoffin.matt.ma2.biz.impl.IOBizImpl} class.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.26 $ $Date: 2007/08/18 10:48:52 $
+ * @version $Revision$ $Date$
  */
 public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	

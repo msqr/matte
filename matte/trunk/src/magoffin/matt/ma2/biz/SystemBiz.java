@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: SystemBiz.java,v 1.17 2007/09/19 07:43:05 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -43,7 +43,7 @@ import org.springframework.core.io.Resource;
  * Business API for system settings and functions.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.17 $ $Date: 2007/09/19 07:43:05 $
+ * @version $Revision$ $Date$
  */
 public interface SystemBiz {
 

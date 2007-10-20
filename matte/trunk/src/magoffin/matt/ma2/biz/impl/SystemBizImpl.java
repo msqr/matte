@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: SystemBizImpl.java,v 1.28 2007/09/25 06:24:02 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -126,7 +126,7 @@ import org.springframework.validation.ObjectError;
  * </dl>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.28 $ $Date: 2007/09/25 06:24:02 $
+ * @version $Revision$ $Date$
  */
 public class SystemBizImpl implements SystemBiz, 
 ApplicationContextAware, ApplicationListener {

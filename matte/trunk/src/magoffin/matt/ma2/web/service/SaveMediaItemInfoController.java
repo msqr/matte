@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: SaveMediaItemInfoController.java,v 1.5 2007/06/03 01:38:33 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -51,7 +51,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Controller for saving media info.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.5 $ $Date: 2007/06/03 01:38:33 $
+ * @version $Revision$ $Date$
  */
 public class SaveMediaItemInfoController extends AbstractCommandController {
 	

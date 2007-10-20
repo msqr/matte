@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: NoopPlugin.java,v 1.3 2007/09/25 06:24:02 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -34,7 +34,7 @@ import org.springframework.context.ApplicationContext;
  * <p>This plugin exists just to be able to test plugin infrastructure.</p>
  *
  * @author matt
- * @version $Revision: 1.3 $ $Date: 2007/09/25 06:24:02 $
+ * @version $Revision$ $Date$
  */
 public class NoopPlugin implements Plugin {
 

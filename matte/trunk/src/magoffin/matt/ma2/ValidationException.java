@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: ValidationException.java,v 1.1 2007/01/07 05:50:40 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -30,7 +30,7 @@ import org.springframework.validation.Errors;
  * Application exception for validation errors.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2007/01/07 05:50:40 $
+ * @version $Revision$ $Date$
  */
 public class ValidationException extends RuntimeException {
 	

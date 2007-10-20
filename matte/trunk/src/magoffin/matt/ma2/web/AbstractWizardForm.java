@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AbstractWizardForm.java,v 1.3 2007/07/28 10:25:54 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -58,7 +58,7 @@ import org.springframework.web.servlet.mvc.AbstractWizardFormController;
  * </dl>
  * 
  * @author matt.magoffin
- * @version $Revision: 1.3 $ $Date: 2007/07/28 10:25:54 $
+ * @version $Revision$ $Date$
  */
 public abstract class AbstractWizardForm extends AbstractWizardFormController {
 

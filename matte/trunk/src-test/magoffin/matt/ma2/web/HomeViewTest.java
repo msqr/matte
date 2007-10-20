@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: HomeViewTest.java,v 1.5 2006/12/17 07:37:41 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -55,7 +55,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Test the HomeController.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.5 $ $Date: 2006/12/17 07:37:41 $
+ * @version $Revision$ $Date$
  */
 public class HomeViewTest extends AbstractSpringEnabledTransactionalTest {
 	

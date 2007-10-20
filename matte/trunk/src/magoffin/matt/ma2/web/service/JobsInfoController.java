@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: JobsInfoController.java,v 1.2 2007/08/08 10:24:46 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -44,7 +44,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Controller to get the IDs of all work tickets for the current user.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2007/08/08 10:24:46 $
+ * @version $Revision$ $Date$
  */
 public class JobsInfoController extends AbstractController {
 

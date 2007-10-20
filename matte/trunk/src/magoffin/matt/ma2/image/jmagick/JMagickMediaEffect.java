@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: JMagickMediaEffect.java,v 1.2 2006/12/29 23:34:26 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -36,7 +36,7 @@ import magoffin.matt.ma2.domain.MediaItem;
  * An API for JMagick-based implementations of {@link MediaEffect}.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2006/12/29 23:34:26 $
+ * @version $Revision$ $Date$
  */
 public interface JMagickMediaEffect extends MediaEffect {
 	

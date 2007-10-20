@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: BrowseAlbumsController.java,v 1.11 2007/09/30 05:29:53 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -64,7 +64,7 @@ import org.springframework.web.servlet.ModelAndView;
  * </dl>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.11 $ $Date: 2007/09/30 05:29:53 $
+ * @version $Revision$ $Date$
  */
 public class BrowseAlbumsController extends AbstractCommandController {
 

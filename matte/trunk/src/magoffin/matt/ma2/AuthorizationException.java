@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AuthorizationException.java,v 1.4 2007/06/06 09:54:51 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -30,7 +30,7 @@ package magoffin.matt.ma2;
  * Exception thrown when authorization fails.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.4 $ $Date: 2007/06/06 09:54:51 $
+ * @version $Revision$ $Date$
  */
 public class AuthorizationException extends RuntimeException {
 

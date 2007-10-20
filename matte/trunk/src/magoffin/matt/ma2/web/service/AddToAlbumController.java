@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AddToAlbumController.java,v 1.4 2006/07/13 09:09:56 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -48,7 +48,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Add items to an album.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.4 $ $Date: 2006/07/13 09:09:56 $
+ * @version $Revision$ $Date$
  */
 public class AddToAlbumController extends AbstractCommandController {
 	

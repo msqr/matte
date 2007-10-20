@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: SvgMediaHandlerTest.java,v 1.1 2007/02/02 05:30:09 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -49,7 +49,7 @@ import org.springframework.util.FileCopyUtils;
  * Test case for the {@link SvgMediaHandler} class.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2007/02/02 05:30:09 $
+ * @version $Revision$ $Date$
  */
 public class SvgMediaHandlerTest extends AbstractSpringEnabledTransactionalTest {
 

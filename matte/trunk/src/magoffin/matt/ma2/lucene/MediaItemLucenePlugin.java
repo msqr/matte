@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MediaItemLucenePlugin.java,v 1.26 2007/10/01 00:27:25 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -75,7 +75,7 @@ import org.springframework.util.StringUtils;
  * Lucene search plugin implementation for {@link MediaItem} objects.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.26 $ $Date: 2007/10/01 00:27:25 $
+ * @version $Revision$ $Date$
  */
 public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 

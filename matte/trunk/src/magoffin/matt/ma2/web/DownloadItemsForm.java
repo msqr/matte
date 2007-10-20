@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: DownloadItemsForm.java,v 1.7 2007/08/06 09:48:12 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -67,7 +67,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Form controller for downloading a set of media items.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.7 $ $Date: 2007/08/06 09:48:12 $
+ * @version $Revision$ $Date$
  */
 public class DownloadItemsForm extends AbstractForm {
 	

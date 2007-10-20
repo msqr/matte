@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: BumpMapEffect.java,v 1.1 2007/09/10 02:52:39 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -51,7 +51,7 @@ import com.sun.glf.goodies.LitSurface;
  * from the watermark image.
  *
  * @author matt
- * @version $Revision: 1.1 $ $Date: 2007/09/10 02:52:39 $
+ * @version $Revision$ $Date$
  */
 public class BumpMapEffect extends BaseAwtMediaEffect {
 	

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AbstractForm.java,v 1.6 2007/08/03 10:58:30 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -54,7 +54,7 @@ import org.springframework.web.util.WebUtils;
  * Abstract base class for form controllers.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.6 $ $Date: 2007/08/03 10:58:30 $
+ * @version $Revision$ $Date$
  */
 public abstract class AbstractForm extends SimpleFormController {
 	

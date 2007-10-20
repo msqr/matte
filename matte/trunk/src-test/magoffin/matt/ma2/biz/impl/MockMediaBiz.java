@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MockMediaBiz.java,v 1.17 2007/09/09 01:58:47 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -56,7 +56,7 @@ import org.springframework.core.io.Resource;
  * Mock implementation of MediaBiz.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.17 $ $Date: 2007/09/09 01:58:47 $
+ * @version $Revision$ $Date$
  */
 public class MockMediaBiz implements MediaBiz {
 	

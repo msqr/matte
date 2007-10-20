@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: ReindexController.java,v 1.4 2007/07/13 23:17:22 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -48,7 +48,7 @@ import magoffin.matt.ma2.web.util.WebConstants;
  * Controller for re-indexing a search index.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.4 $ $Date: 2007/07/13 23:17:22 $
+ * @version $Revision$ $Date$
  */
 public class ReindexController extends AbstractCommandController {
 	

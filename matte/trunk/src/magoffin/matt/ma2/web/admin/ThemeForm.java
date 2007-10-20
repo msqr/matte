@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: ThemeForm.java,v 1.6 2007/07/13 23:17:22 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -53,7 +53,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Form for editing/creating a Theme.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.6 $ $Date: 2007/07/13 23:17:22 $
+ * @version $Revision$ $Date$
  */
 public class ThemeForm extends AbstractForm {
 

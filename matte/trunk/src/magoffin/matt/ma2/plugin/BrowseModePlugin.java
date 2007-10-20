@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: BrowseModePlugin.java,v 1.2 2007/09/30 05:29:53 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -38,7 +38,7 @@ import magoffin.matt.ma2.support.BrowseAlbumsCommand;
  * search results with.</p>
  *
  * @author matt
- * @version $Revision: 1.2 $ $Date: 2007/09/30 05:29:53 $
+ * @version $Revision$ $Date$
  */
 public interface BrowseModePlugin extends Plugin {
 	

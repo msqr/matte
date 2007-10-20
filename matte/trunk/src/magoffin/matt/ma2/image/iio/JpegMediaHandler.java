@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: JpegMediaHandler.java,v 1.10 2007/02/02 05:30:09 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -45,7 +45,7 @@ import org.springframework.core.io.Resource;
  * JPEG media handler using ImageIO.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.10 $ $Date: 2007/02/02 05:30:09 $
+ * @version $Revision$ $Date$
  */
 public class JpegMediaHandler extends BaseImageIOMediaHandler implements MediaHandlerDelegate {
 

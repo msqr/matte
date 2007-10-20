@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MediaRequest.java,v 1.6 2007/07/29 08:42:43 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -47,7 +47,7 @@ import java.util.Map;
  * same item with the same properties do not need to be re-processed.</p>
  * 
  * @author matt.magoffin
- * @version $Revision: 1.6 $ $Date: 2007/07/29 08:42:43 $
+ * @version $Revision$ $Date$
  */
 public interface MediaRequest {
 	

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MediaQuality.java,v 1.3 2007/07/29 08:42:43 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -41,7 +41,7 @@ package magoffin.matt.ma2;
  * the amount of compression.</p>
  * 
  * @author matt.magoffin
- * @version $Revision: 1.3 $ $Date: 2007/07/29 08:42:43 $
+ * @version $Revision$ $Date$
  */
 public enum MediaQuality {
 	

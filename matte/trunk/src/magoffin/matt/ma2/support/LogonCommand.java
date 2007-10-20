@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: LogonCommand.java,v 1.1 2006/10/29 01:32:50 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -32,7 +32,7 @@ package magoffin.matt.ma2.support;
  * <p>The <code>code</code> property is used for registration.</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2006/10/29 01:32:50 $
+ * @version $Revision$ $Date$
  */
 public class LogonCommand {
 	

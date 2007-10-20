@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: HomeController.java,v 1.4 2007/09/07 08:34:09 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -39,7 +39,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Controller for the admin home view.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.4 $ $Date: 2007/09/07 08:34:09 $
+ * @version $Revision$ $Date$
  */
 public class HomeController extends AbstractController {
 	

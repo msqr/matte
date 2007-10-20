@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: SmetaMediaMetadata.java,v 1.9 2007/09/02 05:58:31 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -54,7 +54,7 @@ import org.springframework.core.io.Resource;
  * General purpose {@link MediaMetadata} using sMeta.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.9 $ $Date: 2007/09/02 05:58:31 $
+ * @version $Revision$ $Date$
  */
 public class SmetaMediaMetadata extends AbstractMediaMetadata 
 implements MediaMetadata, EmbeddedImageMetadata {

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MediaEffect.java,v 1.6 2007/09/10 02:52:39 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -52,7 +52,7 @@ import magoffin.matt.ma2.domain.MediaItem;
  * parameter is defined for this purpose).</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.6 $ $Date: 2007/09/10 02:52:39 $
+ * @version $Revision$ $Date$
  */
 public interface MediaEffect {
 	

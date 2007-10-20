@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: ConfigurationException.java,v 1.1 2007/01/07 05:50:40 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -30,7 +30,7 @@ package magoffin.matt.ma2;
  * Exception thrown during application initialization.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.1 $ $Date: 2007/01/07 05:50:40 $
+ * @version $Revision$ $Date$
  */
 public class ConfigurationException extends RuntimeException {
 

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AudioConstants.java,v 1.1 2007/01/30 06:31:22 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -30,7 +30,7 @@ package magoffin.matt.ma2.audio;
  * Audio related constants.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2007/01/30 06:31:22 $
+ * @version $Revision$ $Date$
  */
 public final class AudioConstants {
 

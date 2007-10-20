@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: SearchBiz.java,v 1.11 2007/07/07 03:44:06 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -37,7 +37,7 @@ import magoffin.matt.ma2.support.BrowseAlbumsCommand;
  * API for search actions.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.11 $ $Date: 2007/07/07 03:44:06 $
+ * @version $Revision$ $Date$
  */
 public interface SearchBiz {
 	

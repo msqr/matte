@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: JpegMediaHandlerTest.java,v 1.7 2007/02/02 05:30:09 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -53,7 +53,7 @@ import org.springframework.util.FileCopyUtils;
  * class.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.7 $ $Date: 2007/02/02 05:30:09 $
+ * @version $Revision$ $Date$
  */
 public class JpegMediaHandlerTest extends AbstractSpringEnabledTransactionalTest {
 

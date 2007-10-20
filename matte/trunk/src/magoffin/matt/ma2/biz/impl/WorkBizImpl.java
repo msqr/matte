@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: WorkBizImpl.java,v 1.22 2007/09/07 08:34:09 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -90,7 +90,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
  * </dl>
  * 
  * @author matt.magoffin
- * @version $Revision: 1.22 $ $Date: 2007/09/07 08:34:09 $
+ * @version $Revision$ $Date$
  */
 public class WorkBizImpl implements WorkBiz {
 	

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: BaseJMagickMediaHandler.java,v 1.10 2007/07/29 10:11:00 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -63,7 +63,7 @@ import org.springframework.util.FileCopyUtils;
  * </dl>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.10 $ $Date: 2007/07/29 10:11:00 $
+ * @version $Revision$ $Date$
  */
 public abstract class BaseJMagickMediaHandler extends BaseImageMediaHandler {
 	

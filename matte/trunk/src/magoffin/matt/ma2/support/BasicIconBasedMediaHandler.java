@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: BasicIconBasedMediaHandler.java,v 1.4 2007/07/29 08:42:43 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -95,7 +95,7 @@ import org.springframework.util.StringUtils;
  * </dl>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.4 $ $Date: 2007/07/29 08:42:43 $
+ * @version $Revision$ $Date$
  */
 public class BasicIconBasedMediaHandler extends AbstractMediaHandler {
 

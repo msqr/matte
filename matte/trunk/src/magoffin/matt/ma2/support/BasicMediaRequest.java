@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: BasicMediaRequest.java,v 1.8 2007/09/07 08:34:09 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -40,7 +40,7 @@ import magoffin.matt.ma2.MediaSize;
  * Basic implementation of MediaRequest.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.8 $ $Date: 2007/09/07 08:34:09 $
+ * @version $Revision$ $Date$
  */
 public class BasicMediaRequest implements MediaRequest {
 	

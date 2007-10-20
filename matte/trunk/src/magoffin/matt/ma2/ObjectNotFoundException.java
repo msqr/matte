@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: ObjectNotFoundException.java,v 1.1 2007/04/01 09:15:19 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -30,7 +30,7 @@ package magoffin.matt.ma2;
  * Exception thrown when a requested object is not found.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2007/04/01 09:15:19 $
+ * @version $Revision$ $Date$
  */
 public class ObjectNotFoundException extends RuntimeException {
 

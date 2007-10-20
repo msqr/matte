@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AlbumFeedCommand.java,v 1.2 2006/11/19 06:57:22 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -32,7 +32,7 @@ import java.util.Date;
  * Command object for user album feed.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2006/11/19 06:57:22 $
+ * @version $Revision$ $Date$
  */
 public class AlbumFeedCommand {
 

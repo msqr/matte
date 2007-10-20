@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: BasicIndexData.java,v 1.1 2006/07/13 09:09:56 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -37,7 +37,7 @@ import magoffin.matt.dao.IndexCallback.IndexData;
  * 
  * @param <PK> the primary key type
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2006/07/13 09:09:56 $
+ * @version $Revision$ $Date$
  */
 public class BasicIndexData<PK extends Serializable> implements IndexData<PK> {
 	

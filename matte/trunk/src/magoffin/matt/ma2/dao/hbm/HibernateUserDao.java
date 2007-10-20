@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: HibernateUserDao.java,v 1.11 2007/03/22 08:13:31 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -42,7 +42,7 @@ import org.hibernate.criterion.Order;
  * Hibernate implementation of {@link magoffin.matt.ma2.dao.UserDao}.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.11 $ $Date: 2007/03/22 08:13:31 $
+ * @version $Revision$ $Date$
  */
 public class HibernateUserDao extends GenericHibernateDao<User, Long>
 implements UserDao {

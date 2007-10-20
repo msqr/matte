@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AlbumsByDateBrowseModePlugin.java,v 1.7 2007/09/30 05:29:53 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -59,7 +59,7 @@ import org.springframework.jdbc.core.ResultSetExtractor;
  * in feed.</p>
  *
  * @author matt
- * @version $Revision: 1.7 $ $Date: 2007/09/30 05:29:53 $
+ * @version $Revision$ $Date$
  */
 public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 	

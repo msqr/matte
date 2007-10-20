@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: CollectionDaoTest.java,v 1.8 2007/01/23 06:43:11 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -41,7 +41,7 @@ import magoffin.matt.ma2.domain.User;
  * Test case for the {@link magoffin.matt.ma2.dao.CollectionDao} class.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.8 $ $Date: 2007/01/23 06:43:11 $
+ * @version $Revision$ $Date$
  */
 public class CollectionDaoTest extends AbstractSpringEnabledTransactionalTest {
 	

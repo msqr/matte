@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: IndexField.java,v 1.13 2007/06/17 08:16:29 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -28,7 +28,7 @@ package magoffin.matt.ma2.lucene;
  * An enumeration of Matte Lucene index fields.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.13 $ $Date: 2007/06/17 08:16:29 $
+ * @version $Revision$ $Date$
  */
 public enum IndexField {
 	

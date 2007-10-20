@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AlbumsByDateBrowseModePluginTest.java,v 1.1 2007/09/20 05:05:35 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -47,7 +47,7 @@ import magoffin.matt.ma2.support.BrowseAlbumsCommand;
  * Test case for the {@link AlbumsByDateBrowseModePlugin} class.
  *
  * @author matt
- * @version $Revision: 1.1 $ $Date: 2007/09/20 05:05:35 $
+ * @version $Revision$ $Date$
  */
 public class AlbumsByDateBrowseModePluginTest extends
 		AbstractSpringEnabledTransactionalTest {

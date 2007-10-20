@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: PreferencesForm.java,v 1.4 2007/09/09 10:38:25 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -52,7 +52,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Form controller for editing overall user preferences.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.4 $ $Date: 2007/09/09 10:38:25 $
+ * @version $Revision$ $Date$
  */
 public class PreferencesForm extends AbstractForm {
 	

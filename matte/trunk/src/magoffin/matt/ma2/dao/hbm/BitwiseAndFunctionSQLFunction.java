@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: BitwiseAndFunctionSQLFunction.java,v 1.4 2007/07/27 00:51:21 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -43,7 +43,7 @@ import org.hibernate.engine.SessionFactoryImplementor;
  * <p>Where param1 and param2 are presumed to be integer types.</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.4 $ $Date: 2007/07/27 00:51:21 $
+ * @version $Revision$ $Date$
  * @see DerbyBitwiseAndSQLFunction
  */
 public class BitwiseAndFunctionSQLFunction extends BitwiseAndSQLFunction {

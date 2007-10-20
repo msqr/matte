@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: UserForm.java,v 1.5 2007/07/13 23:17:22 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -52,7 +52,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Form controller for administering user details.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.5 $ $Date: 2007/07/13 23:17:22 $
+ * @version $Revision$ $Date$
  */
 public class UserForm extends AbstractForm {
 	

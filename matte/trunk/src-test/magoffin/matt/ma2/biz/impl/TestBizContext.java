@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: TestBizContext.java,v 1.4 2007/07/21 10:20:14 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -40,7 +40,7 @@ import magoffin.matt.xweb.util.AppContextSupport;
  * BizContext for test cases.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.4 $ $Date: 2007/07/21 10:20:14 $
+ * @version $Revision$ $Date$
  */
 public class TestBizContext extends BasicBizContext {
 	

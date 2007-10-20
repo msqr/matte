@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: TimeZoneDao.java,v 1.3 2006/07/13 09:09:56 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -35,7 +35,7 @@ import magoffin.matt.ma2.domain.TimeZone;
  * DAO for TimeZone objects.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.3 $ $Date: 2006/07/13 09:09:56 $
+ * @version $Revision$ $Date$
  */
 public interface TimeZoneDao extends GenericDao<TimeZone, String> {
 

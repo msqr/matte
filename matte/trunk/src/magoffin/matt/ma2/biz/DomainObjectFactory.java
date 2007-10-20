@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: DomainObjectFactory.java,v 1.18 2007/09/02 08:53:21 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -60,7 +60,7 @@ import magoffin.matt.xweb.XwebParameter;
  * Object factory interface for domain objects.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.18 $ $Date: 2007/09/02 08:53:21 $
+ * @version $Revision$ $Date$
  */
 public interface DomainObjectFactory {
 

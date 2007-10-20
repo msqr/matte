@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: UserBizImplTest.java,v 1.17 2007/09/09 10:38:25 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -60,7 +60,7 @@ import org.springframework.core.io.Resource;
  * Test the {@link magoffin.matt.ma2.biz.impl.UserBizImpl} class.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.17 $ $Date: 2007/09/09 10:38:25 $
+ * @version $Revision$ $Date$
  */
 public class UserBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: UploadMediaForm.java,v 1.11 2007/08/13 09:28:27 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -57,7 +57,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Form controller uploading new media items.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.11 $ $Date: 2007/08/13 09:28:27 $
+ * @version $Revision$ $Date$
  */
 public class UploadMediaForm extends AbstractForm {
 	

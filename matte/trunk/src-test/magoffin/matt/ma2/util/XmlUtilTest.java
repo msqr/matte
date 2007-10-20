@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: XmlUtilTest.java,v 1.2 2006/10/29 01:32:50 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -38,7 +38,7 @@ import magoffin.matt.ma2.domain.Album;
  * <p>info</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2006/10/29 01:32:50 $
+ * @version $Revision$ $Date$
  */
 public class XmlUtilTest extends AbstractSpringEnabledTransactionalTest {
 

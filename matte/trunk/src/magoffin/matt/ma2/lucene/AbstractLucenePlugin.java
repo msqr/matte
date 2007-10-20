@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AbstractLucenePlugin.java,v 1.2 2007/02/25 19:23:39 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -52,7 +52,7 @@ import magoffin.matt.ma2.biz.DomainObjectFactory;
  * Base implementation for LucenePlugin implementations.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.2 $ $Date: 2007/02/25 19:23:39 $
+ * @version $Revision$ $Date$
  */
 public abstract class AbstractLucenePlugin implements LucenePlugin {
 

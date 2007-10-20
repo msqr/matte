@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MediaItemLuceneSearchCriteria.java,v 1.3 2007/03/07 03:46:36 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -34,7 +34,7 @@ import magoffin.matt.ma2.domain.PaginationCriteria;
  * Lucene search criteria for media items.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.3 $ $Date: 2007/03/07 03:46:36 $
+ * @version $Revision$ $Date$
  */
 public class MediaItemLuceneSearchCriteria implements SearchCriteria {
 

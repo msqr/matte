@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AbstractSearchBiz.java,v 1.7 2007/09/19 22:29:37 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -52,7 +52,7 @@ import org.springframework.beans.BeanUtils;
  * Base implementation of {@link SearchBiz} that builds on DAO searching.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.7 $ $Date: 2007/09/19 22:29:37 $
+ * @version $Revision$ $Date$
  */
 public abstract class AbstractSearchBiz implements SearchBiz {
 

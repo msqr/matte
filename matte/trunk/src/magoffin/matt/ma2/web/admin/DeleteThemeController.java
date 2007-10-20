@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: DeleteThemeController.java,v 1.4 2007/07/13 23:17:22 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -46,7 +46,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Controller to delete a Theme.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.4 $ $Date: 2007/07/13 23:17:22 $
+ * @version $Revision$ $Date$
  */
 public class DeleteThemeController extends AbstractCommandController {
 

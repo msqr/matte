@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: EditInitializer.java,v 1.1 2007/04/14 09:50:06 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -34,7 +34,7 @@ import magoffin.matt.xweb.util.DynamicInitializer;
  * DynamicInitializer for {@link Album} albums.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2007/04/14 09:50:06 $
+ * @version $Revision$ $Date$
  */
 public class EditInitializer implements DynamicInitializer {
 	

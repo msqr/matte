@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: BaseImageIOMediaHandler.java,v 1.13 2007/09/10 00:10:51 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -48,7 +48,7 @@ import org.springframework.core.io.Resource;
  * using the Java ImageIO library for image operations.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.13 $ $Date: 2007/09/10 00:10:51 $
+ * @version $Revision$ $Date$
  */
 public abstract class BaseImageIOMediaHandler extends BaseAwtImageMediaHandler {
 

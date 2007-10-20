@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: JAXBDomainObjectFactory.java,v 1.25 2007/09/02 08:53:21 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -66,7 +66,7 @@ import org.springframework.beans.BeanUtils;
  * JAXB implementation of {@link magoffin.matt.ma2.biz.DomainObjectFactory}.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.25 $ $Date: 2007/09/02 08:53:21 $
+ * @version $Revision$ $Date$
  */
 public class JAXBDomainObjectFactory implements DomainObjectFactory {
 	

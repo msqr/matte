@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MockMediaHandler.java,v 1.3 2007/01/25 01:47:51 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -35,7 +35,7 @@ import magoffin.matt.ma2.domain.MediaItem;
  * Test implementation of MediaHandler.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.3 $ $Date: 2007/01/25 01:47:51 $
+ * @version $Revision$ $Date$
  */
 public class MockMediaHandler implements MediaHandler {
 

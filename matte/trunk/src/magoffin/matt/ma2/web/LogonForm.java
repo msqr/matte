@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: LogonForm.java,v 1.5 2007/01/06 08:32:03 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -41,7 +41,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Form controller for logging into the application.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.5 $ $Date: 2007/01/06 08:32:03 $
+ * @version $Revision$ $Date$
  */
 public class LogonForm extends AbstractForm {
 	

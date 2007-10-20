@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MP3JMagickMediaHandlerTest.java,v 1.2 2007/01/30 06:31:22 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -50,7 +50,7 @@ import org.springframework.util.FileCopyUtils;
  * <p>info</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2007/01/30 06:31:22 $
+ * @version $Revision$ $Date$
  */
 public class MP3JMagickMediaHandlerTest extends
 		AbstractSpringEnabledTransactionalTest {
