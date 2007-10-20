@@ -208,12 +208,16 @@ public class WorkBizImpl implements WorkBiz {
 
 		// add work info to jobs list
 		if ( work.canStart() ) {
-			this.jobs.put(workInfo.getTicket(),workInfo);
+			synchronized (this.jobs) {
+				this.jobs.put(workInfo.getTicket(),workInfo);
+			}
 		} else {
 			if ( log.isTraceEnabled() ) {
 				log.trace("Work ticket " +workInfo.ticket +" cannot start yet");
 			}
-			this.delayedJobs.put(workInfo.getTicket(), workInfo);
+			synchronized (this.delayedJobs) {
+				this.delayedJobs.put(workInfo.getTicket(), workInfo);
+			}
 			return workInfo;
 		}
 		
