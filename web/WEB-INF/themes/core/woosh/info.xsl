@@ -236,7 +236,13 @@
 						<xsl:text>)</xsl:text>
 					-->
 					<li id="item-rating-container">
-						<span id="item-rating"/>
+						<span id="item-rating">
+							<xsl:value-of select="$meta-item/m:user-rating[m:rating-user[@user-id = $acting-user/@user-id]]/@rating"/>
+							<xsl:text>,</xsl:text>
+							<xsl:value-of select="sum($meta-item/m:user-rating/@rating)"/>
+							<xsl:text>,</xsl:text>
+							<xsl:value-of select="count($meta-item/m:user-rating)"/>
+						</span>
 					</li>
 				</ul>
 			</div>
