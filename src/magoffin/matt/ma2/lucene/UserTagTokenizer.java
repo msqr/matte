@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: UserTagTokenizer.java,v 1.1 2007/03/05 05:44:27 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -36,7 +36,7 @@ import org.apache.lucene.analysis.CharTokenizer;
  * <p>Splits on whitespace and commas, and normalizes to lower case.</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2007/03/05 05:44:27 $
+ * @version $Revision$ $Date$
  */
 public class UserTagTokenizer extends CharTokenizer {
 

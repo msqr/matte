@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AbstractSearchBizTest.java,v 1.1 2007/07/07 03:44:06 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -60,7 +60,7 @@ import org.springframework.core.io.Resource;
  * Test case for the {@link AbstractSearchBiz} class.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2007/07/07 03:44:06 $
+ * @version $Revision$ $Date$
  */
 public class AbstractSearchBizTest extends
 		AbstractSpringEnabledTransactionalTest {

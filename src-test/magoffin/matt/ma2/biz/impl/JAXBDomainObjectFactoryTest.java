@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: JAXBDomainObjectFactoryTest.java,v 1.16 2007/09/02 08:53:21 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -59,7 +59,7 @@ import junit.framework.TestCase;
  * Unit test for {@link magoffin.matt.ma2.biz.impl.JAXBDomainObjectFactory}.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.16 $ $Date: 2007/09/02 08:53:21 $
+ * @version $Revision$ $Date$
  */
 public class JAXBDomainObjectFactoryTest extends TestCase {
 	

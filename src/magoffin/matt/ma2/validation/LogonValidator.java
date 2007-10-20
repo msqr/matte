@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: LogonValidator.java,v 1.4 2007/07/13 22:17:51 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -33,7 +33,7 @@ import org.springframework.validation.Validator;
  * Validator for LogonCommand objects.
  * 
  * @author Matt Magoffin (mmagoffi@yahoo.com)
- * @version $Revision: 1.4 $ $Date: 2007/07/13 22:17:51 $
+ * @version $Revision$ $Date$
  */
 public class LogonValidator implements Validator {
 

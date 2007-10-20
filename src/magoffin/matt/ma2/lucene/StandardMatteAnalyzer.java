@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: StandardMatteAnalyzer.java,v 1.5 2007/04/29 14:58:51 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -51,7 +51,7 @@ import org.apache.lucene.analysis.standard.StandardTokenizer;
  * Standard implementation of Analyzer for Matte.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.5 $ $Date: 2007/04/29 14:58:51 $
+ * @version $Revision$ $Date$
  */
 public class StandardMatteAnalyzer extends Analyzer {
 	

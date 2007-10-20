@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AbstractSecurityInterceptor.java,v 1.3 2007/09/09 01:58:49 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -40,7 +40,7 @@ import org.apache.log4j.Logger;
  * Base AOP interceptor to validate security.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.3 $ $Date: 2007/09/09 01:58:49 $
+ * @version $Revision$ $Date$
  */
 public abstract class AbstractSecurityInterceptor implements MethodInterceptor {
 	

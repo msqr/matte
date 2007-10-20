@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: ApplicationNotConfiguredException.java,v 1.1 2007/01/27 07:49:14 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -33,7 +33,7 @@ package magoffin.matt.ma2;
  * the application for the first time.</p>
  * 
  * @author matt.magoffin
- * @version $Revision: 1.1 $ $Date: 2007/01/27 07:49:14 $
+ * @version $Revision$ $Date$
  */
 public class ApplicationNotConfiguredException extends RuntimeException {
 

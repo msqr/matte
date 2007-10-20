@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: IndexType.java,v 1.1 2006/05/26 03:16:32 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -28,7 +28,7 @@ package magoffin.matt.ma2.lucene;
  * The types of indicies supported. 
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2006/05/26 03:16:32 $
+ * @version $Revision$ $Date$
  */
 public enum IndexType { 
 	

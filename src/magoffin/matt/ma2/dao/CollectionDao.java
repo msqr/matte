@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: CollectionDao.java,v 1.4 2006/07/13 09:09:56 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -35,7 +35,7 @@ import magoffin.matt.ma2.domain.Collection;
  * DAO for Collection objects.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.4 $ $Date: 2006/07/13 09:09:56 $
+ * @version $Revision$ $Date$
  */
 public interface CollectionDao extends GenericDao<Collection, Long> {
 

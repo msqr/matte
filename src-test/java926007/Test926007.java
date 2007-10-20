@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: Test926007.java,v 1.2 2007/03/21 03:03:15 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -41,7 +41,7 @@ import junit.framework.TestCase;
  * Test case for the Java incident 926007.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2007/03/21 03:03:15 $
+ * @version $Revision$ $Date$
  */
 public class Test926007 extends TestCase {
 

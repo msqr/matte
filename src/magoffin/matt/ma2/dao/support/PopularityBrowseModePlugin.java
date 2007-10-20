@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: PopularityBrowseModePlugin.java,v 1.4 2007/09/30 22:00:00 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -117,7 +117,7 @@ import org.springframework.util.StringUtils;
  * </dl>
  * 
  * @author matt.magoffin
- * @version $Revision: 1.4 $ $Date: 2007/09/30 22:00:00 $
+ * @version $Revision$ $Date$
  */
 public class PopularityBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 	

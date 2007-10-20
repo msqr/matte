@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: DerbyBitwiseAndSQLFunction.java,v 1.2 2007/01/28 20:03:19 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -44,7 +44,7 @@ package magoffin.matt.ma2.dao.hbm;
  * Hibernate SQL function generator class.</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2007/01/28 20:03:19 $
+ * @version $Revision$ $Date$
  * @see BitwiseAndFunctionSQLFunction
  */
 public class DerbyBitwiseAndSQLFunction {

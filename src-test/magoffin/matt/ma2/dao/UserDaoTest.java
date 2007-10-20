@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: UserDaoTest.java,v 1.10 2007/01/23 06:43:11 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -45,7 +45,7 @@ import org.apache.commons.lang.mutable.MutableInt;
  * Test case for UserDao.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.10 $ $Date: 2007/01/23 06:43:11 $
+ * @version $Revision$ $Date$
  */
 public class UserDaoTest extends AbstractSpringEnabledTransactionalTest {
 

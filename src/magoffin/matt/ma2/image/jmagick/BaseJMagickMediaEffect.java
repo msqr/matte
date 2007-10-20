@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: BaseJMagickMediaEffect.java,v 1.2 2007/07/28 10:25:54 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -46,7 +46,7 @@ import org.apache.log4j.Logger;
  * </dl>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2007/07/28 10:25:54 $
+ * @version $Revision$ $Date$
  */
 public abstract class BaseJMagickMediaEffect implements JMagickMediaEffect {
 

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: BitwiseAndSQLFunction.java,v 1.4 2007/07/13 22:17:51 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -39,7 +39,7 @@ import org.hibernate.type.Type;
  * <p>Adapted from http://forum.hibernate.org/viewtopic.php?t=942395&view=previous&sid=f13df7759a4a9abd374b406a35ffc3c2</p>
  * 
  * @author matt.magoffin
- * @version $Revision: 1.4 $ $Date: 2007/07/13 22:17:51 $
+ * @version $Revision$ $Date$
  */
 public class BitwiseAndSQLFunction extends StandardSQLFunction {
 	

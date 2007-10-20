@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: IndexCallback.java,v 1.2 2006/10/08 04:32:18 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -35,7 +35,7 @@ import java.util.Map;
  * 
  * @param <PK> the primary key type
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2006/10/08 04:32:18 $
+ * @version $Revision$ $Date$
  */
 public interface IndexCallback<PK extends Serializable> {
 	

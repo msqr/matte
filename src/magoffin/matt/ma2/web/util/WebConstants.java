@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: WebConstants.java,v 1.8 2007/01/27 19:36:18 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -32,7 +32,7 @@ import magoffin.matt.xweb.util.XwebConstants;
  * Constants to share in the web world.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.8 $ $Date: 2007/01/27 19:36:18 $
+ * @version $Revision$ $Date$
  */
 public final class WebConstants extends XwebConstants {
 	

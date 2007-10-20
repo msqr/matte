@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MediaInfoCommand.java,v 1.2 2007/05/17 03:57:51 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -34,7 +34,7 @@ import java.util.TimeZone;
  * Command object for storing media item info (metadata).
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2007/05/17 03:57:51 $
+ * @version $Revision$ $Date$
  */
 public class MediaInfoCommand {
 

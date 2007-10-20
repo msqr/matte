@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: WorkBizImplTest.java,v 1.7 2007/07/29 09:18:03 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -44,7 +44,7 @@ import junit.framework.TestCase;
  * Test case for the {@link magoffin.matt.ma2.biz.impl.WorkBizImpl} class.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.7 $ $Date: 2007/07/29 09:18:03 $
+ * @version $Revision$ $Date$
  */
 public class WorkBizImplTest extends TestCase {
 

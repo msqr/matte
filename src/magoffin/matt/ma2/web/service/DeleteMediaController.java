@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: DeleteMediaController.java,v 1.2 2006/05/13 09:55:24 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -46,7 +46,7 @@ import magoffin.matt.ma2.web.util.WebConstants;
  * Delete a set of media items.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.2 $ $Date: 2006/05/13 09:55:24 $
+ * @version $Revision$ $Date$
  */
 public class DeleteMediaController extends AbstractCommandController {
 	

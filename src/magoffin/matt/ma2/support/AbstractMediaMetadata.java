@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AbstractMediaMetadata.java,v 1.4 2007/01/13 21:03:14 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -38,7 +38,7 @@ import magoffin.matt.ma2.MediaMetadata;
  * Basic implementation of {@link MediaMetadata}.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.4 $ $Date: 2007/01/13 21:03:14 $
+ * @version $Revision$ $Date$
  */
 public abstract class AbstractMediaMetadata implements MediaMetadata {
 	

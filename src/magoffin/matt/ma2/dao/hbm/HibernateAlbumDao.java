@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: HibernateAlbumDao.java,v 1.25 2007/09/20 05:05:35 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -49,7 +49,7 @@ import org.springframework.orm.hibernate3.HibernateCallback;
  * Hibernate implementation of {@link magoffin.matt.ma2.dao.AlbumDao}.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.25 $ $Date: 2007/09/20 05:05:35 $
+ * @version $Revision$ $Date$
  */
 public class HibernateAlbumDao extends GenericIndexableHibernateDao<Album, Long>
 implements AlbumDao {

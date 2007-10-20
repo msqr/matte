@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: TestConstants.java,v 1.9 2007/03/05 03:55:31 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -30,7 +30,7 @@ package magoffin.matt.ma2;
  * Constants for test cases.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.9 $ $Date: 2007/03/05 03:55:31 $
+ * @version $Revision$ $Date$
  */
 public final class TestConstants {
 

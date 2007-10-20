@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: UserDao.java,v 1.8 2007/03/22 08:13:31 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -36,7 +36,7 @@ import magoffin.matt.ma2.domain.User;
  * DAO for User objects.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.8 $ $Date: 2007/03/22 08:13:31 $
+ * @version $Revision$ $Date$
  */
 public interface UserDao extends GenericDao<User, Long>, BatchableDao<User> {
 

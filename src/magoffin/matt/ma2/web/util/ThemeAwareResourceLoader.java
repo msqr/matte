@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: ThemeAwareResourceLoader.java,v 1.2 2006/09/06 08:32:44 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -42,7 +42,7 @@ import org.springframework.web.context.ServletContextAware;
  * <p>This class loader allows themes to have their own message resources.</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2006/09/06 08:32:44 $
+ * @version $Revision$ $Date$
  */
 public class ThemeAwareResourceLoader extends ClassLoader implements ServletContextAware {
 	

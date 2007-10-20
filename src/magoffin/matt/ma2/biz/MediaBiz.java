@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MediaBiz.java,v 1.40 2007/09/10 00:10:51 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -51,7 +51,7 @@ import org.springframework.core.io.Resource;
  * API for media item actions.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.40 $ $Date: 2007/09/10 00:10:51 $
+ * @version $Revision$ $Date$
  */
 public interface MediaBiz {
 	

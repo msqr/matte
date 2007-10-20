@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: ThemeDaoTest.java,v 1.3 2007/01/23 06:43:11 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -40,7 +40,7 @@ import magoffin.matt.ma2.domain.User;
  * Test case for ThemeDao.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.3 $ $Date: 2007/01/23 06:43:11 $
+ * @version $Revision$ $Date$
  */
 public class ThemeDaoTest extends AbstractSpringEnabledTransactionalTest {
 	

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: DownloadThemeController.java,v 1.2 2006/12/24 09:52:06 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -41,7 +41,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Controller to download a Theme archive.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2006/12/24 09:52:06 $
+ * @version $Revision$ $Date$
  */
 public class DownloadThemeController extends AbstractCommandController {
 

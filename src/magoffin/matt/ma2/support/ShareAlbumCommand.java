@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: ShareAlbumCommand.java,v 1.4 2007/09/05 07:35:17 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -30,7 +30,7 @@ package magoffin.matt.ma2.support;
  * Command object for sharing an album.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.4 $ $Date: 2007/09/05 07:35:17 $
+ * @version $Revision$ $Date$
  */
 public class ShareAlbumCommand {
 

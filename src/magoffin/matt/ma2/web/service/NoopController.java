@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: NoopController.java,v 1.1 2006/05/08 03:31:14 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -37,7 +37,7 @@ import magoffin.matt.ma2.web.AbstractController;
  * Does not do anything but forward to success view.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2006/05/08 03:31:14 $
+ * @version $Revision$ $Date$
  */
 public class NoopController extends AbstractController {
 

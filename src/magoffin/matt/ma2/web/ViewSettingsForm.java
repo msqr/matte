@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: ViewSettingsForm.java,v 1.1 2007/01/06 08:32:03 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -38,7 +38,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Form controller for updating the current (session only) view settings.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2007/01/06 08:32:03 $
+ * @version $Revision$ $Date$
  */
 public class ViewSettingsForm extends AbstractForm {
 

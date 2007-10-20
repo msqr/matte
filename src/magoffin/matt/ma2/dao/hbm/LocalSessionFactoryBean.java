@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: LocalSessionFactoryBean.java,v 1.2 2007/07/28 10:25:54 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -46,7 +46,7 @@ import org.springframework.util.CollectionUtils;
  * </dl>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2007/07/28 10:25:54 $
+ * @version $Revision$ $Date$
  */
 public class LocalSessionFactoryBean extends
 		org.springframework.orm.hibernate3.LocalSessionFactoryBean {

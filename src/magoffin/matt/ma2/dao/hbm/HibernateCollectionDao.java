@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: HibernateCollectionDao.java,v 1.8 2006/09/06 08:32:44 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -36,7 +36,7 @@ import magoffin.matt.ma2.domain.Collection;
  * Hibernate implementation of {@link magoffin.matt.ma2.dao.CollectionDao}.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.8 $ $Date: 2006/09/06 08:32:44 $
+ * @version $Revision$ $Date$
  */
 public class HibernateCollectionDao extends GenericIndexableHibernateDao<Collection, Long>
 implements CollectionDao {

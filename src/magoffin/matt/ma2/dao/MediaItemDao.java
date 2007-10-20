@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MediaItemDao.java,v 1.13 2006/10/10 04:31:47 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -36,7 +36,7 @@ import magoffin.matt.ma2.domain.MediaItem;
  * DAO for MediaItem objects.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.13 $ $Date: 2006/10/10 04:31:47 $
+ * @version $Revision$ $Date$
  */
 public interface MediaItemDao extends GenericDao<MediaItem, Long>, BatchableDao<MediaItem> {
 	

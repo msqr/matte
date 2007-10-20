@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: CompositeEffect.java,v 1.1 2007/09/10 10:34:16 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -44,7 +44,7 @@ import magoffin.matt.ma2.image.ImageMediaHelper;
  * image on top of the media image.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.1 $ $Date: 2007/09/10 10:34:16 $
+ * @version $Revision$ $Date$
  */
 public class CompositeEffect extends BaseAwtMediaEffect {
 

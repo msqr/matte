@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: UserLucenePlugin.java,v 1.13 2007/09/07 08:34:09 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -53,7 +53,7 @@ import org.apache.lucene.index.IndexWriter;
  * Lucene search plugin implementation for User objects.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.13 $ $Date: 2007/09/07 08:34:09 $
+ * @version $Revision$ $Date$
  */
 public class UserLucenePlugin extends AbstractLucenePlugin {
 

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AlbumFeedController.java,v 1.4 2007/09/19 07:43:05 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -50,7 +50,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Controller for generating a user's album feed.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.4 $ $Date: 2007/09/19 07:43:05 $
+ * @version $Revision$ $Date$
  */
 public class AlbumFeedController extends AbstractCommandController {
 	

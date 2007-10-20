@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: WebHelper.java,v 1.19 2007/09/09 01:58:47 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -74,7 +74,7 @@ import org.springframework.context.MessageSource;
  * </dl>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.19 $ $Date: 2007/09/09 01:58:47 $
+ * @version $Revision$ $Date$
  */
 public final class WebHelper extends BasicXwebHelper {
 	

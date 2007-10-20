@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: InternalBizContext.java,v 1.1 2006/10/29 01:32:50 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -32,7 +32,7 @@ import java.util.Locale;
  * BizContext implementation for interal application use.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.1 $ $Date: 2006/10/29 01:32:50 $
+ * @version $Revision$ $Date$
  */
 public class InternalBizContext extends BasicBizContext {
 

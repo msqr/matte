@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MP3MediaHandlerTest.java,v 1.5 2007/01/30 06:31:22 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -47,7 +47,7 @@ import org.springframework.util.FileCopyUtils;
  * Test case for handling an MP3 media file.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.5 $ $Date: 2007/01/30 06:31:22 $
+ * @version $Revision$ $Date$
  */
 public class MP3MediaHandlerTest extends AbstractSpringEnabledTransactionalTest {
 

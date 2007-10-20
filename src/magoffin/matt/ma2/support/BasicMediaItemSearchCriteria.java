@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: BasicMediaItemSearchCriteria.java,v 1.4 2007/06/17 03:24:09 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -35,7 +35,7 @@ import magoffin.matt.ma2.domain.MediaItem;
  * Basic implementation of {@link MediaItemSearchCriteria}.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.4 $ $Date: 2007/06/17 03:24:09 $
+ * @version $Revision$ $Date$
  */
 public class BasicMediaItemSearchCriteria implements MediaItemSearchCriteria {
 	

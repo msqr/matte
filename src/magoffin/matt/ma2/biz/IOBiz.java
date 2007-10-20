@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: IOBiz.java,v 1.13 2007/09/10 10:34:16 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -44,7 +44,7 @@ import magoffin.matt.ma2.support.ExportItemsCommand;
  * API for importing and exporting media.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.13 $ $Date: 2007/09/10 10:34:16 $
+ * @version $Revision$ $Date$
  */
 public interface IOBiz {
 	

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: RatingAverageBrowseModePluginTest.java,v 1.2 2007/09/29 07:55:34 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -56,7 +56,7 @@ import magoffin.matt.ma2.support.BrowseAlbumsCommand;
  * Test case for the {@link RatingAverageBrowseModePlugin} class.
  *
  * @author matt
- * @version $Revision: 1.2 $ $Date: 2007/09/29 07:55:34 $
+ * @version $Revision$ $Date$
  */
 public class RatingAverageBrowseModePluginTest extends
 		AbstractSpringEnabledTransactionalTest {

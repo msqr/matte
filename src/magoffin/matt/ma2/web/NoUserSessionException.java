@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: NoUserSessionException.java,v 1.1 2007/01/06 08:32:03 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -33,7 +33,7 @@ import magoffin.matt.ma2.domain.Session;
  * HttpSession.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2007/01/06 08:32:03 $
+ * @version $Revision$ $Date$
  */
 public class NoUserSessionException extends RuntimeException {
 

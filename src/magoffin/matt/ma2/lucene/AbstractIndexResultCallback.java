@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AbstractIndexResultCallback.java,v 1.2 2006/10/09 23:02:41 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -45,7 +45,7 @@ import org.springframework.context.MessageSource;
  * @param <T> the domain object type
  * @param <PK> the primary key type
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2006/10/09 23:02:41 $
+ * @version $Revision$ $Date$
  */
 public abstract class AbstractIndexResultCallback<T, PK extends Serializable>
 implements IndexResults, magoffin.matt.dao.BatchableDao.BatchCallback<T> {

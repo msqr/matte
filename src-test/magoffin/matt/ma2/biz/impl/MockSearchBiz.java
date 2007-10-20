@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MockSearchBiz.java,v 1.1 2007/07/07 03:44:06 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -34,7 +34,7 @@ import magoffin.matt.ma2.domain.SearchResults;
  * Extension of {@link AbstractSearchBiz} to enable unit testing.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2007/07/07 03:44:06 $
+ * @version $Revision$ $Date$
  */
 public class MockSearchBiz extends AbstractSearchBiz {
 

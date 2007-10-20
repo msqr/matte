@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: EmbeddedImageMetadata.java,v 1.9 2007/07/29 08:42:43 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -42,7 +42,7 @@ import org.springframework.core.io.Resource;
  * media item within Matte.</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.9 $ $Date: 2007/07/29 08:42:43 $
+ * @version $Revision$ $Date$
  */
 public interface EmbeddedImageMetadata {
 	

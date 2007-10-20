@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MediaItemInfoController.java,v 1.7 2007/09/02 05:57:44 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -49,7 +49,7 @@ import magoffin.matt.ma2.web.util.WebConstants;
  * of media item info populated in a single media item.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.7 $ $Date: 2007/09/02 05:57:44 $
+ * @version $Revision$ $Date$
  */
 public class MediaItemInfoController extends AbstractCommandController {
 

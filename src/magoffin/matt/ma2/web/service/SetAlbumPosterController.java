@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: SetAlbumPosterController.java,v 1.1 2007/03/18 06:50:59 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -46,7 +46,7 @@ import magoffin.matt.ma2.web.util.WebConstants;
  * Controller to set the media item poster of an album.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2007/03/18 06:50:59 $
+ * @version $Revision$ $Date$
  */
 public class SetAlbumPosterController extends AbstractCommandController {
 	

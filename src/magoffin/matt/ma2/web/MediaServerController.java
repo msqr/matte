@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MediaServerController.java,v 1.11 2007/08/03 10:58:30 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -60,7 +60,7 @@ import org.springframework.web.servlet.mvc.LastModified;
  * Controller for serving up media items.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.11 $ $Date: 2007/08/03 10:58:30 $
+ * @version $Revision$ $Date$
  */
 public class MediaServerController extends AbstractCommandController implements LastModified {
 

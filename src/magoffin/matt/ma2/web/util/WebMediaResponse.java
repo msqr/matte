@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: WebMediaResponse.java,v 1.2 2007/08/05 02:40:19 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -36,7 +36,7 @@ import magoffin.matt.ma2.domain.MediaItem;
  * Web implementation of {@link MediaResponse}.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.2 $ $Date: 2007/08/05 02:40:19 $
+ * @version $Revision$ $Date$
  */
 public class WebMediaResponse implements MediaResponse {
 	

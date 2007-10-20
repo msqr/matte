@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: IOBizImpl.java,v 1.62 2007/10/01 00:53:24 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -110,7 +110,7 @@ import org.w3c.dom.NodeList;
  * Implementation of IOBiz.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.62 $ $Date: 2007/10/01 00:53:24 $
+ * @version $Revision$ $Date$
  */
 public class IOBizImpl implements IOBiz {
 	

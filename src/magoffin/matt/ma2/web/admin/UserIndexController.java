@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: UserIndexController.java,v 1.2 2007/07/13 23:17:22 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -47,7 +47,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Get User index data.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2007/07/13 23:17:22 $
+ * @version $Revision$ $Date$
  */
 public class UserIndexController extends AbstractCommandController {
 	

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: HomeController.java,v 1.10 2007/06/18 10:31:17 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -54,7 +54,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Home controller.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.10 $ $Date: 2007/06/18 10:31:17 $
+ * @version $Revision$ $Date$
  */
 public class HomeController extends AbstractCommandController {
 
@@ -169,7 +169,7 @@ public class HomeController extends AbstractCommandController {
 	 * has the user's data (like collections, albums, etc) populated.
 	 * 
 	 * @author matt.magoffin
-	 * @version $Revision: 1.10 $ $Date: 2007/06/18 10:31:17 $
+	 * @version $Revision$ $Date$
 	 */
 	public static class PostProcessor implements XDataPostProcessor {
 		

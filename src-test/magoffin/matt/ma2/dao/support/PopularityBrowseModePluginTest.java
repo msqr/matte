@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: PopularityBrowseModePluginTest.java,v 1.3 2007/09/29 21:24:11 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -55,7 +55,7 @@ import magoffin.matt.ma2.support.BrowseAlbumsCommand;
  * Test case for the {@link PopularityBrowseModePlugin} class.
  *
  * @author matt
- * @version $Revision: 1.3 $ $Date: 2007/09/29 21:24:11 $
+ * @version $Revision$ $Date$
  */
 public class PopularityBrowseModePluginTest extends
 		AbstractSpringEnabledTransactionalTest {

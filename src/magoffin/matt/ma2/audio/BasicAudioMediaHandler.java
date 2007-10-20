@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: BasicAudioMediaHandler.java,v 1.1 2007/02/01 03:44:12 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -37,7 +37,7 @@ import org.springframework.core.io.Resource;
  * {@link magoffin.matt.ma2.MediaHandler} implementation for audio files.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.1 $ $Date: 2007/02/01 03:44:12 $
+ * @version $Revision$ $Date$
  */
 public class BasicAudioMediaHandler extends BasicIconBasedMediaHandler {
 	

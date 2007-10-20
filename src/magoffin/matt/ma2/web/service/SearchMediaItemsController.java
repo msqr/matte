@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: SearchMediaItemsController.java,v 1.5 2007/06/17 03:24:09 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -50,7 +50,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Controller for searching for media items.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.5 $ $Date: 2007/06/17 03:24:09 $
+ * @version $Revision$ $Date$
  */
 public class SearchMediaItemsController extends AbstractCommandController {
 

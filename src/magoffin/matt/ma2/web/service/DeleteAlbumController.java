@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: DeleteAlbumController.java,v 1.5 2007/07/13 22:17:51 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -49,7 +49,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Delete an album.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.5 $ $Date: 2007/07/13 22:17:51 $
+ * @version $Revision$ $Date$
  */
 public class DeleteAlbumController extends AbstractCommandController {
 	

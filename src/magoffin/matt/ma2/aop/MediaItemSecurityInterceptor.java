@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MediaItemSecurityInterceptor.java,v 1.6 2007/09/05 10:34:02 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -49,7 +49,7 @@ import org.aopalliance.intercept.MethodInvocation;
  * AOP security interceptor for MediaItem instances.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.6 $ $Date: 2007/09/05 10:34:02 $
+ * @version $Revision$ $Date$
  */
 public class MediaItemSecurityInterceptor extends AbstractSecurityInterceptor {
 	

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: BizContext.java,v 1.4 2007/07/27 00:38:20 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -38,7 +38,7 @@ import magoffin.matt.xweb.util.AppContextSupport;
  * context-specific information to get passed into the Biz layer.</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.4 $ $Date: 2007/07/27 00:38:20 $
+ * @version $Revision$ $Date$
  */
 public interface BizContext {
 	

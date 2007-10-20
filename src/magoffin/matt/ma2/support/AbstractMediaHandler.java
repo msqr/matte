@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AbstractMediaHandler.java,v 1.21 2007/09/10 02:52:39 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -119,7 +119,7 @@ import org.springframework.util.FileCopyUtils;
  * </dl>
  * 
  * @author matt.magoffin
- * @version $Revision: 1.21 $ $Date: 2007/09/10 02:52:39 $
+ * @version $Revision$ $Date$
  */
 public abstract class AbstractMediaHandler implements MediaHandler {
 	

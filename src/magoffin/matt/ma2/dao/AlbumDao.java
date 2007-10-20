@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AlbumDao.java,v 1.17 2007/09/20 05:05:35 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -38,7 +38,7 @@ import magoffin.matt.ma2.domain.Theme;
  * DAO for Album objects.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.17 $ $Date: 2007/09/20 05:05:35 $
+ * @version $Revision$ $Date$
  */
 public interface AlbumDao  extends GenericDao<Album,Long> {
 

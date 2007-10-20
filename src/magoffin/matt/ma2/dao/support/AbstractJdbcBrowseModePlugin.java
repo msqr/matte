@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AbstractJdbcBrowseModePlugin.java,v 1.3 2007/10/01 01:53:21 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -80,7 +80,7 @@ import org.springframework.util.ClassUtils;
  * configuration of themselves.</p>
  * 
  * @author matt.magoffin
- * @version $Revision: 1.3 $ $Date: 2007/10/01 01:53:21 $
+ * @version $Revision$ $Date$
  */
 public abstract class AbstractJdbcBrowseModePlugin implements BrowseModePlugin {
 

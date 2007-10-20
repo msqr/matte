@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: RotateEffect.java,v 1.5 2007/07/30 09:35:01 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -40,7 +40,7 @@ import magoffin.matt.ma2.domain.MediaItem;
  * parameter.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.5 $ $Date: 2007/07/30 09:35:01 $
+ * @version $Revision$ $Date$
  */
 public class RotateEffect extends BaseAwtMediaEffect {
 

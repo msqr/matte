@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: ForgotPasswordConfirmForm.java,v 1.1 2007/07/25 08:58:02 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -41,7 +41,7 @@ import org.springframework.web.servlet.ModelAndView;
  * the password.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.1 $ $Date: 2007/07/25 08:58:02 $
+ * @version $Revision$ $Date$
  */
 public class ForgotPasswordConfirmForm extends AbstractForm {
 

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MediaItemDaoTest.java,v 1.5 2007/01/23 06:43:11 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -49,7 +49,7 @@ import org.apache.log4j.Logger;
  * Unit test for the {@link MediaItemDao} class.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.5 $ $Date: 2007/01/23 06:43:11 $
+ * @version $Revision$ $Date$
  */
 public class MediaItemDaoTest extends AbstractSpringEnabledTransactionalTest {
 

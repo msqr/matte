@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: HibernateMediaItemDao.java,v 1.20 2007/05/17 01:02:05 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -50,7 +50,7 @@ import org.hibernate.criterion.Restrictions;
  * Hibernate implementation of {@link magoffin.matt.ma2.dao.MediaItemDao}.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.20 $ $Date: 2007/05/17 01:02:05 $
+ * @version $Revision$ $Date$
  */
 public class HibernateMediaItemDao extends GenericHibernateDao<MediaItem,Long> 
 implements MediaItemDao {

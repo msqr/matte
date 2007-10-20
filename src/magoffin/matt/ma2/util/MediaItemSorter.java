@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MediaItemSorter.java,v 1.6 2007/07/15 08:21:21 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -35,7 +35,7 @@ import magoffin.matt.ma2.domain.MediaItem;
  * Comparator for MediaItem objects.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.6 $ $Date: 2007/07/15 08:21:21 $
+ * @version $Revision$ $Date$
  */
 public class MediaItemSorter implements Comparator<MediaItem> {
 	

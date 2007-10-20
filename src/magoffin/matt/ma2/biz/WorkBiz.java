@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: WorkBiz.java,v 1.9 2007/08/20 00:07:33 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -34,7 +34,7 @@ import java.util.concurrent.Future;
  * from overloading the system it's running on.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.9 $ $Date: 2007/08/20 00:07:33 $
+ * @version $Revision$ $Date$
  */
 public interface WorkBiz {
 

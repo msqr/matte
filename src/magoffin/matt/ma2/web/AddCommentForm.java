@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: AddCommentForm.java,v 1.1 2007/09/09 01:58:47 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -47,7 +47,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Form controller for adding user comments to media items.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.1 $ $Date: 2007/09/09 01:58:47 $
+ * @version $Revision$ $Date$
  */
 public class AddCommentForm extends AbstractForm {
 

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: ShareAlbumController.java,v 1.7 2007/09/05 07:35:17 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -49,7 +49,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Share (and un-share) an album.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.7 $ $Date: 2007/09/05 07:35:17 $
+ * @version $Revision$ $Date$
  */
 public class ShareAlbumController extends AbstractCommandController {
 	

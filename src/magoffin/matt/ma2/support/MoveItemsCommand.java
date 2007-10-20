@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MoveItemsCommand.java,v 1.1 2007/08/19 02:50:22 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -28,7 +28,7 @@ package magoffin.matt.ma2.support;
  * Command object for moving items into a new Collection.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.1 $ $Date: 2007/08/19 02:50:22 $
+ * @version $Revision$ $Date$
  */
 public class MoveItemsCommand {
 

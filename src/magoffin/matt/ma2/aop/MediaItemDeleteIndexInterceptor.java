@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: MediaItemDeleteIndexInterceptor.java,v 1.3 2007/05/29 00:15:02 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -48,7 +48,7 @@ import magoffin.matt.ma2.domain.MediaItem;
  * {@link magoffin.matt.ma2.biz.IndexBiz#removeMediaItemFromIndex(Long)}.</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.3 $ $Date: 2007/05/29 00:15:02 $
+ * @version $Revision$ $Date$
  */
 public class MediaItemDeleteIndexInterceptor extends AbstractIndexInterceptor {
 

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: JobInfoController.java,v 1.6 2007/01/03 01:50:45 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -44,7 +44,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Controller to get information about a job.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.6 $ $Date: 2007/01/03 01:50:45 $
+ * @version $Revision$ $Date$
  */
 public class JobInfoController extends AbstractCommandController {
 	

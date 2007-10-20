@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: TimeZoneDaoTest.java,v 1.6 2007/01/23 06:43:11 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -37,7 +37,7 @@ import magoffin.matt.ma2.domain.TimeZone;
  * Test case for TimeZoneDao.
  * 
  * @author matt.magoffin
- * @version $Revision: 1.6 $ $Date: 2007/01/23 06:43:11 $
+ * @version $Revision$ $Date$
  */
 public class TimeZoneDaoTest extends AbstractSpringEnabledTransactionalTest {
 

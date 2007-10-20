@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: LogoffController.java,v 1.2 2006/03/21 20:31:52 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -35,7 +35,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Controller to handle logging a user out.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.2 $ $Date: 2006/03/21 20:31:52 $
+ * @version $Revision$ $Date$
  */
 public class LogoffController extends AbstractController {
 

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: UserBiz.java,v 1.17 2007/09/09 10:38:25 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -44,7 +44,7 @@ import magoffin.matt.ma2.support.PreferencesCommand;
  * Business interface for users.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.17 $ $Date: 2007/09/09 10:38:25 $
+ * @version $Revision$ $Date$
  */
 public interface UserBiz {
 

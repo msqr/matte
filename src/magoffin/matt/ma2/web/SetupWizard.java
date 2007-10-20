@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: SetupWizard.java,v 1.9 2007/09/09 10:38:25 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -49,7 +49,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Wizard for configuring Matte options, when running for the first time.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.9 $ $Date: 2007/09/09 10:38:25 $
+ * @version $Revision$ $Date$
  */
 public class SetupWizard extends AbstractWizardForm {
 	

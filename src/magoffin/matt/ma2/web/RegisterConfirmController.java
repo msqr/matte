@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: RegisterConfirmController.java,v 1.4 2007/01/06 08:32:03 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -42,7 +42,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Controller for handing the registration confirmation request.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.4 $ $Date: 2007/01/06 08:32:03 $
+ * @version $Revision$ $Date$
  */
 public class RegisterConfirmController extends AbstractCommandController {
 	

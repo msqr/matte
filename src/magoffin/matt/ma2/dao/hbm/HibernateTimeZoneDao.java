@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: HibernateTimeZoneDao.java,v 1.6 2006/11/19 06:57:22 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -38,7 +38,7 @@ import magoffin.matt.ma2.domain.TimeZone;
  * <p>info</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.6 $ $Date: 2006/11/19 06:57:22 $
+ * @version $Revision$ $Date$
  */
 public class HibernateTimeZoneDao extends GenericIndexableHibernateDao<TimeZone,String> 
 implements TimeZoneDao {

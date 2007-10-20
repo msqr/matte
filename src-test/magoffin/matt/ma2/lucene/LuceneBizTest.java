@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: LuceneBizTest.java,v 1.11 2007/03/07 03:46:36 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -60,7 +60,7 @@ import magoffin.matt.ma2.support.MediaInfoCommand;
  * Test case for the {@link LuceneBiz} class.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.11 $ $Date: 2007/03/07 03:46:36 $
+ * @version $Revision$ $Date$
  */
 public class LuceneBizTest extends AbstractSpringEnabledTransactionalTest {
 	

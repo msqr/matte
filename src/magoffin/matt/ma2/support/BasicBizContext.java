@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: BasicBizContext.java,v 1.3 2007/07/21 10:20:14 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -40,7 +40,7 @@ import magoffin.matt.xweb.util.AppContextSupport;
  * <p>Note this implementation is not thread safe.</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.3 $ $Date: 2007/07/21 10:20:14 $
+ * @version $Revision$ $Date$
  */
 public class BasicBizContext implements BizContext {
 	

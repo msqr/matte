@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: ImageMediaHelper.java,v 1.4 2007/07/13 22:17:51 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -61,7 +61,7 @@ import magoffin.matt.ma2.domain.MediaItem;
  * this class to render image previews for their video files.</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.4 $ $Date: 2007/07/13 22:17:51 $
+ * @version $Revision$ $Date$
  */
 public class ImageMediaHelper {
 	

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: UserBizImpl.java,v 1.43 2007/09/19 07:43:05 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -142,7 +142,7 @@ import org.springframework.validation.Validator;
  * </dl>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.43 $ $Date: 2007/09/19 07:43:05 $
+ * @version $Revision$ $Date$
  */
 public class UserBizImpl implements UserBiz {
 	

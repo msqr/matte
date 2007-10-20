@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: SortAlbumsForm.java,v 1.4 2007/07/11 03:21:14 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -58,7 +58,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Controller to save the ordering of child albums within an album.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.4 $ $Date: 2007/07/11 03:21:14 $
+ * @version $Revision$ $Date$
  */
 public class SortAlbumsForm extends AbstractForm {
 	

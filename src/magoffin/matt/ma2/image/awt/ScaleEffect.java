@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id: ScaleEffect.java,v 1.6 2007/07/31 10:12:09 matt Exp $
+ * $Id$
  * ===================================================================
  */
 
@@ -43,7 +43,7 @@ import magoffin.matt.ma2.support.Geometry;
  * before this effect is applied.</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision: 1.6 $ $Date: 2007/07/31 10:12:09 $
+ * @version $Revision$ $Date$
  */
 public class ScaleEffect extends BaseAwtMediaEffect {
 	
