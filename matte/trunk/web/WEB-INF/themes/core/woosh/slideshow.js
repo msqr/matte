@@ -981,7 +981,7 @@ StarRating.prototype = {
 				if ( isAjaxLogonRedirect(t) ) {
 					me.loggedOutRating = me.currentRating;
 					me.resetRating(0);
-					popup(webContext+'/logonPop.do', 'rating_logon', 450, 200);
+					popup(webContext+'/logonPop.do?errorMsg=login.setrating', 'rating_logon', 450, 200);
 				}
 			}, 
 			onFailure: function(t) {
