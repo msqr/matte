@@ -657,6 +657,7 @@
 		<property name="commandClass" value="magoffin.matt.ma2.support.LogonCommand"/>
 		<property name="validator" ref="logonValidator"/>
 		<property name="formView" value="logon"/>
+		<property name="bindOnNewForm" value="true"/>
 		<property name="successView" value="home-redirect"/>
 	</bean>
 	<bean id="logonPopForm" parent="logonForm">

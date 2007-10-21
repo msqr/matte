@@ -26,6 +26,8 @@
 
 package magoffin.matt.ma2.web;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -35,6 +37,7 @@ import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.support.LogonCommand;
 
 import org.springframework.validation.BindException;
+import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -47,6 +50,17 @@ public class LogonForm extends AbstractForm {
 	
 	private UserBiz userBiz;
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	protected Map referenceData(HttpServletRequest request, Object command,
+			Errors errors) throws Exception {
+		LogonCommand cmd = (LogonCommand)command;
+		if ( cmd.getErrorMsg() != null ) {
+			errors.reject(cmd.getErrorMsg(), cmd.getErrorMsg());
+		}
+		return null;
+	}
+
 	@Override
 	protected ModelAndView onSubmit(HttpServletRequest request,
 			HttpServletResponse response, Object command, BindException errors)

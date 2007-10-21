@@ -39,6 +39,7 @@ public class LogonCommand {
 	private String login = null;
 	private String password = null;
 	private String code = null;
+	private String errorMsg = null;
 	
 	/**
 	 * @return Returns the code.
@@ -80,6 +81,20 @@ public class LogonCommand {
 	 */
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	/**
+	 * @return the errorMsg
+	 */
+	public String getErrorMsg() {
+		return errorMsg;
+	}
+
+	/**
+	 * @param errorMsg the errorMsg to set
+	 */
+	public void setErrorMsg(String errorMsg) {
+		this.errorMsg = errorMsg;
 	}
 	
 }
