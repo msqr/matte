@@ -40,7 +40,7 @@ dl.class-properties dd {
 
 dl.class-properties dd code {
 	font-size: 9pt;
-	font-family: courier new, monospace;
+	font-family: "courier new", monospace;
 }
 
 dl.class-properties dd + dt {
