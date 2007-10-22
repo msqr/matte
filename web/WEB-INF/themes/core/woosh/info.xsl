@@ -235,7 +235,7 @@
 						</xsl:call-template>
 						<xsl:text>)</xsl:text>
 					-->
-					<li id="item-rating-container">
+					<li id="item-rating-container" style="display: none;">
 						<span id="item-rating">
 							<xsl:value-of select="$meta-item/m:user-rating[m:rating-user[@user-id = $acting-user/@user-id]]/@rating"/>
 							<xsl:text>,</xsl:text>
