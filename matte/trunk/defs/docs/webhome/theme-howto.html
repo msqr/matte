@@ -244,43 +244,43 @@ now ready to start modifying your new theme however you see fit!</p>
 that includes web elements that web-heads will be familiar with. Here is a sample XWeb XML document
 with all Matte-specific XML removed:</p>
 
-<textarea name="code" class="xml">
-<?xml version="1.0" encoding="UTF-8"?>
-<x:x-data xmlns:x="http://msqr.us/xsd/jaxb-web">
-  <x:x-context>
-    <x:server-name>localhost</x:server-name>
-    <x:server-port>8484</x:server-port>
-    <x:user-agent>Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en) 
-    	AppleWebKit/418.9.1 Safari/419.3</x:user-agent>
-    <x:user-locale>en</x:user-locale>
-    <x:web-context>/matte</x:web-context>
-    <x:path>/viewMediaItemInfo.do</x:path>
-  </x:x-context>
-  <x:x-session>
-    <x:x-param key="magoffin.matt.ma2.ViewedItems">[8260]</x:x-param>
-  </x:x-session>
-  <x:x-request>
-    <x:param key="themeId">1</x:param>
-    <x:param key="itemId">8260</x:param>
-    <x:param key="_"/>
-    <x:param key="albumKey">OfPl7RxidbzpUMyry331j6shLO4M</x:param>
-  </x:x-request>
-  <x:x-request-headers>
-    <x:param key="accept">*/*</x:param>
-    <x:param key="accept-language">en</x:param>
-    <x:param key="accept-encoding">gzip, deflate</x:param>
-    <x:param key="cookie">JSESSIONID=CB2EE17213B8707DFA824F68FEC36178; cookies=true</x:param>
-    <x:param key="referer">http://localhost:8484/matte/album.do?key=OfPl7RxidbzpUMyry331j6shLO4M</x:param>
-    <x:param key="user-agent">Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en) 
-    	AppleWebKit/418.9.1 Safari/419.3</x:param>
-    <x:param key="x-prototype-version">1.4.0</x:param>
-    <x:param key="x-requested-with">XMLHttpRequest</x:param>
-    <x:param key="connection">keep-alive</x:param>
-    <x:param key="host">localhost:8484</x:param>
-  </x:x-request-headers>
-  <x:x-model>
-  </x:x-model>
-</x:x-data>
+<textarea name="code" rows="1" cols="80" class="xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;x:x-data xmlns:x="http://msqr.us/xsd/jaxb-web"&gt;
+  &lt;x:x-context&gt;
+    &lt;x:server-name&gt;localhost&lt;/x:server-name&gt;
+    &lt;x:server-port&gt;8484&lt;/x:server-port&gt;
+    &lt;x:user-agent&gt;Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en) 
+    	AppleWebKit/418.9.1 Safari/419.3&lt;/x:user-agent&gt;
+    &lt;x:user-locale&gt;en&lt;/x:user-locale&gt;
+    &lt;x:web-context&gt;/matte&lt;/x:web-context&gt;
+    &lt;x:path&gt;/viewMediaItemInfo.do&lt;/x:path&gt;
+  &lt;/x:x-context&gt;
+  &lt;x:x-session&gt;
+    &lt;x:x-param key="magoffin.matt.ma2.ViewedItems"&gt;[8260]&lt;/x:x-param&gt;
+  &lt;/x:x-session&gt;
+  &lt;x:x-request&gt;
+    &lt;x:param key="themeId"&gt;1&lt;/x:param&gt;
+    &lt;x:param key="itemId"&gt;8260&lt;/x:param&gt;
+    &lt;x:param key="_"/&gt;
+    &lt;x:param key="albumKey"&gt;OfPl7RxidbzpUMyry331j6shLO4M&lt;/x:param&gt;
+  &lt;/x:x-request&gt;
+  &lt;x:x-request-headers&gt;
+    &lt;x:param key="accept"&gt;*/*&lt;/x:param&gt;
+    &lt;x:param key="accept-language"&gt;en&lt;/x:param&gt;
+    &lt;x:param key="accept-encoding"&gt;gzip, deflate&lt;/x:param&gt;
+    &lt;x:param key="cookie"&gt;JSESSIONID=CB2EE17213B8707DFA824F68FEC36178; cookies=true&lt;/x:param&gt;
+    &lt;x:param key="referer"&gt;http://localhost:8484/matte/album.do?key=OfPl7RxidbzpUMyry331j6shLO4M&lt;/x:param&gt;
+    &lt;x:param key="user-agent"&gt;Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en) 
+    	AppleWebKit/418.9.1 Safari/419.3&lt;/x:param&gt;
+    &lt;x:param key="x-prototype-version"&gt;1.4.0&lt;/x:param&gt;
+    &lt;x:param key="x-requested-with"&gt;XMLHttpRequest&lt;/x:param&gt;
+    &lt;x:param key="connection"&gt;keep-alive&lt;/x:param&gt;
+    &lt;x:param key="host"&gt;localhost:8484&lt;/x:param&gt;
+  &lt;/x:x-request-headers&gt;
+  &lt;x:x-model&gt;
+  &lt;/x:x-model&gt;
+&lt;/x:x-data&gt;
 </textarea>
 
 <p>Note the use of the XWeb namespace <code>http://msqr.us/xsd/jaxb-web</code>, mapped to the <code>x</code> 
@@ -350,61 +350,61 @@ namespace, which we'll use in this document as well. This element is a container
 <code>&lt;m:album&gt;</code> and <code>&lt;m:item&gt;</code> elements. Here is an example Matte XML model 
 document, this one from a detail view request:</p>
 
-<textarea name="code" class="xml">
-<?xml version="1.0" encoding="UTF-8"?>
-<m:model xmlns:m="http://msqr.us/xsd/matte">
-  <m:album album-date="2007-01-02T00:00:00+13:00" album-id="1727"
+<textarea name="code" rows="1" cols="80" class="xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;m:model xmlns:m="http://msqr.us/xsd/matte"&gt;
+  &lt;m:album album-date="2007-01-02T00:00:00+13:00" album-id="1727"
     allow-anonymous="true" allow-feed="true" allow-original="true"
     anonymous-key="3psrM7WNN1IxivJyU66zYnuzrOw"
     creation-date="2007-01-03T10:59:46.525+13:00"
     modify-date="2007-01-09T16:47:57.036+13:00" name="My Album"
-    sort-mode="1">
-    <m:comment>This is a test album. And look how cool it is!</m:comment>
-    <m:owner access-level="1"
+    sort-mode="1"&gt;
+    &lt;m:comment&gt;This is a test album. And look how cool it is!&lt;/m:comment&gt;
+    &lt;m:owner access-level="1"
       anonymous-key="617518b954c6126dfc34fa1e6ad13e4b" country="US"
       creation-date="2007-01-03T08:30:52.685+13:00"
       email="matte-admin@localhost.localdomain" language="en"
       login="matte-admin" name="Admin"
-      password="{SHA}W6ph5Mm5Pz8GgiULbPgzG37mj9g=" quota="0" user-id="2">
-      <m:tz code="Pacific/Auckland" name="Pacific/Auckland"
-        offset="43200000" ordering="559"/>
-      <m:thumbnail-setting quality="GOOD" size="THUMB_NORMAL"/>
-      <m:view-setting quality="GOOD" size="NORMAL"/>
-    </m:owner>
-    <m:theme author="Matte Development Team" author-email="matte@noplace"
+      password="{SHA}W6ph5Mm5Pz8GgiULbPgzG37mj9g=" quota="0" user-id="2"&gt;
+      &lt;m:tz code="Pacific/Auckland" name="Pacific/Auckland"
+        offset="43200000" ordering="559"/&gt;
+      &lt;m:thumbnail-setting quality="GOOD" size="THUMB_NORMAL"/&gt;
+      &lt;m:view-setting quality="GOOD" size="NORMAL"/&gt;
+    &lt;/m:owner&gt;
+    &lt;m:theme author="Matte Development Team" author-email="matte@noplace"
       base-path="/core/woosh"
       creation-date="2007-01-03T08:30:52.534+13:00" name="Woosh"
-      theme-id="1">
-      <m:description>Default theme.</m:description>
-    </m:theme>
-  </m:album>
-  <m:item creation-date="2006-11-24T19:57:56+13:00" custom-date="false"
+      theme-id="1"&gt;
+      &lt;m:description&gt;Default theme.&lt;/m:description&gt;
+    &lt;/m:theme&gt;
+  &lt;/m:album&gt;
+  &lt;m:item creation-date="2006-11-24T19:57:56+13:00" custom-date="false"
     display-order="0" file-size="3375256" height="2336" hits="8"
     icon-height="0" icon-width="0" item-id="1729" mime="image/jpeg"
     name="IMG_4398.jpg" path="Goodbye 2006/IMG_4398.jpg" use-icon="false"
-    width="3504">
-    <m:tz code="Pacific/Auckland" name="Pacific/Auckland" offset="43200000"
-      ordering="559"/>
-    <m:tz-display code="Pacific/Auckland" name="Pacific/Auckland"
-      offset="43200000" ordering="559"/>
-    <m:metadata key="APERTURE">4.9708557</m:metadata>
-    <m:metadata key="CAMERA_MAKE">Canon</m:metadata>
-    <m:metadata key="CAMERA_MODEL">Canon EOS 20D</m:metadata>
-    <m:metadata key="EXPOSURE_BIAS">0</m:metadata>
-    <m:metadata key="EXPOSURE_TIME">1/6</m:metadata>
-    <m:metadata key="F_STOP">F5.6</m:metadata>
-    <m:metadata key="FLASH">true</m:metadata>
-    <m:metadata key="FOCAL_LENGTH">135.0</m:metadata>
-    <m:metadata key="FOCAL_LENGTH_35MM_EQUIV">216</m:metadata>
-    <m:metadata key="ORIENTATION">1</m:metadata>
-    <m:metadata key="SHUTTER_SPEED">1/6</m:metadata>
-  </m:item>
-  <m:theme author="Matte Development Team" author-email="matte@noplace"
+    width="3504"&gt;
+    &lt;m:tz code="Pacific/Auckland" name="Pacific/Auckland" offset="43200000"
+      ordering="559"/&gt;
+    &lt;m:tz-display code="Pacific/Auckland" name="Pacific/Auckland"
+      offset="43200000" ordering="559"/&gt;
+    &lt;m:metadata key="APERTURE"&gt;4.9708557&lt;/m:metadata&gt;
+    &lt;m:metadata key="CAMERA_MAKE"&gt;Canon&lt;/m:metadata&gt;
+    &lt;m:metadata key="CAMERA_MODEL"&gt;Canon EOS 20D&lt;/m:metadata&gt;
+    &lt;m:metadata key="EXPOSURE_BIAS"&gt;0&lt;/m:metadata&gt;
+    &lt;m:metadata key="EXPOSURE_TIME"&gt;1/6&lt;/m:metadata&gt;
+    &lt;m:metadata key="F_STOP"&gt;F5.6&lt;/m:metadata&gt;
+    &lt;m:metadata key="FLASH"&gt;true&lt;/m:metadata&gt;
+    &lt;m:metadata key="FOCAL_LENGTH"&gt;135.0&lt;/m:metadata&gt;
+    &lt;m:metadata key="FOCAL_LENGTH_35MM_EQUIV"&gt;216&lt;/m:metadata&gt;
+    &lt;m:metadata key="ORIENTATION"&gt;1&lt;/m:metadata&gt;
+    &lt;m:metadata key="SHUTTER_SPEED"&gt;1/6&lt;/m:metadata&gt;
+  &lt;/m:item&gt;
+  &lt;m:theme author="Matte Development Team" author-email="matte@noplace"
     base-path="/core/woosh" creation-date="2007-01-03T08:30:52.534+13:00"
-    name="Woosh" theme-id="1">
-    <m:description>Default theme.</m:description>
-  </m:theme>
-</m:model>
+    name="Woosh" theme-id="1"&gt;
+    &lt;m:description&gt;Default theme.&lt;/m:description&gt;
+  &lt;/m:theme&gt;
+&lt;/m:model&gt;
 </textarea>
 
 <p>This provides a good example of the Matte XML elements you'll work with in a theme.</p>
@@ -554,16 +554,16 @@ parameters:</p>
 <p>For example, here's how you would generate an HTML JavaScript &lt;script&gt; tag
 for the <code>behaviour.js</code> theme resource:</p>
 
-<textarea name="code" class="xslt">
+<textarea name="code" rows="1" cols="80" class="xslt">
 &lt;script type="text/javascript"&gt;
-  <xsl:attribute name="src">
-    <xsl:call-template name="get-resource-url">
-      <xsl:with-param name="resource" select="'behaviour.js'"/>
-      <xsl:with-param name="theme" select="$theme"/>
-      <xsl:with-param name="web-context" select="$web-context"/>
-    </xsl:call-template>
-  </xsl:attribute>
-  <xsl:text> </xsl:text>
+  &lt;xsl:attribute name="src"&gt;
+    &lt;xsl:call-template name="get-resource-url"&gt;
+      &lt;xsl:with-param name="resource" select="'behaviour.js'"/&gt;
+      &lt;xsl:with-param name="theme" select="$theme"/&gt;
+      &lt;xsl:with-param name="web-context" select="$web-context"/&gt;
+    &lt;/xsl:call-template&gt;
+  &lt;/xsl:attribute&gt;
+  &lt;xsl:text&gt; &lt;/xsl:text&gt;
 &lt;/script&gt;
 </textarea>
 
@@ -645,17 +645,17 @@ image (where <code>$display-image</code> is a variable holding a <code>&lt;m:ite
 element and <code>$display-album</code> is a variable holding a <code>&lt;m:album&gt;</code>
 element):</p>
 
-<textarea name="code" class="xslt">
+<textarea name="code" rows="1" cols="80" class="xslt">
 &lt;img alt="{$display-item/@name}"&gt;
-  <xsl:attribute name="src">
-    <xsl:call-template name="render-media-server-url">
-      <xsl:with-param name="item" select="$display-item"/>
-      <xsl:with-param name="album-key" select="$display-album/@anonymous-key"/>
-      <xsl:with-param name="size" select="THUMB_NORMAL"/>
-      <xsl:with-param name="quality" select="GOOD"/>
-      <xsl:with-param name="web-context" select="$web-context"/>
-    </xsl:call-template>
-  </xsl:attribute>
+  &lt;xsl:attribute name="src"&gt;
+    &lt;xsl:call-template name="render-media-server-url"&gt;
+      &lt;xsl:with-param name="item" select="$display-item"/&gt;
+      &lt;xsl:with-param name="album-key" select="$display-album/@anonymous-key"/&gt;
+      &lt;xsl:with-param name="size" select="THUMB_NORMAL"/&gt;
+      &lt;xsl:with-param name="quality" select="GOOD"/&gt;
+      &lt;xsl:with-param name="web-context" select="$web-context"/&gt;
+    &lt;/xsl:call-template&gt;
+  &lt;/xsl:attribute&gt;
 &lt;/img&gt;
 </textarea>
 

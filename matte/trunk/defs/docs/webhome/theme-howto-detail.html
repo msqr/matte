@@ -38,7 +38,7 @@ populated so the detail view can render it as desired (i.e. they <b>will</b> hav
 
 <p>Here is a sample of the detail data model:</p>
 
-<textarea name="code" class="xml">
+<textarea name="code" rows="1" cols="80" class="xml">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;x:x-data xmlns:x="http://msqr.us/xsd/jaxb-web"
   xmlns:m="http://msqr.us/xsd/matte"&gt;
@@ -203,7 +203,7 @@ the media item or downloading the entire album.</p>
 	<li>
 		<p><b>Item name:</b> here the item's name is displayed, with XSLT like this:</p>
 		
-<textarea name="code" class="xslt">
+<textarea name="code" rows="1" cols="80" class="xslt">
 &lt;xsl:template match="m:model" mode="meta"&gt;
 	&lt;xsl:variable name="meta-item" select="m:item[1]"/&gt;
 	&lt;h2 id="ii-imageTitle"&gt;
@@ -224,7 +224,7 @@ the media item or downloading the entire album.</p>
 		or logged in but with a different time zone set in the Matte user profile, the item's
 		time zone is also displayed.</p>
 		
-<textarea name="code" class="xslt">
+<textarea name="code" rows="1" cols="80" class="xslt">
 &lt;div id="ii-imageDate"&gt;
 	&lt;xsl:choose&gt;
 		&lt;xsl:when test="string-length($meta-item/@item-date) &gt;= 19"&gt;
@@ -255,7 +255,7 @@ the media item or downloading the entire album.</p>
 
 		<p>Which renders HTML like this:</p>
 		
-<textarea name="code" class="html">
+<textarea name="code" rows="1" cols="80" class="html">
 &lt;div id="ii-imageDate"&gt;2 Jan 2007 18:45 (Pacific/Auckland)&lt;/div&gt;
 </textarea>
 	</li>
@@ -264,7 +264,7 @@ the media item or downloading the entire album.</p>
 		<code>&lt;m:description&gt;</code> element. The comments are a free text field entered
 		by the owner of the item. Woosh renders it like this:</p>
 		
-<textarea name="code" class="xslt">
+<textarea name="code" rows="1" cols="80" class="xslt">
 &lt;xsl:value-of select="$meta-item/m:description"/&gt;
 </textarea>
 	</li>
@@ -278,7 +278,7 @@ the media item or downloading the entire album.</p>
 		
 		<p>Our example here is for a photograph. The metadata available from this item is:</p>
 		
-<textarea name="code" class="xml">
+<textarea name="code" rows="1" cols="80" class="xml">
 &lt;m:metadata key="APERTURE"&gt;5.3106995&lt;/m:metadata&gt;
 &lt;m:metadata key="CAMERA_MAKE"&gt;Canon&lt;/m:metadata&gt;
 &lt;m:metadata key="CAMERA_MODEL"&gt;Canon EOS 20D&lt;/m:metadata&gt;
@@ -299,52 +299,52 @@ the media item or downloading the entire album.</p>
 		is available in the <code>@mime</code> attribute of each item: if the MIME type starts
 		with <code>image</code>, it renders these specific types.</p>
 		
-<textarea name="code" class="xslt">
-<xsl:template match="m:item[starts-with(@mime,'image')]" mode="extra-extra-info">
-	<xsl:choose>
-		<xsl:when test="key('item-meta','EXPOSURE_TIME')">
-			<span class="ii-attribute">Shutter: </span>
-			<xsl:value-of select="key('item-meta','EXPOSURE_TIME')"/>
-			<xsl:text>s</xsl:text>
-			<br />
-		</xsl:when>
-		<xsl:when test="key('item-meta','SHUTTER_SPEED')">
-			<span class="ii-attribute">Shutter: </span>
-			<xsl:value-of select="key('item-meta','SHUTTER_SPEED')"/>
-			<br />
-		</xsl:when>
-	</xsl:choose>
-	<xsl:if test="key('item-meta','F_STOP')">
-		<span class="ii-attribute">F-Stop: </span>
-		<xsl:value-of select="key('item-meta','F_STOP')"/>
-		<br />
-	</xsl:if>
-	<xsl:if test="key('item-meta','FOCAL_LENGTH')">
-		<span class="ii-attribute">Focal length: </span>
-		<xsl:value-of select="key('item-meta','FOCAL_LENGTH')"/>
-		<xsl:text>mm</xsl:text>
-		<xsl:if test="key('item-meta','FOCAL_LENGTH_35MM_EQUIV')">
-			<xsl:text> (</xsl:text>
-			<xsl:value-of select="key('item-meta','FOCAL_LENGTH_35MM_EQUIV')"/>
-			<xsl:text> @ 35mm)</xsl:text>
-		</xsl:if>
-		<br />
-	</xsl:if>
-	<xsl:if test="m:metadata[@key='CAMERA_MODEL']">
-		<span class="ii-attribute">Camera: </span>
-		<xsl:value-of select="m:metadata[@key='CAMERA_MODEL']"/>
-		<br />
-	</xsl:if>
-	<!--  The following are not m:metadata elements, but we display them here -->
-	<span class="ii-attribute">File: </span><xsl:value-of select="@path"/><br />
-	<xsl:if test="@width &gt; 0">
-		<span class="ii-attribute">Original size: </span>
-		<xsl:value-of select="@width"/>
-		<xsl:text> x </xsl:text>
-		<xsl:value-of select="@height"/>
-		<br />
-	</xsl:if>
-</xsl:template>
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;xsl:template match="m:item[starts-with(@mime,'image')]" mode="extra-extra-info"&gt;
+	&lt;xsl:choose&gt;
+		&lt;xsl:when test="key('item-meta','EXPOSURE_TIME')"&gt;
+			&lt;span class="ii-attribute"&gt;Shutter: &lt;/span&gt;
+			&lt;xsl:value-of select="key('item-meta','EXPOSURE_TIME')"/&gt;
+			&lt;xsl:text&gt;s&lt;/xsl:text&gt;
+			&lt;br /&gt;
+		&lt;/xsl:when&gt;
+		&lt;xsl:when test="key('item-meta','SHUTTER_SPEED')"&gt;
+			&lt;span class="ii-attribute"&gt;Shutter: &lt;/span&gt;
+			&lt;xsl:value-of select="key('item-meta','SHUTTER_SPEED')"/&gt;
+			&lt;br /&gt;
+		&lt;/xsl:when&gt;
+	&lt;/xsl:choose&gt;
+	&lt;xsl:if test="key('item-meta','F_STOP')"&gt;
+		&lt;span class="ii-attribute"&gt;F-Stop: &lt;/span&gt;
+		&lt;xsl:value-of select="key('item-meta','F_STOP')"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="key('item-meta','FOCAL_LENGTH')"&gt;
+		&lt;span class="ii-attribute"&gt;Focal length: &lt;/span&gt;
+		&lt;xsl:value-of select="key('item-meta','FOCAL_LENGTH')"/&gt;
+		&lt;xsl:text&gt;mm&lt;/xsl:text&gt;
+		&lt;xsl:if test="key('item-meta','FOCAL_LENGTH_35MM_EQUIV')"&gt;
+			&lt;xsl:text&gt; (&lt;/xsl:text&gt;
+			&lt;xsl:value-of select="key('item-meta','FOCAL_LENGTH_35MM_EQUIV')"/&gt;
+			&lt;xsl:text&gt; @ 35mm)&lt;/xsl:text&gt;
+		&lt;/xsl:if&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='CAMERA_MODEL']"&gt;
+		&lt;span class="ii-attribute"&gt;Camera: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='CAMERA_MODEL']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;!--  The following are not m:metadata elements, but we display them here --&gt;
+	&lt;span class="ii-attribute"&gt;File: &lt;/span&gt;&lt;xsl:value-of select="@path"/&gt;&lt;br /&gt;
+	&lt;xsl:if test="@width &gt; 0"&gt;
+		&lt;span class="ii-attribute"&gt;Original size: &lt;/span&gt;
+		&lt;xsl:value-of select="@width"/&gt;
+		&lt;xsl:text&gt; x &lt;/xsl:text&gt;
+		&lt;xsl:value-of select="@height"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+&lt;/xsl:template&gt;
 </textarea>
 
 		<p>Note the last two items are not really metadata elements, in the data model
@@ -353,104 +353,103 @@ the media item or downloading the entire album.</p>
 		are the <code>@width</code> and <code>@height</code> attributes of the item.
 		All of this renders HTML like the following:</p>
 		
-<textarea name="code" class="html">
-<span class="ii-attribute">Shutter: </span>1/8s<br/>
-<span class="ii-attribute">F-Stop: </span>F6.3<br/>
-<span class="ii-attribute">Focal length: </span>90.0mm (144 @ 35mm)<br/>
-<span class="ii-attribute">Camera: </span>Canon EOS 20D<br/>
-<span class="ii-attribute">File: </span>4 months!/IMG_4525.JPG<br/>
-<span class="ii-attribute">Original size: </span>3504 x 2336<br/>
+<textarea name="code" rows="1" cols="80" class="html">
+&lt;span class="ii-attribute"&gt;Shutter: &lt;/span&gt;1/8s&lt;br/&gt;
+&lt;span class="ii-attribute"&gt;F-Stop: &lt;/span&gt;F6.3&lt;br/&gt;
+&lt;span class="ii-attribute"&gt;Focal length: &lt;/span&gt;90.0mm (144 @ 35mm)&lt;br/&gt;
+&lt;span class="ii-attribute"&gt;Camera: &lt;/span&gt;Canon EOS 20D&lt;br/&gt;
+&lt;span class="ii-attribute"&gt;File: &lt;/span&gt;4 months!/IMG_4525.JPG&lt;br/&gt;
+&lt;span class="ii-attribute"&gt;Original size: &lt;/span&gt;3504 x 2336&lt;br/&gt;
 </textarea>
 		
 		<p>Woosh also has similar XSLT templates for audio media items and video media items:</p>
 		
-<textarea name="code" class="xslt">
-<xsl:template match="m:item[starts-with(@mime,'audio')]" mode="extra-extra-info">
-	<!-- FIXME needs to be updated -->
-	<xsl:if test="m:metadata[@key='SONG_NAME']">
-		<span class="ii-attribute"><xsl:value-of select="key('i18n','meta.audio.songName')"/>: </span>
-		<xsl:value-of select="m:metadata[@key='SONG_NAME']"/>
-		<br />
-	</xsl:if>
-	<xsl:if test="m:metadata[@key='ARTIST']">
-		<span class="ii-attribute"><xsl:value-of select="key('i18n','meta.audio.artist')"/>: </span>
-		<xsl:value-of select="m:metadata[@key='ARTIST']"/>
-		<br />
-	</xsl:if>
-	<xsl:if test="m:metadata[@key='ALBUM']">
-		<span class="ii-attribute"><xsl:value-of select="key('i18n','meta.audio.album')"/>: </span>
-		<xsl:value-of select="m:metadata[@key='ALBUM']"/>
-		<br />
-	</xsl:if>
-	<xsl:if test="m:metadata[@key='TRACK_NUM']">
-		<span class="ii-attribute"><xsl:value-of select="key('i18n','meta.audio.track')"/>: </span>
-		<xsl:value-of select="m:metadata[@key='TRACK_NUM']"/>
-		<xsl:if test="m:metadata[@key='TRACK_TOTAL']">
-			<xsl:text> </xsl:text>
-			<xsl:value-of select="key('i18n','meta.of')"/>
-			<xsl:text> </xsl:text>
-			<xsl:value-of select="m:metadata[@key='TRACK_TOTAL']"/>
-		</xsl:if>
-		<br />
-	</xsl:if>
-	<xsl:if test="m:metadata[@key='GENRE']">
-		<span class="ii-attribute"><xsl:value-of select="key('i18n','meta.audio.genre')"/>: </span>
-		<xsl:call-template name="render-id3-genre">
-			<xsl:with-param name="genre" select="string(m:metadata[@key='GENRE'])"/>
-		</xsl:call-template>
-		<br />
-	</xsl:if>
-	<xsl:if test="m:metadata[@key='AUDIO_FORMAT']">
-		<span class="ii-attribute"><xsl:value-of select="key('i18n','meta.audio.format')"/>: </span>
-		<xsl:value-of select="m:metadata[@key='AUDIO_FORMAT']"/>
-		<br />
-	</xsl:if>
-	<xsl:if test="m:metadata[@key='BIT_RATE']">
-		<span class="ii-attribute"><xsl:value-of select="key('i18n','meta.audio.bitRate')"/>: </span>
-		<xsl:value-of select="m:metadata[@key='BIT_RATE']"/>
-		<br />
-	</xsl:if>
-	<xsl:if test="m:metadata[@key='SAMPLE_RATE']">
-		<span class="ii-attribute"><xsl:value-of select="key('i18n','meta.audio.sampleRate')"/>: </span>
-		<xsl:value-of select="m:metadata[@key='SAMPLE_RATE']"/>
-		<br />
-	</xsl:if>
-</xsl:template>
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;xsl:template match="m:item[starts-with(@mime,'audio')]" mode="extra-extra-info"&gt;
+	&lt;xsl:if test="m:metadata[@key='SONG_NAME']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.audio.songName')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='SONG_NAME']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='ARTIST']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.audio.artist')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='ARTIST']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='ALBUM']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.audio.album')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='ALBUM']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='TRACK_NUM']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.audio.track')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='TRACK_NUM']"/&gt;
+		&lt;xsl:if test="m:metadata[@key='TRACK_TOTAL']"&gt;
+			&lt;xsl:text&gt; &lt;/xsl:text&gt;
+			&lt;xsl:value-of select="key('i18n','meta.of')"/&gt;
+			&lt;xsl:text&gt; &lt;/xsl:text&gt;
+			&lt;xsl:value-of select="m:metadata[@key='TRACK_TOTAL']"/&gt;
+		&lt;/xsl:if&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='GENRE']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.audio.genre')"/&gt;: &lt;/span&gt;
+		&lt;xsl:call-template name="render-id3-genre"&gt;
+			&lt;xsl:with-param name="genre" select="string(m:metadata[@key='GENRE'])"/&gt;
+		&lt;/xsl:call-template&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='AUDIO_FORMAT']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.audio.format')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='AUDIO_FORMAT']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='BIT_RATE']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.audio.bitRate')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='BIT_RATE']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='SAMPLE_RATE']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.audio.sampleRate')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='SAMPLE_RATE']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+&lt;/xsl:template&gt;
 
-<xsl:template match="m:item[starts-with(@mime,'video')]" mode="extra-extra-info">
-	<xsl:if test="m:metadata[@key='DURATION_TIME']">
-		<span class="ii-attribute"><xsl:value-of select="key('i18n','meta.video.duration')"/>: </span>
-		<xsl:value-of select="m:metadata[@key='DURATION_TIME']"/>
-		<br />
-	</xsl:if>
-	<xsl:if test="@width &gt; 0 and @height &gt; 0">
-		<span class="ii-attribute"><xsl:value-of select="key('i18n','meta.dimensions')"/>: </span>
-		<xsl:value-of select="@width"/>
-		<xsl:text> x </xsl:text>
-		<xsl:value-of select="@height"/>
-		<br />
-	</xsl:if>
-	<xsl:if test="m:metadata[@key='FPS']">
-		<span class="ii-attribute"><xsl:value-of select="key('i18n','meta.video.fps')"/>: </span>
-		<xsl:value-of select="format-number(m:metadata[@key='FPS'],'#0.#')"/>
-		<br />
-	</xsl:if>
-	<xsl:if test="m:metadata[@key='VIDEO_FORMAT']">
-		<span class="ii-attribute"><xsl:value-of select="key('i18n','meta.video.format')"/>: </span>
-		<xsl:value-of select="m:metadata[@key='VIDEO_FORMAT']"/>
-		<br />
-	</xsl:if>
-	<xsl:if test="m:metadata[@key='AUDIO_FORMAT']">
-		<span class="ii-attribute"><xsl:value-of select="key('i18n','meta.audio.format')"/>: </span>
-		<xsl:value-of select="m:metadata[@key='AUDIO_FORMAT']"/>
-		<br />
-	</xsl:if>
-	<xsl:if test="not(m:metadata[@key='VIDEO_FORMAT'] or m:metadata[@key='AUDIO_FORMAT'])">
-		<span class="ii-attribute"><xsl:value-of select="key('i18n','mime.displayName')"/>: </span>
-		<xsl:value-of select="@mime"/>
-		<br />
-	</xsl:if>
-</xsl:template>
+&lt;xsl:template match="m:item[starts-with(@mime,'video')]" mode="extra-extra-info"&gt;
+	&lt;xsl:if test="m:metadata[@key='DURATION_TIME']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.video.duration')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='DURATION_TIME']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="@width &gt; 0 and @height &gt; 0"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.dimensions')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="@width"/&gt;
+		&lt;xsl:text&gt; x &lt;/xsl:text&gt;
+		&lt;xsl:value-of select="@height"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='FPS']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.video.fps')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="format-number(m:metadata[@key='FPS'],'#0.#')"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='VIDEO_FORMAT']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.video.format')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='VIDEO_FORMAT']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='AUDIO_FORMAT']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.audio.format')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='AUDIO_FORMAT']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="not(m:metadata[@key='VIDEO_FORMAT'] or m:metadata[@key='AUDIO_FORMAT'])"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','mime.displayName')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="@mime"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+&lt;/xsl:template&gt;
 </textarea>
 		
 	</li>
@@ -465,7 +464,7 @@ the media item or downloading the entire album.</p>
 		the user who created the tag, and the tags, as a comma-delimited list. The XML looks
 		like this:</p>
 		
-<textarea name="code" class="xml">
+<textarea name="code" rows="1" cols="80" class="xml">
 &lt;m:user-tag creation-date="2007-07-20T17:07:18.013+12:00"
   tag-id="1706"&gt;
   &lt;m:tagging-user access-level="0"
@@ -483,17 +482,17 @@ the media item or downloading the entire album.</p>
 
 		<p>Woosh renders all available tags as a single list, like this:</p>
 		
-<textarea name="code" class="xslt">
-<xsl:if test="m:user-tag">
-	<span class="ii-attribute"><xsl:value-of select="key('i18n','meta.tags')"/>: </span>
-	<xsl:for-each select="m:user-tag">
-		<xsl:if test="position() &gt; 1">
-			<xsl:text>, </xsl:text>
-		</xsl:if>
-		<xsl:value-of select="m:tag"/>
-	</xsl:for-each>
-	<br/>
-</xsl:if>
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;xsl:if test="m:user-tag"&gt;
+	&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.tags')"/&gt;: &lt;/span&gt;
+	&lt;xsl:for-each select="m:user-tag"&gt;
+		&lt;xsl:if test="position() &gt; 1"&gt;
+			&lt;xsl:text&gt;, &lt;/xsl:text&gt;
+		&lt;/xsl:if&gt;
+		&lt;xsl:value-of select="m:tag"/&gt;
+	&lt;/xsl:for-each&gt;
+	&lt;br/&gt;
+&lt;/xsl:if&gt;
 </textarea>
 
 	</li>
@@ -503,25 +502,25 @@ the media item or downloading the entire album.</p>
 		attribute of the item. Woosh displays the hit count, making use of several message
 		bundle keys to display the appropriate message based on how many hits there are:</p>
 
-<textarea name="code" class="xslt">
-<span class="ii-attribute"><xsl:value-of select="key('i18n','meta.hits')"/>: </span>
-<xsl:choose>
-	<xsl:when test="@hits &gt; 0">
-		<xsl:value-of select="@hits"/>
-		<xsl:text> </xsl:text>
-		<xsl:choose>
-			<xsl:when test="@hits &gt; 1">
-				<xsl:value-of select="key('i18n','meta.hits.times')"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="key('i18n','meta.hits.time')"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:when>
-	<xsl:otherwise>
-		<xsl:value-of select="key('i18n','meta.hits.never')"/>
-	</xsl:otherwise>
-</xsl:choose>
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.hits')"/&gt;: &lt;/span&gt;
+&lt;xsl:choose&gt;
+	&lt;xsl:when test="@hits &gt; 0"&gt;
+		&lt;xsl:value-of select="@hits"/&gt;
+		&lt;xsl:text&gt; &lt;/xsl:text&gt;
+		&lt;xsl:choose&gt;
+			&lt;xsl:when test="@hits &gt; 1"&gt;
+				&lt;xsl:value-of select="key('i18n','meta.hits.times')"/&gt;
+			&lt;/xsl:when&gt;
+			&lt;xsl:otherwise&gt;
+				&lt;xsl:value-of select="key('i18n','meta.hits.time')"/&gt;
+			&lt;/xsl:otherwise&gt;
+		&lt;/xsl:choose&gt;
+	&lt;/xsl:when&gt;
+	&lt;xsl:otherwise&gt;
+		&lt;xsl:value-of select="key('i18n','meta.hits.never')"/&gt;
+	&lt;/xsl:otherwise&gt;
+&lt;/xsl:choose&gt;
 </textarea>
 
 		<p>All of this will render one of</p>
@@ -534,8 +533,8 @@ the media item or downloading the entire album.</p>
 		
 		<p>The rendered HTML looks like:</p>
 		
-<textarea name="code" class="html">
-<span class="ii-attribute">Viewed: </span> 7 times<br/>
+<textarea name="code" rows="1" cols="80" class="html">
+&lt;span class="ii-attribute"&gt;Viewed: &lt;/span&gt; 7 times&lt;br/&gt;
 </textarea>
 	
 	</li>
@@ -549,27 +548,27 @@ the media item or downloading the entire album.</p>
 		because in most other cases Matte probably does not know how to scale the item to different 
 		sizes. The XSLT looks like this:</p>
 		
-<textarea name="code" class="xslt">
-<!-- if MIME is an image, MediaServer can scale for download... -->
-<xsl:if test="starts-with($meta-item/@mime,'image')">
-	<li>
-		<a title="{key('i18n','action.download.title')}">
-			<xsl:attribute name="href">
-				<xsl:call-template name="render-media-server-url">
-					<xsl:with-param name="item" select="$meta-item"/>
-					<xsl:with-param name="album-key" select="m:album[1]/@anonymous-key"/>
-					<xsl:with-param name="size" select="$single-size"/>
-					<xsl:with-param name="quality" select="$single-quality"/>
-					<xsl:with-param name="download" select="true()"/>
-					<xsl:with-param name="web-context" select="$web-context"/>
-				</xsl:call-template>
-			</xsl:attribute>
-			<xsl:value-of select="key('i18n','action.download')"/>
-			<xsl:text> </xsl:text>
-			<xsl:value-of select="$meta-item-type-name"/>
-		</a>
-	</li>
-</xsl:if>
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;!-- if MIME is an image, MediaServer can scale for download... --&gt;
+&lt;xsl:if test="starts-with($meta-item/@mime,'image')"&gt;
+	&lt;li&gt;
+		&lt;a title="{key('i18n','action.download.title')}"&gt;
+			&lt;xsl:attribute name="href"&gt;
+				&lt;xsl:call-template name="render-media-server-url"&gt;
+					&lt;xsl:with-param name="item" select="$meta-item"/&gt;
+					&lt;xsl:with-param name="album-key" select="m:album[1]/@anonymous-key"/&gt;
+					&lt;xsl:with-param name="size" select="$single-size"/&gt;
+					&lt;xsl:with-param name="quality" select="$single-quality"/&gt;
+					&lt;xsl:with-param name="download" select="true()"/&gt;
+					&lt;xsl:with-param name="web-context" select="$web-context"/&gt;
+				&lt;/xsl:call-template&gt;
+			&lt;/xsl:attribute&gt;
+			&lt;xsl:value-of select="key('i18n','action.download')"/&gt;
+			&lt;xsl:text&gt; &lt;/xsl:text&gt;
+			&lt;xsl:value-of select="$meta-item-type-name"/&gt;
+		&lt;/a&gt;
+	&lt;/li&gt;
+&lt;/xsl:if&gt;
 </textarea>
 
 	<p>Here you can see on line 11 Woosh is passing <code>true()</code> as the <code>download</code>
@@ -587,30 +586,30 @@ the media item or downloading the entire album.</p>
 	
 	<p>In Woosh, the XSLT looks like this:</p>
 	
-<textarea name="code" class="xslt">
-<xsl:if test="m:album[1]/@allow-original = 'true'">
-	<li>
-		<a title="{key('i18n','action.download.original.title')}">
-			<xsl:attribute name="href">
-				<xsl:call-template name="render-media-server-url">
-					<xsl:with-param name="item" select="$meta-item"/>
-					<xsl:with-param name="album-key" select="m:album[1]/@anonymous-key"/>
-					<xsl:with-param name="download" select="true()"/>
-					<xsl:with-param name="original" select="true()"/>
-					<xsl:with-param name="web-context" select="$web-context"/>
-				</xsl:call-template>
-			</xsl:attribute>
-			<xsl:value-of select="key('i18n','action.download.original')"/>
-			<xsl:text> </xsl:text>
-			<xsl:value-of select="$meta-item-type-name"/>
-		</a> 
-		<xsl:text> (</xsl:text>
-		<xsl:call-template name="render-file-size">
-			<xsl:with-param name="size" select="$meta-item/@file-size"/>
-		</xsl:call-template>
-		<xsl:text>)</xsl:text>
-	</li>
-</xsl:if>
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;xsl:if test="m:album[1]/@allow-original = 'true'"&gt;
+	&lt;li&gt;
+		&lt;a title="{key('i18n','action.download.original.title')}"&gt;
+			&lt;xsl:attribute name="href"&gt;
+				&lt;xsl:call-template name="render-media-server-url"&gt;
+					&lt;xsl:with-param name="item" select="$meta-item"/&gt;
+					&lt;xsl:with-param name="album-key" select="m:album[1]/@anonymous-key"/&gt;
+					&lt;xsl:with-param name="download" select="true()"/&gt;
+					&lt;xsl:with-param name="original" select="true()"/&gt;
+					&lt;xsl:with-param name="web-context" select="$web-context"/&gt;
+				&lt;/xsl:call-template&gt;
+			&lt;/xsl:attribute&gt;
+			&lt;xsl:value-of select="key('i18n','action.download.original')"/&gt;
+			&lt;xsl:text&gt; &lt;/xsl:text&gt;
+			&lt;xsl:value-of select="$meta-item-type-name"/&gt;
+		&lt;/a&gt; 
+		&lt;xsl:text&gt; (&lt;/xsl:text&gt;
+		&lt;xsl:call-template name="render-file-size"&gt;
+			&lt;xsl:with-param name="size" select="$meta-item/@file-size"/&gt;
+		&lt;/xsl:call-template&gt;
+		&lt;xsl:text&gt;)&lt;/xsl:text&gt;
+	&lt;/li&gt;
+&lt;/xsl:if&gt;
 </textarea>
 		
 		<p>Notice here on lines 8 and 9, both <code>download</code> and <code>original</code>
@@ -621,20 +620,20 @@ the media item or downloading the entire album.</p>
 		
 		<p>The final HTML rendered by Woosh looks like this:</p>
 		
-<textarea name="code" class="html">
-<li>
-	<a title="Download this image at the current size you are viewing it at." 
-		href="/matte/media.do?id=32&amp;albumKey=gVL9ZPlb2pW7MuntmQQwd7gSPuCA&amp;size=NORMAL&amp;quality=GOOD&amp;download=true">
+<textarea name="code" rows="1" cols="80" class="html">
+&lt;li&gt;
+	&lt;a title="Download this image at the current size you are viewing it at." 
+		href="/matte/media.do?id=32&amp;albumKey=gVL9ZPlb2pW7MuntmQQwd7gSPuCA&amp;size=NORMAL&amp;quality=GOOD&amp;download=true"&gt;
 		Download current size image
-	</a>
-</li>
-<li>
-	<a title="Download the original image" 
-		href="/matte/media.do?id=32&amp;albumKey=gVL9ZPlb2pW7MuntmQQwd7gSPuCA&amp;original=true&amp;download=true">
+	&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;
+	&lt;a title="Download the original image" 
+		href="/matte/media.do?id=32&amp;albumKey=gVL9ZPlb2pW7MuntmQQwd7gSPuCA&amp;original=true&amp;download=true"&gt;
 		Download original image
-	</a> 
+	&lt;/a&gt; 
 	(3.37 MB)
-</li>
+&lt;/li&gt;
 </textarea>
 		
 	</li>
@@ -644,34 +643,34 @@ the media item or downloading the entire album.</p>
 		displays this in a friendly way, using kilobytes or megabytes, by using the 
 		<code>render-file-size</code> template that is available in Matte:</p>
 
-<textarea name="code" class="xslt">
-<!--
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;!--
 	Named Template: render-file-size
 	
 	Generate text representation of the size of a file. For example:
 	
-	render-file-size(size = 14875) => 14.53 KB
+	render-file-size(size = 14875) =&gt; 14.53 KB
 	
 	Parameters:
 	size - an integer, assumed to be the number of bytes of the file
--->
-<xsl:template name="render-file-size">
-	<xsl:param name="size"/>
-	<xsl:choose>
-		<xsl:when test="$size &gt; 1048576">
-			<xsl:value-of select="format-number($size div 1048576,'#,##0.##')"/>
-			<xsl:text> MB</xsl:text>
-		</xsl:when>
-		<xsl:when test="$size &gt; 1024">
-			<xsl:value-of select="format-number($size div 1024,'#,##0.##')"/>
-			<xsl:text> KB</xsl:text>
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:value-of select="format-number($size div 1024,'#,##0')"/>
-			<xsl:text> bytes</xsl:text>
-		</xsl:otherwise>
-	</xsl:choose>
-</xsl:template>
+--&gt;
+&lt;xsl:template name="render-file-size"&gt;
+	&lt;xsl:param name="size"/&gt;
+	&lt;xsl:choose&gt;
+		&lt;xsl:when test="$size &gt; 1048576"&gt;
+			&lt;xsl:value-of select="format-number($size div 1048576,'#,##0.##')"/&gt;
+			&lt;xsl:text&gt; MB&lt;/xsl:text&gt;
+		&lt;/xsl:when&gt;
+		&lt;xsl:when test="$size &gt; 1024"&gt;
+			&lt;xsl:value-of select="format-number($size div 1024,'#,##0.##')"/&gt;
+			&lt;xsl:text&gt; KB&lt;/xsl:text&gt;
+		&lt;/xsl:when&gt;
+		&lt;xsl:otherwise&gt;
+			&lt;xsl:value-of select="format-number($size div 1024,'#,##0')"/&gt;
+			&lt;xsl:text&gt; bytes&lt;/xsl:text&gt;
+		&lt;/xsl:otherwise&gt;
+	&lt;/xsl:choose&gt;
+&lt;/xsl:template&gt;
 </textarea>
 
 	</li>
@@ -686,50 +685,50 @@ the media item or downloading the entire album.</p>
 		items sized to the current view settings, and one for downloading the original files.
 		The XSLT looks like this:</p>
 		
-<textarea name="code" class="xslt">
-<li class="sep">
-	<a title="{key('i18n','action.download.album.title')}">
-		<xsl:attribute name="href">
-			<xsl:call-template name="render-download-album-url">
-				<xsl:with-param name="album-key" select="m:album[1]/@anonymous-key"/>
-				<xsl:with-param name="original" select="false()"/>
-				<xsl:with-param name="web-context" select="$web-context"/>
-			</xsl:call-template>
-		</xsl:attribute>
-		<xsl:value-of select="key('i18n','action.download.album')"/>
-	</a>
-</li>
-<xsl:if test="m:album[1]/@allow-original = 'true'">
-	<li>
-		<a title="{key('i18n','action.download.album.original.title')}">
-			<xsl:attribute name="href">
-				<xsl:call-template name="render-download-album-url">
-					<xsl:with-param name="album-key" select="m:album[1]/@anonymous-key"/>
-					<xsl:with-param name="original" select="true()"/>
-					<xsl:with-param name="web-context" select="$web-context"/>
-				</xsl:call-template>
-			</xsl:attribute>
-			<xsl:value-of select="key('i18n','action.download.album.original')"/>
-		</a> 
-	</li>
-</xsl:if>
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;li class="sep"&gt;
+	&lt;a title="{key('i18n','action.download.album.title')}"&gt;
+		&lt;xsl:attribute name="href"&gt;
+			&lt;xsl:call-template name="render-download-album-url"&gt;
+				&lt;xsl:with-param name="album-key" select="m:album[1]/@anonymous-key"/&gt;
+				&lt;xsl:with-param name="original" select="false()"/&gt;
+				&lt;xsl:with-param name="web-context" select="$web-context"/&gt;
+			&lt;/xsl:call-template&gt;
+		&lt;/xsl:attribute&gt;
+		&lt;xsl:value-of select="key('i18n','action.download.album')"/&gt;
+	&lt;/a&gt;
+&lt;/li&gt;
+&lt;xsl:if test="m:album[1]/@allow-original = 'true'"&gt;
+	&lt;li&gt;
+		&lt;a title="{key('i18n','action.download.album.original.title')}"&gt;
+			&lt;xsl:attribute name="href"&gt;
+				&lt;xsl:call-template name="render-download-album-url"&gt;
+					&lt;xsl:with-param name="album-key" select="m:album[1]/@anonymous-key"/&gt;
+					&lt;xsl:with-param name="original" select="true()"/&gt;
+					&lt;xsl:with-param name="web-context" select="$web-context"/&gt;
+				&lt;/xsl:call-template&gt;
+			&lt;/xsl:attribute&gt;
+			&lt;xsl:value-of select="key('i18n','action.download.album.original')"/&gt;
+		&lt;/a&gt; 
+	&lt;/li&gt;
+&lt;/xsl:if&gt;
 </textarea>
 
 		<p>This renders HTML like this:</p>
 		
-<textarea name="code" class="html">
-<li class="sep">
-	<a title="Download all the items in this album as a zip archive, with the items sized..." 
-		href="/matte/downloadAlbum.do?albumKey=gVL9ZPlb2pW7MuntmQQwd7gSPuCA">
+<textarea name="code" rows="1" cols="80" class="html">
+&lt;li class="sep"&gt;
+	&lt;a title="Download all the items in this album as a zip archive, with the items sized..." 
+		href="/matte/downloadAlbum.do?albumKey=gVL9ZPlb2pW7MuntmQQwd7gSPuCA"&gt;
 		Download album (current size items)
-	</a>
-</li>
-<li>
-	<a title="Download all the original items in this album as a zip archive (can be quite large)." 
-		href="/matte/downloadAlbum.do?albumKey=gVL9ZPlb2pW7MuntmQQwd7gSPuCA&original=true">
+	&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;
+	&lt;a title="Download all the original items in this album as a zip archive (can be quite large)." 
+		href="/matte/downloadAlbum.do?albumKey=gVL9ZPlb2pW7MuntmQQwd7gSPuCA&amp;original=true"&gt;
 		Download album (originals)
-	</a>
-</li>
+	&lt;/a&gt;
+&lt;/li&gt;
 </textarea>
 
 	</li>
@@ -740,7 +739,7 @@ the media item or downloading the entire album.</p>
 		<code>&lt;m:user&gt;</code> object). The rating value is stored as the 
 		<code>@rating</code> attribute:</p>
 		
-<textarea name="code" class="xml">
+<textarea name="code" rows="1" cols="80" class="xml">
 &lt;m:user-rating creation-date="2007-07-20T17:29:06.068+12:00"
   rating="3" rating-id="1707"&gt;
   &lt;m:rating-user access-level="0"
@@ -758,48 +757,48 @@ the media item or downloading the entire album.</p>
 		
 		<p>Woosh displays all available user ratings, using the following XSLT:</p>
 		
-<textarea name="code" class="xslt">
-<xsl:if test="$meta-item/m:user-rating">
-	<div id="ii-ratings">
-		<h3>User Ratings</h3>
-		<xsl:apply-templates select="$meta-item/m:user-rating" mode="meta"/>
-		<xsl:variable name="num-ratings" select="count($meta-item/m:user-rating)"/>
-		<xsl:if test="$num-ratings &gt; 1">
-			<div class="sep"></div>
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;xsl:if test="$meta-item/m:user-rating"&gt;
+	&lt;div id="ii-ratings"&gt;
+		&lt;h3&gt;User Ratings&lt;/h3&gt;
+		&lt;xsl:apply-templates select="$meta-item/m:user-rating" mode="meta"/&gt;
+		&lt;xsl:variable name="num-ratings" select="count($meta-item/m:user-rating)"/&gt;
+		&lt;xsl:if test="$num-ratings &gt; 1"&gt;
+			&lt;div class="sep"&gt;&lt;/div&gt;
 			
-			<span class="ii-attribute">
-				<xsl:text>Average (from </xsl:text>
-				<xsl:value-of select="$num-ratings"/>
-				<xsl:text> ratings): </xsl:text>
-			</span>
-			<xsl:value-of select="format-number(
-				sum($meta-item/m:user-rating/@rating) div $num-ratings, '0.#')"/>
-			<br />
-		</xsl:if>
-	</div>
-</xsl:if>
+			&lt;span class="ii-attribute"&gt;
+				&lt;xsl:text&gt;Average (from &lt;/xsl:text&gt;
+				&lt;xsl:value-of select="$num-ratings"/&gt;
+				&lt;xsl:text&gt; ratings): &lt;/xsl:text&gt;
+			&lt;/span&gt;
+			&lt;xsl:value-of select="format-number(
+				sum($meta-item/m:user-rating/@rating) div $num-ratings, '0.#')"/&gt;
+			&lt;br /&gt;
+		&lt;/xsl:if&gt;
+	&lt;/div&gt;
+&lt;/xsl:if&gt;
 
-<!--  follwed by later... -->
-<xsl:template match="m:user-rating" mode="meta">
-	<span class="ii-attribute">
-		<xsl:choose>
-			<xsl:when test="m:rating-user">
-				<xsl:value-of select="m:rating-user/@name"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text>Anonymous user</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>
-	</span>
-	<xsl:text>: </xsl:text>
-	<xsl:value-of select="@rating"/>
-	<em>
-		<xsl:text> (</xsl:text>
-		<xsl:value-of select="date:format-date(substring(@creation-date,1,19),'d MMM yyyy, h:mm a')"/>
-		<xsl:text>)</xsl:text>
-	</em>
-	<br />
-</xsl:template>
+&lt;!--  follwed by later... --&gt;
+&lt;xsl:template match="m:user-rating" mode="meta"&gt;
+	&lt;span class="ii-attribute"&gt;
+		&lt;xsl:choose&gt;
+			&lt;xsl:when test="m:rating-user"&gt;
+				&lt;xsl:value-of select="m:rating-user/@name"/&gt;
+			&lt;/xsl:when&gt;
+			&lt;xsl:otherwise&gt;
+				&lt;xsl:text&gt;Anonymous user&lt;/xsl:text&gt;
+			&lt;/xsl:otherwise&gt;
+		&lt;/xsl:choose&gt;
+	&lt;/span&gt;
+	&lt;xsl:text&gt;: &lt;/xsl:text&gt;
+	&lt;xsl:value-of select="@rating"/&gt;
+	&lt;em&gt;
+		&lt;xsl:text&gt; (&lt;/xsl:text&gt;
+		&lt;xsl:value-of select="date:format-date(substring(@creation-date,1,19),'d MMM yyyy, h:mm a')"/&gt;
+		&lt;xsl:text&gt;)&lt;/xsl:text&gt;
+	&lt;/em&gt;
+	&lt;br /&gt;
+&lt;/xsl:template&gt;
 </textarea>
 		
 		<p>Woosh calculates the average user rating, if there are more than one available, followed
