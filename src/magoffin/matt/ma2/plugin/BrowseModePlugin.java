@@ -33,9 +33,8 @@ import magoffin.matt.ma2.support.BrowseAlbumsCommand;
 /**
  * Plugin API for browse-mode types.
  * 
- * <p>A "browse mode" is a mode of browsing all shared albums or items of 
- * a single user. It defines a SQL query to use to geneate the browse 
- * search results with.</p>
+ * <p>A "browse mode" is a mode of browsing all shared albums or items of a single 
+ * user. It implements some query that can geneate a browse search results object.</p>
  *
  * @author matt
  * @version $Revision$ $Date$
