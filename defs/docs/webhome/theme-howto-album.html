@@ -45,7 +45,7 @@ have their detailed metadata elements available (i.e. they will not have
 
 <p>Here is a sample of the album data model:</p>
 
-<textarea name="code" class="xml">
+<textarea name="code" rows="1" cols="80" class="xml">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;x:x-data xmlns:x="http://msqr.us/xsd/jaxb-web" xmlns:m="http://msqr.us/xsd/matte"&gt;
   &lt;x:x-context&gt;
@@ -60,12 +60,12 @@ have their detailed metadata elements available (i.e. they will not have
   &lt;x:x-auxillary&gt;
     &lt;x:x-param key="display.album.key"&gt;2XlxVfKHja3CFGtMlyG57ofbchw&lt;/x:x-param&gt;
   &lt;/x:x-auxillary&gt;
-  <x:x-session>
-    <m:session>
-      <m:thumbnail-setting quality="GOOD" size="THUMB_NORMAL"/>
-      <m:view-setting quality="GOOD" size="NORMAL"/>
-    </m:session>
-  </x:x-session>
+  &lt;x:x-session&gt;
+    &lt;m:session&gt;
+      &lt;m:thumbnail-setting quality="GOOD" size="THUMB_NORMAL"/&gt;
+      &lt;m:view-setting quality="GOOD" size="NORMAL"/&gt;
+    &lt;/m:session&gt;
+  &lt;/x:x-session&gt;
   &lt;x:x-request&gt;
     &lt;x:param key="key"&gt;2XlxVfKHja3CFGtMlyG57ofbchw&lt;/x:param&gt;
   &lt;/x:x-request&gt;
@@ -215,27 +215,27 @@ items from this snippet in more detail:</p>
 		<p>The overall XSLT that generates the title (name and date)
 		looks like this:</p>
 		
-<textarea name="code" class="xslt">
-<xsl:template match="m:album" mode="title">
-	<xsl:value-of select="@name"/>
-	<xsl:if test="string-length(@name) &gt; 0">
-		<xsl:text> - </xsl:text>
-	</xsl:if>
-	<xsl:variable name="date">
-		<xsl:choose>
-			<xsl:when test="@album-date">
-				<xsl:value-of select="@album-date"/>
-			</xsl:when>
-			<xsl:when test="@modify-date">
-				<xsl:value-of select="@modify-date"/>
-			</xsl:when>
-			<xsl:when test="@creation-date">
-				<xsl:value-of select="@creation-date"/>
-			</xsl:when>
-		</xsl:choose>
-	</xsl:variable>
-	<xsl:value-of select="date:format-date(substring($date, 1, 19), 'yyyy.MM.dd')"/>
-</xsl:template>
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;xsl:template match="m:album" mode="title"&gt;
+	&lt;xsl:value-of select="@name"/&gt;
+	&lt;xsl:if test="string-length(@name) &gt; 0"&gt;
+		&lt;xsl:text&gt; - &lt;/xsl:text&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:variable name="date"&gt;
+		&lt;xsl:choose&gt;
+			&lt;xsl:when test="@album-date"&gt;
+				&lt;xsl:value-of select="@album-date"/&gt;
+			&lt;/xsl:when&gt;
+			&lt;xsl:when test="@modify-date"&gt;
+				&lt;xsl:value-of select="@modify-date"/&gt;
+			&lt;/xsl:when&gt;
+			&lt;xsl:when test="@creation-date"&gt;
+				&lt;xsl:value-of select="@creation-date"/&gt;
+			&lt;/xsl:when&gt;
+		&lt;/xsl:choose&gt;
+	&lt;/xsl:variable&gt;
+	&lt;xsl:value-of select="date:format-date(substring($date, 1, 19), 'yyyy.MM.dd')"/&gt;
+&lt;/xsl:template&gt;
 </textarea>
 	</li>
 	<li>
@@ -246,7 +246,7 @@ items from this snippet in more detail:</p>
 		Matte provides an XSLT template that is useful for this 
 		purpose:</p>
 		
-<textarea name="code" class="xslt">
+<textarea name="code" rows="1" cols="80" class="xslt">
 &lt;!--
 	Template: m:item, mode album-data
 	
@@ -264,54 +264,54 @@ items from this snippet in more detail:</p>
 	8: icon height
 	9: mime type
 --&gt;
-<xsl:template match="m:item" mode="album-data">
-	<xsl:text>[</xsl:text>
-	<xsl:value-of select="@item-id"/>
-	<xsl:text>,</xsl:text>
-	<xsl:value-of select="@width"/>
-	<xsl:text>,</xsl:text>
-	<xsl:value-of select="@height"/>
-	<xsl:text>,"</xsl:text>
-	<xsl:call-template name="javascript-string">
-		<xsl:with-param name="output-string" select="@path"/>
-	</xsl:call-template>
-	<xsl:text>","</xsl:text>
-	<xsl:call-template name="javascript-string">
-		<xsl:with-param name="output-string" select="@name"/>
-	</xsl:call-template>
-	<xsl:text>","</xsl:text>
-	<xsl:if test="m:comment">
-		<xsl:call-template name="javascript-string">
-			<xsl:with-param name="output-string" select="normalize-space(m:comment)"/>
-		</xsl:call-template>
-	</xsl:if>
-	<xsl:text>","</xsl:text>
-	<xsl:value-of select="date:format-date(substring(@creation-date,1,19),'dd MMM yyyy')"/>
-	<xsl:text>",</xsl:text>
-	<xsl:value-of select="@icon-width"/>
-	<xsl:text>,</xsl:text>
-	<xsl:value-of select="@icon-height"/>
-	<xsl:text>,"</xsl:text>
-	<xsl:value-of select="@mime"/>
-	<xsl:text>"]</xsl:text>
-	<xsl:if test="position() != last()">
-		<xsl:text>,</xsl:text>
-	</xsl:if>
-</xsl:template>
+&lt;xsl:template match="m:item" mode="album-data"&gt;
+	&lt;xsl:text&gt;[&lt;/xsl:text&gt;
+	&lt;xsl:value-of select="@item-id"/&gt;
+	&lt;xsl:text&gt;,&lt;/xsl:text&gt;
+	&lt;xsl:value-of select="@width"/&gt;
+	&lt;xsl:text&gt;,&lt;/xsl:text&gt;
+	&lt;xsl:value-of select="@height"/&gt;
+	&lt;xsl:text&gt;,"&lt;/xsl:text&gt;
+	&lt;xsl:call-template name="javascript-string"&gt;
+		&lt;xsl:with-param name="output-string" select="@path"/&gt;
+	&lt;/xsl:call-template&gt;
+	&lt;xsl:text&gt;","&lt;/xsl:text&gt;
+	&lt;xsl:call-template name="javascript-string"&gt;
+		&lt;xsl:with-param name="output-string" select="@name"/&gt;
+	&lt;/xsl:call-template&gt;
+	&lt;xsl:text&gt;","&lt;/xsl:text&gt;
+	&lt;xsl:if test="m:comment"&gt;
+		&lt;xsl:call-template name="javascript-string"&gt;
+			&lt;xsl:with-param name="output-string" select="normalize-space(m:comment)"/&gt;
+		&lt;/xsl:call-template&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:text&gt;","&lt;/xsl:text&gt;
+	&lt;xsl:value-of select="date:format-date(substring(@creation-date,1,19),'dd MMM yyyy')"/&gt;
+	&lt;xsl:text&gt;",&lt;/xsl:text&gt;
+	&lt;xsl:value-of select="@icon-width"/&gt;
+	&lt;xsl:text&gt;,&lt;/xsl:text&gt;
+	&lt;xsl:value-of select="@icon-height"/&gt;
+	&lt;xsl:text&gt;,"&lt;/xsl:text&gt;
+	&lt;xsl:value-of select="@mime"/&gt;
+	&lt;xsl:text&gt;"]&lt;/xsl:text&gt;
+	&lt;xsl:if test="position() != last()"&gt;
+		&lt;xsl:text&gt;,&lt;/xsl:text&gt;
+	&lt;/xsl:if&gt;
+&lt;/xsl:template&gt;
 </textarea>
 
 		<p>The way Woosh calls this template is like this:</p>
 		
-<textarea name="code" class="xslt">
+<textarea name="code" rows="1" cols="80" class="xslt">
 var imageData = [
 [-1,-1,-1,"dummy/path","dummy name","dummy comment","dummy date"],
-<xsl:apply-templates select="$display-album/m:item" mode="album-data"/>
+&lt;xsl:apply-templates select="$display-album/m:item" mode="album-data"/&gt;
 ];
 </textarea>
 		
 		<p>Which generates JavaScript like this:</p>
 		
-<textarea name="code" class="javascript">
+<textarea name="code" rows="1" cols="80" class="javascript">
 var imageData = [
 	[-1,-1,-1,"dummy/path","dummy name","dummy comment","dummy date"],
 	[8,1024,683,"_6A_1392.jpg","_6A_1392.jpg","","17 Dec 2006",,,"image/jpeg"],
@@ -328,14 +328,14 @@ var imageData = [
 		it should use. Matte makes this available to themes, so Woosh
 		generates some more JavaScript data to pass this to the client:</p>
 		
-<textarea name="code" class="xslt">
-<xsl:variable name="root-album" select="/x:x-data/x:x-model/m:model/descendant::m:album[1]"/>
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;xsl:variable name="root-album" select="/x:x-data/x:x-model/m:model/descendant::m:album[1]"/&gt;
 &lt;script type="text/javascript"&gt;
-	var albumKey = '<xsl:value-of select="$root-album/@anonymous-key"/>';
-	var webContext = '<xsl:value-of select="$web-context"/>';
-	var serverName = '<xsl:value-of select="$server-name"/>'
-	var serverPort = '<xsl:value-of select="$server-port"/>'
-	var myLang = '<xsl:value-of select="$user-locale"/>'
+	var albumKey = '&lt;xsl:value-of select="$root-album/@anonymous-key"/&gt;';
+	var webContext = '&lt;xsl:value-of select="$web-context"/&gt;';
+	var serverName = '&lt;xsl:value-of select="$server-name"/&gt;'
+	var serverPort = '&lt;xsl:value-of select="$server-port"/&gt;'
+	var myLang = '&lt;xsl:value-of select="$user-locale"/&gt;'
 &lt;/script&gt;
 </textarea>
 		
@@ -343,7 +343,7 @@ var imageData = [
 		generate the thumbnail images. The JavaScript (simplified here)
 		looks like this:</p>
 		
-<textarea name="code" class="javascript">
+<textarea name="code" rows="1" cols="80" class="javascript">
 var albumKey = '2XlxVfKHja3CFGtMlyG57ofbchw';
 var webContext = '/matte';
 var serverName = 'localhost'
@@ -374,7 +374,7 @@ for ( var i = 0; i &lt; imageData.length; i++ ) {
 		to how the thumbnails images are generated. Woosh does it in this 
 		way (again, simplifed here):</p>
 		
-<textarea name="code" class="javascript">
+<textarea name="code" rows="1" cols="80" class="javascript">
 function displayImage(imageNumber) {
 	var newImg = document.createElement("img");
 	var newImgUrl = webContext 
@@ -413,7 +413,7 @@ function handleDisplayImageLoad(newImg, imageNumber) {
 		<code>Ajax.Updater</code> class to call the detail URL and place the
 		result into the page. The JavaScript looks like this:</p>
 		
-<textarea name="code" class="javascript">
+<textarea name="code" rows="1" cols="80" class="javascript">
 function updateImageInfo(imageNumber) {
 	Element.addClassName('ii-imageMetaFrame', 'updating');
 	new Ajax.Updater(

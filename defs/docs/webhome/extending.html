@@ -404,35 +404,35 @@ JPEG and PNG <code>MediaHandler</code> instances configured in Matte.</p>
 like in Matte:</p>
 
 <textarea name="code" class="xml">
-<bean id="mp3MediaHandler" class="magoffin.matt.ma2.audio.BasicAudioMediaHandler">
-	<constructor-arg index="0" value="audio/mpeg"/>
-	<constructor-arg index="1" value="mp3"/>
-	<property name="domainObjectFactory" ref="domainObjectFactory"/>
-	<property name="mediaBiz" ref="mediaBizTarget"/>
-	<property name="imageMediaRequestDelegate">
-		<bean class="magoffin.matt.ma2.support.MimeTypeMediaHandlerDelegate">
-			<property name="delegateMap">
-				<map>
-					<entry key="image/jpeg" value-ref="jpegMediaHandler"/>
-					<entry key="image/png" value-ref="pngMediaHandler"/>
-				</map>
-			</property>
-		</bean>
-	</property>
-</bean>
-<bean id="jpegMediaHandler" class="magoffin.matt.ma2.image.iio.JpegMediaHandler">
-	<property name="domainObjectFactory" ref="domainObjectFactory"/>
-	<property name="mediaBiz" ref="mediaBizTarget"/>
-	<property name="imageMediaHelper" ref="imageMediaHelper"/>
-	<property name="awtMediaEffectMap" ref="awtEffectMap"/>
-	<property name="smetaPropertyMap">
-		<map>
-			<entry key="creationDateKey" value="DATE_TAKEN"/>
-		</map>
-	</property>
-</bean>
-<bean id="pngMediaHandler" class="magoffin.matt.ma2.image.iio.PngMediaHandler"
-	parent="jpegMediaHandler"/>
+&lt;bean id="mp3MediaHandler" class="magoffin.matt.ma2.audio.BasicAudioMediaHandler"&gt;
+	&lt;constructor-arg index="0" value="audio/mpeg"/&gt;
+	&lt;constructor-arg index="1" value="mp3"/&gt;
+	&lt;property name="domainObjectFactory" ref="domainObjectFactory"/&gt;
+	&lt;property name="mediaBiz" ref="mediaBizTarget"/&gt;
+	&lt;property name="imageMediaRequestDelegate"&gt;
+		&lt;bean class="magoffin.matt.ma2.support.MimeTypeMediaHandlerDelegate"&gt;
+			&lt;property name="delegateMap"&gt;
+				&lt;map&gt;
+					&lt;entry key="image/jpeg" value-ref="jpegMediaHandler"/&gt;
+					&lt;entry key="image/png" value-ref="pngMediaHandler"/&gt;
+				&lt;/map&gt;
+			&lt;/property&gt;
+		&lt;/bean&gt;
+	&lt;/property&gt;
+&lt;/bean&gt;
+&lt;bean id="jpegMediaHandler" class="magoffin.matt.ma2.image.iio.JpegMediaHandler"&gt;
+	&lt;property name="domainObjectFactory" ref="domainObjectFactory"/&gt;
+	&lt;property name="mediaBiz" ref="mediaBizTarget"/&gt;
+	&lt;property name="imageMediaHelper" ref="imageMediaHelper"/&gt;
+	&lt;property name="awtMediaEffectMap" ref="awtEffectMap"/&gt;
+	&lt;property name="smetaPropertyMap"&gt;
+		&lt;map&gt;
+			&lt;entry key="creationDateKey" value="DATE_TAKEN"/&gt;
+		&lt;/map&gt;
+	&lt;/property&gt;
+&lt;/bean&gt;
+&lt;bean id="pngMediaHandler" class="magoffin.matt.ma2.image.iio.PngMediaHandler"
+	parent="jpegMediaHandler"/&gt;
 </textarea>
 
 <p>Notice how the <code>mp3MediaHandler</code>'s 

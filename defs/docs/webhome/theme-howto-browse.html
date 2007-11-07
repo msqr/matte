@@ -49,7 +49,7 @@ You can, of course, sort them any way you like in the theme's XSLT.</p>
 
 <p>Here is a sample of the browse data model:</p>
 
-<textarea name="code" class="xml">
+<textarea name="code" rows="1" cols="80" class="xml">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;m:model xmlns:m="http://msqr.us/xsd/matte"&gt;
 	&lt;m:search-results returned-results="2" search-time="31" total-results="2"&gt;
@@ -216,7 +216,7 @@ returned (line 3), populated with two <code>&lt;m:album&gt;</code> elements
 	you'd have something like this (here the XSLT context node is a
 	<code>&lt;m:album&gt;</code> element):</p>
 	
-<textarea name="code" class="xslt">
+<textarea name="code" rows="1" cols="80" class="xslt">
 &lt;a&gt;
   &lt;xsl:attribute name="title"&gt;
     &lt;xsl:value-of select="key('i18n','browse.album.view')"/&gt;
@@ -254,32 +254,32 @@ returned (line 3), populated with two <code>&lt;m:album&gt;</code> elements
 	
 	<p>Here is what the final rendered XHTML for this snippet looks like:</p>
 	
-<textarea name="code" class="html">	
-<div class="browse-album-frame">
-	<div class="browse-odd">
-		<h2>
+<textarea name="code" rows="1" cols="80" class="html">	
+&lt;div class="browse-album-frame"&gt;
+	&lt;div class="browse-odd"&gt;
+		&lt;h2&gt;
 			More John Muir Trail
-		</h2>
-		<div class="browse-album-info">
+		&lt;/h2&gt;
+		&lt;div class="browse-album-info"&gt;
 			1 Jun 2006 - 6 items
-			<div class="browse-album-info">
+			&lt;div class="browse-album-info"&gt;
 				Items ranging from 17 Dec 2006 to 18 Dec 2006
-			</div>
-		</div>
-		<div class="browse-album-text">
+			&lt;/div&gt;
+		&lt;/div&gt;
+		&lt;div class="browse-album-text"&gt;
 			These are photos from the John Muir Trail.
-		</div>
-	</div>
-	<div class="poster">
-		<a title="View album More John Muir Trail" 
-			href="/matte-stage/album.do?key=2XlxVfKHja3CFGtMlyG57ofbchw">
-			<img class="poster" alt="_6A_1392.jpg" 
+		&lt;/div&gt;
+	&lt;/div&gt;
+	&lt;div class="poster"&gt;
+		&lt;a title="View album More John Muir Trail" 
+			href="/matte-stage/album.do?key=2XlxVfKHja3CFGtMlyG57ofbchw"&gt;
+			&lt;img class="poster" alt="_6A_1392.jpg" 
 				onload="setShadow(this)" 
 				title="_6A_1392.jpg" 
-				src="http://localhost:8080/matte/media.do?id=8&amp;size=THUMB_BIGGER&amp;quality=GOOD" />
-		</a>
-	</div>
-</div>
+				src="http://localhost:8080/matte/media.do?id=8&amp;size=THUMB_BIGGER&amp;quality=GOOD" /&gt;
+		&lt;/a&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
 </textarea>
 
 	<p>Let's take a look at the numbered items from this snippet in more detail:</p>
@@ -294,7 +294,7 @@ returned (line 3), populated with two <code>&lt;m:album&gt;</code> elements
 			
 			<p>The XSLT to render the album thumbnail looks like this:</p>
 			
-<textarea name="code" class="xslt">
+<textarea name="code" rows="1" cols="80" class="xslt">
 &lt;xsl:template match="m:search-poster"&gt;
 	&lt;div class="poster"&gt;
 		&lt;a&gt;
@@ -328,7 +328,7 @@ returned (line 3), populated with two <code>&lt;m:album&gt;</code> elements
 			
 			<p>This all generates XHTML like the following:</p>
 			
-<textarea name="code" class="html">
+<textarea name="code" rows="1" cols="80" class="html">
 &lt;div class="poster"&gt;
   &lt;a title="View album More John Muir Trail"
     href="/matte/album.do?key=2XlxVfKHja3CFGtMlyG57ofbchw"&gt;
@@ -350,7 +350,7 @@ returned (line 3), populated with two <code>&lt;m:album&gt;</code> elements
 			<code>onload="setShadow(this)"</code> attribute. This is the JavaScript call to set the
 			shadow image. The JavaScript function looks like this:</p>
 			
-<textarea name="code" class="javascript">
+<textarea name="code" rows="1" cols="80" class="javascript">
 function setShadow(el) {
   var dim = Element.getDimensions(el);
   var width = dim.width;
@@ -397,7 +397,7 @@ function setShadow(el) {
 			<p><b>Album name:</b> here Woosh is simply displaying the &lt;m:album&gt;
 		<code>@name</code> attribute, like this:</p>
 
-<textarea name="code" class="xslt">
+<textarea name="code" rows="1" cols="80" class="xslt">
 &lt;h2&gt;
   &lt;xsl:value-of select="@name"/&gt;
 &lt;/h2&gt;
@@ -411,7 +411,7 @@ function setShadow(el) {
 			<code>date:format-date()</code> extension functions (included with the
 			Java 5 built-in XSLT engine) to render the date into a display-friendly format:</p>
 			
-<textarea name="code" class="xslt">
+<textarea name="code" rows="1" cols="80" class="xslt">
 &lt;xsl:variable name="album.date"&gt;
   &lt;xsl:choose&gt;
     &lt;xsl:when test="@album-date"&gt;
@@ -437,7 +437,7 @@ function setShadow(el) {
 			items that the album contains. This is accomplished by counting the number of 
 			&lt;m:item&gt; elements in the &gt;m:album&gt;, like this:</p>
 			
-<textarea name="code" class="xslt">
+<textarea name="code" rows="1" cols="80" class="xslt">
 &lt;xsl:value-of select="count(m:item)"/&gt;
 &lt;xsl:text&gt; &lt;/xsl:text&gt;
 &lt;xsl:choose&gt;
@@ -462,7 +462,7 @@ function setShadow(el) {
 			from each other. It looks for the minimum/maximum dates within the entire album hierarchy, 
 			using some XSLT sorting to accomplish, like this:</p>
 
-<textarea name="code" class="xslt">
+<textarea name="code" rows="1" cols="80" class="xslt">
 &lt;xsl:variable name="min-date"&gt;
   &lt;xsl:for-each select=".//@item-min-date"&gt;
     &lt;xsl:sort select="." order="ascending"/&gt;
@@ -503,7 +503,7 @@ function setShadow(el) {
 			<code>browse.album.nocomments</code> message resource key to display the 
 			message <em>No comments.</em> (in English):</p>
 			
-<textarea name="code" class="xslt">
+<textarea name="code" rows="1" cols="80" class="xslt">
 &lt;div class="browse-album-text"&gt;
   &lt;xsl:choose&gt;
     &lt;xsl:when test="string-length(m:comment) &gt; 0"&gt;
@@ -536,7 +536,7 @@ a particular user is</p>
 <p>To add a link to this feed from the browse view, you need to generate an HTML &lt;link&gt; element,
 like this</p>
 
-<textarea name="code" class="html">
+<textarea name="code" rows="1" cols="80" class="html">
 &lt;link rel="alternate" 
 	type="application/atom+xml" lang="en-US" 
 	title="Matt's Photo Album Feed" 
@@ -545,7 +545,7 @@ like this</p>
 	
 <p>The way Woosh accomplishes this is with this XSLT:</p>
 
-<textarea name="code" class="xslt">
+<textarea name="code" rows="1" cols="80" class="xslt">
 &lt;xsl:variable name="author" select="/x:x-data/x:x-model[1]/m:model[1]/m:user[1]"/&gt;
 &lt;link rel="alternate" type="application/atom+xml" lang="en-US"&gt;
   &lt;xsl:attribute name="title"&gt;
