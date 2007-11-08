@@ -53,6 +53,23 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  * Controller for browsing albums.
  * 
+ * <p>This serves as a web-based interface to the 
+ * {@link SearchBiz#findAlbumsForBrowsing(BrowseAlbumsCommand, PaginationCriteria, BizContext)} 
+ * method.</p>
+ * 
+ * <p>This class looks for registered {@link BrowseModePlugin} instances via
+ * {@link magoffin.matt.ma2.biz.SystemBiz#getPluginsOfType(Class)}, and for each 
+ * plugin returned  will create a {@link Metadata} instance for each plugin's
+ * {@link BrowseModePlugin#getSupportedModes()} values, using a key of 
+ * {@code browse-mode}. This allows the view to display a list of options to
+ * the user for browsing shared items in any available browse mode.</p>
+ * 
+ * <p>If the {@link BrowseAlbumsCommand#getSection()} value is provided on the 
+ * request, this value will be set as the 
+ * {@link PaginationCriteria#setIndexKey(String)} value passed to the 
+ * {@link SearchBiz#findAlbumsForBrowsing(BrowseAlbumsCommand, PaginationCriteria, BizContext)} 
+ * method.</p>
+ * 
  * <p>The configurable properties of this class are:</p>
  * 
  * <dl class="class-properties">
