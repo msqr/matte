@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Matte: Extending with Plugins</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" type="text/css" href="whoosh-matte.css" />
+	<link type="text/css" rel="stylesheet" href="css/SyntaxHighlighter.css"></link>
+	<script type="text/javascript" src="js/shCore.js"></script>
+	<script type="text/javascript" src="js/shBrushJava.js"></script>
+	<script type="text/javascript" src="js/shBrushXml.js"></script>
+</head>
+<body class="full">
+
+<h1>Matte: Extending with Plugins</h1>
+
+<p>Matte supports <em>plugins</em> for extending the some features from beyond the default
+ones part of Matte itself. This document describes how plugins are managed by Matte in a
+general sesnse: how Matte locates them, initializes them, and allows the application to 
+query for them.</p>
+
+<h2>The Plugin API</h2>
+
+<p>The <a href="api/magoffin/matt/ma2/plugin/Plugin.html">Plugin</a>. API is a generic API
+in Matte that facilitates finding and registering plugins dynamically when Matte starts.</p>
+
+<textarea name="code" rows="1" cols="80" class="java">
+public interface Plugin {
+	
+	/**
+	 * Return the type of plugin this plugin represents.
+	 * 
+	 * @return the plugin type
+	 */
+	Class&lt;? extends Plugin&gt; getPluginType();
+
+	/**
+	 * Initialize the plugin.
+	 * 
+	 * @param application the Spring application context
+	 */
+	public void initialize(ApplicationContext application);
+	
+	/**
+	 * Get a list of message resource names to register.
+	 * 
+	 * @return the message resource names
+	 */
+	public String[] getMessageResourceNames();
+	
+}
+</textarea>
+
+<h3>Plugin types</h3>
+
+<p>Plugins are gouped into <em>types</em>, which each type represents a specific function 
+the plugin will perform. The <code>getPluginType()</code> method must return the plugin's 
+type. In this way Matte can perform tasks like "give me all plugins that
+support this <em>type</em> of function". The type is represented by an interface that must 
+extend the <code>Plugin</code> interface. For example, the 
+<a href="api/magoffin/matt/ma2/plugin/BrowseModePlugin.html">BrowseModePlugin</a> is a 
+"browse mode" plugin type.</p>
+
+<h3>Plugin initialization hook</h3>
+
+<p>When Matte locates a plugin at startup, it will call the <code>initialize()</code> method,
+passing in the Spring <code>ApplicationContext</code> for the running Matt application. In 
+this way each plugin has access to the full application configuration and is free to perform
+any initialization routines necessary.</p>
+
+<h3>Plugin message resources</h3>
+
+<p>Each plugin can register one or more plugin-specific message resource bundles if it needs
+to supply internationalizable messages to the Matte user interface. Matte will call the 
+<code>getMessageResourceNames()</code> method after it has initialized the plugin, and for any
+message resource name returned it will call the <code>registerMessageResource()</code> method
+those messages will become available just like any other message bundle in Matte.</p>
+
+<h2>Matte plugin registration</h2>
+
+<p>When Matte starts up, the <a href="api/magoffin/matt/ma2/biz/SystemBiz.html">SystemBiz</a>
+is responsible for finding, initializing, and registering all available plugins. Matte does so
+by looking for all available class-path resources named <code class="hilight">META-INF/matte-plugin.properties</code>.
+That means plugins should be distributed as normal Java JAR files, with this special properties
+file included in the <code>META-INF</code> directory in the JAR file. To make the plugin available
+to Matte, then, you just need to add it to Matte's classpath by adding the JAR to the 
+<code>WEB-INF/lib</code> directory in the Matte WAR archive.</p>
+
+<h3>META-INF/matte-plugin.properties</h3>
+
+<p>This properties file must define the plugin class (or classes) that should be registered by
+the given plugin. It must contain first one property <code>matte.plugin</code> which should 
+contain a list of plugin aliases in the properties file. Then for each plugin aliases named
+in that list, there should be one more property named <code>matte.plugin.<em>[alias]</em>.class</code>
+that contains the full Java class name to load as the plugin.</p>
+
+<p>For example, the Matte built-in configuration looks like this:</p>
+
+<pre class="code">
+matte.plugin = <span style="color: #00c;">noop, albumBrowse, popularityBrowse, ratingAvgBrowse</span>
+matte.plugin.noop.class = <span style="color: #00c;">magoffin.matt.ma2.plugin.NoopPlugin</span>
+matte.plugin.albumBrowse.class = <span style="color: #00c;">magoffin.matt.ma2.dao.support.AlbumsByDateBrowseModePlugin</span>
+matte.plugin.popularityBrowse.class = <span style="color: #00c;">magoffin.matt.ma2.dao.support.PopularityBrowseModePlugin</span>
+matte.plugin.ratingAvgBrowse.class = <span style="color: #00c;">magoffin.matt.ma2.dao.support.RatingAverageBrowseModePlugin</span>
+</pre>
+
+<p>The alias names can be anything, but must be unique within a given 
+<code>matte-plugins.properties</code> file.</p>
+
+<h3>Plugin instantiation</h3>
+
+<p>Each plugin instance is instantiated using the Java <code>Class.newInstance()</code> method,
+so it must provide a default, no-argument constructor for this to work. The plugin class <em>must</em>
+implement the <a href="api/magoffin/matt/ma2/plugin/Plugin.html">Plugin</a> interface.</p>
+
+<h3>Plugin initialization</h3>
+
+<p>Immediately after the plugin instance is instantiated, Matte will call the <code>initialize()</code>
+method, passing in the current Spring <code>ApplicationContext</code>. It is the responsibility of the 
+plugin to perform any/all start-up initialization and configuration at this point. A good way for 
+plugin implementations to initialize themselves by using Spring, and the 
+<a href="api/magoffin/matt/ma2/support/AbstractPlugin.html">AbstractPlugin</a> provides a default base
+class that provides a standardized way of locating and configuring themselves via a
+plugin-specific Spring XML configuration file.</p>
+
+<h3>Plugin registration</h3>
+
+<p>Once initialized, the plugin will be registered based on the <em>plugin type</em> returned by
+the plugin's <code>getPluginType()</code> method. Then, when any part of Matte that calls the 
+<code>SystemBiz.getPluginsOfType()</code> method, all plugins of the given type will be returned.
+See the <a href="api/magoffin/matt/ma2/web/BrowseAlbumsController.html">BrowseAlbumsController</a> 
+for an example of how this is used for the <code>BrowseModePlugin</code> type.</p>
+
+
+<div>
+<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=103583&amp;type=1" 
+	width="88" height="31" alt="SourceForge.net Logo" /></a>
+</div>
+<script type="text/javascript">
+	dp.SyntaxHighlighter.ClipboardSwf = 'js/clipboard.swf';
+	dp.SyntaxHighlighter.HighlightAll('code');
+</script>
+</body>
+</html>

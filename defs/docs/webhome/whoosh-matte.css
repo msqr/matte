@@ -19,6 +19,12 @@ body.full {
 	font-size: 10pt;
 }
 
+code {
+	font-family: monospace;
+	color: #069;
+	background-color: inherit;
+}
+
 div.section {
 	margin-top: 4px;
 	margin-bottom: 4px;
