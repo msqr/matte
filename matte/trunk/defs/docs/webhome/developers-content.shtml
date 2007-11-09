@@ -23,4 +23,17 @@ distribution of Matte, email
 	<dt>Extending media support</dt>
 	<dd>The <a href="extending.html" title="Extending media support">Extending media support</a> 
 	document provides information about developing your own media type handler for Matte.</dd>
+	
+	<dt>Extending with plugins</dt>
+	<dd>
+		<ul>
+			<li>The <a href="extending-plugins.html" title="Extending with Plugins">Extending 
+			with plugins</a> document provides information about developing Matte's plugin 
+			support.</li>
+	
+			<li>The <a href="extending-browse-plugins.html" 
+			title="Extending with browse mode plugins">Extending with browse mode plugins</a> 
+			document provides information about developing "browse mode" plugins.</li>
+		</ul>
+	</dd>
 </dl>
