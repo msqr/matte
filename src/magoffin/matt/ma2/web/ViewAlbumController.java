@@ -51,7 +51,24 @@ import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * Controller for viewing a shared album.
+ * Controller for viewing a shared album or a virtual album by way of a 
+ * {@link magoffin.matt.ma2.plugin.BrowseModePlugin}.
+ * 
+ * <p>To view a normal shared album, pass the {@code key} property on the request
+ * of the anonymous key of the album to view. To view a child album of that shared
+ * album, also pass the {@code childKey} of that child album.</p>
+ * 
+ * <p>The default theme will be added to the view model, unless a {@code themeId}
+ * parameter for some other theme is provided.</p>
+ * 
+ * <p>To view a <em>virtual album</em> from a browse mode (see the 
+ * {@link magoffin.matt.ma2.plugin.BrowseModePlugin} API) you must pass the 
+ * {@code userKey} of the owner of the shared albums and a {@code mode} for the
+ * browse mode being viewed. The {@code key} parameter in this case will be set
+ * as the {@link PaginationCriteria#setIndexKey(String)} passed to 
+ * {@link SearchBiz#findAlbumsForBrowsing(BrowseAlbumsCommand, PaginationCriteria, BizContext)}
+ * and the first {@link AlbumSearchResult} returned in the results will be passed 
+ * to the view as the album to view.</p>
  * 
  * @author matt.magoffin
  * @version $Revision$ $Date$
