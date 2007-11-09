@@ -139,6 +139,57 @@ works within the default Woosh theme in Matt:</p>
 	offset album.</li>
 </ol>
 
+<p>The XML model for this example looks like this:</p>
+
+<textarea name="code" rows="1" cols="80" class="xml">
+&lt;m:model xmlns:m="http://msqr.us/xsd/matte"&gt;
+	&lt;m:ui-metadata key="browse-mode"&gt;albums&lt;/m:ui-metadata&gt;
+	&lt;m:ui-metadata key="browse-mode"&gt;popularity&lt;/m:ui-metadata&gt;
+	&lt;m:ui-metadata key="browse-mode"&gt;avg-rating&lt;/m:ui-metadata&gt;
+	&lt;m:search-results returned-results="1" total-results="1"&gt;
+		&lt;m:pagination/&gt;
+		&lt;m:index&gt;
+			&lt;m:index-section count="1" index-key="20 - 39"/&gt;
+			&lt;m:index-section count="1" index-key="0 - 19" selected="true"/&gt;
+		&lt;/m:index&gt;
+		&lt;m:album item-count="25" anonymous-key="0 - 19:0"
+			name="0 - 19 hits: items 1 - 25"&gt;
+			&lt;m:search-poster item-id="629" name="The family"/&gt;
+		&lt;/m:album&gt;
+	&lt;/m:search-results&gt;
+&lt;/m:model&gt;
+</textarea>
+
+<h2>Virtual albums</h2>
+
+<p>Each browse mode plugin should support viewing the <em>virtual albums</em> that it returns
+in the browse search results by way of the 
+<a href="api/magoffin/matt/ma2/web/ViewAlbumController.html">ViewAlbumController</a>. That means
+for each <code>AlbumSearchResult</code> returned while browsing, the <code>anonymousKey</code>
+should be set to some value that the plugin can understand later as a specific album to 
+find and return. In this case, the returned album should have <code>MediaItemSearchResult</code>
+objects populated for each item within the virtual album.</p>
+
+<p>For example, the XML model for a virtual album would look like this:</p>
+
+<textarea name="code" rows="1" cols="80" class="xml">
+&lt;m:model xmlns:m="http://msqr.us/xsd/matte"&gt;
+	&lt;m:album item-count="25" anonymous-key="0 - 19:0" name="0 - 19 hits: items 1 - 25"&gt;
+		&lt;m:theme author="Matte Development Team" author-email="matte@noplace"
+			base-path="/core/woosh" creation-date="2007-05-17T07:41:32.820+12:00" name="Woosh"
+			theme-id="1"&gt;
+			&lt;m:description&gt;Default theme.&lt;/m:description&gt;
+		&lt;/m:theme&gt;
+		&lt;m:item item-id="5754" mime="image/jpeg" name="IMG_4407_1.jpg"&gt; &lt;/m:item&gt;
+		&lt;m:item item-id="5741" mime="image/jpeg" name="IMG_4398.jpg"&gt; &lt;/m:item&gt;
+		&lt;m:item item-id="4785" mime="image/jpeg" name="Sunrise"&gt; &lt;/m:item&gt;
+		&lt;!-- ... --&gt;
+		&lt;m:search-poster item-id="629" name="The family"/&gt;
+	&lt;/m:album&gt;
+&lt;/m:model&gt;
+</textarea>
+
+
 <div>
 <a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=103583&amp;type=1" 
 	width="88" height="31" alt="SourceForge.net Logo" /></a>
