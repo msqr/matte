@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Matte: Extending with Browse Mode Plugins</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" type="text/css" href="whoosh-matte.css" />
+	<link type="text/css" rel="stylesheet" href="css/SyntaxHighlighter.css"></link>
+	<script type="text/javascript" src="js/shCore.js"></script>
+	<script type="text/javascript" src="js/shBrushJava.js"></script>
+	<script type="text/javascript" src="js/shBrushXml.js"></script>
+</head>
+<body class="full">
+
+<h1>Matte: Extending with Browse Mode Plugins</h1>
+
+<p>Matte supports <em>Brose Mode Plugins</em> for extending how it can display a user's
+shared albums. Read the general <a href="extending-plugins.html">Extending with Plugins</a>
+documentation before reading this document.</p>
+
+<p>The default brose mode in the default Woosh theme looks like this:</p>
+
+<div class="screenshot">
+	<img src="img/bmplugin-default-woosh.png" alt="Woosh default Browse Mode" width="619" height="516" />
+	<div>Woosh default Browse Mode view.</div>
+</div>
+
+<p>Here, when you click on the <em>Alternate Views</em> link, it reveals all available browse modes
+which were registered with Matte with it started up:</p>
+
+<div class="screenshot">
+	<img src="img/bmplugin-default-woosh-alt.png" alt="Woosh alternate Browse Mode selection" width="460" height="110" />
+	<div>Woosh alternate Browse Mode selection view.</div>
+</div>
+
+<p>Matte comes with 3 built-in browse mode plugins:</p>
+
+<ol>
+	<li><b>Albums by date</b>: the default browse mode for a user's shared albums ordered by date.</li>
+	<li><b>Popularity</b>: virtual albums created from the number of times individual items have been viewed.</li>
+	<li><b>Average rating</b>: virtual albums created from the average user rating of individual items.</li>
+</ol>
+
+<p>You can think of browse modes as different search queries that Matte will perform in order to 
+generate the browse user interface. The result of the search is a set of albums, each album populated
+with the media items that fall into that album's grouping.</p>
+
+<h2>Browse Mode Plugin API</h2>
+
+<p>There is one main API to implement for browse mode plugins: 
+<a href="api/magoffin/matt/ma2/plugin/BrowseModePlugin.html">BrowseModePlugin</a>.</p>
+
+<textarea name="code" rows="1" cols="80" class="java">
+public interface BrowseModePlugin extends Plugin {
+	
+	/**
+	 * Test if this plugin supports a given browse mode.
+	 * 
+	 * @param mode the mode to test
+	 * @return boolean
+	 */
+	boolean supportsMode(String mode);
+
+	/**
+	 * Perform the search, returning {@link SearchResults} populated with
+	 * {@code AlbumSearchResult} objects.
+	 * 
+	 * @param command the browse command
+	 * @param pagination  the pagination criteria
+	 * @return the search results
+	 */
+	public SearchResults find(BrowseAlbumsCommand command, PaginationCriteria pagination);
+	
+	/**
+	 * Get the supported modes of this plugin.
+	 * @return the supported modes
+	 */
+	public String[] getSupportedModes();
+	
+}
+</textarea>
+
+<h3>Browse mode keys</h3>
+
+<p>Each browse mode is defined by a mode key, which must be unique across all browse modes 
+registered with Matte. A single <code>BrowseModePlugin</code> can support more than one mode.
+The mode keys it supports are returned by the <code>getSupportedModes()</code> method. In addition,
+the <code>supportsMode()</code> method returns <em>true</em> or <em>false</em> if it supports
+a given mode key. These mode keys are passed to the Matte UI, so the UI can allow the user to
+select different browse modes.</p>
+
+<h3>The find() method</h3>
+
+<p>The <code>find()</code> method is what performs the browse mode search and returns a
+<code>SearchResults</code> instance. It is passed a 
+<a href="api/magoffin/matt/ma2/support/BrowseAlbumsCommand.html">BrowseAlbumsCommand</a> instance,
+which will be populated with the requested browse mode key, the anonymous user key of the 
+owner of the items being browsed, and optionally a <em>section</em> key that represents a 
+specific subset within the browse search results.</p>
+
+<h2>Browse search results</h2>
+
+<p>For browsing, it is expected the <code>SearchResults</code> object returned by the 
+<code>find()</code> method contain a collection of <code>AlbumSearchResult</code> objects.
+The plugin can support <em>sections</em> by returning a <code>PaginationIndex</code> object
+within the <code>SearchResults</code> that specifies all available sections.</p>
+
+<p>For each <code>AlbumSearchResult</code>, the anonymous key must be generated with some 
+value that can later be passed back to the plugin as a <code>PaginationCriteria.indexKey</code> 
+value. That means the album anonymous keys need to be encoded in such a way they are 
+recognizable from normal browseing section keys.</p>
+
+<p>Let's look at an example of how the 
+<a href="api/magoffin/matt/ma2/dao/support/PopularityBrowseModePlugin.html">PopularityBrowseModePlugin</a>
+works within the default Woosh theme in Matt:</p>
+
+<div class="screenshot">
+	<img src="img/bmplugin-browse-results.png" alt="Popularity browse mode in Woosh theme" width="645" height="302" />
+	<div>The popularity browse mode in Woosh theme.</div>
+</div>
+
+<ol>
+	<li><b>Sections</b> - the plugin breaks up popularity into range groups of 20 different 
+	values. In this example there are two sections: <em>20-39</em> and <em>0-19</em>. It is up 
+	to the plugin to determin how (and if) sections are supported. Since a user can have any 
+	number of shared items, sections are a good way to break up the results into smaller parts
+	that are easier to view. In this case, when a user clicks on a section link, that value
+	will be passed back to the plugin as the <code>PaginationCriteria.indexKey</code> value.</li>
+	
+	<li><b>Album search result names</b> - the names of the albums returned by the plugin are
+	set to the section name and an offset within the setion. This plugin limits the size of 
+	each album to 25, so within each section there can be any number of albums.</li>
+	
+	<li><b>Anonymous key</b> - the anonymous keys for each album are encoded as a combination 
+	of the section key and the offset within the section. In this example, the anonymous key
+	for the album is encoded as <code>"0 - 19:0"</code>. In this way, when a user clicks on 
+	the album the <em>0 - 19:0</em> value will be passed as the <code>PaginationCriteria.indexKey</code>
+	value, which the plugin can decode as the <code>0 - 19</code> section, with the <code>0</code>
+	offset album.</li>
+</ol>
+
+<p>The XML model for this example looks like this:</p>
+
+<textarea name="code" rows="1" cols="80" class="xml">
+&lt;m:model xmlns:m="http://msqr.us/xsd/matte"&gt;
+	&lt;m:ui-metadata key="browse-mode"&gt;albums&lt;/m:ui-metadata&gt;
+	&lt;m:ui-metadata key="browse-mode"&gt;popularity&lt;/m:ui-metadata&gt;
+	&lt;m:ui-metadata key="browse-mode"&gt;avg-rating&lt;/m:ui-metadata&gt;
+	&lt;m:search-results returned-results="1" total-results="1"&gt;
+		&lt;m:pagination/&gt;
+		&lt;m:index&gt;
+			&lt;m:index-section count="1" index-key="20 - 39"/&gt;
+			&lt;m:index-section count="1" index-key="0 - 19" selected="true"/&gt;
+		&lt;/m:index&gt;
+		&lt;m:album item-count="25" anonymous-key="0 - 19:0"
+			name="0 - 19 hits: items 1 - 25"&gt;
+			&lt;m:search-poster item-id="629" name="The family"/&gt;
+		&lt;/m:album&gt;
+	&lt;/m:search-results&gt;
+&lt;/m:model&gt;
+</textarea>
+
+<h2>Virtual albums</h2>
+
+<p>Each browse mode plugin should support viewing the <em>virtual albums</em> that it returns
+in the browse search results by way of the 
+<a href="api/magoffin/matt/ma2/web/ViewAlbumController.html">ViewAlbumController</a>. That means
+for each <code>AlbumSearchResult</code> returned while browsing, the <code>anonymousKey</code>
+should be set to some value that the plugin can understand later as a specific album to 
+find and return. In this case, the returned album should have <code>MediaItemSearchResult</code>
+objects populated for each item within the virtual album.</p>
+
+<p>For example, the XML model for a virtual album would look like this:</p>
+
+<textarea name="code" rows="1" cols="80" class="xml">
+&lt;m:model xmlns:m="http://msqr.us/xsd/matte"&gt;
+	&lt;m:album item-count="25" anonymous-key="0 - 19:0" name="0 - 19 hits: items 1 - 25"&gt;
+		&lt;m:theme author="Matte Development Team" author-email="matte@noplace"
+			base-path="/core/woosh" creation-date="2007-05-17T07:41:32.820+12:00" name="Woosh"
+			theme-id="1"&gt;
+			&lt;m:description&gt;Default theme.&lt;/m:description&gt;
+		&lt;/m:theme&gt;
+		&lt;m:item item-id="5754" mime="image/jpeg" name="IMG_4407_1.jpg"&gt; &lt;/m:item&gt;
+		&lt;m:item item-id="5741" mime="image/jpeg" name="IMG_4398.jpg"&gt; &lt;/m:item&gt;
+		&lt;m:item item-id="4785" mime="image/jpeg" name="Sunrise"&gt; &lt;/m:item&gt;
+		&lt;!-- ... --&gt;
+		&lt;m:search-poster item-id="629" name="The family"/&gt;
+	&lt;/m:album&gt;
+&lt;/m:model&gt;
+</textarea>
+
+
+<div>
+<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=103583&amp;type=1" 
+	width="88" height="31" alt="SourceForge.net Logo" /></a>
+</div>
+<script type="text/javascript">
+	dp.SyntaxHighlighter.ClipboardSwf = 'js/clipboard.swf';
+	dp.SyntaxHighlighter.HighlightAll('code');
+</script>
+</body>
+</html>

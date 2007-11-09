@@ -1,0 +1,906 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jaxb:bindings version="1.0" 
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:hj="http://hyperjaxb2.jvnet.org/customizations"
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+	jaxb:extensionBindingPrefixes="hj xjc">
+	
+	<jaxb:bindings schemaLocation="core.xsd" node="/xs:schema">	
+
+		<jaxb:globalBindings bindingStyle="modelGroupBinding" choiceContentProperty="true">
+			<jaxb:javaType name="java.lang.Long" xmlType="xs:long"/>
+			<jaxb:javaType name="java.lang.Long" xmlType="xs:nonNegativeInteger" 
+				parseMethod="java.lang.Long.getLong" printMethod="java.lang.String.valueOf"/>
+			
+			<!-- The SerializeableUID value should be set the the date 
+				(yyyymmdd) plus version (1, 2, 3, etc) to signify the 
+				unique version of these objects. -->
+			<xjc:serializable uid="200703311"/>
+			
+			<xjc:superClass name="magoffin.matt.ma2.support.AbstractDomainObject"/>
+		</jaxb:globalBindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='album-search-result']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='key-name-type']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='init-param-config']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='media-item-search-result']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='pagination-index']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='pagination-index-section']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='pagination-criteria']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='poster-search-result']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='search-results']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='shared-album-search-result']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='user-search-result']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='work-info']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='media-spec']">
+			<!--hj:class>
+				<hj:table name="media_spec"/>
+				<hj:cache usage="read-write"/>
+			</hj:class>
+			
+			<jaxb:bindings node="xs:attribute[@name='quality']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true" length="16"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+
+			<jaxb:bindings node="xs:attribute[@name='size']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true" length="16"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings-->
+			<hj:ignored/>
+			<hj:component/>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='media-size-definition']">
+			<hj:ignored/>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='locale']">
+			<hj:ignored/>
+		</jaxb:bindings>
+			
+		<jaxb:bindings node="xs:complexType[@name='time-zone']">
+			<hj:class>
+				<hj:table name="time_zone"/>
+				<hj:cache usage="read-write"/> 
+			</hj:class>
+			
+			<jaxb:bindings node="xs:attribute[@name='code']">
+				<hj:id unsaved-value="null">
+					<hj:column length="40" not-null="true"/>
+					<hj:generator generatorClass="assigned"/>
+				</hj:id>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='name']">
+				<hj:simpleSingleProperty>
+					<hj:column length="40"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='offset']">
+				<hj:simpleSingleProperty>
+					<hj:column name="TimeOffset" not-null="true" length="16"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+
+			<jaxb:bindings node="xs:attribute[@name='ordering']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+		</jaxb:bindings>
+		
+	</jaxb:bindings>
+	
+	<jaxb:bindings schemaLocation="import.xsd" node="/xs:schema">	
+
+		<jaxb:bindings node="xs:complexType[@name='album-import-type']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:simpleType[@name='album-import-sort-type']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='base-import-type']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='collection-import-type']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='item-import-type']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='metadata-import-type']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		
+	</jaxb:bindings>		
+	
+	<jaxb:bindings schemaLocation="ui.xsd" node="/xs:schema">
+		
+		<jaxb:bindings node="xs:complexType[@name='ui-base']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ui-edit']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ui-model']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ui-session']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		
+	</jaxb:bindings>
+	
+	<jaxb:bindings schemaLocation="domain.xsd" node="/xs:schema">
+		<!--jaxb:globalBindings bindingStyle="modelGroupBinding" choiceContentProperty="true">
+			<jaxb:javaType name="java.lang.Long"  xmlType="xs:long"/>
+			
+			<!- The SerializeableUID value should be set the the date 
+			(yyyymmdd) plus version (1, 2, 3, etc) to signify the 
+			unique version of these objects. ->
+			<xjc:serializable uid="200605201"/>
+		</jaxb:globalBindings-->
+		
+		<jaxb:bindings node="xs:complexType[@name='album']">
+			<hj:class>
+				<hj:table name="album"/>
+				<hj:cache usage="read-write"/>
+			</hj:class>
+
+			<!-- Primary Key -->
+			
+			<jaxb:bindings node="xs:attribute[@name='album-id']">
+				<hj:id unsaved-value="null">
+					<hj:generator generatorClass="native"/>
+				</hj:id>
+			</jaxb:bindings>
+			
+			<!-- Required Attributes -->
+			
+			<jaxb:bindings node="xs:attribute[@name='creation-date']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>			
+
+			<jaxb:bindings node="xs:attribute[@name='name']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<!-- Optional with defaults -->
+			
+			<jaxb:bindings node="xs:attribute[@name='allow-anonymous']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='allow-browse']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='allow-feed']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='allow-original']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<!-- Optional Attributes -->
+			
+			<jaxb:bindings node="xs:attribute[@name='album-date']">
+				<hj:simpleSingleProperty/>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='anonymous-key']">
+				<hj:simpleSingleProperty>
+					<hj:column length="96"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='modify-date']">
+				<hj:simpleSingleProperty/>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='sort-mode']">
+				<hj:simpleSingleProperty/>
+			</jaxb:bindings>
+			
+			<!-- Elements -->
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='album']">
+				<hj:complexCollectionProperty lazy="true" cascade="all">
+					<hj:cache usage="read-write"/>
+					<hj:one-to-many insert="true" update="true"/>
+				</hj:complexCollectionProperty>	
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='comment']">
+				<hj:simpleSingleProperty>
+					<hj:column length="2048"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='owner']">
+				<hj:complexSingleProperty>
+					<!--hj:cache usage="read-write"/-->
+					<hj:many-to-one insert="true" update="false" cascade="none"/>
+				</hj:complexSingleProperty>	
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='item']">
+				<hj:complexCollectionProperty lazy="true" cascade="none">
+					<hj:cache usage="read-write"/>
+					<hj:many-to-many insert="true" update="true"/>
+				</hj:complexCollectionProperty>	
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='poster']">
+				<hj:complexSingleProperty>
+					<!--hj:cache usage="read-write"/-->
+					<hj:many-to-one insert="true" update="true" cascade="none"/>
+				</hj:complexSingleProperty>	
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='theme']">
+				<hj:complexSingleProperty>
+					<!--hj:cache usage="read-write"/-->
+					<hj:many-to-one insert="true" update="true" cascade="none"/>
+				</hj:complexSingleProperty>	
+			</jaxb:bindings>
+			
+		</jaxb:bindings>
+		
+		<!--jaxb:bindings node="xs:complexType[@name='album-permissions']">
+			<hj:class>
+				<hj:table name="album_permissions"/>
+			</hj:class>
+			<jaxb:bindings node="xs:attribute[@name='permissionId']">
+				<hj:id unsaved-value="null">
+					<hj:generator generatorClass="native"/>
+				</hj:id>
+			</jaxb:bindings>
+		</jaxb:bindings-->
+		
+		<jaxb:bindings node="xs:complexType[@name='collection']">
+			<hj:class>
+				<hj:table name="collection"/>
+				<hj:cache usage="read-write"/>
+			</hj:class>
+
+			<!-- Primary Key -->
+			
+			<jaxb:bindings node="xs:attribute[@name='collection-id']">
+				<hj:id unsaved-value="null">
+					<hj:generator generatorClass="native"/>
+				</hj:id>
+			</jaxb:bindings>
+
+			<!-- Required Attributes -->
+			
+			<jaxb:bindings node="xs:attribute[@name='creation-date']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='name']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true" length="128"/>
+				</hj:simpleSingleProperty>	
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='path']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true" length="255"/>
+				</hj:simpleSingleProperty>	
+			</jaxb:bindings>
+			
+			<!-- Optional Attributes -->
+			
+			<jaxb:bindings node="xs:attribute[@name='modify-date']">
+				<hj:simpleSingleProperty/>
+			</jaxb:bindings>
+			
+			<!-- Elements -->
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='comment']">
+				<hj:simpleSingleProperty>
+					<hj:column length="2048"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+
+			<jaxb:bindings node="xs:sequence/xs:element[@name='owner']">
+				<hj:complexSingleProperty>
+					<!--hj:cache usage="read-write"/-->
+					<hj:many-to-one insert="true" update="false" cascade="none"/>
+				</hj:complexSingleProperty>	
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='item']">
+				<!--hj:complexCollectionProperty lazy="true" inverse="true" 
+					cascade="all-delete-orphan" batch-size="10" outer-join="auto" fetch="join" 
+					optimistic-lock="false">
+					<hj:table name="d_table" catalog="d_catalog" schema="d_schema"/>
+					<hj:cache usage="read-write"/>
+					<hj:key on-delete="cascade" not-null="true" update="true" unique="true">
+						<hj:column name="d_key"/>
+					</hj:key>
+					<hj:list-index base="15">
+						<hj:column name="d_index"/>
+					</hj:list-index>
+					<hj:one-to-many insert="true" update="true"/>
+				</hj:complexCollectionProperty-->
+				<hj:complexCollectionProperty lazy="true" cascade="persist,merge,save-update">
+					<hj:cache usage="read-write"/>
+					<hj:one-to-many insert="true" update="true"/>
+				</hj:complexCollectionProperty>	
+			</jaxb:bindings>
+			
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='media-item']">
+			<hj:class>
+				<hj:table name="media_item"/>
+				<hj:cache usage="read-write"/> 
+			</hj:class>
+			
+			<!-- Primay Key -->
+			
+			<jaxb:bindings node="xs:attribute[@name='item-id']">
+				<hj:id unsaved-value="null">
+					<hj:generator generatorClass="native"/>
+				</hj:id>
+			</jaxb:bindings>
+			
+			<!-- Required Attributes -->
+			
+			<jaxb:bindings node="xs:attribute[@name='creation-date']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='file-size']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='file-size']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='height']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='mime']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true" length="64"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='name']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true" length="128"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='path']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true" length="255"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='width']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<!-- Optional attributes with defaults -->
+			
+			<jaxb:bindings node="xs:attribute[@name='display-order']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='hits']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='use-icon']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<!-- Optional attributes -->
+			
+			<jaxb:bindings node="xs:attribute[@name='item-date']">
+				<hj:simpleSingleProperty/>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='modify-date']">
+				<hj:simpleSingleProperty/>
+			</jaxb:bindings>
+			
+			<!-- Elements -->
+			
+			<!-- Removed to eliminate recursion problems in XSLT
+				jaxb:bindings node="xs:sequence/xs:element[@name='collection']">
+				<hj:ignored/>
+				<!-hj:complexCollectionProperty>
+					<hj:key not-null="true"/>
+					<hj:many-to-one/>
+				</hj:complexCollectionProperty->
+			</jaxb:bindings-->
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='description']">
+				<hj:simpleSingleProperty>
+					<hj:column length="2048"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='media-type']">
+				<hj:complexSingleProperty>
+					<!--hj:cache usage="read-write"/-->
+					<hj:many-to-one insert="true" update="true" cascade="none"/>
+				</hj:complexSingleProperty>	
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='tz']">
+				<hj:complexSingleProperty>
+					<!--hj:cache usage="read-write"/-->
+					<hj:many-to-one insert="true" update="true" cascade="none">
+						<hj:column not-null="true" length="40"/>
+					</hj:many-to-one>
+				</hj:complexSingleProperty>	
+			</jaxb:bindings>
+
+			<jaxb:bindings node="xs:sequence/xs:element[@name='tz-display']">
+				<hj:complexSingleProperty>
+					<!--hj:cache usage="read-write"/-->
+					<hj:many-to-one insert="true" update="true" cascade="none">
+						<hj:column not-null="true" length="40"/>
+					</hj:many-to-one>
+				</hj:complexSingleProperty>	
+			</jaxb:bindings>
+			
+			<!-- Lists -->
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='metadata']">
+				<hj:complexCollectionProperty lazy="true">
+					<hj:cache usage="read-write"/>
+					<hj:one-to-many/>
+				</hj:complexCollectionProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='user-comment']">
+				<hj:complexCollectionProperty lazy="true">
+					<hj:cache usage="read-write"/>
+					<hj:one-to-many/>
+				</hj:complexCollectionProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='user-rating']">
+				<hj:complexCollectionProperty lazy="true">
+					<hj:cache usage="read-write"/>
+					<hj:one-to-many/>
+				</hj:complexCollectionProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='user-tag']">
+				<hj:complexCollectionProperty lazy="true">
+					<hj:cache usage="read-write"/>
+					<hj:one-to-many/>
+				</hj:complexCollectionProperty>
+			</jaxb:bindings>
+			
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='media-item-rating']">
+			<hj:class>
+				<hj:table name="media_item_rating"/>
+				<hj:cache usage="read-write"/>
+			</hj:class>
+			
+			<!-- Primay Key -->
+			
+			<jaxb:bindings node="xs:attribute[@name='rating-id']">
+				<hj:id unsaved-value="null">
+					<hj:generator generatorClass="native"/>
+				</hj:id>
+			</jaxb:bindings>
+
+			<!-- Required Attributes -->
+			
+			<jaxb:bindings node="xs:attribute[@name='creation-date']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='rating']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='rating-user']">
+				<hj:complexSingleProperty>
+					<hj:many-to-one insert="true" update="true" cascade="none">
+						<hj:column not-null="false"/>
+					</hj:many-to-one>
+				</hj:complexSingleProperty>	
+			</jaxb:bindings>
+			
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='media-item-type']">
+			<hj:class>
+				<hj:table name="media_item_type"/>
+				<hj:cache usage="read-write"/> 
+			</hj:class>
+			<jaxb:bindings node="xs:attribute[@name='typeId']">
+				<hj:id unsaved-value="null">
+					<hj:generator generatorClass="native"/>
+				</hj:id>
+			</jaxb:bindings>
+			<jaxb:bindings node="xs:attribute[@name='name']">
+				<hj:simpleSingleProperty>
+					<hj:column name="name" not-null="true" length="64"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='field']">
+				<hj:complexCollectionProperty>
+					<hj:one-to-many/>
+				</hj:complexCollectionProperty>
+			</jaxb:bindings>
+			
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='metadata']">
+			<hj:class>
+				<hj:table name="metadata"/>
+				<hj:cache usage="read-write"/> 
+			</hj:class>
+			<jaxb:bindings node="xs:simpleContent/xs:extension/xs:attribute[@name='key']">
+				<hj:simpleSingleProperty>
+					<hj:column name="mkey" not-null="true" length="64"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			<jaxb:bindings node=".">
+				<hj:simpleSingleProperty>
+					<hj:column name="mvalue" not-null="true" length="128"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='theme']">
+			<hj:class>
+				<hj:table name="theme"/>
+				<hj:cache usage="read-write"/>
+			</hj:class>
+			
+			<!-- Primay Key -->
+			
+			<jaxb:bindings node="xs:attribute[@name='theme-id']">
+				<hj:id unsaved-value="null">
+					<hj:generator generatorClass="native"/>
+				</hj:id>
+			</jaxb:bindings>
+			
+			<!-- Required Attributes -->
+			
+			<jaxb:bindings node="xs:attribute[@name='base-path']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true" length="255"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='creation-date']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='name']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true" length="128" unique="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<!-- Optional Attributes -->
+			
+			<jaxb:bindings node="xs:attribute[@name='author']">
+				<hj:simpleSingleProperty>
+					<hj:column length="64"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='author-email']">
+				<hj:simpleSingleProperty>
+					<hj:column length="128"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='modify-date']">
+				<hj:simpleSingleProperty/>
+			</jaxb:bindings>
+			
+			<!-- Elements -->
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='description']">
+				<hj:simpleSingleProperty>
+					<hj:column length="2048"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='owner']">
+				<hj:complexSingleProperty>
+					<hj:many-to-one insert="true" update="false" cascade="none"/>
+				</hj:complexSingleProperty>	
+			</jaxb:bindings>
+			
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='user']">
+			<hj:class>
+				<hj:table name="users"/>
+				<hj:cache usage="read-write"/> 
+			</hj:class>
+			
+			<!-- Primary Key -->
+			
+			<jaxb:bindings node="xs:attribute[@name='user-id']">
+				<hj:id unsaved-value="null">
+					<hj:generator generatorClass="native"/>
+				</hj:id>
+			</jaxb:bindings>
+			
+			<!-- Required Attributes -->
+			
+			<jaxb:bindings node="xs:attribute[@name='creation-date']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='email']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true" unique="true" length="255"/>
+				</hj:simpleSingleProperty>	
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='login']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true" unique="true" length="128"/>
+				</hj:simpleSingleProperty>	
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='name']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true" length="128"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='password']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true" length="128"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<!-- Required with Default Attributes -->
+			
+			<jaxb:bindings node="xs:attribute[@name='country']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true" length="3"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='language']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true" length="2"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<!-- Optional Attributes -->
+			
+			<jaxb:bindings node="xs:attribute[@name='anonymous-key']">
+				<hj:simpleSingleProperty>
+					<hj:column length="64"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:attribute[@name='modify-date']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="false"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<!-- Elements -->
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='thumbnail-setting']">
+				<hj:complexSingleProperty>
+					<!--hj:many-to-one insert="false" update="false"/-->
+					<hj:component>
+						<hj:column length="16"/>
+					</hj:component>
+				</hj:complexSingleProperty>	
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='tz']">
+				<hj:complexSingleProperty>
+					<hj:many-to-one insert="true" update="true" cascade="none">
+						<hj:column not-null="true" length="40"/>
+					</hj:many-to-one>
+				</hj:complexSingleProperty>	
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='view-setting']">
+				<hj:complexSingleProperty>
+					<!--hj:many-to-one insert="false" update="false"/-->
+					<hj:component>
+						<hj:column length="16"/>
+					</hj:component>
+				</hj:complexSingleProperty>	
+			</jaxb:bindings>
+			
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='user-comment']">
+			<hj:class>
+				<hj:table name="user_comment"/>
+				<hj:cache usage="read-write"/> 
+			</hj:class>
+			
+			<!-- Primary Key -->
+			
+			<jaxb:bindings node="xs:attribute[@name='comment-id']">
+				<hj:id unsaved-value="null">
+					<hj:generator generatorClass="native"/>
+				</hj:id>
+			</jaxb:bindings>
+
+			<!-- Required Attributes -->
+			
+			<jaxb:bindings node="xs:attribute[@name='creation-date']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+
+			<!-- Required with Default Attributes -->
+			
+			<jaxb:bindings node="xs:attribute[@name='approved']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+
+			<!-- Optional Attributes -->
+			
+			<jaxb:bindings node="xs:attribute[@name='commenter']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="false" length="255"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<!-- Elements -->
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='comment']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true" length="2048"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+
+			<jaxb:bindings node="xs:sequence/xs:element[@name='commenting-user']">
+				<hj:complexSingleProperty>
+					<hj:many-to-one insert="true" update="true" cascade="none">
+						<hj:column not-null="false"/>
+					</hj:many-to-one>
+				</hj:complexSingleProperty>	
+			</jaxb:bindings>
+			
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='user-tag']">
+			<hj:class>
+				<hj:table name="user_tag"/>
+				<hj:cache usage="read-write"/> 
+			</hj:class>
+			
+			<!-- Primary Key -->
+			
+			<jaxb:bindings node="xs:attribute[@name='tag-id']">
+				<hj:id unsaved-value="null">
+					<hj:generator generatorClass="native"/>
+				</hj:id>
+			</jaxb:bindings>
+			
+			<!-- Required Attributes -->
+			
+			<jaxb:bindings node="xs:attribute[@name='creation-date']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<!-- Elements -->
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='tag']">
+				<hj:simpleSingleProperty>
+					<hj:column not-null="true" length="2048"/>
+				</hj:simpleSingleProperty>
+			</jaxb:bindings>
+			
+			<jaxb:bindings node="xs:sequence/xs:element[@name='tagging-user']">
+				<hj:complexSingleProperty>
+					<hj:many-to-one insert="true" update="true" cascade="none">
+						<hj:column not-null="true"/>
+					</hj:many-to-one>
+				</hj:complexSingleProperty>	
+			</jaxb:bindings>
+			
+		</jaxb:bindings>
+		
+	</jaxb:bindings>
+	
+</jaxb:bindings>
