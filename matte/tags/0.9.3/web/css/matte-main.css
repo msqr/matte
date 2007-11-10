@@ -1,0 +1,218 @@
+/* ====================== ITEM TZ FORM ===================== */
+
+#tz-item-form label {
+	min-width: 80px !important;
+}
+
+#tz-item-form {
+	max-width: 350px !important;
+}
+
+/* ======================= INFO PANE ======================= */
+
+#info-pane {
+	display: none;
+	color: inherit;
+	background-color: #D9F3DE;
+	border-bottom: 1px solid #D9F3DE;
+}
+
+#info-pane h2 {
+	color: inherit;
+	background-color: #C5DCC9;
+}
+
+#info-pane label {
+	text-transform: lowercase;
+}
+
+#info-form {
+	color: inherit;
+	background-color: #D9F3DE;
+}
+
+#info-form > div {
+	clear: both;
+}
+
+#info-form label {
+	float: left;
+	width: 65px;
+	text-align: right;
+	font-size: 10px;
+	font-weight: bold;
+	padding-top: 4px;
+	/*line-height: 22px;
+	vertical-align: top;*/
+}
+
+#info-form label:after {
+	content: ": ";
+}
+
+#info-form label + * {
+	float: left;
+	width: 205px;
+	margin-left: 8px;
+	margin-bottom: 5px;
+	text-align: left;
+	padding: 0px 0px 0px 0px;
+	border: 1px solid #999;
+	color: inherit;
+	background-color: #F2F2F2;
+}
+
+#info-form label + span {
+	color: inherit;
+	background-color: transparent !important;
+	border: 0 !important;
+	padding-top: 0.25em;
+}
+
+#info-form div.submit {
+	margin-left: 75px;
+}
+
+#info-form span.rating-stars {
+	border: 0px;
+	color: inherit;
+	background-color: transparent;
+	visibility: hidden;
+	margin-top: 3px;
+}
+
+#info-form #item-comments {
+	height: 80px;
+}
+
+#info-form #item-tags {
+	height: 50px;
+}
+
+#preview-pane {
+	color: inherit;
+	background-color: #D9F3DE;
+	border-bottom: 1px solid #D9F3DE;
+}
+
+#preview-pane h2 {
+	color: inherit;
+	background-color: #C5DCC9;
+}
+
+#preview-container img {
+	margin-left: 20px;
+	cursor: pointer;
+}
+
+/* ===================== SEARCH PANE ===================== */
+
+#search-pane {
+	position: fixed;
+	top: 45px;
+	left: 340px;
+	width: 410px;
+	height: auto;
+	color: inherit;
+	background-color: #F3F2E9;
+	border: 1px solid #333333;
+	z-index: 988; /* one below draggables */
+}
+
+#search-pane .close-x {
+	right: 3px !important;
+}
+
+#search-item-form {
+	padding: 0.5em;
+}
+
+#quick-search {
+	width: 10em;
+	margin-right: 0.5em;
+}
+
+#date-range-calendar-toggle {
+	margin-left: 0.5em;
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+#date-range-calendar-container {
+	font-size: 8pt;
+	font-family: arial, helvetica, sans-serif;
+}
+
+#search-start-date, 
+#search-end-date {
+	width: 60pt;
+}
+
+#start-date-calendar {
+	float: left;
+	margin-right: 10pt;
+}
+
+#search-pane h3 {
+	color: inherit;
+	background-color: #E0DFD7;
+	color: #333333;
+    margin: 0px 0px 4px 0px;
+    padding: 0px 0px 0px 7px;
+    border: 0px;
+	font-family: Tahoma, Verdana, sans-serif;
+	font-size: 10px;
+	line-height: 18px;
+	font-weight: bold;
+	clear: both;
+}
+
+/* ======================= OTHER ======================= */
+
+#share-album-form > p {
+	max-width: 350pt;
+}
+
+#share-album-form label {
+	width: 80pt;
+}
+
+#share-album-form div.submit {
+	margin-left: 85pt;
+}
+
+#sort-albums-form div.label {
+	font-weight: bold;
+}
+
+#sort-albums-container {
+	width: 720px;
+}
+
+#sort-albums-container div {
+	display: block;
+	float: left;
+	border: 1px solid #ccc;
+	background-color: white;
+	color: inherit;
+	width: 120px;
+	height: 100px;
+	padding: 5px;
+	margin: 5px;
+	text-align: center;
+	vertical-align: middle;
+	cursor: move;
+	font-size: 10px;
+}
+
+#item-download-form {
+	max-width: 350pt;
+}
+
+#user-prefs-form > div > label {
+	width: 100px;
+}
+
+#share-album-form label + div{
+	max-width: 240pt;
+}
