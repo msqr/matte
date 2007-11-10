@@ -944,58 +944,6 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		assertTrue(comment.getCommenter().contains(cmd.getEmail()));
 	}
 	
-	/*
-	 * Test able to format an item's date correct.
-	 * @throws Exception if an error occurs
-	 *
-	public void testFormatItemDate() throws Exception {
-		User user = registerAndConfirmUser();
-		BizContext context = new TestBizContext(getContext(contextKey()),user);
-		
-		Collection newCollection = domainObjectFactory.newCollectionInstance();
-		newCollection.setName("This is a new collection");
-		newCollection.setComment("This is a new collection's comments.");
-		
-		Collection c = testUserBiz.newCollectionForUser(
-				newCollection,user,context);
-		
-		// import an item (with metadata)
-		AddMediaCommand cmd = new AddMediaCommand();
-		cmd.setMediaTz("Etc/GMT+8");
-		cmd.setLocalTz("Pacific/Honolulu");
-		importImage("magoffin/matt/ma2/image/IMG_896.JPG", c, context, cmd);
-		
-		cmd.setMediaTz("Etc/GMT+8");
-		cmd.setLocalTz("America/Los_Angeles");
-		importImage("magoffin/matt/ma2/image/IMG_4215.jpg", c, context, cmd);
-		
-		List<MediaItem> collectionItems = testMediaBizImpl.getMediaItemsForCollection(
-				c, context);
-		MediaItem item1 = collectionItems.get(0);
-		MediaItem item2 = collectionItems.get(1);
-		
-		assertEquals("Etc/GMT+8", item1.getTz().getCode());
-		assertEquals("Pacific/Honolulu", item1.getTzDisplay().getCode());
-
-		assertEquals("Etc/GMT+8", item2.getTz().getCode());
-		assertEquals("America/Los_Angeles", item2.getTzDisplay().getCode());
-		
-		SimpleThreadSafeDateFormat sdf = new SimpleThreadSafeDateFormat(
-				"yyyy-MM-dd HH:mm:ss zzz");
-		logger.debug("Input = " +sdf.format(item1.getItemDate(), 
-				TimeZone.getTimeZone(item1.getTz().getCode()))
-				+", " +sdf.format(item2.getItemDate(), 
-				TimeZone.getTimeZone(item2.getTz().getCode())));
-		
-		
-		String result = testMediaBizImpl.formatMediaItemDate(item1, sdf);
-		String result1 = testMediaBizImpl.formatMediaItemDate(item2, sdf);
-		
-		logger.debug("Result = " +result +", " +result1);
-		assertEquals("2003-11-09 07:52:05 HST", result);
-		assertEquals("2005-04-13 14:54:40 PDT", result1);
-	}*/
-	
 	// save a new album
 	private Album saveNewAlbum(User user) {
 		int count = ++counter;

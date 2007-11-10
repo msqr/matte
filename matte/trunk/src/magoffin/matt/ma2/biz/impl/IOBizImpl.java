@@ -100,6 +100,7 @@ import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
@@ -137,6 +138,7 @@ public class IOBizImpl implements IOBiz {
 	private ThreadSafeDateFormat xmlDateTimeFormat
 		= new SimpleThreadSafeDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	private String zipMimeType = DEFAULT_ZIP_MIME_TYPE;
+	private List<Pattern> zipIgnorePatterns;
 	
 	private final Logger log = Logger.getLogger(IOBizImpl.class);
 	
@@ -798,6 +800,13 @@ public class IOBizImpl implements IOBiz {
 							numZipEntries--;
 							continue;
 						}
+						if ( shouldIgnoreZipResource(entry.getName()) ) {
+							numZipEntries--;
+							if ( log.isDebugEnabled() ) {
+								log.debug("Ignoring zip resource [" +entry.getName() +']');
+							}
+							continue;
+						}
 					}
 					if ( metadata != null && getMetadataSchemaResource() != null ) {
 						getXmlHelper().validateXml(new DOMSource(metadata), getMetadataSchemaResource());
@@ -808,10 +817,10 @@ public class IOBizImpl implements IOBiz {
 						ZipEntry entry = zipEnum.nextElement();
 						boolean validItem = false;
 						try {
-							if ( entry.isDirectory() ) {
+							String zipEntryName = entry.getName();
+							if ( entry.isDirectory() || shouldIgnoreZipResource(zipEntryName) ) {
 								continue;
 							}
-							String zipEntryName = entry.getName();
 							File currOutputFile = new File(collectionDir,zipEntryName);
 							currOutputFile.getParentFile().mkdirs();
 							if ( log.isDebugEnabled() ) {
@@ -1208,6 +1217,44 @@ public class IOBizImpl implements IOBiz {
 		
 	}
 	
+	private boolean shouldIgnoreZipResource(String name) {
+		if ( CollectionUtils.isEmpty(this.zipIgnorePatterns) ) {
+			return false;
+		}
+		for ( Pattern pat : this.zipIgnorePatterns ) {
+			if ( pat.matcher(name).find() ) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * @return the zipIgnorePatterns
+	 */
+	public List<String> getZipIgnorePatterns() {
+		List<String> pats = new LinkedList<String>();
+		if ( !CollectionUtils.isEmpty(this.zipIgnorePatterns) ) {
+			for ( Pattern pat : this.zipIgnorePatterns ) {
+				pats.add(pat.pattern());
+			}
+		}
+		return pats;
+	}
+
+	/**
+	 * @param zipIgnorePatterns the zipIgnorePatterns to set
+	 */
+	public void setZipIgnorePatterns(List<String> zipIgnorePatterns) {
+		List<Pattern> pats = new LinkedList<Pattern>();
+		if ( !CollectionUtils.isEmpty(zipIgnorePatterns) ) {
+			for ( String pat : zipIgnorePatterns ) {
+				pats.add(Pattern.compile(pat));
+			}
+		}
+		this.zipIgnorePatterns = pats;
+	}
+
 	/**
 	 * @return Returns the collectionDao.
 	 */
