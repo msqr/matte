@@ -14,14 +14,14 @@
 
 <h1>Matte: Extending with Plugins</h1>
 
-<p>Matte supports <em>plugins</em> for extending the some features from beyond the default
-ones part of Matte itself. This document describes how plugins are managed by Matte in a
-general sesnse: how Matte locates them, initializes them, and allows the application to 
+<p>Matte supports <em>plugins</em> for extending the some features from beyond the built-in
+ones that come with Matte itself. This document describes how plugins are managed by Matte in a
+general sense: how Matte locates them, initializes them, and allows the application to 
 query for them.</p>
 
 <h2>The Plugin API</h2>
 
-<p>The <a href="api/magoffin/matt/ma2/plugin/Plugin.html">Plugin</a>. API is a generic API
+<p>The <a href="api/magoffin/matt/ma2/plugin/Plugin.html">Plugin</a> API is a generic API
 in Matte that facilitates finding and registering plugins dynamically when Matte starts.</p>
 
 <textarea name="code" rows="1" cols="80" class="java">
@@ -64,7 +64,7 @@ extend the <code>Plugin</code> interface. For example, the
 <h3>Plugin initialization hook</h3>
 
 <p>When Matte locates a plugin at startup, it will call the <code>initialize()</code> method,
-passing in the Spring <code>ApplicationContext</code> for the running Matt application. In 
+passing in the Spring <code>ApplicationContext</code> for the running Matte application. In 
 this way each plugin has access to the full application configuration and is free to perform
 any initialization routines necessary.</p>
 
@@ -80,7 +80,7 @@ those messages will become available just like any other message bundle in Matte
 
 <p>When Matte starts up, the <a href="api/magoffin/matt/ma2/biz/SystemBiz.html">SystemBiz</a>
 is responsible for finding, initializing, and registering all available plugins. Matte does so
-by looking for all available class-path resources named <code class="hilight">META-INF/matte-plugin.properties</code>.
+by looking for all available classpath resources named <code class="hilight">META-INF/matte-plugin.properties</code>.
 That means plugins should be distributed as normal Java JAR files, with this special properties
 file included in the <code>META-INF</code> directory in the JAR file. To make the plugin available
 to Matte, then, you just need to add it to Matte's classpath by adding the JAR to the 
@@ -120,13 +120,13 @@ method, passing in the current Spring <code>ApplicationContext</code>. It is the
 plugin to perform any/all start-up initialization and configuration at this point. A good way for 
 plugin implementations to initialize themselves by using Spring, and the 
 <a href="api/magoffin/matt/ma2/support/AbstractPlugin.html">AbstractPlugin</a> provides a default base
-class that provides a standardized way of locating and configuring themselves via a
+class that provides a standardized way for plugins to configure themselves via a
 plugin-specific Spring XML configuration file.</p>
 
 <h3>Plugin registration</h3>
 
 <p>Once initialized, the plugin will be registered based on the <em>plugin type</em> returned by
-the plugin's <code>getPluginType()</code> method. Then, when any part of Matte that calls the 
+the plugin's <code>getPluginType()</code> method. Then, when any part of Matte calls the 
 <code>SystemBiz.getPluginsOfType()</code> method, all plugins of the given type will be returned.
 See the <a href="api/magoffin/matt/ma2/web/BrowseAlbumsController.html">BrowseAlbumsController</a> 
 for an example of how this is used for the <code>BrowseModePlugin</code> type.</p>
