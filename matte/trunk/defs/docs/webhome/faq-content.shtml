@@ -1,6 +1,26 @@
 <p class="intro">Here is a collection of frequently asked questions about Matte:</p>
 
 <dl>
+	<dt>Is there any way to export albums from iPhoto into Matte?</dt>
+	<dd>
+		<p>Currently there is a fairly crude AppleScript that comes in the 
+		<b>scripts</b> directory of the Matte binary distribution which will
+		export the currently-selected album in iPhoto into a directory and 
+		generate an import XML document that preserves the album name, and
+		for each item in the album its name, keywords, and comments. You then 
+		need only zip up the exported items with the import XML file, and 
+		then import that zip archive into Matte.</p>
+		
+		<p>See the <a href="iphoto-applescript-export.html">iPhoto
+		AppleScript Export</a> page for more info.</p>
+		
+		<p>I do have plans to work on a real iPhoto export plugin someday, 
+		or if anyone with OS X programming skills wanted to contribute, this 
+		would be a welcome addition to Matte (email 
+		<a href="mailto:msqr@users.sourceforge.net">msqr@users.sourceforge.net</a>
+		if you're interested).</p>
+	</dd>
+	
 	<dt>Images take forever to be resized. How can I speed this up?</dt>
 	<dd>
 		<p>The default handler for images uses built-in Java classes to transform the images
