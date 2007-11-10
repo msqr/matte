@@ -444,6 +444,57 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	}
 	
 	/**
+	 * Test able to import a Mac OS X zip archive that contains resource forks
+	 * (skipping resource forks).
+	 * @throws Exception if an error occurs
+	 */
+	@SuppressWarnings("unchecked")
+	public void testImportMacZip() throws Exception {
+		AddMediaCommand addCmd = new AddMediaCommand();
+		addCmd.setAutoAlbum(false);
+		addCmd.setCollectionId(this.testCollection.getCollectionId());
+		final Resource testZip = new ClassPathResource("/magoffin/matt/ma2/image/Archive.zip");
+		addCmd.setTempFile(new TemporaryFile() {
+
+			public InputStream getInputStream() throws IOException {
+				return testZip.getInputStream();
+			}
+
+			public String getName() {
+				return testZip.getFilename();
+			}
+
+			public String getContentType() {
+				return "application/zip";
+			}
+			
+			public long getSize() {
+				try {
+					return testZip.getFile().length();
+				} catch ( IOException e ) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+		
+		BizContext context = new TestBizContext(getContext(contextKey()),testUser);
+		WorkInfo info = testIOBizImpl.importMedia(addCmd, context);
+		
+		assertNotNull("Returned WorkInfo must not be null", info);
+		
+		// wait at most 10 minutes for job to complete
+		info.get(600,TimeUnit.SECONDS);	
+		assertTrue(info.isDone());
+		assertNull(info.getException());
+		
+		// verify imported two items
+		Collection c = collectionDao.get(this.testCollection.getCollectionId());
+		List<MediaItem> items = c.getItem();
+		assertNotNull(items);
+		assertEquals(2, items.size());
+	}
+	
+	/**
 	 * Test exporting an item.
 	 * @throws Exception if an error occurs
 	 */
