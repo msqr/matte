@@ -66,7 +66,9 @@
 	<property name="build.version" value="(local build)"/>
 	
 	<property name="env.src" value="local" />
-	<property name="dir.env" value="environment/${env.src}"/>
+	<property name="dir.env" value="environment"/>
+	<property name="dir.env.src" value="${dir.env}/${env.src}"/>
+	<property name="dir.env.src.defaults" value="${dir.env}/example"/>
 	
 	<property name="cvs.root" value="/data/cvs"/>
 	<property name="cvs.compressionlevel" value="6"/>
@@ -165,8 +167,6 @@
 				<include name="core.xsd"/>
 				<include name="domain.xsd"/>
 				<include name="ui.xsd"/>
-			</fileset>
-			<fileset dir="${dir.source}/magoffin/matt/ma2/biz">
 				<include name="import.xsd"/>
 			</fileset>
 		</copy>
@@ -283,13 +283,13 @@
 		depends="generate.domain,compile.domain,jar.domain"/>
 
 	<target name="check-has-env">
-		<available file="${dir.env}" type="dir" property="has.env" />
+		<available file="${dir.env.src}" type="dir" property="has.env" />
 	</target>
 
 	<target name="prepare-env" depends="check-has-env" if="has.env">
 		<mkdir dir="${dir.compile.dest}"/>
 		<copy todir="${dir.compile.dest}" filtering="no">
-			<fileset dir="${dir.env}">
+			<fileset dir="${dir.env.src}">
 				<include name="**"/>
 				<exclude name="README*"/>
 				<exclude name="*.jar"/>
@@ -333,6 +333,26 @@
 			</filterset>
 		</copy>
 
+		<!-- copy schemas for web service -->
+		<copy todir="${dir.app.dest}/WEB-INF/xsd">
+			<fileset dir="${dir.schema}">
+				<include name="*.xsd"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<!-- Run this task to setup local development files -->
+	<target name="prepare-local-dev" description="Setup local development files">
+		<copy todir="${dir.web}/WEB-INF/xsd">
+			<fileset dir="${dir.schema}">
+				<include name="*.xsd"/>
+			</fileset>
+		</copy>
+		<copy todir="${dir.env}/local">
+			<fileset dir="${dir.env}/example">
+				<include name="**"/>
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="compile" depends="prepare" description="Compile source files">
@@ -431,9 +451,9 @@
 
 	<!-- Copy environment properties (to catch local env) -->
 	<target name="cvs-prepare">
-		<mkdir dir="${dir.build.cvs}/${cvs.module.name}/${dir.env}"/>
-		<copy todir="${dir.build.cvs}/${cvs.module.name}/${dir.env}">
-			<fileset dir="${dir.base}/${dir.env}" includes="**" excludes="README*"/>
+		<mkdir dir="${dir.build.cvs}/${cvs.module.name}/${dir.env.src}"/>
+		<copy todir="${dir.build.cvs}/${cvs.module.name}/${dir.env.src}">
+			<fileset dir="${dir.base}/${dir.env.src}" includes="**" excludes="README*"/>
 		</copy>
 	</target>
 	
@@ -563,7 +583,7 @@
 				<include name="${cvs.module.name}/**" />
 				<exclude name="**/build/**" />
 				<exclude name="**/dist/**" />
-				<exclude name="**/environment/local/**" />
+				<exclude name="**/${dir.env}/local/**" />
 			</fileset>
 		</copy>
 
@@ -617,7 +637,7 @@
 				includes="**"/>
 		</copy>
 		<copy filtering="false" todir="${release-dir}/setup">
-			<fileset dir="${dir.build.cvs}/${cvs.module.name}/environment/example"
+			<fileset dir="${dir.build.cvs}/${cvs.module.name}/${dir.env}/example"
 				includes="environmentContext*.xml"/>
 		</copy>
 		<mkdir dir="${release-dir}/scripts"/>
@@ -682,7 +702,7 @@
 			<property name="build.version" value="${cvs.build.version}"/>
 			<property name="dir.build" value="${dir.build}"/>
 			<property name="dir.javadoc" value="${dir.javadoc}"/>
-			<property name="dir.env" value="${dir.env.defaults}"/>
+			<property name="dir.env.src" value="${dir.env.src.defaults}"/>
 			<property name="dir.dist" value="${dir.dist}"/>
 			<property name="app.name" value="${app.name}"/>
 		</ant>
@@ -716,9 +736,9 @@
 	
 	<!-- Copy environment properties (to catch local env) -->
 	<target name="svn-prepare">
-		<mkdir dir="${svn.dir.build}/${dir.env}"/>
-		<copy todir="${svn.dir.build}/${dir.env}">
-			<fileset dir="${dir.base}/${dir.env}" includes="**" excludes="README*"/>
+		<mkdir dir="${svn.dir.build}/${dir.env.src}"/>
+		<copy todir="${svn.dir.build}/${dir.env.src}">
+			<fileset dir="${dir.base}/${dir.env.src}" includes="**" excludes="README*"/>
 		</copy>
 	</target>
 
@@ -822,7 +842,7 @@
 				<include name=".*" />
 				<exclude name="build/**" />
 				<exclude name="dist/**" />
-				<exclude name="environment/local/**" />
+				<exclude name="${dir.env}/local/**" />
 			</fileset>
 		</copy>
 
@@ -877,7 +897,7 @@
 				includes="**"/>
 		</copy>
 		<copy filtering="false" todir="${release-dir}/setup">
-			<fileset dir="${svn.dir.build}/environment/example"
+			<fileset dir="${svn.dir.build}/${dir.env}/example"
 				includes="environmentContext*.xml"/>
 		</copy>
 		<mkdir dir="${release-dir}/scripts"/>
@@ -942,7 +962,7 @@
 			<property name="build.version" value="${svn.tag}"/>
 			<property name="dir.build" value="${dir.build}"/>
 			<property name="dir.javadoc" value="${dir.javadoc}"/>
-			<property name="dir.env" value="${dir.env.defaults}"/>
+			<property name="dir.env.src" value="${dir.env.src.defaults}"/>
 			<property name="dir.dist" value="${dir.dist}"/>
 			<property name="app.name" value="${app.name}"/>
 		</ant>
@@ -954,7 +974,7 @@
 		
 		<antcall target="compile" inheritall="true">
 			<param name="env.src" value="demo"/>
-			<param name="dir.env" value="environment/demo"/>
+			<param name="dir.env.src" value="${dir.env}/demo"/>
 		</antcall>
 			
 		<mkdir dir="${dir.build}/${app.name}-demo"/>
@@ -999,7 +1019,7 @@
 		
 		<!-- add resources required on Tomcat classpath -->
 		<copy todir="${dir.build}/${app.name}-demo/apache-tomcat/common/classes">
-			<fileset dir="environment/demo" includes="META-INF/mime.types"/>
+			<fileset dir="${dir.env}/demo" includes="META-INF/mime.types"/>
 			<fileset dir="${dir.compile.dest}"
 				includes="magoffin/matt/ma2/dao/hbm/Derby*"/>
 		</copy>

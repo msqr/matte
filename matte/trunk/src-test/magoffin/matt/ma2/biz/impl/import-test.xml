@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <collection-import xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://msqr.us/xsd/matte ../../../../../../src/magoffin/matt/ma2/biz/import.xsd"
+	xsi:schemaLocation="http://msqr.us/xsd/matte ../../../../../../defs/schema/import.xsd"
 	xmlns="http://msqr.us/xsd/matte">
 	<album name="My Test Import With XML Album" sort="date">
 		<comment>This is a test album, testing comments. here.</comment>

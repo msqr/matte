@@ -213,7 +213,16 @@
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-
+	
+	<servlet>
+		<servlet-name>matte-ws</servlet-name>
+		<servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>matte-ws</servlet-name>
+		<url-pattern>/ws/*</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>matte</servlet-name>
 		<url-pattern>*.do</url-pattern>

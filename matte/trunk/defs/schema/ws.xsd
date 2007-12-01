@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xml:lang="EN" targetNamespace="http://msqr.us/xsd/matte"
+	xmlns:m="http://msqr.us/xsd/matte"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	
+	<xs:include schemaLocation="import.xsd"/>
+	
+	<xs:import namespace="http://www.w3.org/2005/05/xmlmime"
+		schemaLocation="http://www.w3.org/2005/05/xmlmime"/>
+	
+	<xs:element name="AddMediaRequest" type="m:add-media-request-type"/>
+	
+	<xs:element name="AddMediaResponse" type="m:add-media-response-type"/>
+	
+	<xs:complexType name="add-media-request-type">
+		<xs:sequence>
+			<xs:element name="collection-import" type="m:collection-import-type"/>
+			<xs:element name="media-data" type="m:media-data-type" minOccurs="0" maxOccurs="1">
+				<xs:annotation><xs:documentation>
+					The media to import. This should be a Zip archive of all media files
+					referenced by album items in the associated collection-import element.
+				</xs:documentation></xs:annotation>
+			</xs:element>			
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="add-media-response-type">
+		<xs:sequence>
+			<xs:element name="message" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="media-data-type">
+		<xs:simpleContent>
+			<xs:extension base="xs:base64Binary" >
+				<xs:attribute ref="xmime:contentType" use="optional" default="application/zip"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+</xs:schema>
