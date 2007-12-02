@@ -22,14 +22,19 @@
 					The media to import. This should be a Zip archive of all media files
 					referenced by album items in the associated collection-import element.
 				</xs:documentation></xs:annotation>
-			</xs:element>			
+			</xs:element>
 		</xs:sequence>
+		<xs:attribute name="collection-id" type="xs:long" use="required"/>
+		<xs:attribute name="local-tz" type="xs:string" use="optional"/>
+		<xs:attribute name="media-tz" type="xs:string" use="optional"/>
 	</xs:complexType>
 	
 	<xs:complexType name="add-media-response-type">
 		<xs:sequence>
 			<xs:element name="message" type="xs:string"/>
 		</xs:sequence>
+		<xs:attribute name="success" type="xs:boolean" use="required"/>
+		<xs:attribute name="ticket" type="xs:long" use="optional"/>
 	</xs:complexType>
 	
 	<xs:complexType name="media-data-type">

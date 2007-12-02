@@ -33,6 +33,8 @@ import java.util.List;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 
+import magoffin.matt.ma2.SystemConstants;
+
 /**
  * {@link NamespaceContext} implementation for Matte.
  * 
@@ -51,7 +53,7 @@ public class MatteNamespaceContext implements NamespaceContext {
 	private String matteNamespacePrefix = "m";
 
 	/** The Matte XML namespace URI to use. */
-	private String matteNamespaceURI = "http://msqr.us/xsd/matte";
+	private String matteNamespaceURI = SystemConstants.MATTE_XML_NAMESPACE_URI;
 
 	/** The XWeb namespace prefix to use. */
 	private String xWebNamespacePrefix = "x";

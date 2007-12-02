@@ -167,6 +167,11 @@ public class IOBizImpl implements IOBiz {
 		
 		// get the Collection we are importing the media to...
 		Collection c = collectionDao.get(command.getCollectionId());
+		
+		if ( c == null ) {
+			throw new ObjectNotFoundException("Collection " +command.getCollectionId()
+					+" not found");
+		}
 
 		// have to save temp file to non-temp location as work happens in new thread
 		final File collectionDir = new File(systemBiz.getCollectionRootDirectory(),c.getPath());

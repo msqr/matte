@@ -37,12 +37,26 @@ import magoffin.matt.util.TemporaryFile;
 public class AddMediaCommand {
 	
 	private TemporaryFile tempFile;
+	private TemporaryFile metaXmlFile;
 	private Long collectionId;
 	private String localTz;
 	private String mediaTz;
 	private boolean autoAlbum;
 	
-	
+	/**
+	 * @return the metaXmlFile
+	 */
+	public TemporaryFile getMetaXmlFile() {
+		return metaXmlFile;
+	}
+
+	/**
+	 * @param metaXmlFile the metaXmlFile to set
+	 */
+	public void setMetaXmlFile(TemporaryFile metaXmlFile) {
+		this.metaXmlFile = metaXmlFile;
+	}
+
 	/**
 	 * @return the mediaTz
 	 */
