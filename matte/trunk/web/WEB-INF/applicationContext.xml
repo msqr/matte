@@ -155,6 +155,7 @@
 		<property name="mediaBiz" ref="mediaBizTarget"/>
 		<property name="mediaItemDao" ref="mediaItemDao"/>
 		<property name="systemBiz" ref="systemBiz"/>
+		<property name="metadataSchemaResource" value="/WEB-INF/xsd/import.xsd"/>
 		<property name="zipContentTypes">
 			<set>
 				<value>application/zip</value>
