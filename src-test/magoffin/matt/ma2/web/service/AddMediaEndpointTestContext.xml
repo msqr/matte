@@ -12,6 +12,11 @@
 		<property name="mediaBiz" ref="testMediaBiz"/>
 		<property name="mediaItemDao" ref="mediaItemDao"/>
 		<property name="systemBiz" ref="testSystemBiz"/>
+		<property name="metadataSchemaResource">
+			<bean class="org.springframework.core.io.FileSystemResource">
+				<constructor-arg index="0" type="java.lang.String" value="defs/schema/import.xsd"/>
+			</bean>
+		</property>
 		<property name="zipContentTypes">
 			<set>
 				<value>application/zip</value>
