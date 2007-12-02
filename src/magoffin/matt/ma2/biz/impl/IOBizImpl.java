@@ -98,7 +98,6 @@ import magoffin.matt.util.ThreadSafeDateFormat;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.FileCopyUtils;
@@ -131,8 +130,7 @@ public class IOBizImpl implements IOBiz {
 	private FileTypeMap fileTypeMap;
 	private XmlHelper xmlHelper;
 	private DomainObjectFactory domainObjectFactory;
-	private Resource metadataSchemaResource = 
-		new ClassPathResource("magoffin/matt/ma2/biz/import.xsd");
+	private Resource metadataSchemaResource = null;
 	private ThreadSafeDateFormat xmlDateFormat
 		= new SimpleThreadSafeDateFormat("yyyy-MM-dd");
 	private ThreadSafeDateFormat xmlDateTimeFormat
@@ -813,6 +811,13 @@ public class IOBizImpl implements IOBiz {
 							continue;
 						}
 					}
+					
+					// also support metadata document from command directly
+					if ( command.getMetaXmlFile() != null ) {
+						metadata = xmlHelper.getDocument(
+								command.getMetaXmlFile().getInputStream());
+					}
+					
 					if ( metadata != null && getMetadataSchemaResource() != null ) {
 						getXmlHelper().validateXml(new DOMSource(metadata), getMetadataSchemaResource());
 					}
