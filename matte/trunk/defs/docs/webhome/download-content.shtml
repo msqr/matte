@@ -34,6 +34,13 @@ and Mac OS X. It also runs on Windows, and should run on any platform with a Jav
 	<dd>
 		Matte is distributed as a Java web application (WAR). To use this you'll need a servlet container to deploy it into. Matte has been extensively tested with the <a href="http://tomcat.apache.org/">Tomcat</a> 5.5 server. Any J2EE servlet container should work, however.
 	</dd>
+	
+	<dt>Web browser</dt>
+	<dd>
+		The main media organization UI has been tested and is known to work in the Firefox (1.5+) 
+		and Safari (2+) web browsers. When sharing albums, browser requirements depend on the theme 
+		being used. The default built-in Woosh theme is known to work in Firefox, Safari, and IE (6+).
+	</dd>
 
 </dl>
 
