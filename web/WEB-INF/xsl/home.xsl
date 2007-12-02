@@ -74,7 +74,9 @@
 			</xsl:if>
 
 			<xsl:if test="$alert.message">
-				APP_INFO.alertMessage = "<xsl:value-of select="$alert.message"/>";
+				APP_INFO.alertMessage = "<xsl:call-template name="javascript-string">
+					<xsl:with-param name="output-string" select="$alert.message"/>
+				</xsl:call-template>";
 			</xsl:if>
 			<xsl:if test="$display.collection.id">
 				APP_INFO.displayCollectionId = <xsl:value-of select="$display.collection.id"/>;
