@@ -50,7 +50,9 @@ import magoffin.matt.ma2.biz.UserBiz;
 import magoffin.matt.ma2.biz.WorkBiz;
 import magoffin.matt.ma2.biz.WorkBiz.WorkInfo;
 import magoffin.matt.ma2.biz.impl.TestBizContext;
+import magoffin.matt.ma2.dao.AlbumDao;
 import magoffin.matt.ma2.dao.CollectionDao;
+import magoffin.matt.ma2.domain.Album;
 import magoffin.matt.ma2.domain.Collection;
 import magoffin.matt.ma2.domain.MediaItem;
 import magoffin.matt.ma2.domain.User;
@@ -86,8 +88,11 @@ public class AddMediaEndpointTest extends AbstractSpringEnabledTransactionalTest
 	/** The WorkBiz. */
 	protected WorkBiz testWorkBiz;
 	
-	/** The CollectionDAO. */
+	/** The CollectionDao. */
 	protected CollectionDao collectionDao;
+	
+	/** The AlbumDao. */
+	protected AlbumDao albumDao;
 	
 	private User testUser;
 	private Collection testCollection;
@@ -159,6 +164,18 @@ public class AddMediaEndpointTest extends AbstractSpringEnabledTransactionalTest
 		assertEquals("AddMediaTestAlbum/arrow-closed.png", testItem.getPath());
 		assertEquals("Arrow Closed", testItem.getName());
 		assertEquals("This is an arrow, closed.", testItem.getDescription());
+		
+		// verify album has been created, with test item in it
+		List<Album> userAlbums = albumDao.findAlbumsForUser(testUser.getUserId());
+		assertNotNull(userAlbums);
+		assertEquals(1, userAlbums.size());
+		Album userAlbum = userAlbums.get(0);
+		assertEquals("AddMediaTestAlbum", userAlbum.getName());
+		assertEquals("This is a test album.", userAlbum.getComment());
+		assertNotNull(userAlbum.getItem());
+		assertEquals(1, userAlbum.getItem().size());
+		MediaItem albumItem = (MediaItem)userAlbum.getItem().get(0);
+		assertEquals(testItem.getItemId(), albumItem.getItemId());
 	}
 	
 	private File getTestXml() throws Exception {
