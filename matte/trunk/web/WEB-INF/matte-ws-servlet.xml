@@ -24,31 +24,77 @@
 -->
 <beans>
 	
-	<bean id="imageRepository" class="org.springframework.ws.samples.mtom.service.StubImageRepository"/>
-	
-	<bean class="org.springframework.ws.samples.mtom.ws.ImageRepositoryEndpoint">
-		<constructor-arg ref="imageRepository"/>
-	</bean>
-	
-	<bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping"/>
-	
-	<bean class="org.springframework.ws.server.endpoint.adapter.GenericMarshallingMethodEndpointAdapter">
-		<constructor-arg ref="marshaller"/>
-	</bean>
-	
-	<bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
-		<property name="contextPath" value="org.springframework.ws.samples.mtom.schema"/>
-		<property name="mtomEnabled" value="true"/>
-	</bean>
-	
-	<bean id="mtom" class="org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition">
-		<property name="builder">
-			<bean class="org.springframework.ws.wsdl.wsdl11.builder.XsdBasedSoap11Wsdl4jDefinitionBuilder">
-				<property name="schema" value="/WEB-INF/schema.xsd"/>
-				<property name="portTypeName" value="ImageRepository"/>
-				<property name="locationUri" value="http://localhost:8080/mtom/"/>
-			</bean>
+	<bean id="endpointMapping"
+		class="org.springframework.ws.soap.server.endpoint.mapping.SoapActionEndpointMapping">
+		<property name="mappings">
+			<props>
+				<prop key="http://msqr.us/matte/ws/AddMedia">addMediaEndpoint</prop>
+			</props>
 		</property>
+		<property name="interceptors"> 
+			<list>
+				<ref bean="wsSecurityInterceptor"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="endpointMethodMapping" 
+		class="org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping">
+		<property name="interceptors"> 
+			<list>
+				<ref bean="wsSecurityInterceptor"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean class="org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter">
+		<constructor-arg ref="wsMarshaller"/>
+	</bean>
+	
+	<bean id="messageFactory" class="org.springframework.ws.soap.axiom.AxiomSoapMessageFactory"> 
+		<property name="payloadCaching" value="false"/> 
+	</bean>
+	
+	<bean id="wsMarshaller" class="org.springframework.oxm.jaxb.Jaxb1Marshaller">
+		<property name="contextPath" value="magoffin.matt.ma2.domain"/>
+		<property name="validating" value="true"/>
+		<property name="marshallerProperties">
+			<map>
+				<entry key="com.sun.xml.bind.namespacePrefixMapper" 
+					value-ref="jaxbNamespacePrefixMapper"/>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="wsSecurityInterceptor" 
+		class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor"> 
+		<property name="policyConfiguration" value="classpath:wsSecurityPolicy.xml"/> 
+		<property name="callbackHandlers">
+			<list>
+				<ref bean="authenticationHandler"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="authenticationHandler" 
+		class="magoffin.matt.ma2.web.service.PasswordValidationCallbackHandler">
+		<property name="userBiz" ref="userBiz"/>	
+	</bean>
+	
+	<bean id="matte" class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
+		<property name="wsdl" value="/WEB-INF/xsd/matte.wsdl"/>
+	</bean>
+	
+	<bean id="addMediaEndpoint" class="magoffin.matt.ma2.web.service.AddMediaEndpoint">
+		<property name="ioBiz" ref="ioBiz"/>
+	</bean>
+	
+	<bean id="getCollectionListEndpoint" 
+		class="magoffin.matt.ma2.web.service.GetCollectionListEndpoint">
+		<property name="userBiz" ref="userBiz"/>
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="marshaller" ref="wsMarshaller"/>
+		<property name="unmarshaller" ref="wsMarshaller"/>
 	</bean>
 	
 </beans>

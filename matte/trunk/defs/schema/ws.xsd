@@ -63,7 +63,9 @@
 	<xs:complexType name="add-media-request-type">
 		<xs:sequence>
 			<xs:element name="collection-import" type="m:collection-import-type"/>
-			<xs:element name="media-data" type="m:media-data-type" minOccurs="0" maxOccurs="1">
+			<xs:element name="media-data" type="m:media-data-type" 
+				xmime:expectedContentTypes="application/zip, application/octet-stream"
+				minOccurs="0" maxOccurs="1">
 				<xs:annotation><xs:documentation>
 					The media to import. This should be a Zip archive of all media files
 					referenced by album items in the associated collection-import element.
@@ -85,7 +87,7 @@
 	
 	<xs:complexType name="media-data-type">
 		<xs:simpleContent>
-			<xs:extension base="xs:base64Binary" >
+			<xs:extension base="xs:base64Binary">
 				<xs:attribute ref="xmime:contentType" use="optional" default="application/zip"/>
 			</xs:extension>
 		</xs:simpleContent>

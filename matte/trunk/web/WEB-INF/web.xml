@@ -221,6 +221,11 @@
 	<servlet>
 		<servlet-name>matte-ws</servlet-name>
 		<servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
+		<init-param> 
+			<param-name>transformWsdlLocations</param-name> 
+			<param-value>true</param-value> 
+		</init-param>
+		<load-on-startup>2</load-on-startup>
 	</servlet>
 	
 	<servlet-mapping>
@@ -239,6 +244,15 @@
 		<servlet-name>matte</servlet-name>
 		<url-pattern>*.xml</url-pattern>
 	</servlet-mapping>
+	
+	<mime-mapping>
+		<extension>xsd</extension>
+		<mime-type>text/xml</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>wsdl</extension>
+		<mime-type>text/xml</mime-type>
+	</mime-mapping>
 	
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>

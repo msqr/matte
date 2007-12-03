@@ -28,7 +28,6 @@ package magoffin.matt.ma2.web.service;
 
 import java.util.List;
 
-import magoffin.matt.ma2.SystemConstants;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.DomainObjectFactory;
 import magoffin.matt.ma2.biz.UserBiz;
@@ -39,8 +38,9 @@ import magoffin.matt.ma2.domain.GetCollectionListResponse;
 import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.util.BizContextUtil;
 
+import org.springframework.ws.server.endpoint.AbstractMarshallingPayloadEndpoint;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
-import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.soap.server.endpoint.annotation.SoapAction;
 
 /**
  * Web service endpoint for getting the list of collections for the current user.
@@ -52,10 +52,15 @@ import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
  * @version $Revision$ $Date$
  */
 @Endpoint
-public class GetCollectionListEndpoint {
+public class GetCollectionListEndpoint extends AbstractMarshallingPayloadEndpoint {
 	
 	private UserBiz userBiz;
 	private DomainObjectFactory domainObjectFactory;
+
+	@Override
+	protected Object invokeInternal(Object requestObject) throws Exception {
+		return getCollectionList((GetCollectionListRequest)requestObject);
+	}
 
 	/**
 	 * Get a list of all collections for the current user.
@@ -64,8 +69,7 @@ public class GetCollectionListEndpoint {
 	 * @return the response
 	 */
 	@SuppressWarnings("unchecked")
-	@PayloadRoot(localPart = "GetCollectionList", 
-			namespace = SystemConstants.MATTE_XML_NAMESPACE_URI)
+	@SoapAction("http://msqr.us/matte/ws/GetCollectionList")
 	public GetCollectionListResponse getCollectionList(GetCollectionListRequest request) {
 		BizContext context = BizContextUtil.getBizContext();
 		User user = context.getActingUser();
