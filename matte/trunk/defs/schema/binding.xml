@@ -169,6 +169,34 @@
 		
 	</jaxb:bindings>
 	
+	<jaxb:bindings schemaLocation="ws.xsd" node="/xs:schema">
+		
+		<jaxb:bindings node="xs:complexType[@name='get-collection-list-request-type']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='get-collection-list-response-type']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='add-media-request-type']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='add-media-response-type']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='media-data-type']">
+			<hj:ignored/>
+		</jaxb:bindings>
+			
+		<jaxb:bindings node="xs:complexType[@name='collection-list-item-type']">
+			<hj:ignored/>
+		</jaxb:bindings>
+			
+	</jaxb:bindings>
+	
 	<jaxb:bindings schemaLocation="domain.xsd" node="/xs:schema">
 		<!--jaxb:globalBindings bindingStyle="modelGroupBinding" choiceContentProperty="true">
 			<jaxb:javaType name="java.lang.Long"  xmlType="xs:long"/>

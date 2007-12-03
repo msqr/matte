@@ -42,6 +42,7 @@ import magoffin.matt.ma2.dao.UserDaoTest;
 import magoffin.matt.ma2.dao.support.AlbumsByDateBrowseModePluginTest;
 import magoffin.matt.ma2.dao.support.PopularityBrowseModePluginTest;
 import magoffin.matt.ma2.dao.support.RatingAverageBrowseModePluginTest;
+import magoffin.matt.ma2.web.service.AddMediaEndpointTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -76,6 +77,7 @@ public class AllTests {
 		suite.addTestSuite(SystemBizImplTest.class);
 		suite.addTestSuite(WorkBizImplTest.class);
 		suite.addTestSuite(UserBizImplTest.class);
+		suite.addTestSuite(AddMediaEndpointTest.class);
 		return suite;
 	}
 
