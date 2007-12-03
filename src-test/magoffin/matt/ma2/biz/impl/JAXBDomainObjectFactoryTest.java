@@ -28,7 +28,10 @@ package magoffin.matt.ma2.biz.impl;
 
 import magoffin.matt.ma2.domain.Album;
 import magoffin.matt.ma2.domain.Collection;
+import magoffin.matt.ma2.domain.CollectionListItemType;
 import magoffin.matt.ma2.domain.Edit;
+import magoffin.matt.ma2.domain.GetCollectionListRequest;
+import magoffin.matt.ma2.domain.GetCollectionListResponse;
 import magoffin.matt.ma2.domain.JobInfo;
 import magoffin.matt.ma2.domain.KeyNameType;
 import magoffin.matt.ma2.domain.Locale;
@@ -278,6 +281,30 @@ public class JAXBDomainObjectFactoryTest extends TestCase {
 	 */
 	public void testCreateLocaleInstance() {
 		Locale l = dof.newLocaleInstance();
+		assertNotNull(l);
+	}
+	
+	/**
+	 * Test creation of GetCollectionListResponse.
+	 */
+	public void testCreateGetCollectionListResponseInstance() {
+		GetCollectionListResponse l = dof.newGetCollectionListResponseInstance();
+		assertNotNull(l);
+	}
+	
+	/**
+	 * Test creation of CollectionListItemType.
+	 */
+	public void testCreateCollectionListItemTypeInstance() {
+		CollectionListItemType l = dof.newCollectionListItemTypeInstance();
+		assertNotNull(l);
+	}
+	
+	/**
+	 * Test creation of GetCollectionListRequest.
+	 */
+	public void testCreateGetCollectionListRequestInstance() {
+		GetCollectionListRequest l = dof.newGetCollectionListRequestInstance();
 		assertNotNull(l);
 	}
 	

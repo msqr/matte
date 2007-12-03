@@ -171,6 +171,10 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>Compression Filter</filter-name>
+		<url-pattern>/home.do</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
 		<url-pattern>/album.do</url-pattern>
 	</filter-mapping>
 	<filter-mapping>

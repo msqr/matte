@@ -29,7 +29,10 @@ package magoffin.matt.ma2.biz;
 import magoffin.matt.ma2.domain.Album;
 import magoffin.matt.ma2.domain.AlbumSearchResult;
 import magoffin.matt.ma2.domain.Collection;
+import magoffin.matt.ma2.domain.CollectionListItemType;
 import magoffin.matt.ma2.domain.Edit;
+import magoffin.matt.ma2.domain.GetCollectionListRequest;
+import magoffin.matt.ma2.domain.GetCollectionListResponse;
 import magoffin.matt.ma2.domain.JobInfo;
 import magoffin.matt.ma2.domain.KeyNameType;
 import magoffin.matt.ma2.domain.Locale;
@@ -83,10 +86,28 @@ public interface DomainObjectFactory {
 	Collection newCollectionInstance();
 	
 	/**
+	 * Get a new CollectionListItemType instance.
+	 * @return new CollectionListItemType instance
+	 */
+	CollectionListItemType newCollectionListItemTypeInstance();
+	
+	/**
 	 * Get a new Edit instance.
 	 * @return new Edit instance
 	 */
 	Edit newEditInstance();
+	
+	/**
+	 * Get a new GetCollectionListRequest instance.
+	 * @return the new GetCollectionListRequest instance
+	 */
+	GetCollectionListRequest newGetCollectionListRequestInstance();
+	
+	/**
+	 * Get a new GetCollectionListResponse instance.
+	 * @return the new GetCollectionListResponse instance
+	 */
+	GetCollectionListResponse newGetCollectionListResponseInstance();
 	
 	/**
 	 * Return a new JobInfo instance.

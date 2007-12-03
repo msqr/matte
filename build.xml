@@ -156,6 +156,12 @@
 	</target>
 	
 	<target name="generate.domain" depends="init" description="Generate JAXB domain objects from XML schemas">
+		<delete>
+			<fileset dir="${hjb.dir}/src/main/resources">
+				<include name="*.xjb"/>
+				<include name="*.xsd"/>
+			</fileset>
+		</delete>
 		<copy todir="${hjb.dir}/src/main/resources">
 			<fileset dir="defs/schema">
 				<include name="binding.xml"/>
@@ -168,13 +174,24 @@
 				<include name="domain.xsd"/>
 				<include name="ui.xsd"/>
 				<include name="import.xsd"/>
+				<include name="ws.xsd"/>
 			</fileset>
 		</copy>
+		<delete>
+			<fileset dir="${hjb.dir}/src/main/java">
+				<include name="**"/>
+			</fileset>
+		</delete>
 		<copy todir="${hjb.dir}/src/main/java">
 			<fileset dir="${dir.source}">
 				<include name="magoffin/matt/ma2/support/AbstractDomainObject.java"/>
 			</fileset>
 		</copy>
+		<delete>
+			<fileset dir="${hjb.dir}/target/generated-sources/xjc">
+				<include name="magoffin/matt/ma2/domain/**"/>
+			</fileset>
+		</delete>
 		
 		<!-- Extract SearchMatch.java from mmagoff.jar -->
 		<delete dir="${dir.build}/tmp" failonerror="no"/>
@@ -337,6 +354,7 @@
 		<copy todir="${dir.app.dest}/WEB-INF/xsd">
 			<fileset dir="${dir.schema}">
 				<include name="*.xsd"/>
+				<include name="*.wsdl"/>
 			</fileset>
 		</copy>
 	</target>
@@ -346,6 +364,7 @@
 		<copy todir="${dir.web}/WEB-INF/xsd">
 			<fileset dir="${dir.schema}">
 				<include name="*.xsd"/>
+				<include name="*.wsdl"/>
 			</fileset>
 		</copy>
 		<copy todir="${dir.env}/local">
