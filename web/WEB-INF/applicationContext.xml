@@ -79,9 +79,7 @@
 		<property name="objectFactory">
 			<bean class="magoffin.matt.ma2.domain.ObjectFactory"/>
 		</property>
-		<property name="xpathNamespaceContext">
-			<bean class="magoffin.matt.ma2.util.MatteNamespaceContext"/>
-		</property>
+		<property name="xpathNamespaceContext" ref="namespaceContext"/>
 		<property name="marshallerProperties">
 			<map>
 				<entry key="com.sun.xml.bind.namespacePrefixMapper" 
@@ -93,6 +91,19 @@
 				<property name="cacheManager" ref="cacheManager"/> 
 				<property name="cacheName" value="magoffin.matt.ma2.SCHEMA"/> 
 			</bean>
+		</property>
+	</bean>
+	
+	<!-- namespaceContext: XML namespace support -->
+	<bean id="namespaceContext" class="magoffin.matt.xweb.util.BasicNamespaceContext"
+		init-method="init">
+		<property name="namespacePrefixMap">
+			<map>
+				<entry key="m" value="http://msqr.us/xsd/matte"/>
+				<entry key="x" value="http://msqr.us/xsd/jaxb-web"/>
+				<entry key="xmime" value="http://www.w3.org/2005/05/xmlmime"/>
+				<entry key="wsse" value="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+			</map>
 		</property>
 	</bean>
 	
