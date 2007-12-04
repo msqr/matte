@@ -11,10 +11,11 @@
 		<config>web/WEB-INF/matte-servlet.xml</config>
 		<config>web/WEB-INF/webEnvironmentContext.xml</config>
 		<config>environment/local/environmentContext.xml</config>
+		<config>web/WEB-INF/matte-ws-servlet.xml</config>
 	</configs>
 	<configSets>
 		<configSet>
-			<name>MA2</name>
+			<name><![CDATA[MA2]]></name>
 			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
 			<incomplete>false</incomplete>
 			<configs>
@@ -25,6 +26,7 @@
 				<config>web/WEB-INF/webEnvironmentContext.xml</config>
 				<config>environment/local/environmentContext.xml</config>
 				<config>web/WEB-INF/jobContext.xml</config>
+				<config>web/WEB-INF/matte-ws-servlet.xml</config>
 			</configs>
 		</configSet>
 	</configSets>

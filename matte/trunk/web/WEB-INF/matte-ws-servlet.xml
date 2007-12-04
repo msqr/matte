@@ -33,10 +33,15 @@
 		</property>
 		<property name="interceptors"> 
 			<list>
+				<!-- if enable this, turn messageFactory.payloadCaching to "true"
+					bean id="loggingInterceptor" 
+					class="org.springframework.ws.soap.server.endpoint.interceptor.SoapEnvelopeLoggingInterceptor"/-->
 				<ref bean="wsSecurityInterceptor"/>
 			</list>
 		</property>
 	</bean>
+	
+	<bean class="org.springframework.ws.server.endpoint.adapter.MessageEndpointAdapter"/>
 	
 	<bean id="endpointMethodMapping" 
 		class="org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping">
@@ -51,7 +56,7 @@
 		<constructor-arg ref="wsMarshaller"/>
 	</bean>
 	
-	<bean id="messageFactory" class="org.springframework.ws.soap.axiom.AxiomSoapMessageFactory"> 
+	<bean id="messageFactory" class="magoffin.matt.ma2.web.service.AxiomSoapMessageFactory"> 
 		<property name="payloadCaching" value="false"/> 
 	</bean>
 	
@@ -67,26 +72,18 @@
 	</bean>
 	
 	<bean id="wsSecurityInterceptor" 
-		class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor"> 
-		<property name="policyConfiguration" value="classpath:wsSecurityPolicy.xml"/> 
-		<property name="callbackHandlers">
-			<list>
-				<ref bean="authenticationHandler"/>
-			</list>
-		</property>
-	</bean>
-	
-	<bean id="authenticationHandler" 
-		class="magoffin.matt.ma2.web.service.PasswordValidationCallbackHandler">
-		<property name="userBiz" ref="userBiz"/>	
+		class="magoffin.matt.ma2.web.service.SimpleWsSecurityInterceptor">
+		<property name="userBiz" ref="userBiz"/>
+		<property name="xmlHelper" ref="xmlHelper"/>
 	</bean>
 	
 	<bean id="matte" class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
 		<property name="wsdl" value="/WEB-INF/xsd/matte.wsdl"/>
 	</bean>
 	
-	<bean id="addMediaEndpoint" class="magoffin.matt.ma2.web.service.AddMediaEndpoint">
+	<bean id="addMediaEndpoint" class="magoffin.matt.ma2.web.service.AddMediaMessageEndpoint">
 		<property name="ioBiz" ref="ioBiz"/>
+		<property name="xmlHelper" ref="xmlHelper"/>
 	</bean>
 	
 	<bean id="getCollectionListEndpoint" 

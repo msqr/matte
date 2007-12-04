@@ -1,7 +1,7 @@
 /* ===================================================================
- * AddMediaEndpoint.java
+ * AddMediaMessageEndpoint.java
  * 
- * Created Dec 1, 2007 10:23:29 AM
+ * Created Dec 4, 2007 11:45:15 AM
  * 
  * Copyright (c) 2007 Matt Magoffin.
  * 
@@ -27,10 +27,14 @@
 package magoffin.matt.ma2.web.service;
 
 import java.io.File;
-
+import java.io.FileOutputStream;
+import java.io.StringReader;
+import java.util.Iterator;
 
 import javax.xml.stream.XMLOutputFactory;
-import javax.xml.transform.Source;
+import javax.xml.transform.Result;
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.stream.StreamSource;
 
 import magoffin.matt.ma2.SystemConstants;
 import magoffin.matt.ma2.biz.BizContext;
@@ -38,34 +42,46 @@ import magoffin.matt.ma2.biz.IOBiz;
 import magoffin.matt.ma2.biz.WorkBiz.WorkInfo;
 import magoffin.matt.ma2.support.AddMediaCommand;
 import magoffin.matt.ma2.util.BizContextUtil;
+import magoffin.matt.ma2.util.XmlHelper;
 import magoffin.matt.util.FileBasedTemporaryFile;
 
 import org.apache.log4j.Logger;
-import org.springframework.ws.server.endpoint.AbstractSaxPayloadEndpoint;
-import org.springframework.xml.transform.StringSource;
-import org.xml.sax.ContentHandler;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.mime.Attachment;
+import org.springframework.ws.mime.MimeMessage;
+import org.springframework.ws.server.endpoint.MessageEndpoint;
 
 /**
- * Web service endpoint for adding media.
+ * Implementation of AddMediaRequest web service that uses SOAP attachments for
+ * the media data.
  * 
- * <p>Uses SAX to handle potentially large amount of data encoded into the request.</p>
- * 
- * <p>Note that a {@link BizContext} must be available via {@link BizContextUtil#getBizContext()}
- * prior to invoking this service, to pass the user authentication to the import.</p> 
+ * <p>This works better than {@link AddMediaEndpoint} in the default configuration 
+ * of Spring-WS, which does not seem to handle large text element content well
+ * (as in, large base64 encoded element content).</p>
  *
- * @see BizContextUtil
  * @author matt
  * @version $Revision$ $Date$
  */
-public class AddMediaEndpoint extends AbstractSaxPayloadEndpoint {
+public class AddMediaMessageEndpoint implements MessageEndpoint {
 	
+	private final Logger log = Logger.getLogger(getClass());
+
 	private IOBiz ioBiz = null;
 	private XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-	
-	final Logger log = Logger.getLogger(getClass());
+	private XmlHelper xmlHelper = null;
 
-	@Override
-	protected ContentHandler createContentHandler() throws Exception {
+	/* (non-Javadoc)
+	 * @see org.springframework.ws.server.endpoint.MessageEndpoint#invoke(org.springframework.ws.context.MessageContext)
+	 */
+	@SuppressWarnings("unchecked")
+	public void invoke(MessageContext messageContext) throws Exception {
+		WebServiceMessage msg = messageContext.getRequest();
+		if ( !(msg instanceof MimeMessage) ) {
+			throw new IllegalArgumentException("Only MimeMessage is supported");
+		}
+		
 		File xmlFile = File.createTempFile("matte-add-media-", ".xml");
 		if ( log.isDebugEnabled() ) {
 			log.debug("Creating <m:collection-import> document at " 
@@ -75,13 +91,33 @@ public class AddMediaEndpoint extends AbstractSaxPayloadEndpoint {
 		if ( log.isDebugEnabled() ) {
 			log.debug("Decoding <m:media-data> to "  +mediaFile.getAbsolutePath());
 		}
-		return new AddMediaContentHandler(xmlFile, mediaFile, this.outputFactory);
-	}
+		
+		// re-use the SAX content handler used by AddMediaEndpoint, even though
+		// it won't find the <m:media-data> data, as it's an attachment here
+		AddMediaContentHandler addContentHander = new AddMediaContentHandler(
+				xmlFile, mediaFile, this.outputFactory);
+		SAXResult result = new SAXResult(addContentHander);
+		xmlHelper.transformXml(msg.getPayloadSource(), result);
 
-	@Override
-	protected Source getResponse(ContentHandler contentHandler) throws Exception {
-		boolean success = true;
-		final AddMediaContentHandler addContentHander = (AddMediaContentHandler)contentHandler;
+		MimeMessage mimeRequest = (MimeMessage)msg;
+		Iterator<Attachment> itr = mimeRequest.getAttachments();
+		Attachment media = null;
+		while ( itr.hasNext() ) {
+			Attachment a = itr.next();
+			String contentType = a.getContentType();
+			// take the first non-XML attachment
+			if ( !contentType.equalsIgnoreCase("text/xml") ) {
+				media = a;
+				break;
+			}
+		}
+		if ( media == null ) {
+			throw new IllegalArgumentException("Media not attached.");
+		}
+		
+		// copy media to tmp file
+		FileCopyUtils.copy(media.getInputStream(), new FileOutputStream(mediaFile));
+		
 		AddMediaCommand command = new AddMediaCommand();
 		command.setAutoAlbum(true);
 		command.setCollectionId(addContentHander.getCollectionId());
@@ -97,13 +133,16 @@ public class AddMediaEndpoint extends AbstractSaxPayloadEndpoint {
 		buf.append("<m:AddMediaResponse xmlns:m=\"")
 			.append(SystemConstants.MATTE_XML_NAMESPACE_URI)
 			.append("\" success=\"")
-			.append(success).append("\" ticket=\"")
+			.append(true).append("\" ticket=\"")
 			.append(workInfo.getTicket()).append("\">");
 		
 		buf.append("</m:AddMediaResponse>");
-		return new StringSource(buf.toString());
+		
+		Result response = messageContext.getResponse().getPayloadResult();
+		xmlHelper.transformXml(new StreamSource(
+				new StringReader(buf.toString())), response);
 	}
-	
+
 	/**
 	 * @return the ioBiz
 	 */
@@ -130,6 +169,20 @@ public class AddMediaEndpoint extends AbstractSaxPayloadEndpoint {
 	 */
 	public void setOutputFactory(XMLOutputFactory outputFactory) {
 		this.outputFactory = outputFactory;
+	}
+
+	/**
+	 * @return the xmlHelper
+	 */
+	public XmlHelper getXmlHelper() {
+		return xmlHelper;
+	}
+
+	/**
+	 * @param xmlHelper the xmlHelper to set
+	 */
+	public void setXmlHelper(XmlHelper xmlHelper) {
+		this.xmlHelper = xmlHelper;
 	}
 
 }

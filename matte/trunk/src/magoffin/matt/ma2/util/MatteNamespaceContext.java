@@ -40,7 +40,10 @@ import magoffin.matt.ma2.SystemConstants;
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
  * @version $Revision$ $Date$
+ * @deprecated see {@link magoffin.matt.xweb.util.BasicNamespaceContext}
+ * @see magoffin.matt.xweb.util.BasicNamespaceContext
  */
+@Deprecated
 public class MatteNamespaceContext implements NamespaceContext {
 
 	/** The MA2 XML namespace prefix to use. */
