@@ -1123,6 +1123,8 @@ var wooshBehaviours = {
 	},
 	
 	'#download-originals' : function(el) {
+		el = $(el);
+		if ( el.hasClassName('behaved') ) return;
 		el.onchange = function() {
 			var size = $('download-size');
 			var quality = $('download-quality');
@@ -1135,6 +1137,7 @@ var wooshBehaviours = {
 				quality.disabled = false;
 			}	
 		}
+		el.addClassName('behaved');
 	},
 	
 	'#add-comment-link' : function(el) {
@@ -1178,6 +1181,9 @@ var wooshBehaviours = {
 	},
 	
 	'#item-rating' : function(el) {
+		el = $(el);
+		if ( el.hasClassName('behaved') ) return;
+		
 		if ( typeof Builder == 'object' ) {
 			Builder.xmlMode = xmlMode;
 		}
@@ -1193,6 +1199,7 @@ var wooshBehaviours = {
 				' (' +new Number(data[1] / data[2]).toFixed(1) + ' - ' +data[2] +')'));
 		}*/
 		$('item-rating-container').show();
+		el.addClassName('behaved');
 	}
 	
 }
