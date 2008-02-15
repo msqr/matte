@@ -44,7 +44,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +52,6 @@ import java.util.TimeZone;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipOutputStream;
 
 import javax.activation.FileDataSource;
 import javax.activation.FileTypeMap;
@@ -92,7 +90,6 @@ import magoffin.matt.ma2.support.ExportItemsCommand;
 import magoffin.matt.ma2.support.InternalBizContext;
 import magoffin.matt.ma2.util.BizContextUtil;
 import magoffin.matt.ma2.util.XmlHelper;
-import magoffin.matt.util.NonClosingOutputStream;
 import magoffin.matt.util.SimpleThreadSafeDateFormat;
 import magoffin.matt.util.ThreadSafeDateFormat;
 
@@ -138,7 +135,7 @@ public class IOBizImpl implements IOBiz {
 	private String zipMimeType = DEFAULT_ZIP_MIME_TYPE;
 	private List<Pattern> zipIgnorePatterns;
 	
-	private final Logger log = Logger.getLogger(IOBizImpl.class);
+	final Logger log = Logger.getLogger(IOBizImpl.class);
 	
 	/**
 	 * Call to initialize after peroprties have been set.
@@ -350,7 +347,7 @@ public class IOBizImpl implements IOBiz {
 		}
 	}
 	
-	private void exportSingleMediaItem(MediaRequest request, MediaResponse response, BizContext context) {
+	void exportSingleMediaItem(MediaRequest request, MediaResponse response, BizContext context) {
 		MediaItem item = this.mediaItemDao.get(request.getMediaItemId());
 		if ( item == null ) {
 			throw new ObjectNotFoundException("Item ["
@@ -471,12 +468,12 @@ public class IOBizImpl implements IOBiz {
 		String msg = messages.getMessage("export.displayName", null, context.getLocale())
 			+" " +messages.getMessage("album.displayName", null, context.getLocale())
 			+ " \"" +album.getName() +"\"";
-		ExportZipArchive export = new ExportZipArchive(itemIds, msg, 
+		ExportZipArchive export = new ExportZipArchive(this, itemIds, msg, 
 				request, response, context);
-		export.album = album;
+		export.setAlbum(album);
 		WorkInfo info = workBiz.submitWork(export);
 		if ( !direct ) {
-			export.workTicket = info.getTicket();
+			export.setWorkTicket(info.getTicket());
 		}
 		return info;
 	}
@@ -485,11 +482,11 @@ public class IOBizImpl implements IOBiz {
 			MediaRequest request, MediaResponse response, BizContext context) {
 		String msg = messages.getMessage("export.displayName", null, context.getLocale())
 			+" " +messages.getMessage("items", null, context.getLocale());
-		ExportZipArchive export = new ExportZipArchive(itemIds, msg, 
+		ExportZipArchive export = new ExportZipArchive(this, itemIds, msg, 
 				request, response, context);
 		WorkInfo info = workBiz.submitWork(export);
 		if ( !direct ) {
-			export.workTicket = info.getTicket();
+			export.setWorkTicket(info.getTicket());
 		}
 		return info;
 	}
@@ -556,144 +553,6 @@ public class IOBizImpl implements IOBiz {
 					+ofSize));
 		}
 		return cacheFiles == null ? 0 : cacheFiles.length;
-	}
-
-	private class ExportZipArchive implements TwoPhaseExportRequest {
-		
-		private Album album;
-		private Long[] itemIds;
-		private BizContext context;
-		private MediaRequest request;
-		private MediaResponse response;
-		private MediaItem currItem = null;
-		private List<Long> processedItems = new LinkedList<Long>();
-		private String exportMessage;
-		private Long workTicket = null;
-		private Set<String> zipNames = new LinkedHashSet<String>();
-		
-		private ExportZipArchive(Long[] itemIds, String exportMessage, 
-				MediaRequest request, MediaResponse response, BizContext context) {
-			this.request = request;
-			this.response = response;
-			this.itemIds = itemIds;
-			this.exportMessage = exportMessage;
-			this.context = context;
-		}
-		
-		public void setMediaResponse(MediaResponse response) {
-			this.response = response;
-			if ( workTicket != null ) {
-				getWorkBiz().workReadyNow(workTicket);
-			}
-		}
-		public float getAmountCompleted() {
-			return itemIds == null ? 0f 
-					: (float)processedItems.size() / (float)itemIds.length;
-		}
-		public String getDisplayName() {
-			return exportMessage;
-		}
-		public String getMessage() {
-			return currItem == null ? "" : 
-				messages.getMessage("export.items.message", 
-					new Object[] {
-						this.processedItems.size(),
-						this.itemIds.length,
-						currItem.getPath(),
-					}, context.getLocale());
-		}
-		public List<Long> getObjectIdList() {
-			return processedItems;
-		}
-		public Integer getPriority() {
-			return WorkBiz.DEFAULT_PRIORITY;
-		}
-		public boolean canStart() {
-			return this.response != null;
-		}
-		public boolean isTransactional() {
-			return true;
-		}
-		public void startWork() throws Exception {
-			response.setMimeType(zipMimeType);
-			final ZipOutputStream zout = new ZipOutputStream(response.getOutputStream());
-			String zipPathFormat = (album == null 
-				? "%s/%s" 
-				: "%s/%0" +String.valueOf(itemIds.length).length() + "d_%s" );
-			try {
-				int itemCount = 0;
-				for ( Long itemId : itemIds ) {
-					itemCount++;
-					final MediaItem item = mediaItemDao.get(itemId);
-					currItem = item;
-					
-					// construct zip path from collection + item path
-					String zipPath = null;
-					if ( album == null ) {
-						Collection col = getCollectionDao().getCollectionForMediaItem(
-								item.getItemId());
-						zipPath = String.format(zipPathFormat, 
-								col.getName().replace('/', '_'),item.getPath());
-					} else {
-						zipPath = String.format(zipPathFormat, 
-								album.getName().replace('/','_'),  
-								itemCount, 
-								StringUtils.getFilename(item.getPath()));
-					}
-					if ( zipNames.contains(zipPath) ) {
-						int count = 0;
-						while ( true ) {
-							count++;
-							int idx = zipPath.lastIndexOf('.');
-							if ( idx >= 0 ) {
-								zipPath = zipPath.substring(0, idx)
-									+'_' +count +zipPath.substring(idx);
-							} else {
-								zipPath += '_' +count;
-							}
-							if ( !zipNames.contains(zipPath) ) {
-								break;
-							}
-						}
-					}
-					zipNames.add(zipPath);
-					ZipEntry entry = new ZipEntry(zipPath);
-					zout.putNextEntry(entry);
-					BasicMediaRequest itemRequest = new BasicMediaRequest(request);
-					itemRequest.setMediaItemId(item.getItemId());
-					exportSingleMediaItem(itemRequest, new MediaResponse() {
-						public OutputStream getOutputStream() {
-							return new NonClosingOutputStream(zout);
-						}
-						public void setItem(MediaItem responseItem) {
-							// ignore
-						}
-						public void setMediaLength(long length) {
-							// ignore
-						}
-						public void setMimeType(String mime) {
-							// ignore
-						}
-						public void setModifiedDate(long date) {
-							// ignore
-						}
-					}, context);
-					processedItems.add(item.getItemId());
-				}
-			} catch ( IOException e ) {
-				throw new RuntimeException(e);
-			} finally {
-				if ( zout != null ) {
-					try {
-						zout.flush();
-						zout.finish();
-						zout.close();
-					} catch ( IOException e ) {
-						log.warn("IOException closing zip output stream: " +e);
-					}
-				}
-			}
-		}
 	}
 
 	private class ImportWorkRequest implements WorkRequest {
