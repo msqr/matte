@@ -41,8 +41,13 @@ import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.WorkBiz;
 import magoffin.matt.ma2.biz.IOBiz.TwoPhaseExportRequest;
 import magoffin.matt.ma2.domain.Album;
+import magoffin.matt.ma2.domain.AlbumImportType;
 import magoffin.matt.ma2.domain.Collection;
+import magoffin.matt.ma2.domain.CollectionImport;
+import magoffin.matt.ma2.domain.ItemImportType;
 import magoffin.matt.ma2.domain.MediaItem;
+import magoffin.matt.ma2.domain.MediaItemRating;
+import magoffin.matt.ma2.domain.UserTag;
 import magoffin.matt.ma2.support.BasicMediaRequest;
 import magoffin.matt.util.NonClosingOutputStream;
 
@@ -63,6 +68,7 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 	private final MediaRequest request;
 	private MediaResponse response;
 	private Album album;
+	private CollectionImport metadata;
 	private MediaItem currItem = null;
 	private List<Long> processedItems = new LinkedList<Long>();
 	private String exportMessage;
@@ -113,6 +119,7 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 	public boolean isTransactional() {
 		return true;
 	}
+	@SuppressWarnings("unchecked")
 	public void startWork() throws Exception {
 		response.setMimeType(ioBizImpl.getZipMimeType());
 		final ZipOutputStream zout = new ZipOutputStream(response.getOutputStream());
@@ -121,6 +128,10 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 			: "%s/%0" +String.valueOf(itemIds.length).length() + "d_%s" );
 		try {
 			int itemCount = 0;
+			AlbumImportType albumMetadata = null;
+			if ( this.metadata != null && this.album != null ) {
+				albumMetadata = setupAlbumMetadata();
+			}
 			for ( Long itemId : itemIds ) {
 				itemCount++;
 				final MediaItem item = ioBizImpl.getMediaItemDao().get(itemId);
@@ -156,6 +167,10 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 					}
 				}
 				zipNames.add(zipPath);
+				if ( albumMetadata != null ) {
+					ItemImportType itemImportType = setupItemMetadata(zipPath);
+					albumMetadata.getItem().add(itemImportType);
+				}
 				ZipEntry entry = new ZipEntry(zipPath);
 				zout.putNextEntry(entry);
 				BasicMediaRequest itemRequest = new BasicMediaRequest(request);
@@ -179,6 +194,12 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 				}, context);
 				processedItems.add(item.getItemId());
 			}
+			if ( this.metadata != null ) {
+				ZipEntry entry = new ZipEntry("metadata.xml");
+				zout.putNextEntry(entry);
+				this.ioBizImpl.getXmlHelper().getMarshaller()
+					.marshal(this.metadata, zout);
+			}
 		} catch ( IOException e ) {
 			throw new RuntimeException(e);
 		} finally {
@@ -194,11 +215,61 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	private ItemImportType setupItemMetadata(String zipPath) {
+		ItemImportType itemMetadata = this.ioBizImpl.getDomainObjectFactory()
+			.newItemImportTypeInstance();
+		itemMetadata.setArchivePath(zipPath);
+		itemMetadata.setComment(this.currItem.getDescription());
+		List<UserTag> tagList = this.currItem.getUserTag();
+		if ( tagList != null && tagList.size() > 0 ) {
+			StringBuilder buf = new StringBuilder();
+			for ( UserTag userTag : tagList ) {
+				if ( buf.length() > 0 ) {
+					buf.append(", ");
+				}
+				buf.append(userTag.getTag());
+			}
+			itemMetadata.setKeywords(buf.toString());
+		}
+		itemMetadata.setName(this.currItem.getName());
+		List<MediaItemRating> ratingList = this.currItem.getUserRating();
+		if ( ratingList != null && ratingList.size() > 0 ) {
+			Collection col = ioBizImpl.getCollectionDao().getCollectionForMediaItem(
+					this.currItem.getItemId());
+			for ( MediaItemRating rating : ratingList ) {
+				if ( rating.getRatingUser().getUserId().equals(
+						col.getOwner().getUserId()) ) {
+					itemMetadata.setRating(rating.getRating());
+					break;
+				}
+			}
+		}
+		// TODO support metadata list?
+		return itemMetadata;
+	}
+
+	@SuppressWarnings("unchecked")
+	private AlbumImportType setupAlbumMetadata() {
+		AlbumImportType albumMetadata = this.ioBizImpl.getDomainObjectFactory()
+			.newAlbumImportTypeInstance();
+		albumMetadata.setAlbumDate(this.album.getAlbumDate());
+		albumMetadata.setComment(this.album.getComment());
+		albumMetadata.setCreationDate(this.album.getCreationDate());
+		albumMetadata.setModifyDate(this.album.getModifyDate());
+		albumMetadata.setName(this.album.getName());
+		// perhaps add this? albumMetadata.setSort()
+		this.metadata.getAlbum().add(albumMetadata);
+		return albumMetadata;
+	}
+
 	/**
 	 * @param album the album to set
 	 */
 	void setAlbum(Album album) {
 		this.album = album;
+		this.metadata = this.ioBizImpl.getDomainObjectFactory()
+			.newCollectionImportInstance();
 	}
 
 	/**

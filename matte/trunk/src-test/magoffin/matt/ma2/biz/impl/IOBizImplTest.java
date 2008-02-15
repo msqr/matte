@@ -628,18 +628,23 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 					+outputZip.getAbsolutePath());
 		}
 		
-		// verify all items exported into zip
+		// verify all items + metadata exported into zip
 		ZipFile zFile = new ZipFile(outputZip);
 		Enumeration<? extends ZipEntry> entries = zFile.entries();
 		int count = 0;
+		boolean metaFound = false;
 		while ( entries.hasMoreElements() ) {
 			ZipEntry entry = entries.nextElement();
 			if ( logger.isDebugEnabled() ) {
 				logger.debug("Got entry: " +entry);
 			}
+			if ( entry.getName().equals("metadata.xml") ) {
+				metaFound = true;
+			}
 			count++;
 		}
-		assertEquals(2, count);
+		assertEquals(3, count);
+		assertTrue(metaFound);
 	}
 
 	/**

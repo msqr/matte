@@ -27,12 +27,15 @@
 package magoffin.matt.ma2.biz;
 
 import magoffin.matt.ma2.domain.Album;
+import magoffin.matt.ma2.domain.AlbumImportType;
 import magoffin.matt.ma2.domain.AlbumSearchResult;
 import magoffin.matt.ma2.domain.Collection;
+import magoffin.matt.ma2.domain.CollectionImport;
 import magoffin.matt.ma2.domain.CollectionListItemType;
 import magoffin.matt.ma2.domain.Edit;
 import magoffin.matt.ma2.domain.GetCollectionListRequest;
 import magoffin.matt.ma2.domain.GetCollectionListResponse;
+import magoffin.matt.ma2.domain.ItemImportType;
 import magoffin.matt.ma2.domain.JobInfo;
 import magoffin.matt.ma2.domain.KeyNameType;
 import magoffin.matt.ma2.domain.Locale;
@@ -74,6 +77,12 @@ public interface DomainObjectFactory {
 	Album newAlbumInstance();
 	
 	/**
+	 * Get a new AlbumImportType instance.
+	 * @return new AlbumImportType instance
+	 */
+	AlbumImportType newAlbumImportTypeInstance();
+	
+	/**
 	 * Get a new AlbumSearchResult instance.
 	 * @return new AlbumSearchResult instance
 	 */
@@ -84,6 +93,12 @@ public interface DomainObjectFactory {
 	 * @return new Collection instance
 	 */
 	Collection newCollectionInstance();
+	
+	/**
+	 * Get a new CollectionImport instance.
+	 * @return new CollectionImport instance
+	 */
+	CollectionImport newCollectionImportInstance();
 	
 	/**
 	 * Get a new CollectionListItemType instance.
@@ -108,6 +123,12 @@ public interface DomainObjectFactory {
 	 * @return the new GetCollectionListResponse instance
 	 */
 	GetCollectionListResponse newGetCollectionListResponseInstance();
+	
+	/**
+	 * Get a new ItemImportType instance.
+	 * @return new ItemImportType instance
+	 */
+	ItemImportType newItemImportTypeInstance();
 	
 	/**
 	 * Return a new JobInfo instance.

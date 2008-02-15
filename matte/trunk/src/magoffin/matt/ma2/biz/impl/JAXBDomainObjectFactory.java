@@ -30,12 +30,15 @@ import javax.xml.bind.JAXBException;
 
 import magoffin.matt.ma2.biz.DomainObjectFactory;
 import magoffin.matt.ma2.domain.Album;
+import magoffin.matt.ma2.domain.AlbumImportType;
 import magoffin.matt.ma2.domain.AlbumSearchResult;
 import magoffin.matt.ma2.domain.Collection;
+import magoffin.matt.ma2.domain.CollectionImport;
 import magoffin.matt.ma2.domain.CollectionListItemType;
 import magoffin.matt.ma2.domain.Edit;
 import magoffin.matt.ma2.domain.GetCollectionListRequest;
 import magoffin.matt.ma2.domain.GetCollectionListResponse;
+import magoffin.matt.ma2.domain.ItemImportType;
 import magoffin.matt.ma2.domain.JobInfo;
 import magoffin.matt.ma2.domain.KeyNameType;
 import magoffin.matt.ma2.domain.Locale;
@@ -91,6 +94,14 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	public AlbumImportType newAlbumImportTypeInstance() {
+		try {
+			return MA2_OBJECT_FACTORY.createAlbumImportType();
+		} catch ( JAXBException e ) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public AlbumSearchResult newAlbumSearchResultInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createAlbumSearchResult();
@@ -102,6 +113,14 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 	public Collection newCollectionInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createCollection();
+		} catch ( JAXBException e ) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public CollectionImport newCollectionImportInstance() {
+		try {
+			return MA2_OBJECT_FACTORY.createCollectionImport();
 		} catch ( JAXBException e ) {
 			throw new RuntimeException(e);
 		}
@@ -326,6 +345,14 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 	public GetCollectionListResponse newGetCollectionListResponseInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createGetCollectionListResponse();
+		} catch ( JAXBException e ) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public ItemImportType newItemImportTypeInstance() {
+		try {
+			return MA2_OBJECT_FACTORY.createItemImportType();
 		} catch ( JAXBException e ) {
 			throw new RuntimeException(e);
 		}
