@@ -48,6 +48,7 @@ import magoffin.matt.ma2.domain.MediaItemSearchResult;
 import magoffin.matt.ma2.domain.MediaSizeDefinition;
 import magoffin.matt.ma2.domain.MediaSpec;
 import magoffin.matt.ma2.domain.Metadata;
+import magoffin.matt.ma2.domain.MetadataImportType;
 import magoffin.matt.ma2.domain.Model;
 import magoffin.matt.ma2.domain.ObjectFactory;
 import magoffin.matt.ma2.domain.PaginationCriteria;
@@ -201,6 +202,14 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 	public Metadata newMetadataInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createMetadata();
+		} catch ( JAXBException e ) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public MetadataImportType newMetadataImportTypeInstance() {
+		try {
+			return MA2_OBJECT_FACTORY.createMetadataImportType();
 		} catch ( JAXBException e ) {
 			throw new RuntimeException(e);
 		}

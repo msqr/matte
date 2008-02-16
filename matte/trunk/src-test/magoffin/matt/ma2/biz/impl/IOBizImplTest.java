@@ -147,7 +147,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * @throws Exception if an error occurs
 	 */
 	public void testImportZip() throws Exception {
-		File tempZipFile = File.createTempFile("IOBizImplTest",".zip");
+		File tempZipFile = File.createTempFile("IOBizImplTest-",".zip");
 		ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(tempZipFile));
 
 		Resource testJpegImage = new ClassPathResource(
@@ -209,7 +209,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * @throws Exception if an error occurs
 	 */
 	public void testImportZipAutoAlbum() throws Exception {
-		File tempZipFile = File.createTempFile("IOBizImplTest",".zip");
+		File tempZipFile = File.createTempFile("IOBizImplTest-",".zip");
 		ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(tempZipFile));
 
 		Resource testJpegImage = new ClassPathResource(
@@ -279,7 +279,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * @throws Exception if an error occurs
 	 */
 	public void testImportZipAutoAlbumNestedAlbums() throws Exception {
-		File tempZipFile = File.createTempFile("IOBizImplTest",".zip");
+		File tempZipFile = File.createTempFile("IOBizImplTest-",".zip");
 		ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(tempZipFile));
 
 		Resource testJpegImage = new ClassPathResource(
@@ -371,7 +371,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * @throws Exception if an error occurs
 	 */
 	public void testImportZipWithAlbumXml() throws Exception {
-		File tempZipFile = File.createTempFile("IOBizImplTest",".zip");
+		File tempZipFile = File.createTempFile("IOBizImplTest-",".zip");
 		ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(tempZipFile));
 		
 		Resource importXml = new ClassPathResource(

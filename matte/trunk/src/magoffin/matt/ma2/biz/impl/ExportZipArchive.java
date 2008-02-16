@@ -45,8 +45,11 @@ import magoffin.matt.ma2.domain.AlbumImportType;
 import magoffin.matt.ma2.domain.Collection;
 import magoffin.matt.ma2.domain.CollectionImport;
 import magoffin.matt.ma2.domain.ItemImportType;
+import magoffin.matt.ma2.domain.KeyNameType;
 import magoffin.matt.ma2.domain.MediaItem;
 import magoffin.matt.ma2.domain.MediaItemRating;
+import magoffin.matt.ma2.domain.Metadata;
+import magoffin.matt.ma2.domain.MetadataImportType;
 import magoffin.matt.ma2.domain.UserTag;
 import magoffin.matt.ma2.support.BasicMediaRequest;
 import magoffin.matt.util.NonClosingOutputStream;
@@ -221,6 +224,8 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 			.newItemImportTypeInstance();
 		itemMetadata.setArchivePath(zipPath);
 		itemMetadata.setComment(this.currItem.getDescription());
+		itemMetadata.setName(this.currItem.getName());
+
 		List<UserTag> tagList = this.currItem.getUserTag();
 		if ( tagList != null && tagList.size() > 0 ) {
 			StringBuilder buf = new StringBuilder();
@@ -232,7 +237,7 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 			}
 			itemMetadata.setKeywords(buf.toString());
 		}
-		itemMetadata.setName(this.currItem.getName());
+		
 		List<MediaItemRating> ratingList = this.currItem.getUserRating();
 		if ( ratingList != null && ratingList.size() > 0 ) {
 			Collection col = ioBizImpl.getCollectionDao().getCollectionForMediaItem(
@@ -245,7 +250,18 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 				}
 			}
 		}
-		// TODO support metadata list?
+		
+		List<Metadata> metaList = this.currItem.getMetadata();
+		if ( metaList != null && metaList.size() > 0 ) {
+			for ( Metadata meta : metaList ) {
+				MetadataImportType metaImport = ioBizImpl.getDomainObjectFactory()
+					.newMetadataImportTypeInstance();
+				metaImport.setName(meta.getKey());
+				metaImport.setValue(meta.getValue());
+				itemMetadata.getMeta().add(metaImport);
+			}
+		}
+
 		return itemMetadata;
 	}
 
@@ -258,7 +274,16 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 		albumMetadata.setCreationDate(this.album.getCreationDate());
 		albumMetadata.setModifyDate(this.album.getModifyDate());
 		albumMetadata.setName(this.album.getName());
-		// perhaps add this? albumMetadata.setSort()
+		
+		List<KeyNameType> sortModes = this.ioBizImpl.getMediaBiz()
+			.getAlbumSortTypes(this.context);
+		for ( KeyNameType sortMode : sortModes ) {
+			if ( sortMode.getKey() == this.album.getSortMode() ) {
+				albumMetadata.setSort(sortMode.getName());
+				break;
+			}
+		}
+
 		this.metadata.getAlbum().add(albumMetadata);
 		return albumMetadata;
 	}

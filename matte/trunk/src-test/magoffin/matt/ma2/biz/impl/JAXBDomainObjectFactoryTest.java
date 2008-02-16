@@ -44,6 +44,7 @@ import magoffin.matt.ma2.domain.MediaItemSearchResult;
 import magoffin.matt.ma2.domain.MediaSizeDefinition;
 import magoffin.matt.ma2.domain.MediaSpec;
 import magoffin.matt.ma2.domain.Metadata;
+import magoffin.matt.ma2.domain.MetadataImportType;
 import magoffin.matt.ma2.domain.Model;
 import magoffin.matt.ma2.domain.PaginationCriteria;
 import magoffin.matt.ma2.domain.PaginationIndex;
@@ -132,6 +133,14 @@ public class JAXBDomainObjectFactoryTest extends TestCase {
 	 */
 	public void testCreateMetadata() {
 		Metadata m = dof.newMetadataInstance();
+		assertNotNull(m);
+	}
+	
+	/**
+	 * Test creation of MediaItem.
+	 */
+	public void testCreateMetadataImportType() {
+		MetadataImportType m = dof.newMetadataImportTypeInstance();
 		assertNotNull(m);
 	}
 	
