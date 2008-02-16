@@ -45,6 +45,7 @@ import magoffin.matt.ma2.domain.MediaItemSearchResult;
 import magoffin.matt.ma2.domain.MediaSizeDefinition;
 import magoffin.matt.ma2.domain.MediaSpec;
 import magoffin.matt.ma2.domain.Metadata;
+import magoffin.matt.ma2.domain.MetadataImportType;
 import magoffin.matt.ma2.domain.Model;
 import magoffin.matt.ma2.domain.PaginationCriteria;
 import magoffin.matt.ma2.domain.PaginationIndex;
@@ -177,6 +178,12 @@ public interface DomainObjectFactory {
 	 * @return new Metadata instance
 	 */
 	Metadata newMetadataInstance();
+	
+	/**
+	 * Get a new MetadataImportType instance.
+	 * @return new MetadataImportType instance
+	 */
+	MetadataImportType newMetadataImportTypeInstance();
 	
 	/**
 	 * Get a new Model instance.
