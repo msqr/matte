@@ -1,0 +1,6 @@
+Matte Release Notes
+
+@VERSION@ @BUILD_DATE@
+
+This is the first public release, much documentation work needs to be
+done still.
