@@ -7,7 +7,7 @@ and Mac OS X. It also runs on Windows, and should run on any platform with a Jav
 <dl>
 	<dt>Java 5</dt>
 	<dd>
-		<p>Get the appropriate Java SDK/JDK for your server platform. You can get this 
+		<p>Get the appropriate Java JDK/JRE for your server platform. You can get this 
 		from <a title="Sun's Java" href="http://java.sun.com/">Sun</a>, 
 		<a title="IBM's Java" href="http://www-106.ibm.com/developerworks/java/jdk/">IBM</a>, 
 		or <a title="Blackdown's Java" href="http://www.blackdown.org/">Blackdown</a>.</p>
