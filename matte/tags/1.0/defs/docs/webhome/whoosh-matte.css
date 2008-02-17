@@ -1,0 +1,380 @@
+html {
+	color: #000;
+	background-color: #fff;
+}
+
+body {
+    margin: 18px 15px 15px 190px;
+    padding: 0px;
+    border: 0px;
+    font-size: 10pt;
+	font-family: Tohoma, Verdana, sans-serif;
+}
+
+body.full {
+	margin-left: 18px !important;
+}
+
+#nav-frame {
+	font-size: 10pt;
+}
+
+code {
+	font-family: monospace;
+	color: #069;
+	background-color: inherit;
+}
+
+div.section {
+	margin-top: 4px;
+	margin-bottom: 4px;
+	margin-left: 2px;
+}
+
+div.subsection {
+	margin-left: 15px;
+	font-size: 9pt;
+	margin-bottom: 2px;
+}
+
+div.section-selected {
+	font-weight: bold;
+	margin-bottom: 2px;
+	margin-left: 2px;
+}
+
+div.screenshot {
+	text-align: center;
+	font-style: italic;
+	font-size: 10pt;
+	margin-top: 0.4em;
+	margin-bottom: 1em;
+}
+
+div.screenshot img {
+	padding: 10px;
+	border: 1px solid #ccc;
+	color: inherit;
+	background-color: #D1EAFE;
+}
+
+dd {
+	margin-bottom: 1em;
+}
+
+dd + dt {
+	margin-top: 2.5em;
+}
+
+dl {
+	margin-left: 20px;
+}
+
+dl + p {
+	margin-top: 2em;
+}
+
+dt {
+	font-weight: bold;
+	margin-bottom: 0.5em;
+	color: #666;
+	background-color: inherit;
+}
+
+h1 {
+	background-color: inherit;
+	color: #5D88A8;;
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 12pt;
+	font-family: Helvetica, sans-serif;
+	font-size: 16pt;
+	font-weight: 500;
+}
+
+h2 {
+	color: #666;
+	background-color: inherit;
+	font-size: 12pt;
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 0.5em;
+	margin-top: 3em;
+}
+
+h3 {
+	color: #666;
+	background-color: inherit;
+	font-size: 10pt;
+	font-style: italic;
+	margin-bottom: 0.5em;
+	margin-top: 2em;
+}
+
+h3 + div {
+	margin-left: 2em;
+}
+
+img {
+	border: 0px;
+}
+
+li {
+	margin-bottom: 0.4em;
+}
+
+div.dp-highlighter {
+	margin-left: 10pt !important;
+	width: auto !important;
+}
+
+div.dp-highlighter li {
+	margin-bottom: 0 !important;
+}
+
+p {
+	margin-top: 0px;
+	margin-bottom: 1em;
+}
+
+p.intro {
+	font-size: 12pt;
+}
+
+table.thumbs {
+	border: none;
+	border-collapse: collapse;
+	margin-top: 1em;
+}
+
+table.thumbs td {
+	border: none;
+	margin: 0;
+	padding: 10px;
+	width: 330px;
+	text-align: left;
+	padding-bottom: 2em;
+	vertical-align: top;
+}
+
+table.thumbs th {
+	color: inherit;
+	background-color: inherit;
+	margin: 0;
+	border: none;
+	width: 330px;
+	border-top: 1px solid #666;
+	padding: 10px;
+	padding-top: 2em;
+	text-align: left;
+}
+
+table.thumbs tr:first-child th {
+	border-top: none !important;
+}
+
+table.thumbs img {
+	background-color: #fff;
+	padding: 10px;
+	color: inherit;
+	border: 1px solid #ccc;
+}
+
+table.thumbs div.versioned {
+	position: relative;
+	padding: 0px;
+}
+
+table.thumbs div.version-number {
+	position: absolute; 
+	top: 180px; 
+	left: 240px;
+	width: 30px;
+	height: 30px;
+	padding: 0px 0px 0px 0px;
+	text-align: center;
+	font-weight: normal;
+	font-size: 10px;
+	line-height: 30px;
+	color: white;
+	background-color: inherit;
+	background-image: url('img/star-1.png');
+	background-repeat: no-repeat;
+	z-index: 989;
+}
+
+.code {
+	border: 1px dashed #999;
+	color: inherit;
+	background-color: #fcfcfc;
+	padding: 0.1em;
+	font-family: courier, monospace;
+	font-size: 8pt;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	white-space: pre;
+	width: auto;
+	margin: 0pt 0pt 2em 2em;
+}
+
+.note {
+	border: 1px dotted #c00;
+	font-style: italic;
+	padding: 1em;
+	margin: 2em 2em 2em 2em;
+}
+
+/* ==============================
+ * ID objects
+ * ============================== */
+ 
+#nav-frame {
+    position: absolute;
+    top: 15px;
+    left: 10px;
+    width: 170px;
+    height: 220px;
+    border: 0px solid #909;
+    display: block;
+}
+
+/* ==============================
+ * Generic Frame classes
+ * ============================== */
+
+.frame-t {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+    width: 100%;
+    height: 23px;
+    border: 0px solid #060;
+    background: #fff url(img/tb_05.gif) repeat-x left top;
+    color: inherit;
+    z-index: 2;
+}
+
+.frame-m {
+    position: absolute;
+    top: 24px;
+    bottom: 11px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: 0px solid #060;
+    background-color: #fff;
+    color: inherit;
+    overflow: hidden;
+}
+
+.frame-ml {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 6px;
+    height: 99%;
+    bottom: 11px;
+    border: 0px solid #000;
+    color: inherit;
+    background-color: #fff;
+    background-image: url(img/tb_18.gif);
+    z-index: 1;
+}
+.frame-mr {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 6px;
+    height: 99%;
+    border: 0px solid #000;
+    color: inherit;
+    background-color: #FFF;
+    background-image: url(img/tb_23.gif);
+    z-index: 1;
+}
+.frame-b {
+    position: absolute;
+    width: 100%;
+    height: 11px;
+    bottom: 0px;
+    border: 0px solid #066;
+    background: #FFF url(img/tb_27.gif) repeat-x left bottom;
+    color: inherit;
+    z-index: 2;
+}
+
+.frame-tl {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 11px;
+    height: 23px;
+    color: inherit;
+    background: #FFF;
+    z-index: 2;
+}
+
+.frame-tr {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 11px;
+    height: 23px;
+    background: #FFF;
+    color: inherit;
+}
+
+.frame-bl {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 11px;
+    height: 11px;
+    background: #FFF;
+    color: inherit;
+}
+
+.frame-br {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 11px;
+    height: 11px;
+    background: #FFF;
+    color: inherit;
+}
+
+/* Page nav styles */
+
+div.pagenav {
+	color: #ccc;
+	font-size: 9pt;
+	font-family: Helvetica, sans-serif;
+	background-color: inherit;
+	padding: 0;
+	margin-bottom: 24pt;
+	margin-top: -10pt;
+}
+
+div.pagenav ul {
+	margin-left: 0;
+	padding-left: 0;
+	display: inline;
+	border: none;
+} 
+
+div.pagenav ul li {
+	margin-left: 0;
+	padding-left: 2px;
+	border: none;
+	list-style: none;
+	display: inline;
+}
+
+div.pagenav ul li:before {
+	content: "\0020 \0020 \0020 \00BB \0020";
+	color: #666;
+}
+	
+div.pagenav ul li:first-child:before {
+	content: " ";
+}
+

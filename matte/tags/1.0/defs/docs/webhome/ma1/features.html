@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Media Album features</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<link rel="stylesheet" type="text/css" href="whoosh.css"/>
+</head>
+<body>
+
+<div id="nav-frame">
+	<div class="frame-t">
+		<img class="frame-tl" alt="frame" src="img/tb_03.gif" />
+		<img class="frame-tr" alt="frame" src="img/tb_06.gif" />
+	</div>
+	<div class="frame-m">
+		<div class="section"><a href="index.html">Home</a></div>
+
+		<div class="section"><a href="test-drive.html">Test Drive</a></div>
+
+		<div class="section"><a href="screenshots.html">Screen Shots</a></div>
+
+		<div class="section-selected">Features</div>
+
+		<div class="section"><a href="download.html">Download</a></div>
+
+		<div class="section"><a href="credits.html">Credits</a></div>
+
+		<div class="section"><a href="developers.html">Developers</a></div>
+	</div>
+	<div class="frame-ml"></div>
+	<div class="frame-mr"></div>
+	<div class="frame-b">
+		<img class="frame-bl" alt="frame" src="img/tb_24.gif" />
+		<img class="frame-br" alt="frame" src="img/tb_26.gif" />
+	</div>
+</div>
+
+<h1>Features</h1>
+
+<a name="about"></a>
+<p class="intro">Why does the world need Media Album -- aren't there already dozens of web-based photo applications similar to Media Album?</p>
+
+<p>
+	There certainly are! I counted up 20 or so within an hour of casual web-surfing
+	recently. Media Album actually began life in September 2002. After frustration
+	over not being able to easily share photos with family and friends I looked
+	around for a free solution. None of the solutions at the time fit my needs exactly,
+	thus Media Album was born. You should evaluate your photo/movie sharing needs
+	and pick a web-based application that serves you well! That being said, here are
+	some of the features which differentiate Media Album from other similar applications:
+</p>
+
+<dl>
+	<dt>Java web application</dt>
+	<dd>
+		Most other web photo sharing applications are written in PHP. If you
+		don't run PHP on your web server then you're out of luck. Media
+		Album is a Java web application, however. In a most basic setting
+		you only need two things to run Media Album (not counting a database):
+		a Java application server and Media Album. There are several high-quality
+		and completely free Java application servers available like
+		<a href="http://jakarta.apache.org/tomcat/">Apache Tomcat</a> or
+		<a href="http://www.jboss.org/">JBoss</a>. You don't need any other
+		libraries like GD installed, and you don't even need to have a separate
+		web server.
+	</dd>
+
+	<dt>High performance that won't take down your server</dt>
+	<dd>
+		Media Album is designed to handle thousands upon thousands of media items.
+		Since it scales the items and compresses them on the fly according to
+		user preferences it can also take up a great deal of your server's
+		processing capabilities. Media Album can safely respond to many
+		simultaneous requests without overloading your server, however, by making
+		use of work schedulers and queues. Sounds fancier than it might actually
+		be, but just know that when 50 of your closest friends attempt to download
+		your latest album of 1,000 photos, all scaled from 4000x2000 to 640x480
+		and rotated as necessary and re-compressed, your server will graciously
+		oblige without resorting to consuming all your memory and crashing your
+		hard drive. You can even adjust how much processing Media Album will
+		attempt to do at once so you tune Media Album to run on your old original
+		iMac on up to your personal X-processor mega server.
+	</dd>
+
+	<dt>Insanely customizable</dt>
+	<dd>
+		Did I say insanely? Yes, in fact it is true. Media Album has been
+		designed with many different viewing mediums in mind, from viewing
+		albums over your cell phone to viewing them as PDF documents. For
+		the most part people will view your albums using their favorite
+		web browser, however, so that is where Media Album concentrates
+		right now. But even within the world of HTML much flexibility is
+		granted to Media Album themes. Media Album themes are not simple
+		templates, they rely on XSLT to transform XML data into whatever
+		sort of form you'd like. Media Album also allows you to manage
+		your own themes and install them without stopping/starting the
+		application.
+	</dd>
+
+	<dt>Time zone support</dt>
+	<dd>
+		Have you ever travelled to, say, Hawaii from your hometown of, say,
+		New York, and taken photos with your digital camera? Perhaps you
+		wondered after you returned to New York why those photos taken
+		during breakfast on the beach say they were taken at 4 AM? At least
+		you don't remember getting up that early... With Media Album you get
+		to specify your camera's time zone, and then you can specify the
+		time zone individual items were created in. Thus those 4 AM photos
+		would appear as 9 AM for you. Mystery solved!
+	</dd>
+
+	<dt>Watch for updates</dt>
+	<dd>
+		You can elect to watch entire Media Album libraries or individual
+		albums for updates. When new items are added that Media Album will
+		send you a friendly email telling you so.
+	</dd>
+
+	<dt>Email photos</dt>
+	<dd>
+		You can email photos to your friends, either as attachments in the
+		email itself or in the form of a URL link.
+	</dd>
+
+	<dt>Watermarks</dt>
+	<dd>
+		Emblazon your images with a watermark of your design so that no matter
+		what chain email your photo travels with, it will always carry your
+		personal signature.
+	</dd>
+
+	<dt>Custom meta data</dt>
+	<dd>
+		Media Album lets you assign <em>types</em> to media, which allow you to
+		add useful meta data to items. For example the custom types include a
+		<em>book</em> type, which allows you to add an <em>author</em> and
+		<em>publisher</em> to the media. In this way you can upload a scanned
+		image of a
+		book cover and also save the author and publisher as meta data fields.
+		These meta data fields can then be searched, allowing you to, for
+		example, find all books you have by a specific author.
+	</dd>
+
+	<dt>Download albums</dt>
+	<dd>
+		Media Album lets you download entire albums as a zip file. You can
+		choose to download items scaled to your view settings (eg. 640 x 480)
+		or the original media items. Either way Media Album creates the zip
+		for you on the fly.
+	</dd>
+
+	<dt>Ratings</dt>
+	<dd>
+		Rate your media items from 1-10. You can then browse all your items
+		according to your ratings. If you are logged in to Media Album you
+		can also rate other users' media items. You can then browse their
+		items according to your ratings. You can also browse other users'
+		media items by their owner's ratings. Or you can browse anyone's
+		media items by the average of all ratings. Any way you slice it,
+		ratings give you great flexibility to keep track of your favorites,
+		and other people's favorites.
+	</dd>
+
+	<dt>Lightbox</dt>
+	<dd>
+		Media Album provides you with a shopping cart-like holding area for
+		media items you come across while browsing, called a <em>lightbox</em>.
+		While browsing if something strikes your fancy you can add it to your
+		lightbox. Then from your lightbox you can do things to those items in
+		it, like email or download them. For example, maybe you want
+		only 10 of the 99 photos in somebody's album. With the lightbox feature
+		you simply add those 10 to your lightbox then download them all as a zip
+		file, saving you quite a bit in download time if you're on a slow
+		internet connection.
+	</dd>
+
+	<dt>Quotas</dt>
+	<dd>
+		You can assign quotas to users on your Media Album system to limit
+		the number of items they can upload.
+	</dd>
+
+</dl>
+
+</body>
+</html>

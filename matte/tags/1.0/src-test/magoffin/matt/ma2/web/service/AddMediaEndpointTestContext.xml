@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	
+	<bean id="testIOBiz" class="magoffin.matt.ma2.biz.impl.IOBizImpl" 
+		init-method="init" destroy-method="destroy">
+		<property name="albumDao" ref="albumDao"/>
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="collectionDao" ref="collectionDao"/>
+		<property name="workBiz" ref="testWorkBiz"/>
+		<property name="mediaBiz" ref="testMediaBiz"/>
+		<property name="mediaItemDao" ref="mediaItemDao"/>
+		<property name="systemBiz" ref="testSystemBiz"/>
+		<property name="metadataSchemaResource">
+			<bean class="org.springframework.core.io.FileSystemResource">
+				<constructor-arg index="0" type="java.lang.String" value="defs/schema/import.xsd"/>
+			</bean>
+		</property>
+		<property name="zipContentTypes">
+			<set>
+				<value>application/zip</value>
+				<value>application/x-zip-compressed</value>
+				<value>application/octet-stream</value>
+			</set>
+		</property>
+		<property name="fileTypeMap" ref="fileTypeMap"/>
+		<property name="messages" ref="messageSource"/>
+		<property name="xmlHelper" ref="xmlHelper"/>
+		<property name="zipIgnorePatterns">
+			<list>
+				<value>^__MACOSX</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="testUserBiz" class="magoffin.matt.ma2.biz.impl.UserBizImpl" 
+		init-method="init" destroy-method="destroy">
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="messages" ref="messageSource"/>
+		<property name="albumDao" ref="albumDao"/>
+		<property name="collectionDao" ref="collectionDao"/>
+		<property name="userDao" ref="userDao"/>
+		<property name="ioBiz" ref="testIOBiz"/>
+		<property name="encryptor">
+			<bean class="magoffin.matt.util.DataEncryption">
+				<constructor-arg index="0" value="SunJCE"/>
+				<constructor-arg index="1" value="PBEWithMD5AndDES"/>
+				<constructor-arg index="2" value="PBEWithMD5AndDES"/>
+				<constructor-arg index="3" value="@#$erje934x?"/>
+				<constructor-arg index="4" value="12345678"/>
+			</bean>			
+		</property>
+		<property name="systemBiz" ref="testSystemBiz"/>
+		<property name="adminUserTemplate">
+			<map>
+				<entry key="email"><value>matte-admin@localhost.localdomain</value></entry>
+				<entry key="login"><value>matte-admin</value></entry>
+				<entry key="name"><value>Admin</value></entry>
+				<entry key="password"><value>password</value></entry>
+			</map>
+		</property>
+		<property name="anonymousUserTemplate">
+			<map>
+				<entry key="name" value="Anonymous"/>
+				<entry key="userId" value="-1"/>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="testWorkBiz" class="magoffin.matt.ma2.biz.impl.WorkBizImpl"
+		init-method="init" destroy-method="finish">
+		<property name="transactionManager" ref="transactionManager"/>
+		<!--property name="forceTransactionRollback" value="true"/-->
+	</bean>
+	
+	<bean id="testSystemBiz" class="magoffin.matt.ma2.biz.impl.SystemBizImpl" 
+		init-method="init" destroy-method="destroy">
+		<property name="collectionRootDirectory" value="/var/tmp"/>
+		<property name="cacheDirectory" value="/var/tmp"/>
+		<property name="resourceDirectory" value="/var/tmp"/>
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="timeZoneDao" ref="timeZoneDao"/>
+		<property name="albumDao" ref="albumDao"/>
+		<property name="settingsDao" ref="settingsDao"/>
+		<property name="themeDao" ref="themeDao"/>
+		<property name="sharedAlbumUrlTemplate" value="http://my.url/here?$[album.anonymousKey]"/>
+		<property name="defaultThemeName" value="Woosh"/>
+		<property name="defaultThemeTemplate">
+			<map>
+				<entry key="author"><value>Matte Development Team</value></entry>
+				<entry key="authorEmail"><value>matte@noplace</value></entry>
+				<entry key="basePath"><value>/core/woosh</value></entry>
+				<entry key="description"><value>Default theme.</value></entry>
+				<entry key="name"><value>Woosh</value></entry>
+			</map>
+		</property>
+		<property name="externalThemeDirectory" value="/var/tmp"/>
+		<property name="messages" ref="messageSource"/>
+	</bean>
+	
+	<bean id="testMediaBiz" class="magoffin.matt.ma2.biz.impl.MediaBizImpl" 
+		init-method="init" destroy-method="destroy">
+		<property name="userBiz" ref="testUserBiz"/>
+		<property name="systemBiz" ref="testSystemBiz"/>
+		<property name="albumDao" ref="albumDao"/>
+		<property name="collectionDao" ref="collectionDao"/>
+		<property name="mediaItemDao" ref="mediaItemDao"/>
+		<property name="ioBiz" ref="testIOBiz"/>
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="messages" ref="messageSource"/>
+		<property name="mediaHandlerFileExtensionMap">
+			<map>
+				<entry key="jpg" value-ref="testIOBizJpegHandler"/>
+				<entry key="png" value-ref="testIOBizPngHandler"/>
+			</map>
+		</property>
+		<property name="mediaHandlerMimeMap">
+			<map>
+				<entry key="image/jpeg" value-ref="testIOBizJpegHandler"/>
+				<entry key="image/png" value-ref="testIOBizPngHandler"/>
+			</map>
+		</property>
+	</bean>
+	<bean id="testIOBizJpegHandler" class="magoffin.matt.ma2.image.iio.JpegMediaHandler">
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="mediaBiz" ref="testMediaBiz"/>
+		<property name="userBiz" ref="userBizTarget"/>
+		<property name="imageMediaHelper" ref="testImageMediaHelper"/>
+		<property name="awtMediaEffectMap">
+			<map>
+				<entry key="scale">
+					<bean class="magoffin.matt.ma2.image.awt.ScaleEffect">
+						<property name="mediaBiz" ref="testMediaBiz"/>
+					</bean>
+				</entry>
+				<entry key="rotate">
+					<bean class="magoffin.matt.ma2.image.awt.RotateEffect">
+						<property name="mediaBiz" ref="testMediaBiz"/>
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="testIOBizPngHandler" class="magoffin.matt.ma2.image.iio.PngMediaHandler"
+		parent="testIOBizJpegHandler"/>
+	
+	<bean id="testImageMediaHelper" 
+		class="magoffin.matt.ma2.image.ImageMediaHelper"/>
+	
+</beans>
