@@ -32,6 +32,12 @@
 		<div class="section"><a href="download.shtml">Download</a></div>
 		<!--#endif -->
 
+		<!--#if expr="$currPage = iphoto" -->
+		<div class="section-selected">iPhoto export</div>
+		<!--#else -->
+		<div class="section"><a href="iphoto.shtml">iPhoto export</a></div>
+		<!--#endif -->
+
 		<!--#if expr="$currPage = faq" -->
 		<div class="section-selected">FAQ</div>
 		<!--#else -->
