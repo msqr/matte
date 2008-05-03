@@ -118,9 +118,19 @@ FIRST-TIME APPSERVER SETUP ============================================
   
   For Tomcat 5.5, create the DataSource first by creating a deployment
   context file named <TOMCAT HOME>/conf/Catalina/localhost/matte.xml.
-  Add the following (adjust the parameter values as 
-  necessary for your environment, but if you are following these 
-  directions from the start, these should work for you):
+  Add the below XML (adjust the parameter values as necessary for your 
+  environment, but if you are following these directions from the start, 
+  these should work for you).
+  
+  Note that Tomcat does not ship with the JavaMail binaries, you must
+  download both JavaMail and the required Java Activation Framework for
+  for the javax.mail.Session support required by Matte. See the 
+  
+  http://tomcat.apache.org/tomcat-5.5-doc/jndi-resources-howto.html
+  
+  page (the JavaMail Sessions section) for more information and links
+  to the associated download pages. Place the JARs in the 
+  <TOMCAT HOME>/common/lib directory.
   
   
   POSTGRES ------------------------------------------------------------
@@ -162,6 +172,7 @@ FIRST-TIME APPSERVER SETUP ============================================
   The setup is similar to that shown above, but change the DataSource
   configuration to use MySQL settings. For example:
   
+  <Context path="/matte" ...>
     <Resource name="jdbc/matte" 
       type="javax.sql.DataSource" scope="Shareable"
       driverClassName="com.mysql.jdbc.Driver" 
@@ -170,6 +181,8 @@ FIRST-TIME APPSERVER SETUP ============================================
       maxActive="4" maxIdle="2" removeAbandoned="true"
       removeAbandonedTimeout="60" logAbandoned="true"
     />
+    <Resource path="mail/matte" .../>
+  </Context>
 
   Then, if you don't already have the MySQL JDBC driver added to
   Tomcat, copy setup/lib/mysql-connector-java-5.0.5-bin.jar to the
