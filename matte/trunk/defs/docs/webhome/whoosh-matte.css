@@ -25,6 +25,10 @@ code {
 	background-color: inherit;
 }
 
+div.h4 {
+	margin-left: 30pt;
+}
+
 div.section {
 	margin-top: 4px;
 	margin-bottom: 4px;
@@ -109,7 +113,20 @@ h3 {
 	margin-top: 2em;
 }
 
-h3 + div {
+h3 + div, h3 + ol {
+	margin-left: 2em;
+}
+
+h4 {
+	color: #666;
+	background-color: inherit;
+	font-size: 10pt;
+	font-style: italic;
+	margin-bottom: 0.5em;
+	margin-top: 2em;
+}
+
+h4 + div {
 	margin-left: 2em;
 }
 
@@ -216,6 +233,10 @@ table.thumbs div.version-number {
 	margin: 0pt 0pt 2em 2em;
 }
 
+span.code {
+	margin: 0pt;
+}
+
 .note {
 	border: 1px dotted #c00;
 	font-style: italic;
@@ -232,7 +253,7 @@ table.thumbs div.version-number {
     top: 15px;
     left: 10px;
     width: 170px;
-    height: 220px;
+    height: 250px;
     border: 0px solid #909;
     display: block;
 }
