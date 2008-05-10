@@ -31,12 +31,27 @@
 	</xsl:template>	
 	
 	<xsl:template match="xweb:x-data" mode="page-body">
-		<xsl:apply-templates select="." mode="add-media-form"/>
-		<script type="text/javascript" xml:space="preserve">
-			<xsl:comment>
-			document.forms[0].elements['tempFile'].focus();
-			//</xsl:comment>
-		</script>
+		<xsl:choose>
+			<xsl:when test="key('appenv','feature.upload.applet') = 'true'">
+				<applet code="magoffin.matt.ma2.web.applet.UploadMedia.class" 
+					codebase="applet/" width="600" height="400">
+					<xsl:apply-templates select="." mode="add-media-form"/>
+					<script type="text/javascript" xml:space="preserve">
+						<xsl:comment>
+						document.forms[0].elements['tempFile'].focus();
+						//</xsl:comment>
+					</script>
+				</applet>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="." mode="add-media-form"/>
+				<script type="text/javascript" xml:space="preserve">
+					<xsl:comment>
+					document.forms[0].elements['tempFile'].focus();
+					//</xsl:comment>
+				</script>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	
 </xsl:stylesheet>

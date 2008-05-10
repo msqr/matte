@@ -20,8 +20,8 @@
 		<property name="domainObjectFactory" ref="domainObjectFactory"/>
 		<property name="applicationProperties">
 			<map>
-				<entry key="feature.registration" 
-					value="${feature.registration}"/>
+				<entry key="feature.registration" value="${feature.registration}"/>
+				<entry key="feature.upload.applet" value="${feature.upload.applet}"/>
 			</map>
 		</property>
 	</bean>
