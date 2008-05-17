@@ -41,9 +41,15 @@
 	<property name="dir.lib" value="lib"/>
 	<property name="dir.web" value="web"/>
 	<property name="dir.web.lib" value="${dir.web}/WEB-INF/lib"/>
+	<property name="dir.web.applet.lib" value="${dir.web}/applet"/>
 	<property name="dir.coverage" value="coverage"/>
 	<property name="dir.javadoc" value="${dir.build}/javadoc"/>
 	<property name="dir.webhome" value="defs/docs/webhome"/>
+	<property name="dir.source.applet" value="src-applet"/>
+	<property name="dir.netbeans.proj" value="${dir.build}/netbeans"/>
+	<property name="dir.netbeans.src" value="${dir.netbeans.proj}/src"/>
+	<property name="dir.netbeans.lib" value="${dir.netbeans.proj}/lib"/>
+	
 	<property name="javadoc.stylesheet" value="defs/docs/javadoc.css"/>
 	
 	<property name="app.name" value="matte" />
@@ -156,18 +162,12 @@
 	</target>
 	
 	<target name="generate.domain" depends="init" description="Generate JAXB domain objects from XML schemas">
-		<delete>
+		<delete failonerror="no">
 			<fileset dir="${hjb.dir}/src/main/resources">
 				<include name="*.xjb"/>
 				<include name="*.xsd"/>
 			</fileset>
 		</delete>
-		<copy todir="${hjb.dir}/src/main/resources">
-			<fileset dir="defs/schema">
-				<include name="binding.xml"/>
-			</fileset>
-			<mapper type="glob" from="*.xml" to="*.xjb"/>
-		</copy>
 		<copy todir="${hjb.dir}/src/main/resources">
 			<fileset dir="defs/schema">
 				<include name="core.xsd"/>
@@ -176,6 +176,12 @@
 				<include name="import.xsd"/>
 				<include name="ws.xsd"/>
 			</fileset>
+		</copy>
+		<copy todir="${hjb.dir}/src/main/resources">
+			<fileset dir="defs/schema">
+				<include name="binding.xml"/>
+			</fileset>
+			<mapper type="glob" from="*.xml" to="*.xjb"/>
 		</copy>
 		<delete>
 			<fileset dir="${hjb.dir}/src/main/java">
@@ -187,7 +193,7 @@
 				<include name="magoffin/matt/ma2/support/AbstractDomainObject.java"/>
 			</fileset>
 		</copy>
-		<delete>
+		<delete failonerror="no">
 			<fileset dir="${hjb.dir}/target/generated-sources/xjc">
 				<include name="magoffin/matt/ma2/domain/**"/>
 			</fileset>
@@ -1170,6 +1176,62 @@
 		<mkdir dir="${dir.webhome}/api"/>
 		<copy todir="${dir.webhome}/api">
 			<fileset dir="${dir.build}/javadoc" includes="**"/>
+		</copy>
+	</target>
+	
+	<target name="jar.import.domain" 
+		description="Create binary JAR out of the Applet JAXB classes">
+		<jar destfile="${dir.dist}/${app.name}-import-xml.jar">
+			<fileset dir="${dir.compile.dest.domain}">
+				<include name="magoffin/matt/ma2/domain/bgm.ser"/>
+				<include name="magoffin/matt/ma2/domain/jaxb.properties"/>
+				<include name="magoffin/matt/ma2/domain/**/*Import*"/>
+				<include name="magoffin/matt/ma2/domain/impl/JAXBVersion.class"/>
+				<include name="magoffin/matt/ma2/domain/impl/runtime/**"/>
+			</fileset>
+			<fileset dir="${hjb.dir}/src/main/java">
+				<include name="magoffin/matt/**/*.class"/>
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="generate-import-xml" 
+		description="Generate new import JAXB jar from scratch"
+		depends="generate.domain,compile.domain,jar.import.domain"/>
+	
+	<target name="generate-applet-import-xml"
+		description="Generate new applet JAXB jar from scratch"
+		depends="generate-import-xml">
+		<copy todir="${dir.web.applet.lib}">
+			<fileset dir="${dir.dist}" includes="${app.name}-import-xml.jar"/>
+		</copy>
+	</target>
+		
+	<patternset id="gui-netbeans-src-pat">
+		<include name="magoffin/matt/ma2/web/applet/*.java"/>
+		<include name="magoffin/matt/ma2/web/applet/*.form"/>
+	</patternset>
+	
+	<target name="sync-gui-to-netbeans" 
+		description="Copy local GUI source to a NetBeans project directory">
+		<copy todir="${dir.netbeans.src}">
+			<fileset dir="${dir.source.applet}">
+				<patternset refid="gui-netbeans-src-pat"/>
+			</fileset>
+		</copy>
+		<copy todir="${dir.netbeans.lib}">
+			<fileset dir="${dir.web.applet.lib}">
+				<include name="${app.name}-import-xml.jar"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="sync-gui-from-netbeans" 
+		description="Copy local GUI source from a NetBeans project directory">
+		<copy todir="${dir.source.applet}">
+			<fileset dir="${dir.netbeans.src}">
+				<patternset refid="gui-netbeans-src-pat"/>
+			</fileset>
 		</copy>
 	</target>
 	
