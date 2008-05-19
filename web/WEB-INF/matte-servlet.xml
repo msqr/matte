@@ -31,6 +31,7 @@
 			<props>
 				<prop key="/add.do">addMediaForm</prop>
 				<prop key="/addService.do">addMediaServiceForm</prop>
+				<prop key="/addServiceXml.do">addMediaServiceXml</prop>
 				<prop key="/admin.do">adminHome</prop>
 				<prop key="/album.do">viewAlbum</prop>
 				<prop key="/browse.do">browseAlbums</prop>
@@ -689,6 +690,10 @@
 	
 	<bean id="addMediaServiceForm" parent="addMediaForm">
 		<property name="formView" value="upload-media-service"/>
+	</bean>
+	
+	<bean id="addMediaServiceXml" parent="addMediaForm">
+		<property name="formView" value="xml-service-response"/>
 	</bean>
 	
 	<!--==============================================================================
