@@ -62,6 +62,7 @@
 	<property name="dir.compile.dest" value="${dir.app.dest}/WEB-INF/classes"/>
 	<property name="dir.compile.dest.test" value="${dir.test.home}/classes"/>
 	<property name="dir.compile.dest.domain" value="${dir.build}/generated/classes"/>
+	<property name="dir.compile.dest.applet" value="${dir.build}/applet/classes"/>
 	<property name="compile.debug" value="true" />
 	<property name="compile.deprecation" value="false" />
 	<property name="compile.optimize" value="true" />
@@ -139,6 +140,13 @@
 	<path id="compile.path">
 		<pathelement location="${dir.compile.dest}"/>
 		<path refid="lib.path"/>
+	</path>
+	
+	<path id="compile.applet.path">
+		<pathelement location="${dir.compile.dest.applet}"/>
+		<fileset dir="${dir.lib}">
+			<include name="swing-layout*.jar"/>
+		</fileset>
 	</path>
 	
 	<path id="unit-test.path">
@@ -394,6 +402,21 @@
 			
 			<!-- Exclude MA1 classes -->
 			<exclude name="magoffin/matt/ma/**"/>
+		</javac>
+	</target>
+	
+	<target name="compile.applet"
+		description="Compile source applet files">
+		<mkdir dir="${dir.compile.dest.applet}"/>
+		<javac srcdir="${dir.source.applet}"
+			destdir="${dir.compile.dest.applet}"
+			debug="${compile.debug}" 
+			deprecation="${compile.deprecation}" 
+			optimize="${compile.optimize}" 
+			nowarn="${compile.nowarn}"
+			target="1.5"
+			source="1.5">
+			<classpath refid="compile.applet.path" />
 		</javac>
 	</target>
 	
@@ -1179,25 +1202,9 @@
 		</copy>
 	</target>
 	
-	<target name="jar.import.domain" 
-		description="Create binary JAR out of the Applet JAXB classes">
-		<jar destfile="${dir.dist}/${app.name}-import-xml.jar">
-			<fileset dir="${dir.compile.dest.domain}">
-				<include name="magoffin/matt/ma2/domain/bgm.ser"/>
-				<include name="magoffin/matt/ma2/domain/jaxb.properties"/>
-				<include name="magoffin/matt/ma2/domain/**/*Import*"/>
-				<include name="magoffin/matt/ma2/domain/impl/JAXBVersion.class"/>
-				<include name="magoffin/matt/ma2/domain/impl/runtime/**"/>
-			</fileset>
-			<fileset dir="${hjb.dir}/src/main/java">
-				<include name="magoffin/matt/**/*.class"/>
-			</fileset>
-		</jar>
-	</target>
-
 	<target name="generate-import-xml" 
 		description="Generate new import JAXB jar from scratch"
-		depends="generate.domain,compile.domain,jar.import.domain"/>
+		depends="generate.domain,compile.domain"/>
 	
 	<target name="generate-applet-import-xml"
 		description="Generate new applet JAXB jar from scratch"
@@ -1232,6 +1239,34 @@
 			<fileset dir="${dir.netbeans.src}">
 				<patternset refid="gui-netbeans-src-pat"/>
 			</fileset>
+		</copy>
+	</target>
+	
+	<target name="jar-upload-applet" description="Create the Upload applet JAR"
+		depends="compile.applet">
+		<delete dir="${dir.build}/tmp" failonerror="no"/>
+		<mkdir dir="${dir.build}/tmp"/>
+		<unjar src="${dir.lib}/swing-layout-1.0.3.jar" 
+			dest="${dir.build}/tmp"/>
+		
+		<jar destfile="${dir.dist}/${app.name}-upload-applet.jar">
+			<fileset dir="${dir.compile.dest.applet}">
+				<include name="magoffin/matt/ma2/web/applet/*.class"/>
+			</fileset>
+			<fileset dir="${dir.build}/tmp" includes="**" excludes="META-INF/**"/>
+		</jar>
+	</target>
+	
+	<target name="sign-upload-applet-jar" description="Sign the upload applet"
+		depends="jar-upload-applet">
+		<signjar jar="${dir.dist}/${app.name}-upload-applet.jar" 
+			keystore="defs/keystore-test"
+			alias="testonly" storepass="testonly"/>
+	</target>
+	
+	<target name="deploy-applet-jar" description="Deploy the applet jar">
+		<copy todir="${dir.web.applet.lib}">
+			<fileset file="${dir.dist}/${app.name}-upload-applet.jar"/>
 		</copy>
 	</target>
 	

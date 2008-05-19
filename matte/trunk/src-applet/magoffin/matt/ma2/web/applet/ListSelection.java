@@ -1,5 +1,5 @@
 /* ===================================================================
- * FileSelection.java
+ * ListSelection.java
  * 
  * Copyright (c) 2008 Matt Magoffin (spamsqr@msqr.us)
  * 
@@ -24,38 +24,59 @@
 
 package magoffin.matt.ma2.web.applet;
 
-import java.io.File;
-
 /**
- * A selected file, for use in displaying the selected items to upload.
+ * List item selection.
  * 
  * @author matt.magoffin
  * @version $Revision$ $Date$
  */
-public class FileSelection {
+public class ListSelection {
 
-	private File file;
+	private String id = null;
+	private String name = null;
+	
+	/**
+	 * Construct from a string id/name.
+	 * 
+	 * @param id the ID
+	 * @param name the name
+	 */
+	public ListSelection(String id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 	
 	@Override
 	public String toString() {
-		if ( file != null ) {
-			return file.getName();
-		}
-		return "FileSelection{?}";
-	}
-	
-	/**
-	 * @return the file
-	 */
-	public File getFile() {
-		return file;
-	}
-	
-	/**
-	 * @param file the file to set
-	 */
-	public void setFile(File file) {
-		this.file = file;
+		return name;
 	}
 
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+	
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 }
