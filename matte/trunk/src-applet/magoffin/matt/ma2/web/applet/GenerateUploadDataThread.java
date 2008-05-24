@@ -113,18 +113,6 @@ class GenerateUploadDataThread extends Thread {
 		}
 	}
 	
-	/**
-	 * Get the percent complete.
-	 * 
-	 * @return the percent complete, as a float
-	 */
-	public float getPercentComplete() {
-		if ( numFilesToUpload < 1 ) {
-			return 0f;
-		}
-		return (float)numFilesComplete / (float)numFilesToUpload;
-	}
-	
 	private void copyFiles(ZipOutputStream zout, DefaultMutableTreeNode root) 
 	throws IOException {
 		int count = root.getChildCount();
