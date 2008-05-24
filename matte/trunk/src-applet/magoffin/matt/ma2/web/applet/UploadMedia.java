@@ -26,19 +26,25 @@
 
 package magoffin.matt.ma2.web.applet;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Arrays;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
+import javax.swing.ProgressMonitor;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
@@ -80,23 +86,20 @@ public class UploadMedia extends javax.swing.JApplet {
 	public static final String PARAM_DEVEL_CODEBASE = "develCodeBase";
 
 	private static final long serialVersionUID = -2493449216309735272L;
-	private static final Logger LOG = Logger.getLogger(UploadMedia.class
-			.getName());
 	private static final String DEFAULT_DATA_URL = "/../addServiceXml.do";
 	private static final String DEV_DATA_URL = "/test-add-media-data.xml";
 	private static final String DEFAULT_UPLOAD_URL = DEFAULT_DATA_URL;
 	private static final String DEV_UPLOAD_URL = "/test-add-media-data.zip";
 
-	private static final DocumentBuilderFactory DOC_BUILDER_FACTORY = DocumentBuilderFactory
-			.newInstance();
-	private static final TransformerFactory XFORMER_FACTORY = TransformerFactory
-			.newInstance();
-	private static final XPathFactory XPATH_FACTORY = XPathFactory
-			.newInstance();
 	private static final NamespaceContext XPATH_NS_CONTEXT = new XmlNamespaceContext();
 	private static final String TZ_XPATH = "/x:x-data/x:x-auxillary/m:model/m:time-zone";
 	private static final String COLLECTION_XPATH = "/x:x-data/x:x-auxillary/m:model/m:collection";
 	private static final String SESSION_ID_XPATH = "/x:x-data/x:x-session/@session-id";
+
+	static final Logger LOG = Logger.getLogger(UploadMedia.class.getName());
+	static final DocumentBuilderFactory DOC_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
+	static final TransformerFactory XFORMER_FACTORY = TransformerFactory.newInstance();
+	static final XPathFactory XPATH_FACTORY = XPathFactory.newInstance();
 
 	private DefaultMutableTreeNode treeRoot = new DefaultMutableTreeNode(
 			"Root Node");
@@ -249,6 +252,11 @@ public class UploadMedia extends javax.swing.JApplet {
 			// TODO handle no files selected
 			return;
 		}
+		
+		if ( isLocalDev() ) {
+			createLocalDevUploadFile();
+			return;
+		}
 
 		URL postUrl;
 		try {
@@ -261,19 +269,22 @@ public class UploadMedia extends javax.swing.JApplet {
 		ListSelection mediaTz = (ListSelection) mediaTzCombo.getSelectedItem();
 		ListSelection localTz = (ListSelection) localTzCombo.getSelectedItem();
 
-		HttpClient client = new HttpClient();
+		final ProgressMonitor monitor = new ProgressMonitor(this, "Uploading files to Matte",
+				null, 0, 1);
+		monitor.setMillisToPopup(500);
+		final HttpClient client = new HttpClient();
 		client.getState().addCookie(
-				new Cookie(postUrl.getHost(), "jsessionid", this.sessionId,
+				new Cookie(postUrl.getHost(), "JSESSIONID", this.sessionId,
 						postUrl.getPath(), null, false));
 
-		PostMethod filePost = new PostMethod(postUrl.toString());
+		final PostMethod filePost = new PostMethod(postUrl.toString());
 		filePost.getParams().setBooleanParameter(
-				HttpMethodParams.USE_EXPECT_CONTINUE, true);
+				HttpMethodParams.USE_EXPECT_CONTINUE, false);
 		final PipedInputStream in = new PipedInputStream();
 		final PipedOutputStream out = new PipedOutputStream();
 		try {
 			in.connect(out);
-			new GenerateUploadDataThread(out).start();
+			new GenerateUploadDataThread(out, treeModel, monitor).start();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -287,25 +298,67 @@ public class UploadMedia extends javax.swing.JApplet {
 					}
 
 					public String getFileName() {
-						return "MatteUploadAppletFile";
+						return "MatteUploadAppletFile-" 
+							+UUID.randomUUID().toString()
+							+"+.zip";
 					}
 
 					public long getLength() {
-						return 0;
+						return Long.MAX_VALUE;
 					}
 				}) };
 		filePost.setRequestEntity(new MultipartRequestEntity(parts, filePost
 				.getParams()));
 
-		try {
-			int status = client.executeMethod(filePost);
-			if (LOG.isLoggable(Level.INFO)) {
-				LOG.info("Got HTTP status: " + status);
+		// start new thread to upload... then we can track progress in UI
+		new Thread() {
+			@Override
+			public void run() {
+				try {
+					if (LOG.isLoggable(Level.INFO)) {
+						LOG.info("Posting HTTP request to: " + filePost.getURI());
+					}
+					int status = client.executeMethod(filePost);
+					if (LOG.isLoggable(Level.INFO)) {
+						LOG.info("Got HTTP status: " + status);
+					}
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
 			}
+		}.start();
+	}
+
+	private void createLocalDevUploadFile() {
+		ListSelection collection = (ListSelection) collectionCombo.getSelectedItem();
+		ListSelection mediaTz = (ListSelection) mediaTzCombo.getSelectedItem();
+		ListSelection localTz = (ListSelection) localTzCombo.getSelectedItem();
+		if ( LOG.isLoggable(Level.INFO) ) {
+			LOG.info("Got collection [" +collection.getId() +"], mediaTz ["
+					+mediaTz.getId() +"], localTz [" +localTz +"]");
+		}
+		
+		final ProgressMonitor monitor = new ProgressMonitor(this, "Saveing test archive",
+				null, 0, 1);
+		monitor.setMillisToPopup(500);
+		URL devUrl = null;
+		Thread copyThread = null;
+		try {
+			devUrl = getUploadUrl();
+			OutputStream out = new BufferedOutputStream(new FileOutputStream(new File(
+					URLDecoder.decode(devUrl.getFile()))));
+			copyThread = new GenerateUploadDataThread(out, treeModel, monitor);
+			copyThread.start();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-
+		
+		// start progress bar, get % complete from thread
+		/*try {
+			copyThread.join();
+		} catch (InterruptedException e) {
+			// ignore
+		}*/
 	}
 
 	/**
