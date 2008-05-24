@@ -36,8 +36,8 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -345,20 +345,18 @@ public class UploadMedia extends javax.swing.JApplet {
 		Thread copyThread = null;
 		try {
 			devUrl = getUploadUrl();
-			OutputStream out = new BufferedOutputStream(new FileOutputStream(new File(
-					URLDecoder.decode(devUrl.getFile()))));
+			File outFile = new File(devUrl.toURI());
+			if ( LOG.isLoggable(Level.INFO) ) {
+				LOG.info("Creating test acrhive file: " +outFile.getAbsolutePath());
+			}
+			OutputStream out = new BufferedOutputStream(new FileOutputStream(outFile));
 			copyThread = new GenerateUploadDataThread(out, treeModel, monitor);
 			copyThread.start();
-		} catch (IOException e) {
+		} catch ( URISyntaxException e ) {
+			throw new RuntimeException(e);
+		} catch ( IOException e ) {
 			throw new RuntimeException(e);
 		}
-		
-		// start progress bar, get % complete from thread
-		/*try {
-			copyThread.join();
-		} catch (InterruptedException e) {
-			// ignore
-		}*/
 	}
 
 	/**
