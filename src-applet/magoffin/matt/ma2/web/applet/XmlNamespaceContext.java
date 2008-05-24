@@ -40,21 +40,22 @@ import javax.xml.namespace.NamespaceContext;
 public class XmlNamespaceContext implements NamespaceContext {
 
 	/** The Matte XML namespace prefix to use. */
-	private String matteNamespacePrefix = "m";
+	public static final String MATTE_NAMESPACE_PREFIX = "m";
 
 	/** The Matte XML namespace URI to use. */
-	private String matteNamespaceURI = "http://msqr.us/xsd/matte";
+	public static final String MATTE_NAMESPACE_URI = "http://msqr.us/xsd/matte";
 
 	/** The XWeb namespace prefix to use. */
-	private String xWebNamespacePrefix = "x";
+	public static final String XWEB_NAMESPACE_PREFIX = "x";
 
-	private String xWebNamespaceURI = "http://msqr.us/xsd/jaxb-web";
+	/** The XWeb namespace URI to use. */
+	public static final String XWEB_NAMESPACE_URI = "http://msqr.us/xsd/jaxb-web";
 
 	public String getNamespaceURI(String prefix) {
-		if ( matteNamespacePrefix.equals(prefix) ) {
-			return matteNamespaceURI;
-		} else if ( xWebNamespacePrefix.equals(prefix) ) {
-			return xWebNamespaceURI;
+		if ( MATTE_NAMESPACE_PREFIX.equals(prefix) ) {
+			return MATTE_NAMESPACE_URI;
+		} else if ( XWEB_NAMESPACE_PREFIX.equals(prefix) ) {
+			return XWEB_NAMESPACE_URI;
 		} else if (prefix.equals(XMLConstants.XML_NS_PREFIX)) {
 			return XMLConstants.XML_NS_URI;
 		} else if (prefix.equals(XMLConstants.XMLNS_ATTRIBUTE)) {
@@ -65,10 +66,10 @@ public class XmlNamespaceContext implements NamespaceContext {
 	}
 
 	public String getPrefix(String namespaceURI) {
-		if ( matteNamespaceURI.equals(namespaceURI) ) {
-			return matteNamespacePrefix;
-		} else if ( xWebNamespaceURI.equals(namespaceURI) ) {
-			return xWebNamespacePrefix;
+		if ( MATTE_NAMESPACE_URI.equals(namespaceURI) ) {
+			return MATTE_NAMESPACE_PREFIX;
+		} else if ( XWEB_NAMESPACE_URI.equals(namespaceURI) ) {
+			return XWEB_NAMESPACE_PREFIX;
 		} else if (namespaceURI.equals(XMLConstants.XML_NS_URI)) {
 			return XMLConstants.XML_NS_PREFIX;
 		} else if (namespaceURI.equals(XMLConstants.XMLNS_ATTRIBUTE_NS_URI)) {
