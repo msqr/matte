@@ -30,7 +30,6 @@ import static magoffin.matt.ma2.web.applet.XmlNamespaceContext.MATTE_NAMESPACE_U
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -143,7 +142,7 @@ class GenerateUploadDataThread extends Thread {
 				}
 				monitor.setNote("Uploading " +archivePath);
 				
-				copy(new FileInputStream(fs.getFile()), zout);
+				UploadMedia.copy(new FileInputStream(fs.getFile()), zout);
 				
 				this.numFilesComplete++;
 				monitor.setProgress(this.numFilesComplete);
@@ -154,27 +153,6 @@ class GenerateUploadDataThread extends Thread {
 		}
 	}
 
-	// borrowed from Spring's FileCopyUtils, but don't close output stream
-	private int copy(InputStream in, OutputStream os) throws IOException {
-		try {
-			int byteCount = 0;
-			byte[] buffer = new byte[4096];
-			int bytesRead = -1;
-			while ((bytesRead = in.read(buffer)) != -1) {
-				os.write(buffer, 0, bytesRead);
-				byteCount += bytesRead;
-			}
-			os.flush();
-			return byteCount;
-		} finally {
-			try {
-				in.close();
-			} catch (IOException ex) {
-				// ignore
-			}
-		}
-	}
-	
 	private Document createMetadataXml() throws ParserConfigurationException {
 		Document dom = DOC_BUILDER_FACTORY.newDocumentBuilder().newDocument();
 		Element domRoot = dom.createElementNS(MATTE_NAMESPACE_URI, ELEMENT_COLLECTION_IMPORT);

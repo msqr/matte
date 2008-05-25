@@ -26,8 +26,10 @@
 
 package magoffin.matt.ma2.web.applet;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,12 +43,15 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitor;
+import javax.swing.ProgressMonitorInputStream;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
@@ -108,6 +113,7 @@ public class UploadMedia extends javax.swing.JApplet {
 			"Root Node");
 	private DefaultTreeModel treeModel = new DefaultTreeModel(treeRoot);
 	private String sessionId = null;
+	private boolean zipSelectionWarningShown = false;
 
 	@Override
 	public void init() {
@@ -141,6 +147,11 @@ public class UploadMedia extends javax.swing.JApplet {
 	private URL getUploadUrl() throws MalformedURLException {
 		return new URL(getCodeBase()
 				+ (isLocalDev() ? DEV_UPLOAD_URL : DEFAULT_UPLOAD_URL));
+	}
+	
+	private ResourceBundle getMessageResourceBundle() {
+		return ResourceBundle.getBundle(
+				"magoffin/matt/ma2/web/applet/UploadApplet");
 	}
 
 	private void initData() {
@@ -229,17 +240,52 @@ public class UploadMedia extends javax.swing.JApplet {
 		if (files == null || files.length < 1) {
 			return;
 		}
+		if ( isSingleZipArchive() ) {
+			ResourceBundle bundle = getMessageResourceBundle();
+			JOptionPane.showMessageDialog(this, 
+					bundle.getString("alert.zip.selection.msg"),
+					bundle.getString("alert.title.warning"),
+					JOptionPane.WARNING_MESSAGE);
+				return;
+		}
+		this.zipSelectionWarningShown = false;
 		populateFileSelection(treeRoot, files);
 	}
+	
+	private boolean isSingleZipArchive() {
+		if ( treeRoot.getChildCount() == 1 ) {
+			// check if a zip archive is currently selected, and if so
+			// do not allow any new selection
+			DefaultMutableTreeNode currNode = (DefaultMutableTreeNode)
+				treeRoot.getChildAt(0);
+			FileSelection fs = (FileSelection)currNode.getUserObject();
+			if ( fs.getFile().getName().toLowerCase().endsWith(".zip") ) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-	private void populateFileSelection(MutableTreeNode parent, File[] files) {
+	private void populateFileSelection(DefaultMutableTreeNode parent, File[] files) {
 		if (files == null || files.length < 1) {
 			return;
 		}
 		for (File file : files) {
+			if ( file.getName().toLowerCase().endsWith(".zip") 
+					&& (!parent.isRoot() || parent.getChildCount() > 0) ) {
+				if ( !zipSelectionWarningShown ) {
+					ResourceBundle bundle = getMessageResourceBundle();
+					JOptionPane.showMessageDialog(this, 
+							bundle.getString("alert.zip.selection.msg"),
+							bundle.getString("alert.title.warning"),
+							JOptionPane.WARNING_MESSAGE);
+					this.zipSelectionWarningShown = true;
+				}
+				continue;
+			}
 			FileSelection selection = new FileSelection();
 			selection.setFile(file);
-			MutableTreeNode node = new DefaultMutableTreeNode(selection);
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(selection);
 			if (LOG.isLoggable(Level.FINE)) {
 				LOG.fine("Adding [" + selection + "] selection to tree model");
 			}
@@ -272,9 +318,6 @@ public class UploadMedia extends javax.swing.JApplet {
 		ListSelection mediaTz = (ListSelection) mediaTzCombo.getSelectedItem();
 		ListSelection localTz = (ListSelection) localTzCombo.getSelectedItem();
 
-		final ProgressMonitor monitor = new ProgressMonitor(this, "Uploading files to Matte",
-				null, 0, 1);
-		monitor.setMillisToPopup(500);
 		final HttpClient client = new HttpClient();
 		client.getState().addCookie(
 				new Cookie(postUrl.getHost(), "JSESSIONID", this.sessionId,
@@ -283,11 +326,9 @@ public class UploadMedia extends javax.swing.JApplet {
 		final PostMethod filePost = new PostMethod(postUrl.toString());
 		filePost.getParams().setBooleanParameter(
 				HttpMethodParams.USE_EXPECT_CONTINUE, false);
-		final PipedInputStream in = new PipedInputStream();
-		final PipedOutputStream out = new PipedOutputStream();
+		final InputStream in;
 		try {
-			in.connect(out);
-			new GenerateUploadDataThread(out, treeModel, monitor).start();
+			in = getUploadInputStream();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -332,6 +373,32 @@ public class UploadMedia extends javax.swing.JApplet {
 		}.start();
 	}
 
+	private InputStream getUploadInputStream() throws IOException {
+		if ( isSingleZipArchive() ) {
+			// for zip archive, upload directly
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+				treeRoot.getChildAt(0);
+			FileSelection zip = (FileSelection)node.getUserObject();
+			return new BufferedInputStream(new ProgressMonitorInputStream(
+					this, "Reading " + zip.getFile().getName(),
+					new FileInputStream(zip.getFile())));
+		}
+		
+		// we'll be zipping ourselves, so create piped input stream we can
+		// generate the zip archive to
+		final ProgressMonitor monitor = new ProgressMonitor(this, 
+				"Uploading files to Matte", null, 0, 1);
+		final PipedInputStream in = new PipedInputStream();
+		final PipedOutputStream out = new PipedOutputStream();
+		try {
+			in.connect(out);
+			new GenerateUploadDataThread(out, treeModel, monitor).start();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return in;
+	}
+
 	private void createLocalDevUploadFile() {
 		ListSelection collection = (ListSelection) collectionCombo.getSelectedItem();
 		ListSelection mediaTz = (ListSelection) mediaTzCombo.getSelectedItem();
@@ -341,11 +408,7 @@ public class UploadMedia extends javax.swing.JApplet {
 					+mediaTz.getId() +"], localTz [" +localTz +"]");
 		}
 		
-		final ProgressMonitor monitor = new ProgressMonitor(this, "Saveing test archive",
-				null, 0, 1);
-		monitor.setMillisToPopup(500);
 		URL devUrl = null;
-		Thread copyThread = null;
 		try {
 			devUrl = getUploadUrl();
 			File outFile = new File(devUrl.toURI());
@@ -353,8 +416,23 @@ public class UploadMedia extends javax.swing.JApplet {
 				LOG.info("Creating test acrhive file: " +outFile.getAbsolutePath());
 			}
 			OutputStream out = new BufferedOutputStream(new FileOutputStream(outFile));
-			copyThread = new GenerateUploadDataThread(out, treeModel, monitor);
-			copyThread.start();
+			if ( isSingleZipArchive() ) {
+				try {
+					copy(getUploadInputStream(), out);
+				} finally {
+					try {
+						out.flush();
+						out.close();
+					} catch ( IOException e ) {
+						// ignore
+					}
+				}
+			} else {
+				final ProgressMonitor monitor = new ProgressMonitor(this, 
+						"Saving test archive",
+						null, 0, 1);
+				new GenerateUploadDataThread(out, treeModel, monitor).start();
+			}
 		} catch ( URISyntaxException e ) {
 			throw new RuntimeException(e);
 		} catch ( IOException e ) {
@@ -394,15 +472,16 @@ public class UploadMedia extends javax.swing.JApplet {
 
         setBackground(new java.awt.Color(236, 236, 236));
 
-        optionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Options", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("magoffin/matt/ma2/web/applet/UploadApplet"); // NOI18N
+        optionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, bundle.getString("label.pane.options"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
 
-        collectionLabel.setText("Collection");
+        collectionLabel.setText(bundle.getString("label.collection")); // NOI18N
 
         collectionCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        mediaTzLabel.setText("Media Time Zone");
+        mediaTzLabel.setText(bundle.getString("label.tz.media")); // NOI18N
 
-        localTzLabel.setText("Local Time Zone");
+        localTzLabel.setText(bundle.getString("label.tz.local")); // NOI18N
 
         autoAlbumLabel.setText("Auto Album");
 
@@ -421,7 +500,7 @@ public class UploadMedia extends javax.swing.JApplet {
         jTextPane1.setBackground(bgPanel.getBackground());
         jTextPane1.setBorder(null);
         jTextPane1.setEditable(false);
-        jTextPane1.setText("Selecting this option when uploading folders will turn them into albums.");
+        jTextPane1.setText(bundle.getString("label.autoalbum")); // NOI18N
         jScrollPane2.setViewportView(jTextPane1);
 
         org.jdesktop.layout.GroupLayout optionsPanelLayout = new org.jdesktop.layout.GroupLayout(optionsPanel);
@@ -470,9 +549,9 @@ public class UploadMedia extends javax.swing.JApplet {
                 .addContainerGap())
         );
 
-        fileSelectionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Files", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
+        fileSelectionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, bundle.getString("label.pane.files"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
 
-        chooseFilesButton.setText("Choose...");
+        chooseFilesButton.setText(bundle.getString("button.choose.files")); // NOI18N
         chooseFilesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 chooseFilesActionPerformed(evt);
@@ -482,7 +561,7 @@ public class UploadMedia extends javax.swing.JApplet {
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setViewportView(selectedFilesTree);
 
-        clearFilesButton.setText("Clear");
+        clearFilesButton.setText(bundle.getString("button.clear.files")); // NOI18N
         clearFilesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clearFilesButtonActionPerformed(evt);
@@ -608,6 +687,27 @@ public class UploadMedia extends javax.swing.JApplet {
 		for ( TreePath path : nonNestedPaths ) {
 			MutableTreeNode node = (MutableTreeNode)path.getLastPathComponent();
 			treeModel.removeNodeFromParent(node);
+		}
+	}
+
+    // borrowed from Spring's FileCopyUtils, but don't close output stream
+	static int copy(InputStream in, OutputStream out) throws IOException {
+		try {
+			int byteCount = 0;
+			byte[] buffer = new byte[4096];
+			int bytesRead = -1;
+			while ((bytesRead = in.read(buffer)) != -1) {
+				out.write(buffer, 0, bytesRead);
+				byteCount += bytesRead;
+			}
+			out.flush();
+			return byteCount;
+		} finally {
+			try {
+				in.close();
+			} catch (IOException ex) {
+				// ignore
+			}
 		}
 	}
 
