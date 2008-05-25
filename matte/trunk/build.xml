@@ -1218,6 +1218,7 @@
 	<patternset id="gui-netbeans-src-pat">
 		<include name="magoffin/matt/ma2/web/applet/*.java"/>
 		<include name="magoffin/matt/ma2/web/applet/*.form"/>
+		<include name="magoffin/matt/ma2/web/applet/*.properties"/>
 	</patternset>
 	
 	<target name="sync-gui-to-netbeans" 
@@ -1259,6 +1260,9 @@
 		<jar destfile="${dir.dist}/${app.name}-upload-applet.jar">
 			<fileset dir="${dir.compile.dest.applet}">
 				<include name="magoffin/matt/ma2/web/applet/*.class"/>
+			</fileset>
+			<fileset dir="${dir.source.applet}">
+				<include name="magoffin/matt/ma2/web/applet/*.properties"/>
 			</fileset>
 			<fileset dir="${dir.build}/tmp" includes="**" excludes="META-INF/**"/>
 		</jar>

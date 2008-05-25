@@ -66,6 +66,7 @@
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                 <TitledBorder title="Options">
+                  <ResourceString PropertyName="titleX" bundle="magoffin/matt/ma2/web/applet/UploadApplet.properties" key="label.pane.options" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                   <Font PropertyName="font" name="Tahoma" size="12" style="1"/>
                 </TitledBorder>
               </Border>
@@ -133,7 +134,9 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="collectionLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Collection"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="magoffin/matt/ma2/web/applet/UploadApplet.properties" key="label.collection" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="collectionCombo">
@@ -150,12 +153,16 @@
             </Component>
             <Component class="javax.swing.JLabel" name="mediaTzLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Media Time Zone"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="magoffin/matt/ma2/web/applet/UploadApplet.properties" key="label.tz.media" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="localTzLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Local Time Zone"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="magoffin/matt/ma2/web/applet/UploadApplet.properties" key="label.tz.local" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="autoAlbumLabel">
@@ -217,7 +224,9 @@
                       <Border info="null"/>
                     </Property>
                     <Property name="editable" type="boolean" value="false"/>
-                    <Property name="text" type="java.lang.String" value="Selecting this option when uploading folders will turn them into albums."/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="magoffin/matt/ma2/web/applet/UploadApplet.properties" key="label.autoalbum" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -229,6 +238,7 @@
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                 <TitledBorder title="Files">
+                  <ResourceString PropertyName="titleX" bundle="magoffin/matt/ma2/web/applet/UploadApplet.properties" key="label.pane.files" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                   <Font PropertyName="font" name="Tahoma" size="12" style="1"/>
                 </TitledBorder>
               </Border>
@@ -269,7 +279,9 @@
           <SubComponents>
             <Component class="javax.swing.JButton" name="chooseFilesButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Choose..."/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="magoffin/matt/ma2/web/applet/UploadApplet.properties" key="button.choose.files" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chooseFilesActionPerformed"/>
@@ -294,7 +306,9 @@
             </Container>
             <Component class="javax.swing.JButton" name="clearFilesButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Clear"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="magoffin/matt/ma2/web/applet/UploadApplet.properties" key="button.clear.files" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="clearFilesButtonActionPerformed"/>
