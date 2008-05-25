@@ -94,7 +94,7 @@ public class UploadMedia extends javax.swing.JApplet {
 	public static final String PARAM_DEVEL_CODEBASE = "develCodeBase";
 
 	private static final long serialVersionUID = -2493449216309735272L;
-	private static final String DEFAULT_DATA_URL = "/../addServiceXml.do";
+	private static final String DEFAULT_DATA_URL = "../addServiceXml.do";
 	private static final String DEV_DATA_URL = "/test-add-media-data.xml";
 	private static final String DEFAULT_UPLOAD_URL = DEFAULT_DATA_URL;
 	private static final String DEV_UPLOAD_URL = "/test-add-media-data.zip";
