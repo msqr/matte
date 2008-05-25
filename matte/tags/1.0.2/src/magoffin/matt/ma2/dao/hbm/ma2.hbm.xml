@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+	<query name="AlbumForKey">
+		<![CDATA[from magoffin.matt.ma2.domain.Album Album 
+			where Album.AnonymousKey = ?
+			and Album.AllowAnonymous = TRUE]]>
+	</query>
+	<query name="AlbumParentForAlbum">
+		<![CDATA[select Album2 from magoffin.matt.ma2.domain.Album Album,
+		magoffin.matt.ma2.domain.Album Album2
+		where Album in elements(Album2.Album) 
+		and Album.id = ?]]>
+	</query>
+	<query name="AlbumsForMediaItem">
+		<![CDATA[select Album from magoffin.matt.ma2.domain.Album Album, 
+				magoffin.matt.ma2.domain.MediaItem MediaItem
+			where MediaItem in elements(Album.Item) 
+			and MediaItem.id = :itemId
+			and Album.AllowAnonymous = TRUE]]>
+	</query>
+	<sql-query name="AlbumsForUserId">
+		<return alias="album" class="magoffin.matt.ma2.domain.Album"/>
+		<![CDATA[select {album.*} from album album 
+			where album.album_album_hjid is null 
+			and album.owner_ = ?
+			order by lower(album.name_)]]>
+	</sql-query>
+	<sql-query name="AlbumsForUserIdAndName">
+		<return alias="album" class="magoffin.matt.ma2.domain.Album"/>
+		<![CDATA[select {album.*} from album album 
+			where album.album_album_hjid is null 
+			and album.owner_ = ?
+			and lower(album.name_) = ?
+			order by lower(album.name_)]]>
+	</sql-query>
+	<query name="AlbumsForUserIdAndNameHql">
+		<![CDATA[from magoffin.matt.ma2.domain.Album Album 
+			where Album.Owner.id = ? 
+			and lower(Album.Name) = ?
+			order by lower(Album.Name)]]>
+	</query>
+	<sql-query name="AlbumsForUserIdByDate">
+		<return alias="album" class="magoffin.matt.ma2.domain.Album"/>
+		<![CDATA[select {album.*} from album album 
+			where album.album_album_hjid is null 
+			and album.owner_ = :userId
+			order by (case when album.albumdate is null 
+				then album.creationdate 
+				else album.albumdate end) desc,
+			lower(album.name_)]]>
+	</sql-query>
+	<!--query name="AlbumsForUserIdByDate">
+		<![CDATA[from magoffin.matt.ma2.domain.Album Album 
+			where Album.Owner.id = :userId 
+			order by (case when Album.AlbumDate is null 
+				then Album.CreationDate 
+				else Album.AlbumDate end) desc,
+			Album.Name asc]]>
+	</query-->
+	<sql-query name="AlbumsForUserIdForAnonymousByDate">
+		<return alias="album" class="magoffin.matt.ma2.domain.Album"/>
+		<![CDATA[select {album.*} from album album 
+			where album.album_album_hjid is null 
+			and album.owner_ = :userId
+			and album.AllowAnonymous = TRUE
+			order by (case when album.albumdate is null 
+				then album.creationdate 
+				else album.albumdate end) desc,
+			lower(album.name_)]]>
+	</sql-query>
+	<sql-query name="AlbumsForUserIdForBrowseByDate">
+		<return alias="album" class="magoffin.matt.ma2.domain.Album"/>
+		<![CDATA[select {album.*} from album album 
+			where album.album_album_hjid is null 
+			and album.owner_ = :userId
+			and album.AllowBrowse = TRUE
+			order by (case when album.albumdate is null 
+				then album.creationdate 
+				else album.albumdate end) desc,
+			lower(album.name_)]]>
+	</sql-query>
+	<!--query name="AlbumsForUserIdForAnonymousByDate">
+		<![CDATA[from magoffin.matt.ma2.domain.Album Album 
+			where Album.Owner.id = :userId 
+			and Album.AllowAnonymous = TRUE
+			order by (case when Album.AlbumDate is null 
+				then Album.CreationDate 
+				else Album.AlbumDate end) desc,
+			Album.Name asc]]>
+	</query-->
+	<sql-query name="AlbumsForUserIdForFeedByDate">
+		<return alias="album" class="magoffin.matt.ma2.domain.Album"/>
+		<![CDATA[select {album.*} from album album 
+			where album.album_album_hjid is null 
+			and album.owner_ = :userId
+			and album.AllowFeed = TRUE
+			order by (case when album.albumdate is null 
+				then album.creationdate 
+				else album.albumdate end) desc,
+			lower(album.name_)]]>
+	</sql-query>
+	<!--query name="AlbumsForUserIdForFeedByDate">
+		<![CDATA[from magoffin.matt.ma2.domain.Album Album 
+			where Album.Owner.id = :userId 
+			and Album.AllowFeed = TRUE
+			order by (case when Album.AlbumDate is null 
+				then Album.CreationDate 
+				else Album.AlbumDate end) desc,
+			Album.Name asc]]>
+	</query-->
+	<sql-query name="AlbumsForUserIdByDateSince">
+		<return alias="album" class="magoffin.matt.ma2.domain.Album"/>
+		<![CDATA[select {album.*} from album album 
+			where album.album_album_hjid is null 
+			and album.owner_ = :userId
+			and album.CreationDate >= :sinceDate
+			order by (case when album.albumdate is null 
+				then album.creationdate 
+				else album.albumdate end) desc,
+			lower(album.name_)]]>
+	</sql-query>
+	<!--query name="AlbumsForUserIdByDateSince">
+		<![CDATA[from magoffin.matt.ma2.domain.Album Album 
+			where Album.Owner.id = :userId 
+			and Album.CreationDate >= :sinceDate
+			order by (case when Album.AlbumDate is null 
+				then Album.CreationDate 
+				else Album.AlbumDate end) desc,
+			Album.Name asc]]>
+	</query-->
+	<sql-query name="AlbumsForThemeId">
+		<return alias="album" class="magoffin.matt.ma2.domain.Album"/>
+		<![CDATA[select {album.*} from album album 
+			where album.album_album_hjid is null 
+			and album.theme = :themeId
+			order by album.albumid]]>
+	</sql-query>
+	<!--query name="AlbumsForThemeId">
+		<![CDATA[from magoffin.matt.ma2.domain.Album Album 
+			where album.theme = :themeId
+			order by album.albumid]]>
+	</query-->
+	<query name="CollectionsForUserId">
+		<![CDATA[from magoffin.matt.ma2.domain.Collection Collection 
+			where Collection.Owner.id = ? 
+			order by lower(Collection.Name)]]>
+	</query>
+	<!--query name="CollectionForItemIdHql">
+		<![CDATA[select Collection from magoffin.matt.ma2.domain.Collection Collection, 
+			magoffin.matt.ma2.domain.MediaItem MediaItem
+			where MediaItem in elements(Collection.Item) 
+			and MediaItem.id = ?]]>
+	</query-->
+	<sql-query name="CollectionForItemId">
+		<return alias="c" class="magoffin.matt.ma2.domain.Collection"/>
+		<![CDATA[select {c.*} from collection c, media_item m 
+			where c.collectionid = m.collection_item_hjid 
+			and m.itemid = ?]]>
+	</sql-query>
+	<query name="MediaItemsAndAlbumsForCollection">
+		<![CDATA[select MediaItem, Album from magoffin.matt.ma2.domain.MediaItem MediaItem,
+				magoffin.matt.ma2.domain.Collection Collection,
+				magoffin.matt.ma2.domain.Album Album
+			where MediaItem in elements(Collection.Item)
+			and MediaItem in elements(Album.Item)
+			and Collection.id = ?]]>
+	</query>
+	<query name="MediaItemsForPath">
+		<![CDATA[select MediaItem from magoffin.matt.ma2.domain.MediaItem MediaItem,
+			magoffin.matt.ma2.domain.Collection Collection 
+			where MediaItem in elements(Collection.Item)
+			and Collection.id = ?
+			and MediaItem.Path = ?]]>
+	</query>
+	<query name="MediaItemsForCollection">
+		<![CDATA[select Collection.Item from magoffin.matt.ma2.domain.Collection Collection 
+			where Collection.id = ?]]>
+	</query>
+	<query name="MediaItemsForAlbum">
+		<![CDATA[select Album.Item from magoffin.matt.ma2.domain.Album Album 
+			where Album.id = ?]]>
+	</query>
+	<query name="TimeZoneAll">
+		<![CDATA[from magoffin.matt.ma2.domain.TimeZone TimeZone order by TimeZone.Ordering]]>
+	</query>
+	<query name="ThemeAll">
+		<![CDATA[from magoffin.matt.ma2.domain.Theme Theme order by Theme.Name]]>
+	</query>
+	<query name="ThemeForName">
+		<![CDATA[from magoffin.matt.ma2.domain.Theme Theme where Theme.Name = ?]]>
+	</query>
+	<query name="UserForLogin">
+		<![CDATA[from magoffin.matt.ma2.domain.User User where User.Login = ?]]>
+	</query>
+	<query name="UserForEmail">
+		<![CDATA[from magoffin.matt.ma2.domain.User User where User.Email = ?]]>
+	</query>
+	<query name="UserForKey">
+		<![CDATA[from magoffin.matt.ma2.domain.User User where User.AnonymousKey = ?]]>
+	</query>
+	<query name="UsersForAccessLevel">
+		<![CDATA[from magoffin.matt.ma2.domain.User User 
+		where bitwise_and(User.AccessLevel, ?) > 0]]>
+	</query>
+	<query name="UsersUnconfirmedForLongTime">
+		<![CDATA[from magoffin.matt.ma2.domain.User User where 
+			User.AccessLevel < 0 and User.CreationDate < ? ]]>
+	</query>
+	
+</hibernate-mapping>

@@ -1,0 +1,67 @@
+/* CSS for global theme display.
+ * ===================================================================
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License as 
+ * published by the Free Software Foundation; either version 2 of 
+ * the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
+ * 02111-1307 USA
+ * ===================================================================
+ * $Id: user-maint.css,v 1.8 2004/03/02 21:44:29 matt Exp $
+ * ===================================================================
+ */
+ 
+/* THEME TABLE */
+
+TABLE[class=theme] > TBODY > TR + TR > TD {
+	border-top: thin solid #666;
+}
+
+TABLE[class=theme] > TBODY > TR > TD:first-child {
+	text-align: center;
+}
+
+TABLE[class=theme] > TBODY > TR > TD {
+	padding: 8px;
+}
+
+TABLE[class=theme] > TBODY > TR > TD + TD {
+	padding-left: 15px;
+}
+
+TABLE[class=theme] > TBODY > TR > TH + TD {
+	padding-left: 15px;
+}
+
+TABLE[class=theme] > TBODY > TR[class='even'] {
+	background-color: #efefff;
+}
+
+TABLE[class=theme] DIV {
+	font-size: 12px;
+	font-weight: normal;
+	padding: 0px 0px 4px 0px;
+}
+
+TABLE[class=theme] DIV.title {
+	font-size: 14px;
+	font-weight: bold;
+	padding: 0px 0px 0px 0px;
+}
+
+TABLE[class=theme] DIV.info {
+	color: #666;
+	font-size: 10px;
+	font-weight: normal;
+	padding: 0px 0px 5px 0px;
+}
+
+
