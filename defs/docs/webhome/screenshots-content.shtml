@@ -261,4 +261,29 @@
 		</td>
 	</tr>
 
+
+	<tr>
+		<th>
+			<div class="versioned">
+				<a href="img/upload-applet.png" title="Add Files Applet">
+					<img src="img/upload-applet-icon.png" alt="Add Files Applet" width="240" height="180"/>
+				</a>
+				<div class="version-number">1.1</div>
+			</div>
+		</th>
+		<th>
+		</th>
+	</tr>
+	<tr>
+		<td>
+			<strong>Add Files Applet:</strong> You can deploy a special Java applet to make 
+			uploading files into Matte easier. The applet lets you choose any number of files
+			(or entire folders) and can upload those directly into Matte. Combining this
+			with the <em>Auto Album</em> feature allows you to easily turn folders into 
+			Matte albums.
+		</td>
+		<td>
+		</td>
+	</tr>
+
 </table>
