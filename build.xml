@@ -1281,4 +1281,30 @@
 		</copy>
 	</target>
 	
+	<property name="applet.version" value="0.1"/>
+	<property name="build.applet.release.name" value="Matte-AddFilesApplet-${applet.version}"/>
+	<property name="dir.build.applet.release" value="${dir.build}/${build.applet.release.name}"/>
+	<property name="applet.release.name" value="matte-add-files-applet.tbz2"/>
+	
+	<target name="upload-applet-release" depends="jar-upload-applet">
+		<delete dir="${dir.build.applet.release}" failonerror="no"/>
+		<mkdir dir="${dir.build.applet.release}"/>
+		<copy todir="${dir.build.applet.release}">
+			<fileset dir="${dir.dist}" includes="${app.name}-upload-applet.jar"/>
+		</copy>
+		<copy todir="${dir.build.applet.release}">
+			<fileset dir="${dir.base}/defs/docs/release/upload-applet-notes"
+				includes="notes-${applet.version}.txt"/>
+			<mapper type="merge" to="NOTES"/>
+			<filterset>
+				<filter token="VERSION" value="${applet.version}" />
+				<filter token="BUILD_DATE" value="${build.time}" />
+			</filterset>
+		</copy>
+		<tar tarfile="${dir.dist}/${applet.release.name}" compression="bzip2" longfile="gnu">
+			<tarfileset dir="${dir.build}" 
+				includes="${build.applet.release.name}/**" />
+		</tar>
+	</target>
+	
 </project>
