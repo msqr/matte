@@ -1284,7 +1284,7 @@
 	<property name="applet.version" value="0.1"/>
 	<property name="build.applet.release.name" value="Matte-AddFilesApplet-${applet.version}"/>
 	<property name="dir.build.applet.release" value="${dir.build}/${build.applet.release.name}"/>
-	<property name="applet.release.name" value="matte-add-files-applet.tbz2"/>
+	<property name="applet.release.name" value="matte-add-files-applet-${applet.version}.tbz2"/>
 	
 	<target name="upload-applet-release" depends="jar-upload-applet">
 		<delete dir="${dir.build.applet.release}" failonerror="no"/>
