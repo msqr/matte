@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beansProjectDescription>
-	<configExtensions>
-		<configExtension>xml</configExtension>
-	</configExtensions>
+	<version>1</version>
+	<pluginVersion><![CDATA[2.0.5.v200805211800]]></pluginVersion>
+	<configSuffixes>
+		<configSuffix><![CDATA[xml]]></configSuffix>
+	</configSuffixes>
+	<enableImports><![CDATA[false]]></enableImports>
 	<configs>
 		<config>web/WEB-INF/dataAccessContext.xml</config>
 		<config>web/WEB-INF/applicationContext.xml</config>
