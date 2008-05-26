@@ -40,10 +40,15 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -103,22 +108,26 @@ public class UploadMedia extends javax.swing.JApplet {
 	private static final String TZ_XPATH = "/x:x-data/x:x-auxillary/m:model/m:time-zone";
 	private static final String COLLECTION_XPATH = "/x:x-data/x:x-auxillary/m:model/m:collection";
 	private static final String SESSION_ID_XPATH = "/x:x-data/x:x-session/@session-id";
-
+	private static final String USER_TZ_PATH = "/x:x-data/x:x-session/m:session/m:acting-user/m:tz/@code";
+	private static final Set<Integer> EXPECTED_POST_RESULT_HTTP_STATUS 
+		= Collections.unmodifiableSet(new HashSet<Integer>(
+			Arrays.asList(new Integer[] {200, 302})));
+	
 	static final Logger LOG = Logger.getLogger(UploadMedia.class.getName());
 	static final DocumentBuilderFactory DOC_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
 	static final TransformerFactory XFORMER_FACTORY = TransformerFactory.newInstance();
 	static final XPathFactory XPATH_FACTORY = XPathFactory.newInstance();
 
-	private DefaultMutableTreeNode treeRoot = new DefaultMutableTreeNode(
-			"Root Node");
+	private DefaultMutableTreeNode treeRoot = new DefaultMutableTreeNode("Root Node");
 	private DefaultTreeModel treeModel = new DefaultTreeModel(treeRoot);
 	private String sessionId = null;
 	private boolean zipSelectionWarningShown = false;
+	private ResourceBundle msgBundle = null;
 
 	@Override
 	public void init() {
 		DOC_BUILDER_FACTORY.setNamespaceAware(true);
-		initParameters();
+		msgBundle = getMessageResourceBundle();
 		try {
 			java.awt.EventQueue.invokeAndWait(new Runnable() {
 				public void run() {
@@ -129,10 +138,6 @@ public class UploadMedia extends javax.swing.JApplet {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-	}
-
-	private void initParameters() {
-		// nothing yet
 	}
 
 	private boolean isLocalDev() {
@@ -153,6 +158,11 @@ public class UploadMedia extends javax.swing.JApplet {
 		return ResourceBundle.getBundle(
 				"magoffin/matt/ma2/web/applet/UploadApplet");
 	}
+	
+	private String getMessage(String key, Object... params) {
+		MessageFormat fmt = new MessageFormat(msgBundle.getString(key), getLocale());
+		return fmt.format(params);
+	}
 
 	private void initData() {
 		InputStream in = null;
@@ -162,11 +172,15 @@ public class UploadMedia extends javax.swing.JApplet {
 			in = url.openStream();
 			DocumentBuilder parser = DOC_BUILDER_FACTORY.newDocumentBuilder();
 			doc = parser.parse(in);
-			if (LOG.isLoggable(Level.INFO)) {
-				LOG.info("Called URL [" + url + "], got XML: " + doc);
+			if (LOG.isLoggable(Level.FINE)) {
+				LOG.fine("Called URL [" + url + "], got XML: " + doc);
 			}
 		} catch (Exception e) {
 			LOG.log(Level.SEVERE, "Can't populate data", e);
+			JOptionPane.showMessageDialog(this, 
+					getMessage("alert.error.initdata", e.toString()), 
+					msgBundle.getString("alert.title.error"), 
+					JOptionPane.ERROR_MESSAGE);
 		} finally {
 			if (in != null) {
 				try {
@@ -177,7 +191,7 @@ public class UploadMedia extends javax.swing.JApplet {
 			}
 		}
 
-		if (LOG.isLoggable(Level.INFO)) {
+		if (LOG.isLoggable(Level.FINE)) {
 			StringWriter out = new StringWriter();
 			try {
 				XFORMER_FACTORY.newTransformer().transform(new DOMSource(doc),
@@ -185,7 +199,7 @@ public class UploadMedia extends javax.swing.JApplet {
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
-			LOG.info("Got XML: " + out);
+			LOG.fine("Got XML: " + out);
 		}
 
 		NodeList colList = (NodeList) evaluateXPath(doc, COLLECTION_XPATH,
@@ -200,6 +214,12 @@ public class UploadMedia extends javax.swing.JApplet {
 			String id = el.getAttribute("collection-id");
 			String name = el.getAttribute("name");
 			collectionCombo.addItem(new ListSelection(id, name));
+		}
+		
+		String userDefaultTz = (String) evaluateXPath(doc.getDocumentElement(),
+				USER_TZ_PATH, XPathConstants.STRING);
+		if ( userDefaultTz == null || userDefaultTz.length() < 1 ) {
+			userDefaultTz = TimeZone.getDefault().getID();
 		}
 
 		NodeList tzList = (NodeList) evaluateXPath(doc.getDocumentElement(),
@@ -216,6 +236,10 @@ public class UploadMedia extends javax.swing.JApplet {
 			String name = el.getAttribute("name");
 			localTzCombo.addItem(new ListSelection(id, name));
 			mediaTzCombo.addItem(new ListSelection(id, name));
+			if ( id.equals(userDefaultTz) ) {
+				localTzCombo.setSelectedIndex(localTzCombo.getItemCount() - 1);
+				mediaTzCombo.setSelectedIndex(mediaTzCombo.getItemCount() - 1);
+			}
 		}
 
 		this.sessionId = (String) evaluateXPath(doc.getDocumentElement(),
@@ -241,10 +265,9 @@ public class UploadMedia extends javax.swing.JApplet {
 			return;
 		}
 		if ( isSingleZipArchive() ) {
-			ResourceBundle bundle = getMessageResourceBundle();
 			JOptionPane.showMessageDialog(this, 
-					bundle.getString("alert.zip.selection.msg"),
-					bundle.getString("alert.title.warning"),
+					msgBundle.getString("alert.zip.selection.msg"),
+					msgBundle.getString("alert.title.warning"),
 					JOptionPane.WARNING_MESSAGE);
 				return;
 		}
@@ -274,10 +297,9 @@ public class UploadMedia extends javax.swing.JApplet {
 			if ( file.getName().toLowerCase().endsWith(".zip") 
 					&& (!parent.isRoot() || parent.getChildCount() > 0) ) {
 				if ( !zipSelectionWarningShown ) {
-					ResourceBundle bundle = getMessageResourceBundle();
 					JOptionPane.showMessageDialog(this, 
-							bundle.getString("alert.zip.selection.msg"),
-							bundle.getString("alert.title.warning"),
+							msgBundle.getString("alert.zip.selection.msg"),
+							msgBundle.getString("alert.title.warning"),
 							JOptionPane.WARNING_MESSAGE);
 					this.zipSelectionWarningShown = true;
 				}
@@ -298,7 +320,10 @@ public class UploadMedia extends javax.swing.JApplet {
 
 	private void uploadFileSelection() {
 		if (treeRoot.getChildCount() < 1) {
-			// TODO handle no files selected
+			JOptionPane.showMessageDialog(this, 
+					msgBundle.getString("alert.no.selection.msg"),
+					null, JOptionPane.INFORMATION_MESSAGE);
+
 			return;
 		}
 		
@@ -335,7 +360,8 @@ public class UploadMedia extends javax.swing.JApplet {
 		Part[] parts = { new StringPart("collectionId", collection.getId()),
 				new StringPart("mediaTz", mediaTz.getId()),
 				new StringPart("localTz", localTz.getId()),
-				new StringPart("autoAlbum", "true"), // TODO get from checkbox
+				new StringPart("autoAlbum", Boolean.valueOf(
+						autoAlbumCheckBox.isSelected()).toString()),
 				new FilePart("tempFile", new PartSource() {
 					public InputStream createInputStream() throws IOException {
 						return in;
@@ -348,6 +374,8 @@ public class UploadMedia extends javax.swing.JApplet {
 					}
 
 					public long getLength() {
+						// we don't know the actual length, but for HttpClient all that
+						// matters is that this is > 0
 						return Long.MAX_VALUE;
 					}
 				}) };
@@ -366,8 +394,22 @@ public class UploadMedia extends javax.swing.JApplet {
 					if (LOG.isLoggable(Level.INFO)) {
 						LOG.info("Got HTTP status: " + status);
 					}
+					if ( !EXPECTED_POST_RESULT_HTTP_STATUS.contains(status) ) {
+						JOptionPane.showMessageDialog(UploadMedia.this, 
+								getMessage("alert.error.upload.unexpected.status", status), 
+								msgBundle.getString("alert.title.error"), 
+								JOptionPane.ERROR_MESSAGE);
+					} else {
+						JOptionPane.showMessageDialog(UploadMedia.this, 
+								msgBundle.getString("alert.upload.complete"), 
+								msgBundle.getString("alert.title.error"), 
+								JOptionPane.INFORMATION_MESSAGE);
+					}
 				} catch (IOException e) {
-					throw new RuntimeException(e);
+					JOptionPane.showMessageDialog(UploadMedia.this, 
+							getMessage("alert.error.upload.ioexception", e.getMessage()), 
+							msgBundle.getString("alert.title.error"), 
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}.start();
@@ -379,15 +421,15 @@ public class UploadMedia extends javax.swing.JApplet {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode)
 				treeRoot.getChildAt(0);
 			FileSelection zip = (FileSelection)node.getUserObject();
-			return new BufferedInputStream(new ProgressMonitorInputStream(
-					this, "Reading " + zip.getFile().getName(),
-					new FileInputStream(zip.getFile())));
+			String title = getMessage("upload.progress.reading.file", zip.getFile().getName());
+			return new BufferedInputStream(new ProgressMonitorInputStream(this, 
+					title, new FileInputStream(zip.getFile())));
 		}
 		
 		// we'll be zipping ourselves, so create piped input stream we can
 		// generate the zip archive to
 		final ProgressMonitor monitor = new ProgressMonitor(this, 
-				"Uploading files to Matte", null, 0, 1);
+				msgBundle.getString("upload.progress.title"), null, 0, 1);
 		final PipedInputStream in = new PipedInputStream();
 		final PipedOutputStream out = new PipedOutputStream();
 		try {
@@ -429,8 +471,7 @@ public class UploadMedia extends javax.swing.JApplet {
 				}
 			} else {
 				final ProgressMonitor monitor = new ProgressMonitor(this, 
-						"Saving test archive",
-						null, 0, 1);
+						"Saving test archive", null, 0, 1);
 				new GenerateUploadDataThread(out, treeModel, monitor).start();
 			}
 		} catch ( URISyntaxException e ) {
@@ -472,8 +513,11 @@ public class UploadMedia extends javax.swing.JApplet {
 
         setBackground(new java.awt.Color(236, 236, 236));
 
+        bgPanel.setBackground(new java.awt.Color(218, 217, 209));
+
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("magoffin/matt/ma2/web/applet/UploadApplet"); // NOI18N
         optionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, bundle.getString("label.pane.options"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
+        optionsPanel.setOpaque(false);
 
         collectionLabel.setText(bundle.getString("label.collection")); // NOI18N
 
@@ -515,16 +559,15 @@ public class UploadMedia extends javax.swing.JApplet {
                     .add(localTzLabel)
                     .add(autoAlbumLabel))
                 .add(27, 27, 27)
-                .add(optionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(optionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
                     .add(optionsPanelLayout.createSequentialGroup()
                         .add(autoAlbumCheckBox)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 219, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(optionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                        .add(org.jdesktop.layout.GroupLayout.LEADING, localTzCombo, 0, 242, Short.MAX_VALUE)
-                        .add(org.jdesktop.layout.GroupLayout.LEADING, mediaTzCombo, 0, 242, Short.MAX_VALUE)
-                        .add(org.jdesktop.layout.GroupLayout.LEADING, collectionCombo, 0, 242, Short.MAX_VALUE)))
-                .add(34, 34, 34))
+                        .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 276, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(localTzCombo, 0, 303, Short.MAX_VALUE)
+                    .add(mediaTzCombo, 0, 303, Short.MAX_VALUE)
+                    .add(collectionCombo, 0, 303, Short.MAX_VALUE))
+                .add(39, 39, 39))
         );
         optionsPanelLayout.setVerticalGroup(
             optionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -550,6 +593,7 @@ public class UploadMedia extends javax.swing.JApplet {
         );
 
         fileSelectionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, bundle.getString("label.pane.files"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
+        fileSelectionPanel.setOpaque(false);
 
         chooseFilesButton.setText(bundle.getString("button.choose.files")); // NOI18N
         chooseFilesButton.addActionListener(new java.awt.event.ActionListener() {
@@ -558,7 +602,8 @@ public class UploadMedia extends javax.swing.JApplet {
             }
         });
 
-        jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
+        selectedFilesTree.setDragEnabled(true);
+        selectedFilesTree.setEditable(true);
         jScrollPane1.setViewportView(selectedFilesTree);
 
         clearFilesButton.setText(bundle.getString("button.clear.files")); // NOI18N
@@ -574,7 +619,7 @@ public class UploadMedia extends javax.swing.JApplet {
             fileSelectionPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, fileSelectionPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(fileSelectionPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
                     .add(clearFilesButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -608,7 +653,7 @@ public class UploadMedia extends javax.swing.JApplet {
                 .addContainerGap()
                 .add(bgPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(addButton)
-                    .add(optionsPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(optionsPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 508, Short.MAX_VALUE)
                     .add(fileSelectionPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -619,9 +664,9 @@ public class UploadMedia extends javax.swing.JApplet {
                 .add(fileSelectionPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(optionsPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(addButton)
-                .addContainerGap(13, Short.MAX_VALUE))
+                .add(17, 17, 17))
         );
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
