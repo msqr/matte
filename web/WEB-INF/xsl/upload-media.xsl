@@ -34,7 +34,7 @@
 		<xsl:choose>
 			<xsl:when test="key('appenv','feature.upload.applet') = 'true'">
 				<applet code="magoffin.matt.ma2.web.applet.UploadMedia.class" 
-					codebase="applet/" width="600" height="400"
+					codebase="applet/" width="750" height="600"
 					archive="matte-upload-applet.jar">
 					<xsl:apply-templates select="." mode="add-media-form"/>
 					<script type="text/javascript" xml:space="preserve">
