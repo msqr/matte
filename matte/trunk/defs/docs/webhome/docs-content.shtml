@@ -2,7 +2,14 @@
 
 <h2><a name="requirements"></a>Installation</h2>
 
-<p>The <a href="install.html">Installation Guide</a> describes how to install Matte.</p>
+<dl>
+	<dt>Installation Guide</dt>
+	<dd>The <a href="install.html">Installation Guide</a> describes how to install Matte.</dd>
+	
+	<dt>Add Files Applet Guide</dt>
+	<dd>The <a href="upload-applet.html">Add Files Applet Guide</a> describes how to deploy
+	the <b>Add Files</b> Java applet with Matte.</dd>
+</dl>
 
 
 <h2><a name="requirements"></a>Developer documentation</h2>
