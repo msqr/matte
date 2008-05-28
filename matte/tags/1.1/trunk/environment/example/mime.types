@@ -1,0 +1,28 @@
+# Place this on the application classpath under a META-INF directory, 
+# eg. WEB-INF/classes/META-INF will work for the webapp.
+# 
+# $Id: mime.types,v 1.7 2007/05/23 20:53:52 matt Exp $
+#
+application/postscript				ai eps ps
+application/rtf						rtf
+application/x-javascript			js
+audio/basic							au
+audio/midi							midi mid
+audio/x-aifc						aifc
+audio/x-aiff            			aif aiff
+audio/x-mpeg						mpeg mpg
+audio/x-wav         			    wav
+image/gif							gif GIF
+image/jpeg							jpeg jpg jpe JPG
+image/jp2							jp2 JP2
+image/png							png PNG
+image/tiff							tiff tif
+image/x-xwindowdump					xwd
+text/css 							css
+text/html							html htm HTML HTM
+text/plain							txt text TXT TEXT
+video/mpeg							mpg mpeg mpe
+video/mp4							mp4
+video/3gpp							3gp
+video/quicktime						mov qt
+video/x-msvideo						avi

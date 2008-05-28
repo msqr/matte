@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  Copyright (c) 2004 Matt Magoffin
+  
+  This program is free software; you can redistribute it and/or 
+  modify it under the terms of the GNU General Public License as 
+  published by the Free Software Foundation; either version 2 of 
+  the License, or (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful, 
+  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+  General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License 
+  along with this program; if not, write to the Free Software 
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
+  02111-1307 USA
+
+  Id: DataBaseConfig.xsd,v 1.2 2004/03/02 19:36:02 matt Exp
+-->
+<xsd:schema targetNamespace="http://msqr.us/xsd/DataBaseConfig" 
+			xmlns:db="http://msqr.us/xsd/DataBaseConfig" 
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+			elementFormDefault="qualified">
+	 
+	<xsd:annotation>
+		<xsd:documentation>
+			This is the XML Schema for a data base configuration.
+		</xsd:documentation>
+	</xsd:annotation>
+
+
+	<xsd:complexType name="data-base-config">
+		<xsd:annotation>
+			<xsd:documentation>Defines the database settings.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="db-connect" type="db:data-base-connect" maxOccurs="2"/>
+		</xsd:sequence>
+		<xsd:attribute name="mediaSourceTable" type="xsd:string"/>
+		<xsd:attribute name="mediaTable" type="xsd:string"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="data-base-connect" abstract="true"/>
+
+	<xsd:complexType name="data-base-connect-jndi">
+		<xsd:complexContent>
+			<xsd:extension base="db:data-base-connect">
+				<xsd:sequence>
+					<xsd:element name="jndi-path" type="xsd:string"/>
+					<xsd:element name="credentials" type="db:user-credentials"
+						minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="data-base-connect-jdbc">
+		<xsd:complexContent>
+			<xsd:extension base="db:data-base-connect">
+				<xsd:sequence>
+					<xsd:element name="jdbc-url" type="xsd:string"/>
+					<xsd:element name="driver-class" type="xsd:string"/>
+					<xsd:element name="credentials" type="db:user-credentials"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="user-credentials">
+		<xsd:sequence>
+			<xsd:element name="username" type="xsd:string"/>
+			<xsd:element name="password" type="xsd:string" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+</xsd:schema>
+
