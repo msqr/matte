@@ -32,6 +32,19 @@
 							</c:choose>
 						</td>
 					</tr>
+					<tr>
+						<th><fmt:message key="setup.feature.upload.applet.displayName"/></th>
+						<td>
+							<c:choose>
+								<c:when test="${cmd.settings['feature.upload.applet'] == 'true'}">
+									<fmt:message key="enabled"/>
+								</c:when>
+								<c:otherwise>
+									<fmt:message key="disabled"/>
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
 				</table>
 			
 			</dd>
