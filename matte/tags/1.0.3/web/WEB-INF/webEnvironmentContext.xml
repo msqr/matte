@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+<!--
+	Spring context that defines web-based environment resources, i.e. JNDI-bound
+	DataSource and such. Unit tests and command-line tools define different 
+	implementations of these beans.
+-->	
+<beans>
+	
+	<bean id="propertyConfigurer" class="magoffin.matt.xweb.util.XwebParamPropertiesPlaceholderConfigurer">
+		<property name="order" value="1"/>
+		<property name="locations">
+			<list>
+				<value>classpath:/env.properties</value>
+			</list>
+		</property>
+		<property name="settingDao" ref="settingsDao"/>
+	</bean>
+		
+	<!-- DataSource to the MA2 application database. -->
+	<bean id="myDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="java:comp/env/jdbc/matte"/>
+	</bean>
+	
+	<!-- JNDI-bound javax.mail.Session for use in JNDI-enabled container. -->
+	<bean id="myMailSession" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="java:/comp/env/mail/matte"/>
+	</bean>
+	
+	<!-- Spring MailSender implementation for sending system emails. -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="session" ref="myMailSession"/>
+	</bean>	
+</beans>

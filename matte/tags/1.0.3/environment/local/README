@@ -1,0 +1,6 @@
+$Id: README,v 1.1 2006/05/15 00:09:04 matt Exp $
+
+This directory is for local development, nothing here should be 
+checked into CVS. To get started, copy all the files from 
+the environment/example directory into this directory and then
+modify the properties according to your environment.

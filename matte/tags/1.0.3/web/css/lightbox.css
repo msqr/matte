@@ -1,0 +1,343 @@
+/* CSS for lightbox screens.
+ * ===================================================================
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License as 
+ * published by the Free Software Foundation; either version 2 of 
+ * the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
+ * 02111-1307 USA
+ * ===================================================================
+ * $Id: lightbox.css,v 1.5 2004/06/14 23:54:56 matt Exp $
+ * ===================================================================
+ */
+ 
+/* ADD ITEMS TO ALBUM FROM LIGHTBOX DIALOG */
+
+#add-album-dialog {
+	position: absolute;
+	visibility: hidden;
+	top: 30px;
+	left: 30px;
+	background-color: #ffc;
+	border: 1px solid #666;
+	z-index: 89;
+}
+
+#add-album-dialog P {
+	padding-left: 2px;
+}
+
+#add-album-dialog DIV {
+	padding: 5px 25px 5px 25px;
+	width: 300px;
+}
+
+#add-album-dialog-tl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-tl.png");
+	z-index: 90;
+}
+
+#add-album-dialog-tr {
+	position: absolute;
+	visibility: hidden;
+	height: 18px;
+	width: 18px;
+	background-image: url("../img/corner-x-white-tr.png");
+	z-index: 90;
+}
+
+#add-album-dialog-br {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-br.png");
+	z-index: 90;
+}
+
+#add-album-dialog-bl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-bl.png");
+	z-index: 90;
+}
+
+/* DOWNLOAD ITEMS FROM LIGHTBOX DIALOG */
+
+#download-items-dialog {
+	position: absolute;
+	visibility: hidden;
+	top: 30px;
+	left: 30px;
+	background-color: #ffc;
+	border: 1px solid #666;
+	z-index: 89;
+}
+
+#download-items-dialog P {
+	padding-left: 2px;
+}
+
+#download-items-dialog DIV {
+	padding: 5px 25px 5px 25px;
+	width: 300px;
+}
+
+#download-items-dialog-tl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-tl.png");
+	z-index: 90;
+}
+
+#download-items-dialog-tr {
+	position: absolute;
+	visibility: hidden;
+	height: 18px;
+	width: 18px;
+	background-image: url("../img/corner-x-white-tr.png");
+	z-index: 90;
+}
+
+#download-items-dialog-br {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-br.png");
+	z-index: 90;
+}
+
+#download-items-dialog-bl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-bl.png");
+	z-index: 90;
+}
+
+/* MAIN BODY */
+
+#main-title {
+	position: absolute;
+	top: 47px;
+	left: 10px;
+	right: 10px;
+	height: 20px;
+	/*background-color: #e5e5da;*/
+	background-color: #ffc;
+	border-top: 1px solid #666666;
+	border-right: 1px solid #666666;
+	border-bottom: 1px solid #cccccc;
+	border-left: 1px solid #666666;
+	overflow: hidden;
+	padding: 0px;
+	z-index: 3;
+}
+
+#main-info {
+	position: absolute;
+	top: 69px;
+	left: 10px;
+	right: 10px;
+	background-color: white;
+	border-left: 1px solid #666;
+	border-right: 1px solid #666;
+	border-bottom: 1px solid #ccc;
+	margin: 0px;
+	padding: 4px 0px 1px 4px;
+	z-index: 2;
+}
+		
+#main-content {
+	position: absolute;
+	overflow: auto;
+	top: 68px;
+	left: 10px;
+	right: 10px;
+	bottom: 10px;
+	background-color: white;
+	border: 1px solid #666;
+	margin: 0px;
+	padding: 0px 0px 0px 4px;
+}
+
+#main-content > DIV {
+	padding: 5px 2px 5px 8px;
+}	
+
+#main-tl {
+	position: absolute;
+	top: 47px;
+	left: 10px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background-image: url("../img/corner-tl.png");
+	z-index: 3;
+}
+
+#main-tr {
+	position: absolute;
+	top: 47px;
+	right: 10px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background-image: url("../img/corner-tr.png");
+	z-index: 3;
+}
+
+#main-br {
+	visibility: hidden;
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background-image: url("../img/corner-br.png");
+	z-index: 3;
+}
+
+#main-bl {
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background-image: url("../img/corner-bl.png");
+	z-index: 3;
+}
+
+/* SAVE LIGHTBOX DIALOG */
+
+#save-lightbox-dialog {
+	position: absolute;
+	visibility: hidden;
+	top: 30px;
+	left: 30px;
+	background-color: #ffc;
+	border: 1px solid #666;
+	z-index: 89;
+}
+
+#save-lightbox-dialog P {
+	padding-left: 2px;
+}
+
+#save-lightbox-dialog DIV {
+	padding: 5px 25px 5px 25px;
+	width: 300px;
+}
+
+#save-lightbox-dialog-tl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-tl.png");
+	z-index: 90;
+}
+
+#save-lightbox-dialog-tr {
+	position: absolute;
+	visibility: hidden;
+	height: 18px;
+	width: 18px;
+	background-image: url("../img/corner-x-white-tr.png");
+	z-index: 90;
+}
+
+#save-lightbox-dialog-br {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-br.png");
+	z-index: 90;
+}
+
+#save-lightbox-dialog-bl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-bl.png");
+	z-index: 90;
+}
+
+/* REMOVE ITEMS FROM LIGHTBOX DIALOG */
+
+#remove-items-dialog {
+	position: absolute;
+	visibility: hidden;
+	top: 30px;
+	left: 30px;
+	background-color: #ffc;
+	border: 1px solid #666;
+	z-index: 89;
+}
+
+#remove-items-dialog P {
+	padding-left: 2px;
+}
+
+#remove-items-dialog DIV {
+	padding: 5px 25px 5px 25px;
+	width: 300px;
+}
+
+#remove-items-dialog-tl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-tl.png");
+	z-index: 90;
+}
+
+#remove-items-dialog-tr {
+	position: absolute;
+	visibility: hidden;
+	height: 18px;
+	width: 18px;
+	background-image: url("../img/corner-x-white-tr.png");
+	z-index: 90;
+}
+
+#remove-items-dialog-br {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-br.png");
+	z-index: 90;
+}
+
+#remove-items-dialog-bl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-bl.png");
+	z-index: 90;
+}
