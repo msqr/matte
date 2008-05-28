@@ -1,0 +1,182 @@
+/* CSS for theme maintenance screens.
+ * ===================================================================
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License as 
+ * published by the Free Software Foundation; either version 2 of 
+ * the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
+ * 02111-1307 USA
+ * ===================================================================
+ * $Id: user-maint.css,v 1.8 2004/03/02 21:44:29 matt Exp $
+ * ===================================================================
+ */
+ 
+/* GLOBAL THEME LIST */
+
+#global-theme-list-title {
+	position: absolute;
+	top: 209px;
+	left: 10px;
+	width: 200px;
+	height: 20px;
+	background-color: #fff;
+	border-top: 1px solid #666666;
+	border-right: 1px solid #666666;
+	border-bottom: 1px solid #cccccc;
+	border-left: 1px solid #666666;
+	overflow: hidden;
+	padding: 0px;
+	z-index: 2;
+}
+
+#global-theme-list {
+	position: absolute;
+	top: 230px;
+	left: 10px;
+	width: 200px;
+	height: 200px;
+	background-color: white;
+	border: 1px solid #666666;
+	overflow: auto;
+	padding: 0px;
+	z-index: 1;
+}
+	
+	#global-theme-list DIV {
+		padding: 2px 2px 1px 8px;
+	}
+
+#global-theme-list-tl {
+	position: absolute;
+	top: 209px;
+	left: 10px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background-image: url("../img/corner-tl.png");
+	z-index: 3;
+}
+	
+#global-theme-list-tr {
+	position: absolute;
+	top: 209px;
+	left: 207px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background-image: url("../img/corner-tr.png");
+	z-index: 3;
+}
+	
+#global-theme-list-br {
+	visibility: hidden;
+	position: absolute;
+	top: 427px;
+	left: 207px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background-image: url("../img/corner-br.png");
+	z-index: 3;
+}
+	
+#global-theme-list-bl {
+	position: absolute;
+	top: 427px;
+	left: 10px;
+	height: 5px;
+	width: 5px;
+	border: none;
+	background-image: url("../img/corner-bl.png");
+	z-index: 3;
+}
+
+/* THEME LIST */
+
+#theme-list-title {
+	position: absolute;
+	top: 47px;
+	left: 10px;
+	width: 200px;
+	height: 20px;
+	background-color: #fff;
+	border-top: 1px solid #666666;
+	border-right: 1px solid #666666;
+	border-bottom: 1px solid #cccccc;
+	border-left: 1px solid #666666;
+	overflow: hidden;
+	padding: 0px;
+	z-index: 2;
+}
+
+#theme-list {
+	position: absolute;
+	top: 67px;
+	left: 10px;
+	width: 200px;
+	height: 130px;
+	background-color: white;
+	border: 1px solid #666666;
+	overflow: auto;
+	padding: 0px;
+	z-index: 1;
+}
+	
+	#theme-list DIV {
+		padding: 2px 2px 1px 8px;
+	}
+
+#theme-list-tl {
+	position: absolute;
+	top: 47px;
+	left: 10px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background-image: url("../img/corner-tl.png");
+	z-index: 3;
+}
+	
+#theme-list-tr {
+	position: absolute;
+	top: 47px;
+	left: 207px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background-image: url("../img/corner-tr.png");
+	z-index: 3;
+}
+	
+#theme-list-br {
+	visibility: hidden;
+	position: absolute;
+	top: 194px;
+	left: 207px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background-image: url("../img/corner-br.png");
+	z-index: 3;
+}
+	
+#theme-list-bl {
+	position: absolute;
+	top: 194px;
+	left: 10px;
+	height: 5px;
+	width: 5px;
+	border: none;
+	background-image: url("../img/corner-bl.png");
+	z-index: 3;
+}
+
+
