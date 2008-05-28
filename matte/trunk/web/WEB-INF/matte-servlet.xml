@@ -386,6 +386,7 @@
 				<entry key="crypto.pbe.salt" value="${crypto.pbe.salt}"/>
 				<entry key="xslt.cache" value="${xslt.cache}"/>
 				<entry key="feature.registration" value="${feature.registration}"/>
+				<entry key="feature.upload.applet" value="${feature.upload.applet}"/>
 			</map>
 		</property>
 		<property name="advancedProperties">

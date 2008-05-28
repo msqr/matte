@@ -31,6 +31,19 @@
 					<fmt:message key="setup.feature.registration.caption"/>
 				</dd>
 			
+				<dt><fmt:message key="setup.feature.upload.applet.displayName"/></dt>
+				<dd>
+					<spring:bind path="settings['feature.upload.applet']">
+						<input type="hidden" 
+							name="_<c:out value="${status.expression}"/>" 
+							value="visible"/>
+						<input class="setting" type="checkbox" 
+							name="<c:out value="${status.expression}"/>"
+							value="true" <c:if test="${status.value == 'true'}">checked="checked"</c:if>/>
+					</spring:bind>
+					<fmt:message key="setup.feature.upload.applet.caption"/>
+				</dd>
+			
 			</spring:nestedPath>
 			
 		</dl>
