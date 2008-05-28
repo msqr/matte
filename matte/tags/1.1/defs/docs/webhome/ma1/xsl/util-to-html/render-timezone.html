@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Media Album: XSL Template Reference: render-timezone</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<link rel="stylesheet" type="text/css" href="../../global.css"/>
+	<link rel="stylesheet" type="text/css" href="../../dev.css"/>
+</head>
+<body>
+	<h1>render-timezone</h1>
+
+	<div class="function-info">
+		<table>
+			<tbody>
+				<tr>
+					<th>Type</th>
+					<td>Named</td>
+				</tr>
+				<tr>
+					<th>Parameters</th>
+					<td>
+						<table>
+							<tbody>
+								<tr>
+									<th>offset</th>
+									<td>Timezone offset, in number of milliseconds
+									offset from GMT.</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<th>Result</th>
+					<td>string</td>
+				</tr>
+				<tr>
+					<th>Referenced By</th>
+					<td>
+						<ol>
+							<li><a class="code"
+							href="render-item-creation-date.html">render-item-creation-date</a></li>
+						</ol>
+					</td>
+			</tbody>
+		</table>
+	</div>
+	
+	<div>
+	This template renders time zones in the form of millisecond offsets from GMT into
+	string versions like <code>GMT+1:00</code>. <a class="code"
+	href="../../schema-ref/table/user.html">ma:user</a> and <a class="code"
+	href="../../schema-ref/table/media-item.html">ma:media-item</a> objects have time
+	zone attributes stored as millisecond offsets from GMT.
+	</div>
+
+	<h2>Example usage</h2>
+
+	<div class="function-example"><span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">template</span><span class="synIdentifier"> </span><span class="synType">match</span>=<span class="synConstant">&quot;ma:item&quot;</span><span class="synIdentifier">&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">call-template</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;render-timezone&quot;</span><span class="synIdentifier">&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">with-param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;offset&quot;</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;@tz&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">call-template</span><span class="synIdentifier">&gt;</span>
+<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">template</span><span class="synIdentifier">&gt;</span></div>
+
+	<h2>Example output</h2>
+
+	<div class="function-example-out">GMT+1:00</div>
+	
+	<h2>Source</h2>
+  
+  <div class="function-source"><span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">template</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;render-timezone&quot;</span><span class="synIdentifier">&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;offset&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">choose</span><span class="synIdentifier">&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">when</span><span class="synIdentifier"> </span><span class="synType">test</span>=<span class="synConstant">&quot;string-length($offset) = 0&quot;</span><span class="synIdentifier">&gt;</span>
+      <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>Default<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>
+    <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">when</span><span class="synIdentifier">&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">otherwise</span><span class="synIdentifier">&gt;</span>
+      <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>GMT<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>
+      <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">choose</span><span class="synIdentifier">&gt;</span>
+        <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">when</span><span class="synIdentifier"> </span><span class="synType">test</span>=<span class="synConstant">&quot;$offset = 0&quot;</span><span class="synIdentifier">/&gt;</span>
+        <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">when</span><span class="synIdentifier"> </span><span class="synType">test</span>=<span class="synConstant">&quot;$offset mod 3600000 = 0&quot;</span><span class="synIdentifier">&gt;</span>
+          <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">if</span><span class="synIdentifier"> </span><span class="synType">test</span>=<span class="synConstant">&quot;$offset </span><span class="synType">&amp;</span><span class="synStatement">gt</span><span class="synType">;</span><span class="synConstant"> 0&quot;</span><span class="synIdentifier">&gt;</span>
+            <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>+<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>
+          <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">if</span><span class="synIdentifier">&gt;</span>
+          <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">value-of</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;$offset div 3600000&quot;</span><span class="synIdentifier">/&gt;</span>
+          <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>:00<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>
+        <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">when</span><span class="synIdentifier">&gt;</span>
+        <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">otherwise</span><span class="synIdentifier">&gt;</span>
+          <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">variable</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;abs-ms&quot;</span><span class="synIdentifier">&gt;</span>
+            <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">choose</span><span class="synIdentifier">&gt;</span>
+              <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">when</span><span class="synIdentifier"> </span><span class="synType">test</span>=<span class="synConstant">&quot;$offset </span><span class="synType">&amp;</span><span class="synStatement">lt</span><span class="synType">;</span><span class="synConstant"> 0&quot;</span><span class="synIdentifier">&gt;</span>
+                <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">value-of</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;0 - $offset&quot;</span><span class="synIdentifier">/&gt;</span>
+              <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">when</span><span class="synIdentifier">&gt;</span>
+              <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">otherwise</span><span class="synIdentifier">&gt;</span>
+                <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">value-of</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;$offset&quot;</span><span class="synIdentifier">/&gt;</span>
+              <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">otherwise</span><span class="synIdentifier">&gt;</span>
+            <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">choose</span><span class="synIdentifier">&gt;</span>
+          <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">variable</span><span class="synIdentifier">&gt;</span>
+          <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">variable</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;hours&quot;</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;floor($abs-ms div 3600000)&quot;</span><span class="synIdentifier">/&gt;</span>
+          <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">choose</span><span class="synIdentifier">&gt;</span>
+            <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">when</span><span class="synIdentifier"> </span><span class="synType">test</span>=<span class="synConstant">&quot;$offset </span><span class="synType">&amp;</span><span class="synStatement">lt</span><span class="synType">;</span><span class="synConstant"> 0&quot;</span><span class="synIdentifier">&gt;</span>
+              <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>-<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>
+            <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">when</span><span class="synIdentifier">&gt;</span>
+            <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">otherwise</span><span class="synIdentifier">&gt;</span>
+              <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>+<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>
+            <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">otherwise</span><span class="synIdentifier">&gt;</span>
+          <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">choose</span><span class="synIdentifier">&gt;</span>
+          <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">value-of</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;$hours&quot;</span><span class="synIdentifier">/&gt;</span>
+          <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>:<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>
+          <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">value-of</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;floor(($abs-ms - $hours * 3600000) div 60000)&quot;</span><span class="synIdentifier">/&gt;</span>
+        <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">otherwise</span><span class="synIdentifier">&gt;</span>
+      <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">choose</span><span class="synIdentifier">&gt;</span>
+    <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">otherwise</span><span class="synIdentifier">&gt;</span>
+  <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">choose</span><span class="synIdentifier">&gt;</span>
+<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">template</span><span class="synIdentifier">&gt;</span></div>
+
+<hr>
+<div>
+	<div class="float-r">
+		<a href="http://sourceforge.net"><img
+			src="http://sourceforge.net/sflogo.php?group_id=103583&amp;type=2" 
+			width="125" height="37" alt="SourceForge.net Logo" /></a>
+	</div>
+	<small>$Id: render-timezone.html,v 1.1 2007/01/08 04:39:04 matt Exp $</small>
+</div>
+</body>
+</html>
+
