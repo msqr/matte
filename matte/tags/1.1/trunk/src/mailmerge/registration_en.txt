@@ -1,6 +1,0 @@
-Thank you for registering with Matte. To verify your email 
-address and activate your account, click on the following link:
-
-${confirmUrl}
-
--- Matte System

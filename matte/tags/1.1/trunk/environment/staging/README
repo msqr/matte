@@ -1,5 +1,0 @@
-$Id: README,v 1.1 2006/05/15 00:43:26 matt Exp $
-
-This directory is for staging deployments, nothing here should be 
-checked into CVS. Use this environment for storing staging 
-properties for performing staging builds and deployments.
