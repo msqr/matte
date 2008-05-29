@@ -201,6 +201,7 @@
             <Component class="javax.swing.JCheckBox" name="autoAlbumCheckBox">
               <Properties>
                 <Property name="actionCommand" type="java.lang.String" value="autoalbum"/>
+                <Property name="opaque" type="boolean" value="false"/>
                 <Property name="verticalAlignment" type="int" value="1"/>
                 <Property name="verticalTextPosition" type="int" value="1"/>
               </Properties>
@@ -255,7 +256,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="349" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="381" max="32767" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="clearFilesButton" max="32767" attributes="1"/>
