@@ -215,6 +215,12 @@ class ImportWorkRequest implements WorkRequest {
 						if ( entry.isDirectory() || ioBizImpl.shouldIgnoreZipResource(zipEntryName) ) {
 							continue;
 						}
+						
+						// remove leading slash, if present
+						if ( zipEntryName.charAt(0) == '/' ) {
+							zipEntryName = zipEntryName.substring(1);
+						}
+						
 						File currOutputFile = new File(collectionDir,zipEntryName);
 						currOutputFile.getParentFile().mkdirs();
 						if ( ioBizImpl.log.isDebugEnabled() ) {
