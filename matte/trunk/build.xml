@@ -382,7 +382,7 @@
 				<include name="*.wsdl"/>
 			</fileset>
 		</copy>
-		<copy todir="${dir.env}/local">
+		<copy todir="${dir.env}/local" overwrite="no">
 			<fileset dir="${dir.env}/example">
 				<include name="**"/>
 			</fileset>
