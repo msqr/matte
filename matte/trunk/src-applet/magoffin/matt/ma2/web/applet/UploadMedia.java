@@ -402,7 +402,7 @@ public class UploadMedia extends javax.swing.JApplet {
 					} else {
 						JOptionPane.showMessageDialog(UploadMedia.this, 
 								msgBundle.getString("alert.upload.complete"), 
-								msgBundle.getString("alert.title.error"), 
+								msgBundle.getString("alert.title.info"), 
 								JOptionPane.INFORMATION_MESSAGE);
 					}
 				} catch (IOException e) {
@@ -534,6 +534,7 @@ public class UploadMedia extends javax.swing.JApplet {
         localTzCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         autoAlbumCheckBox.setActionCommand("autoalbum");
+        autoAlbumCheckBox.setOpaque(false);
         autoAlbumCheckBox.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         autoAlbumCheckBox.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
 
@@ -619,7 +620,7 @@ public class UploadMedia extends javax.swing.JApplet {
             fileSelectionPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, fileSelectionPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(fileSelectionPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
                     .add(clearFilesButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
