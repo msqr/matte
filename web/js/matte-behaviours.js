@@ -20,7 +20,12 @@ function applyAlbumCollectionListLogic(el) {
 		if ( myA.previousSibling && Element.hasClassName(myA.previousSibling,'showhide') ) {
 			spanNode.appendChild(myA.previousSibling); // move node into spanNode
 		}
-		spanNode.appendChild(myA.firstChild.cloneNode(true));
+		if ( myA.firstChild ) { // album might not have name
+			spanNode.appendChild(myA.firstChild.cloneNode(true));
+		} else {
+			spanNode.appendChild(document.createTextNode(
+				MatteLocale.i18n('empty.' +data[1] +'.display.name')));
+		}
 		myA.parentNode.replaceChild(spanNode, myA);
 		
 		Event.observe(spanNode,'click',function(evt) {
