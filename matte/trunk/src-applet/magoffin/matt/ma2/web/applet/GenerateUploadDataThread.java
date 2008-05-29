@@ -133,7 +133,9 @@ class GenerateUploadDataThread extends Thread {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode)root.getChildAt(i);
 			FileSelection fs = (FileSelection)node.getUserObject();
 			if ( fs.getFile().isFile() ) {
-				String archivePath = basePath +'/' +fs.getFile().getName();
+				String archivePath = 
+					(basePath.length() > 0 ? basePath +'/' : "") 
+					+fs.getFile().getName();
 				zout.putNextEntry(new ZipEntry(archivePath));
 				
 				if ( LOG.isLoggable(Level.INFO) ) {
