@@ -244,6 +244,25 @@
 							<xsl:value-of select="count($meta-item/m:user-rating)"/>
 						</span>
 					</li>
+					<!-- If have GPS coordinates, show map link -->
+					<xsl:if test="count($meta-item/m:metadata[@key='GPS_LATITUDE' or @key='GPS_LONGITUDE']) = 2">
+						<li>
+							<a target="matte_map" title="{key('i18n','meta.gps.maplink.title')}">
+								<xsl:attribute name="href">
+									<xsl:text>http://maps.google.com/?ie=UTF8&amp;ll=</xsl:text>
+									<xsl:call-template name="dms.to.decimal">
+										<xsl:with-param name="dms" select="normalize-space($meta-item/m:metadata[@key='GPS_LATITUDE']/text())"/>
+									</xsl:call-template>
+									<xsl:text>,</xsl:text>
+									<xsl:call-template name="dms.to.decimal">
+										<xsl:with-param name="dms" select="normalize-space($meta-item/m:metadata[@key='GPS_LONGITUDE']/text())"/>
+									</xsl:call-template>
+									<xsl:text>&amp;spn=0.025911,0.030727&amp;t=h&amp;z=15</xsl:text>
+								</xsl:attribute>
+								<xsl:value-of select="key('i18n','meta.gps.maplink')"/>
+							</a>
+						</li>
+					</xsl:if>
 				</ul>
 			</div>
 			
@@ -500,6 +519,14 @@
 			<xsl:value-of select="m:metadata[@key='CAMERA_MODEL']"/>
 			<br />
 		</xsl:if>
+		<xsl:if test="count(m:metadata[@key='GPS_LATITUDE' or @key='GPS_LONGITUDE']) = 2">
+			<span class="ii-attribute"><xsl:value-of select="key('i18n','meta.gps.latitude')"/>: </span>
+			<xsl:value-of select="m:metadata[@key='GPS_LATITUDE']"/>
+			<br />
+			<span class="ii-attribute"><xsl:value-of select="key('i18n','meta.gps.longitude')"/>: </span>
+			<xsl:value-of select="m:metadata[@key='GPS_LONGITUDE']"/>
+			<br />
+		</xsl:if>
 		<span class="ii-attribute">File: </span><xsl:value-of select="@path"/><br />
 		<xsl:if test="@width &gt; 0">
 			<span class="ii-attribute">Original size: </span>
@@ -508,6 +535,26 @@
 			<xsl:value-of select="@height"/>
 			<br />
 		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template name="dms.to.decimal">
+		<xsl:param name="dms"/><!-- Data format: S 36°47'7.2" -->
+		<xsl:variable name="dmstok" select="normalize-space(translate($dms, translate($dms, 'NSEW0123456789. ', ''), '     '))"/>	
+		<xsl:variable name="degraw" select="substring-before(substring-after($dmstok, ' '), ' ')"/>
+		<xsl:variable name="deg">
+			<xsl:if test="starts-with($dmstok, 'S') or starts-with($dmstok, 'W')">-</xsl:if>
+			<xsl:value-of select="$degraw"/>
+		</xsl:variable>
+		<xsl:variable name="min" select="substring-before(substring-after($dmstok, concat($degraw, ' ')), ' ')"/>
+		<xsl:variable name="sec" select="substring-after($dmstok, concat($degraw, ' ', $min, ' '))"/>
+		<xsl:choose>
+			<xsl:when test="$deg &lt; 0">
+				<xsl:value-of select="$deg - ($min div 60) - ($min div 3600)"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$deg + ($min div 60) + ($min div 3600)"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	
 	<xsl:template match="m:user-rating" mode="meta">
