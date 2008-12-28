@@ -522,7 +522,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 */
 	public void testExportItemWithRotate270() throws Exception {
 		// import first...
-		importImage("magoffin/matt/ma2/image/IMG_5441_ORIENTATION_6.JPG", collectionDao, 
+		importImage("magoffin/matt/ma2/image/IMG_ORIENTATION_8.JPG", collectionDao, 
 				testIOBizImpl, testCollection, testUser);
 		Collection c = collectionDao.get(this.testCollection.getCollectionId());
 		MediaItem item = (MediaItem)c.getItem().get(0);
@@ -543,7 +543,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 */
 	public void testExportItemWithRotate180() throws Exception {
 		// import first...
-		importImage("magoffin/matt/ma2/image/IMG_5441_ORIENTATION_3.JPG", collectionDao, 
+		importImage("magoffin/matt/ma2/image/IMG_ORIENTATION_3.JPG", collectionDao, 
 				testIOBizImpl, testCollection, testUser);
 		Collection c = collectionDao.get(this.testCollection.getCollectionId());
 		MediaItem item = (MediaItem)c.getItem().get(0);
@@ -564,7 +564,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 */
 	public void testExportItemWithRotate90() throws Exception {
 		// import first...
-		importImage("magoffin/matt/ma2/image/IMG_5440_ORIENTATION_8.JPG", collectionDao, 
+		importImage("magoffin/matt/ma2/image/IMG_ORIENTATION_6.JPG", collectionDao, 
 				testIOBizImpl, testCollection, testUser);
 		Collection c = collectionDao.get(this.testCollection.getCollectionId());
 		MediaItem item = (MediaItem)c.getItem().get(0);

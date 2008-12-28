@@ -66,11 +66,11 @@ public abstract class BaseImageMediaHandler extends AbstractMediaHandler {
 	
 	/** The default value for the <code>orientationCounterClockwiseValue</code> property. */
 	public static final String DEFAULT_ORIENTATION_90_COUNTER_CLOCKWISE_VALUE
-		= String.valueOf(6);
+		= String.valueOf(8);
 	
 	/** The default value for the <code>orientationClockwiseValue</code> property. */
 	public static final String DEFAULT_ORIENTATION_90_CLOCKWISE_VALUE
-		= String.valueOf(8);
+		= String.valueOf(6);
 	
 	/** The default value for the <code>orientation180</code> property. */
 	public static final String DEFAULT_ORIENTATION_180_VALUE
