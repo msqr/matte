@@ -1,0 +1,970 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC 
+	"-//SPRING//DTD BEAN//EN" 
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<bean id="myWebPropertyConfigurer" class="magoffin.matt.xweb.util.XwebParamPropertiesPlaceholderConfigurer">
+		<property name="order" value="1"/>
+		<property name="locations">
+			<list>
+				<value>classpath:/env.properties</value>
+			</list>
+		</property>
+		<property name="settingDao" ref="settingsDao"/>
+	</bean>
+	
+	<bean id="appContextInitializer" 
+		class="magoffin.matt.ma2.web.util.AppContextInitializer">
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="applicationProperties">
+			<map>
+				<entry key="feature.registration" value="${feature.registration}"/>
+				<entry key="feature.upload.applet" value="${feature.upload.applet}"/>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+				<prop key="/add.do">addMediaForm</prop>
+				<prop key="/addService.do">addMediaServiceForm</prop>
+				<prop key="/addServiceXml.do">addMediaServiceXml</prop>
+				<prop key="/admin.do">adminHome</prop>
+				<prop key="/album.do">viewAlbum</prop>
+				<prop key="/browse.do">browseAlbums</prop>
+				<prop key="/deleteTheme.do">themeDelete</prop>
+				<prop key="/downloadAlbum.do">downloadItems</prop>
+				<prop key="/downloadItems.do">downloadItems</prop>
+				<prop key="/downloadTheme.do">downloadTheme</prop>
+				<prop key="/editAlbum.do">editAlbumForm</prop>
+				<prop key="/editCollection.do">editCollectionForm</prop>
+				<prop key="/editUser.do">editUserForm</prop>
+				<prop key="/editTheme.do">editThemeForm</prop>
+				<prop key="/feed/atom-1.0.do">albumFeedAtom10Service</prop>
+				<prop key="/forgotPassword.do">forgotPassword</prop>
+				<prop key="/forgotPasswordConfirm.do">forgotPasswordConfirm</prop>
+				<prop key="/help.do">help</prop>
+				<prop key="/home.do">home</prop>
+				<prop key="/logoff.do">logoff</prop>
+				<prop key="/logon.do">logonForm</prop>
+				<prop key="/logonPop.do">logonPopForm</prop>
+				<prop key="/media.do">media</prop>
+				<prop key="/moveItems.do">moveItemsForm</prop>
+				<prop key="/preferences.do">preferencesForm</prop>
+				<prop key="/register.do">registerForm</prop>
+				<prop key="/registerConfirm.do">registerConfirm</prop>
+				<prop key="/setupWizard.do">setupWizardForm</prop>
+				<prop key="/shadow.do">shadow</prop>
+				<prop key="/sortItems.do">sortAlbumItems</prop>
+				<prop key="/themeCss.do">themeDynamicCss</prop>
+				<prop key="/themeJavaScript.do">themeDynamicJavaScript</prop>
+				<prop key="/themeResource.do">themeResource</prop>
+				<prop key="/themeView.do">themeView</prop>
+				<prop key="/userView.do">userView</prop>
+				<prop key="/userResource.do">userResource</prop>
+				<prop key="/viewMediaItemInfo.do">mediaItemInfo</prop>
+				<prop key="/viewPreferences.do">viewSettingsForm</prop>
+				
+				<!-- Services -->
+				<prop key="/addComment.do">addCommentForm</prop>
+				<prop key="/addToAlbum.do">addToAlbumService</prop>
+				<!--prop key="/addToCollection.do">addToCollectionService</prop-->
+				<prop key="/deleteAlbum.do">deleteAlbumService</prop>
+				<prop key="/deleteCollection.do">deleteCollectionService</prop>
+				<prop key="/deleteItems.do">deleteItemsService</prop>
+				<prop key="/find.do">searchMediaItemsService</prop>
+				<prop key="/job.do">jobInfoService</prop>
+				<prop key="/jobs.do">jobsInfoService</prop>
+				<prop key="/mediaItemInfo.do">mediaItemInfoService</prop>
+				<prop key="/mediaItems.json">mediaItemsService</prop>
+				<prop key="/messages.json">messagesService</prop>
+				<prop key="/newAlbum.do">newAlbumService</prop>
+				<prop key="/newCollection.do">newCollectionService</prop>
+				<prop key="/removeFromAlbum.do">removeFromAlbumService</prop>
+				<prop key="/reindex.do">reindexService</prop>
+				<prop key="/saveMediaInfo.do">saveMediaInfoService</prop>
+				<prop key="/setAlbumParent.do">setAlbumParentService</prop>
+				<prop key="/setAlbumPoster.do">setAlbumPosterService</prop>
+				<prop key="/setMediaItemRating.do">setMediaItemRatingService</prop>
+				<prop key="/shareAlbum.do">shareAlbumService</prop>
+				<prop key="/sortAlbums.do">sortAlbumsService</prop>
+				<prop key="/themes.do">themesService</prop>
+				<prop key="/userIndex.do">userIndexService</prop>
+				<prop key="/user.do">userFormService</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!--
+		illegalActionExceptionHandler: exception handler to redirect user to 
+		logon page when denied access to something
+	-->
+	<bean id="authorizationExceptionHandler" 
+		class="magoffin.matt.xweb.util.SimpleMessageExceptionResolver">
+		<property name="redirectView" value="logon-redirect"/>
+		<property name="order" value="0"/>
+		<property name="exceptionClass" value="magoffin.matt.ma2.AuthorizationException"/>
+		<property name="errorMessageKey" value="error.illegalaction"/>
+		<property name="defaultErrorMessage" value="Illegal action, please log in."/>
+		<property name="saveRequestUrl" value="true"/>
+		<property name="xwebHelper" ref="webHelper"/>
+	</bean>
+
+	<!--
+		illegalActionExceptionHandler: exception handler to redirect user to 
+		thew view settings form if they haven't specified settings yet
+	-->
+	<bean id="noUserSessionExceptionHandler" 
+		class="magoffin.matt.xweb.util.SimpleMessageExceptionResolver">
+		<property name="redirectView" value="view-settings"/>
+		<property name="order" value="1"/>
+		<property name="exceptionClass" value="magoffin.matt.ma2.web.NoUserSessionException"/>
+		<property name="saveRequestUrl" value="true"/>
+		<property name="xwebHelper" ref="webHelper"/>
+	</bean>
+	
+	<bean id="exceptionMapping" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="order" value="3"/>
+		<property name="defaultErrorView" value="global-error"/>
+		<property name="exceptionMappings">
+			<props>
+				<prop key="magoffin.matt.ma2.ApplicationNotConfiguredException">redirect:/setupWizard.do</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="http404ExceptionMapping" 
+		class="magoffin.matt.xweb.util.HttpStatusExceptionResolver">
+		<property name="order" value="2"/>
+		<property name="responseStatus" value="404"/>
+		<property name="includeErrorMessage" value="true"/>
+		<property name="exceptionClass" 
+			value="magoffin.matt.ma2.ObjectNotFoundException"/>
+	</bean>
+	
+	<!-- webHelper: utility methods for web classes -->
+	<bean id="webHelper" class="magoffin.matt.ma2.web.util.WebHelper">
+		<property name="mediaBiz" ref="mediaBiz"/>
+		<property name="userBiz" ref="userBiz"/>
+		<property name="systemBiz" ref="systemBiz"/>
+		<property name="workBiz" ref="workBiz"/>
+		<property name="messageSource" ref="messageSource"/>
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+	</bean>
+
+	<!-- Custom XSLT view resolver
+	
+		This view resolver can simplify having to create individual view defintions for 
+		individual XSLT views. Using the view name the resolver will look to see if 
+		a web resource exists named <xsltPathPrefix><viewName><xsltPathSuffix>. If so, 
+		then the AbstractXsltView bean defined by <xsltViewTemplateName> will be obtained, 
+		the <stylesheetLocation> method will be set with the resolved XSLT resource, 
+		and the view returned. Obviously the <xsltViewTemplateName> bean definition 
+		should have the singleton="false" property set so that new instances are created
+		for each view.
+	-->
+	<bean id="viewResolver" class="magoffin.matt.xweb.util.DefaultXsltViewResolver">
+		<property name="order" value="1"/>
+		<property name="xsltViewTemplateName" value="defaultXsltViewTemplate"/>
+		<property name="xsltPathPrefix" value="/WEB-INF/xsl/"/>
+		<property name="xsltPathSuffix" value=".xsl"/>
+	</bean>
+	<bean id="xhtmlContentTypeResolver" class="magoffin.matt.xweb.util.XhtmlContentTypeResolver"/>
+	<bean id="defaultXsltViewTemplate" class="magoffin.matt.xweb.util.XwebJaxbView" singleton="false">
+		<property name="contentType" value="text/html; charset=UTF-8"/>
+		<property name="requestContextAttribute" value="magoffin.matt.xweb.REQ"/>
+		<property name="cache" value="${xslt.cache}"/>
+		<property name="indent" value="false"/>
+		<property name="jaxbContext" value="magoffin.matt.ma2.domain"/>
+		<property name="messagesSource" ref="messageSource"/>
+		<property name="webHelper" ref="webHelper"/>
+		<property name="debugMessageResource" value="false"/>
+		<property name="transformerFactory" ref="transformerFactory"/>
+		<property name="marshallerProperties">
+			<map>
+				<entry key="com.sun.xml.bind.namespacePrefixMapper">
+					<ref bean="jaxbNamespacePrefixMapper"/>
+				</entry>
+			</map>
+		</property>
+		<property name="appSettingsCache">
+			<bean name="schemaCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"> 
+				<property name="cacheManager" ref="cacheManager"/> 
+				<property name="cacheName" value="magoffin.matt.xweb.app_settings_cache"/> 
+			</bean>
+		</property>
+	</bean>
+	<bean id="serviceXsltViewTemplate" parent="defaultXsltViewTemplate" singleton="false">
+		<property name="contentType" value="text/xml; charset=UTF-8"/>
+	</bean>
+	<bean id="serviceViewResolver" parent="viewResolver">
+		<property name="order" value="2"/>
+		<property name="xsltViewTemplateName" value="serviceXsltViewTemplate"/>
+		<property name="xsltPathPrefix" value="/WEB-INF/xsl/service/"/>
+		<property name="xsltPathSuffix" value=".xsl"/>
+	</bean>
+	<bean id="jsonXsltViewTemplate" parent="defaultXsltViewTemplate" singleton="false">
+		<property name="contentType" value="text/javascript; charset=UTF-8"/>
+	</bean>
+	<bean id="jsonViewResolver" parent="viewResolver">
+		<property name="order" value="3"/>
+		<property name="xsltViewTemplateName" value="jsonXsltViewTemplate"/>
+		<property name="xsltPathPrefix" value="/WEB-INF/xsl/json/"/>
+		<property name="xsltPathSuffix" value=".xsl"/>
+	</bean>
+	
+	<bean id="themeMessageSource" parent="messageSource">
+		<property name="bundleClassLoader">
+			<bean class="magoffin.matt.ma2.web.util.ThemeAwareResourceLoader">
+				<property name="webHelper" ref="webHelper"/>
+			</bean>
+		</property>
+		<property name="basenames">
+			<list>
+				<value>theme-messages</value>
+			</list>
+		</property>
+		<property name="parent" ref="messageSource"/>
+	</bean>
+	
+	<bean id="themeXsltViewTemplate" parent="defaultXsltViewTemplate" singleton="false">
+		<property name="contentTypeResolver" ref="xhtmlContentTypeResolver"/>
+		<property name="messagesSource" ref="themeMessageSource"/>
+	</bean>
+	
+	<bean id="themeViewResolver" class="magoffin.matt.xweb.util.DefaultXsltViewResolver">
+		<property name="order" value="4"/>
+		<property name="xsltViewTemplateName" value="themeXsltViewTemplate"/>
+		<property name="xsltPathPrefix" value="/WEB-INF/"/>
+		<property name="xsltPathSuffix" value=".xsl"/>
+	</bean>
+	
+	<bean id="themeDynamicCssViewTemplate" parent="defaultXsltViewTemplate" singleton="false">
+		<property name="messagesSource" ref="themeMessageSource"/>
+		<property name="contentType" value="text/css"/>
+	</bean>
+	
+	<bean id="themeDynamicCssViewResolver" class="magoffin.matt.xweb.util.DefaultXsltViewResolver">
+		<property name="order" value="5"/>
+		<property name="xsltViewTemplateName" value="themeDynamicCssViewTemplate"/>
+		<property name="xsltPathPrefix" value="/WEB-INF/"/>
+		<property name="xsltPathSuffix" value="-dynamic.xsl"/>
+	</bean>
+	
+	<bean id="themeDynamicJavaScriptViewTemplate" parent="defaultXsltViewTemplate" singleton="false">
+		<property name="messagesSource" ref="themeMessageSource"/>
+		<property name="contentType" value="text/javascript"/>
+	</bean>
+	
+	<bean id="themeDynamicJavaScriptViewResolver" class="magoffin.matt.xweb.util.DefaultXsltViewResolver">
+		<property name="order" value="6"/>
+		<property name="xsltViewTemplateName" value="themeDynamicJavaScriptViewTemplate"/>
+		<property name="xsltPathPrefix" value="/WEB-INF/"/>
+		<property name="xsltPathSuffix" value="-dynamic.xsl"/>
+	</bean>
+	
+	<bean id="customThemeViewResolver" class="magoffin.matt.xweb.util.DefaultXsltViewResolver">
+		<property name="order" value="7"/>
+		<property name="xsltViewTemplateName" value="themeXsltViewTemplate"/>
+		<property name="xsltPathPrefix" value="file://${theme.path}/"/>
+		<property name="xsltPathSuffix" value=".xsl"/>
+		<property name="useAbsolutePaths" value="true"/>
+	</bean>
+	
+	<bean id="customThemeDynamicCssViewResolver" class="magoffin.matt.xweb.util.DefaultXsltViewResolver">
+		<property name="order" value="8"/>
+		<property name="xsltViewTemplateName" value="themeDynamicCssViewTemplate"/>
+		<property name="xsltPathPrefix" value="file://${theme.path}/"/>
+		<property name="xsltPathSuffix" value="-dynamic.xsl"/>
+		<property name="useAbsolutePaths" value="true"/>
+	</bean>
+	
+	<bean id="customThemeDynamicJavaScriptViewResolver" class="magoffin.matt.xweb.util.DefaultXsltViewResolver">
+		<property name="order" value="9"/>
+		<property name="xsltViewTemplateName" value="themeDynamicJavaScriptViewTemplate"/>
+		<property name="xsltPathPrefix" value="file://${theme.path}/"/>
+		<property name="xsltPathSuffix" value="-dynamic.xsl"/>
+		<property name="useAbsolutePaths" value="true"/>
+	</bean>
+	
+	<!-- As a backup to the default view handler, use the XmlViewResolver to handle 
+		all other views -->
+	<bean id="viewResolver2" class="org.springframework.web.servlet.view.XmlViewResolver">
+		<property name="order" value="10"/>
+	</bean>
+	
+	<!-- Finally, a view resolver for JSTL views. -->
+	<bean id="jspViewResolver" 
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"> 
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/> 
+		<property name="prefix" value="/WEB-INF/jsp/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean> 
+	
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- one of the properties available; the maximum file size in bytes -->
+		<property name="maxUploadSize" value="500000000"/>
+	</bean>
+	
+	<bean id="editModelDynamicBinder"
+		class="magoffin.matt.xweb.util.DynamicInitializerRequestDataBinder">
+		<constructor-arg index="0">
+			<map>
+				<entry key="uiMetadata" value-ref="editInitializer"/>
+			</map>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="editInitializer" class="magoffin.matt.ma2.web.util.EditInitializer">
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+	</bean>
+		
+	<!--==============================================================================
+		Controllers
+	    ==============================================================================-->
+	
+	<!-- Abstract base form definition. -->
+	<bean id="baseController" abstract="true">
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="systemBiz" ref="systemBiz"/>
+		<property name="webHelper" ref="webHelper"/>
+	</bean>
+	
+	<!-- Abstract base form definition for XML services. -->
+	<bean id="baseServiceController" parent="baseController" abstract="true">
+		<property name="successView" value="xml-service"/>
+		<property name="errorView" value="xml-service"/>
+	</bean>
+	
+	<!--==============================================================================
+		Home: the start of it all!
+	    ==============================================================================-->
+	
+	<!-- Setup wizard form -->
+	<bean name="setupWizardForm" class="magoffin.matt.ma2.web.SetupWizard">
+		<property name="commandName" value="cmd"/>
+		<property name="commandClass" value="magoffin.matt.ma2.web.SetupWizard$Command"/>
+		<property name="webHelper" ref="webHelper"/>
+		<property name="pageAttribute" value="currPage"/>
+		<property name="pages">
+			<list>
+				<value>setup-welcome</value>
+				<value>setup-features</value>
+				<value>setup-db</value>
+				<value>setup-filesystem</value>
+				<value>setup-other</value>
+				<value>setup-advanced</value>
+				<value>setup-confirm</value>
+			</list>
+		</property>
+		<property name="validator">
+			<bean class="magoffin.matt.ma2.web.SetupWizard$SetupCommandValidator">
+				<property name="fileSystemPage" value="2"/>
+			</bean>
+		</property>
+		<property name="successView" value="setup-complete"/>
+		<property name="allowDirtyBack" value="true"/>
+		<property name="settingDao" ref="settingsDao"/>
+		<property name="originalHibernateDialect" value="${hibernate.dialect}"/>
+		<property name="requireAdmin" value="${app.setup.admin.required}"/>
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="defaultSettings">
+			<map>
+				<entry key="hibernate.dialect" value="${hibernate.dialect}"/>
+				<entry key="lucene.index.base.path" value="${lucene.index.base.path}"/>
+				<entry key="collection.root.path" value="${collection.root.path}"/>
+				<entry key="theme.path" value="${theme.path}"/>
+				<entry key="cache.path" value="${cache.path}"/>
+				<entry key="resource.path" value="${resource.path}"/>
+				<entry key="mail.from" value="${mail.from}"/>
+				<entry key="crypto.key" value="${crypto.key}"/>
+				<entry key="crypto.salt" value="${crypto.salt}"/>
+				<entry key="crypto.pbe.salt" value="${crypto.pbe.salt}"/>
+				<entry key="xslt.cache" value="${xslt.cache}"/>
+				<entry key="feature.registration" value="${feature.registration}"/>
+				<entry key="feature.upload.applet" value="${feature.upload.applet}"/>
+			</map>
+		</property>
+		<property name="advancedProperties">
+			<bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+				<property name="locations">
+					<list>
+						<value>classpath:/env.properties</value>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+		<!-- Home -->
+	<bean id="home"  parent="baseController" class="magoffin.matt.ma2.web.HomeController">
+		<property name="commandClass" value="magoffin.matt.ma2.web.HomeController$Command"/>
+		<property name="successView" value="home"/>
+		<property name="userBiz" ref="userBiz"/>
+		<property name="mediaBiz" ref="mediaBiz"/>
+		<property name="albumDao" ref="albumDao"/>
+	</bean>
+	
+	<bean id="homePostProcessor" class="magoffin.matt.ma2.web.HomeController$PostProcessor">
+		<constructor-arg index="0" ref="home"/>
+	</bean>
+	
+	<!-- Help -->
+	<bean id="help" parent="baseController" class="magoffin.matt.ma2.web.HelpController">
+		<property name="successView" value="help/default"/>
+		<property name="customViews">
+			<map>
+				<entry key="help.themepak" value="help/themepak"/>
+				<entry key="help.sharedalbums" value="help/sharedalbums"/>
+				<entry key="help.watermark" value="help/watermark"/>
+			</map>
+		</property>
+	</bean>
+	
+	<!-- View settings -->
+	<bean id="viewSettingsForm" parent="baseController" 
+		class="magoffin.matt.ma2.web.ViewSettingsForm">
+		<property name="commandClass" value="magoffin.matt.ma2.web.ViewSettingsForm$Command"/>
+		<property name="formView" value="view-settings"/>
+	</bean>
+	
+	<!-- User prefs form -->
+	<bean id="preferencesForm" parent="baseController"
+		class="magoffin.matt.ma2.web.PreferencesForm">
+		<property name="commandClass" value="magoffin.matt.ma2.support.PreferencesCommand"/>
+		<property name="formView" value="preferences-form"/>
+		<property name="successView" value="home-redirect"/>
+		<property name="userBiz" ref="userBiz"/>
+	</bean>
+	
+	<!-- Move items to new collection form -->
+	<bean id="moveItemsForm" parent="baseController"
+		class="magoffin.matt.ma2.web.MoveItemsForm">
+		<property name="commandClass" value="magoffin.matt.ma2.support.MoveItemsCommand"/>
+		<property name="bindOnNewForm" value="true"/>
+		<property name="formView" value="move-items-form"/>
+		<property name="successView" value="xml-service"/>
+		<property name="userBiz" ref="userBiz"/>
+		<property name="mediaBiz" ref="mediaBiz"/>
+	</bean>
+	
+	<!-- View Album -->
+	<bean id="viewAlbum"  parent="baseController" class="magoffin.matt.ma2.web.ViewAlbumController">
+		<property name="commandClass" value="magoffin.matt.ma2.web.ViewAlbumController$Command"/>
+		<property name="successView" value="themes"/>
+		<property name="mediaBiz" ref="mediaBiz"/>
+		<property name="searchBiz" ref="searchBiz"/>
+		<property name="userBiz" ref="userBiz"/>
+	</bean>
+	
+	<!-- View MediaItem info (with Theme) -->
+	
+	<bean id="mediaItemInfo" parent="baseController" 
+		class="magoffin.matt.ma2.web.service.MediaItemInfoController">
+		<property name="successView" value="themes"/>
+		<property name="mediaBiz" ref="mediaBiz"/>
+	</bean>
+	
+	<!-- Browse Albums -->
+	<bean id="browseAlbums"  parent="baseController" 
+		class="magoffin.matt.ma2.web.BrowseAlbumsController">
+		<property name="successView" value="themes"/>
+		<property name="userBiz" ref="userBiz"/>
+		<property name="searchBiz" ref="searchBiz"/>
+	</bean>
+	
+	<!-- sortAlbumItems: service to change ordering of album items. -->
+	<bean id="sortAlbumItems" parent="baseController" 
+		class="magoffin.matt.ma2.web.SortMediaItemsForm">
+		<property name="commandClass" 
+			value="magoffin.matt.ma2.web.SortMediaItemsForm$Command"/>
+		<property name="bindOnNewForm" value="true"/>
+		<property name="mediaBiz" ref="mediaBiz"/>
+		<property name="formView" value="sort-items"/>
+		<property name="successView" value="home-redirect"/>
+	</bean>
+	
+	<!--==============================================================================
+		Admin: system admin tasks
+	    ==============================================================================-->
+	
+	<!-- admin home -->
+	<bean id="adminHome"  parent="baseController" class="magoffin.matt.ma2.web.admin.HomeController">
+		<property name="successView" value="admin"/>
+		<property name="userBiz" ref="userBiz"/>
+	</bean>
+	
+	<!-- delete a theme -->	
+	<bean id="themeDelete" parent="baseServiceController" 
+		class="magoffin.matt.ma2.web.admin.DeleteThemeController"/>
+	
+	<!-- view a theme or themes -->	
+	<bean id="themeView" parent="baseController" 
+		class="magoffin.matt.ma2.web.admin.ThemesController">
+		<property name="successView" value="theme-view"/>
+	</bean>
+	
+	<!-- view a user or users -->	
+	<bean id="userView" parent="baseController" 
+		class="magoffin.matt.ma2.web.admin.UsersController">
+		<property name="userBiz" ref="userBiz"/>
+		<property name="successView" value="user-view"/>
+	</bean>
+	
+	<!--==============================================================================
+		Media/Shadow servers: serve up media items and shadows
+	    ==============================================================================-->
+	
+	<!-- Media -->
+	<bean id="media"  parent="baseController" class="magoffin.matt.ma2.web.MediaServerController">
+		<property name="cacheSeconds" value="${media.cache.seconds}"/>
+		<property name="ioBiz" ref="ioBiz"/>
+		<property name="mediaBiz" ref="mediaBiz"/>
+		<property name="executorService" ref="threadPoolExecutorService"/>
+	</bean>
+	
+	<!-- Shadow -->
+	<bean id="shadow"  parent="baseController" class="magoffin.matt.ma2.web.ShadowServerController">
+		<property name="cacheSeconds" value="${media.cache.seconds}"/>
+		<property name="shadowCache">
+			<bean class="org.springframework.cache.ehcache.EhCacheFactoryBean"> 
+				<property name="cacheManager" ref="cacheManager"/> 
+				<property name="cacheName" value="magoffin.matt.ma2.web.ShadowServer.CACHE"/> 
+			</bean>			
+		</property>
+	</bean>
+	
+	<!-- Theme dynamic CSS server -->
+	<bean id="themeDynamicCss" parent="baseController" 
+		class="magoffin.matt.ma2.web.DynamicThemeResourceController">
+		<property name="themeResourceName" value="css"/>
+		<property name="successView" value="themes"/>
+		<property name="cacheSeconds" value="${theme.cache.seconds}"/>
+	</bean>
+	
+	<!-- Theme dynamic JavaScript server -->
+	<bean id="themeDynamicJavaScript" parent="baseController" 
+		class="magoffin.matt.ma2.web.DynamicThemeResourceController">
+		<property name="themeResourceName" value="javascript"/>
+		<property name="successView" value="themes"/>
+		<property name="cacheSeconds" value="${theme.cache.seconds}"/>
+	</bean>
+	
+	<!-- Theme resource server -->
+	<bean id="themeResource" parent="baseController" 
+		class="magoffin.matt.ma2.web.ThemeResourceController">
+		<property name="fileTypeMap" ref="fileTypeMap"/>
+		<property name="cacheSeconds" value="${theme.cache.seconds}"/>
+	</bean>
+	
+	<!-- User resource server -->
+	<bean id="userResource" parent="baseController" 
+		class="magoffin.matt.ma2.web.UserResourceController">
+		<property name="fileTypeMap" ref="fileTypeMap"/>
+		<property name="cacheSeconds" value="${user.resource.cache.seconds}"/>
+	</bean>
+	
+	<!-- Download Album ->
+	<bean id="downloadAlbum"  parent="baseController" 
+		class="magoffin.matt.ma2.web.DownloadAlbumController">
+		<property name="ioBiz" ref="ioBiz"/>
+		<property name="mediaBiz" ref="mediaBiz"/>
+	</bean-->
+	
+	<!-- Download Items -->
+	<bean id="downloadItems"  parent="baseController" 
+		class="magoffin.matt.ma2.web.DownloadItemsForm">
+		<property name="commandClass" 
+			value="magoffin.matt.ma2.support.ExportItemsCommand"/>
+		<property name="bindOnNewForm" value="true"/>
+		<property name="ioBiz" ref="ioBiz"/>
+		<property name="mediaBiz" ref="mediaBiz"/>
+		<property name="searchBiz" ref="searchBiz"/>
+		<property name="workBiz" ref="workBiz"/>
+		<property name="formView" value="download-media-form"/>
+		<property name="successView" value="xml-service"/>
+	</bean>
+	
+	<!-- User prefs form -->
+	<bean id="addCommentForm" parent="baseController"
+		class="magoffin.matt.ma2.web.AddCommentForm">
+		<property name="commandClass" value="magoffin.matt.ma2.support.UserCommentCommand"/>
+		<property name="bindOnNewForm" value="true"/>
+		<property name="formView" value="add-comment-form"/>
+		<property name="successView" value="xml-service"/>
+		<property name="mediaBiz" ref="mediaBiz"/>
+	</bean>
+	
+	<!--==============================================================================
+		Registration: allow user to self-register and then confirm registration.
+	    ==============================================================================-->
+
+	<!-- Register wizard -->
+	<bean id="registerForm" parent="baseController" class="magoffin.matt.ma2.web.RegisterForm">
+		<property name="userBiz" ref="userBiz"/>
+		<property name="pages">
+			<list>
+				<value>registration</value>
+				<value>registration-validate</value>
+			</list>
+		</property>
+		<property name="validator" ref="userValidator"/>
+		<property name="successView" value="registration-complete"/>
+		<property name="cancelView" value="home-redirect"/>
+		<property name="allowDirtyBack" value="true"/>
+	</bean>
+	
+	<!-- Register confirmation -->
+	<bean id="registerConfirm" parent="baseController" class="magoffin.matt.ma2.web.RegisterConfirmController">
+		<property name="userBiz" ref="userBiz"/>
+		<property name="commandClass" value="magoffin.matt.ma2.support.LogonCommand"/>
+		<property name="successView" value="registration-confirmed"/>
+		<property name="errorView" value="logon"/>
+	</bean>
+	
+	<!--==============================================================================
+		Forgot password: allow user to reset own password.
+		==============================================================================-->
+	
+	<!-- Forgot password -->
+	<bean id="forgotPassword" parent="baseController" 
+		class="magoffin.matt.ma2.web.ForgotPasswordForm">
+		<property name="commandClass" value="magoffin.matt.ma2.support.LogonCommand"/>
+		<property name="userBiz" ref="userBiz"/>
+		<property name="formView" value="forgot-password"/>
+		<property name="successView" value="forgot-password-complete"/>
+	</bean>	
+	
+	<!-- "forgot my password" confirm form -->
+	<bean id="forgotPasswordConfirm" parent="baseController"
+			class="magoffin.matt.ma2.web.ForgotPasswordConfirmForm">
+		<property name="commandClass" value="magoffin.matt.ma2.support.LogonCommand"/>
+		<property name="userBiz" ref="userBiz"/>
+		<property name="bindOnNewForm" value="true"/>
+		<property name="formView" value="change-password"/>
+		<property name="successView" value="home-redirect"/>
+	</bean>
+	
+	<!--==============================================================================
+		Logon/logoff: Log on, log off.
+	    ==============================================================================-->
+	
+	<!-- Logon -->
+	<bean id="logonForm" parent="baseController" class="magoffin.matt.ma2.web.LogonForm">
+		<property name="userBiz" ref="userBiz"/>
+		<property name="commandClass" value="magoffin.matt.ma2.support.LogonCommand"/>
+		<property name="validator" ref="logonValidator"/>
+		<property name="formView" value="logon"/>
+		<property name="bindOnNewForm" value="true"/>
+		<property name="successView" value="home-redirect"/>
+	</bean>
+	<bean id="logonPopForm" parent="logonForm">
+		<property name="successView" value="popup-close"/>
+	</bean>
+	
+	<!-- Logoff -->
+	<bean id="logoff" parent="baseController" class="magoffin.matt.ma2.web.LogoffController">
+		<property name="successView" value="logon-redirect"/>
+	</bean>
+	
+	<!--==============================================================================
+		addMediaForm: upload new media items
+		==============================================================================-->
+	
+	<bean id="addMediaForm" parent="baseController" 
+		class="magoffin.matt.ma2.web.UploadMediaForm">
+		<property name="ioBiz" ref="ioBiz"/>
+		<property name="userBiz" ref="userBiz"/>
+		<property name="secondsToWaitToComplete" value="5"/>
+		<property name="commandClass" value="magoffin.matt.ma2.support.AddMediaCommand"/>
+		<property name="formView" value="upload-media"/>
+		<property name="successView" value="home-redirect"/>
+		<property name="bindOnNewForm" value="true"/>
+		<property name="validator">
+			<bean class="magoffin.matt.ma2.validation.AddMediaValidator"/>
+		</property>
+	</bean>
+	
+	<bean id="addMediaServiceForm" parent="addMediaForm">
+		<property name="formView" value="upload-media-service"/>
+	</bean>
+	
+	<bean id="addMediaServiceXml" parent="addMediaForm">
+		<property name="formView" value="xml-service-response"/>
+	</bean>
+	
+	<!--==============================================================================
+		addToAlbumService: service to add items to an Album
+		==============================================================================-->
+	
+	<bean id="addToAlbumService" parent="baseServiceController" 
+			class="magoffin.matt.ma2.web.service.AddToAlbumController">
+		<property name="albumDao" ref="albumDao"/>
+		<property name="mediaBiz" ref="mediaBiz"/>
+	</bean>
+	
+	<bean id="albumFeedAtom10Service" parent="baseServiceController"
+		class="magoffin.matt.ma2.web.service.AlbumFeedController">
+		<property name="commandClass" 
+			value="magoffin.matt.ma2.support.BrowseAlbumsCommand"/>
+		<property name="searchBiz" ref="searchBiz"/>
+		<property name="userBiz" ref="userBiz"/>
+		<property name="successView" value="album-feed-atom-1.0"/>
+	</bean>
+	
+	<!--==============================================================================
+		addToCollectionService: service to add items to an Album
+		==============================================================================-->
+	
+	<!--bean id="addToCollectionService" parent="addMediaForm" >
+		<property name="successView" value="xml-service"/>
+	</bean-->
+	
+	<!--==============================================================================
+		deleteAlbumService: service to delete an Album.
+		==============================================================================-->
+	
+	<bean id="deleteAlbumService" parent="baseServiceController" 
+			class="magoffin.matt.ma2.web.service.DeleteAlbumController">
+		<property name="mediaBiz" ref="mediaBiz"/>
+		<property name="validator">
+			<bean class="magoffin.matt.ma2.web.service.DeleteAlbumController$CommandValidator"/>
+		</property>
+	</bean>
+	
+	<!--==============================================================================
+		deleteCollectionService: service to delete an Collection.
+		==============================================================================-->
+	
+	<bean id="deleteCollectionService" parent="baseServiceController" 
+		class="magoffin.matt.ma2.web.service.DeleteCollectionController">
+		<property name="collectionDao" ref="collectionDao"/>
+		<property name="mediaBiz" ref="mediaBiz"/>
+		<property name="validator">
+			<bean class="magoffin.matt.ma2.web.service.DeleteCollectionController$CommandValidator"/>
+		</property>
+	</bean>
+	
+	<!--==============================================================================
+		deleteItemsService: service to delete media items.
+		==============================================================================-->
+	
+	<bean id="deleteItemsService" parent="baseServiceController" 
+		class="magoffin.matt.ma2.web.service.DeleteMediaController">
+		<property name="mediaBiz" ref="mediaBiz"/>
+	</bean>
+	
+	<!-- downloadTheme: download a theme pack. -->
+	
+	<bean id="downloadTheme" parent="baseController" 
+		class="magoffin.matt.ma2.web.DownloadThemeController"/>
+	
+	<!-- editAlbumForm: create a new Album or modify an existing one. -->
+	<!--bean id="editAlbumValidator" class="magoffin.matt.ma2.validation.EditAlbumValidator"/-->
+	<bean id="editAlbumForm" parent="baseController" 
+		class="magoffin.matt.ma2.web.AlbumForm">
+		<property name="mediaBiz" ref="mediaBiz"/>
+		<property name="formView" value="album-form"/>
+		<property name="successView" value="xml-service"/>
+		<property name="sessionForm" value="true"/>
+		<property name="binderTemplate" ref="editModelDynamicBinder"/>
+	</bean>
+	
+	<!-- editCollectionForm: create a new Collection or modify an existing one. -->
+	<!--bean id="editCollectionValidator" class="magoffin.matt.ma2.validation.EditCollectionValidator"/-->
+	<bean id="editCollectionForm" parent="baseController" 
+		class="magoffin.matt.ma2.web.CollectionForm">
+		<property name="userBiz" ref="userBiz"/>
+		<property name="formView" value="collection-form"/>
+		<property name="successView" value="xml-service"/>
+		<property name="sessionForm" value="true"/>
+	</bean>
+	
+	<!-- editThemeForm: create a new Theme or modify an existing one. -->
+	<bean id="editThemeForm" parent="baseController" 
+		class="magoffin.matt.ma2.web.admin.ThemeForm">
+		<property name="formView" value="theme-form"/>
+		<property name="successView" value="admin"/>
+		<property name="sessionForm" value="true"/>
+	</bean>
+	
+	<!-- editUserForm: create a new User or modify an existing one. -->
+	<bean id="editUserValidator" class="magoffin.matt.ma2.validation.EditUserValidator"/>
+	<bean id="editUserForm" parent="baseController" 
+		class="magoffin.matt.ma2.web.admin.UserForm">
+		<property name="userBiz" ref="userBiz"/>
+		<property name="formView" value="user-form"/>
+		<property name="successView" value="xml-service"/>
+		<property name="validator" ref="editUserValidator"/>
+		<property name="sessionForm" value="true"/>
+	</bean>
+	
+	<!--==============================================================================
+		jobInfoService: service to get information about a submitted work request.
+	     ==============================================================================-->
+	
+	<bean id="jobInfoService" parent="baseServiceController" 
+			class="magoffin.matt.ma2.web.service.JobInfoController"/>
+	
+	<bean id="jobsInfoService" parent="baseServiceController" 
+		class="magoffin.matt.ma2.web.service.JobsInfoController">
+		<property name="successView" value="json"/>
+	</bean>
+
+	<!--==============================================================================
+		mediaItemInfoService: service to get a single media item info.
+		==============================================================================-->
+	
+	<bean id="mediaItemInfoService" parent="baseServiceController" 
+		class="magoffin.matt.ma2.web.service.MediaItemInfoController">
+		<property name="mediaBiz" ref="mediaBiz"/>
+		<property name="successView" value="xml-service-session"/>
+	</bean>
+	
+	<bean id="searchMediaItemsService" parent="baseServiceController" 
+		class="magoffin.matt.ma2.web.service.SearchMediaItemsController">
+		<property name="searchBiz" ref="searchBiz"/>
+		<property name="successView" value="media-search-results"/>
+		<property name="searchDateFormat" ref="searchDateFormat"/>
+	</bean>
+	
+	<!--==============================================================================
+		mediaItemsService: service to get list of media items.
+		==============================================================================-->
+	
+	<bean id="mediaItemsService" parent="baseServiceController" 
+		class="magoffin.matt.ma2.web.service.MediaItemsController">
+		<property name="userBiz" ref="userBiz"/>
+		<property name="mediaBiz" ref="mediaBiz"/>
+		<property name="mediaItemDao" ref="mediaItemDao"/>
+		<property name="successView" value="media-items"/>
+	</bean>
+	
+	<!--==============================================================================
+		messagesService: service to get list of Matte message resources.
+		==============================================================================-->
+	
+	<bean id="messagesService" parent="baseServiceController" 
+		class="magoffin.matt.ma2.web.service.NoopController">
+		<property name="successView" value="messages"/>
+	</bean>
+	
+	<!--==============================================================================
+		newAlbumService: service to create a new Album.
+		==============================================================================-->
+	
+	<bean id="newAlbumService" parent="baseServiceController" 
+			class="magoffin.matt.ma2.web.service.NewAlbumController">
+		<property name="albumDao" ref="albumDao"/>
+		<property name="validator">
+			<bean class="magoffin.matt.ma2.web.service.NewAlbumController$CommandValidator"/>
+		</property>
+	</bean>
+	
+	<!--==============================================================================
+		newCollectionService: service to create a new Collection.
+		==============================================================================-->
+	
+	<bean id="newCollectionService" parent="baseServiceController" 
+			class="magoffin.matt.ma2.web.service.NewCollectionController">
+		<property name="userBiz" ref="userBiz"/>
+		<property name="validator">
+			<bean class="magoffin.matt.ma2.web.service.NewCollectionController$CommandValidator"/>
+		</property>
+	</bean>
+	
+	<!--==============================================================================
+		removeFromAlbumService: service to create a new Collection.
+		==============================================================================-->
+	
+	<bean id="removeFromAlbumService" parent="baseServiceController" 
+		class="magoffin.matt.ma2.web.service.RemoveFromAlbumController">
+		<property name="albumDao" ref="albumDao"/>
+		<property name="mediaBiz" ref="mediaBiz"/>
+	</bean>
+	
+	<!-- reindexService: service to reindex. -->
+	<bean id="reindexService" parent="baseServiceController" 
+		class="magoffin.matt.ma2.web.admin.ReindexController">
+		<property name="indexBiz" ref="indexBiz"/>
+	</bean>
+	
+	<!-- setMediaItemRatingService: service to set the rating on media items. -->
+	<bean id="setMediaItemRatingService" parent="baseServiceController" 
+		class="magoffin.matt.ma2.web.service.MediaItemRatingController">
+		<property name="mediaBiz" ref="mediaBiz"/>
+	</bean>
+	
+	<!-- setAlbumParentService: service to set the parent for an album. -->
+	<bean id="setAlbumParentService" parent="baseServiceController" 
+		class="magoffin.matt.ma2.web.service.SetAlbumParentController">
+		<property name="mediaBiz" ref="mediaBiz"/>
+	</bean>
+	
+	<!-- setAlbumPosterService: service to set the poster item for an album. -->
+	<bean id="setAlbumPosterService" parent="baseServiceController" 
+		class="magoffin.matt.ma2.web.service.SetAlbumPosterController">
+		<property name="mediaBiz" ref="mediaBiz"/>
+	</bean>
+	
+	<!-- shareAlbumService: service to save the sharing settings. -->
+	<bean id="shareAlbumService" parent="baseServiceController" 
+		class="magoffin.matt.ma2.web.service.ShareAlbumController">
+		<property name="commandClass" 
+			value="magoffin.matt.ma2.support.ShareAlbumCommand"/>
+		<property name="mediaBiz" ref="mediaBiz"/>
+	</bean>
+	
+	<!-- sortAlbumsService: service to save the sharing settings. -->
+	<bean id="sortAlbumsService" parent="baseController" 
+		class="magoffin.matt.ma2.web.SortAlbumsForm">
+		<property name="commandClass" 
+			value="magoffin.matt.ma2.web.SortAlbumsForm$Command"/>
+		<property name="bindOnNewForm" value="true"/>
+		<property name="mediaBiz" ref="mediaBiz"/>
+		<property name="searchBiz" ref="searchBiz"/>
+		<property name="formView" value="sort-albums"/>
+		<property name="successView" value="xml-service"/>
+	</bean>
+	
+	<!-- saveMediaInfoService: service to save media info. -->
+	<bean id="saveMediaInfoService" parent="baseServiceController" 
+		class="magoffin.matt.ma2.web.service.SaveMediaItemInfoController">
+		<property name="mediaBiz" ref="mediaBiz"/>
+		<property name="commandClass" 
+			value="magoffin.matt.ma2.support.MediaInfoCommand"/>
+		<property name="mediaDateFormat">
+			<bean class="magoffin.matt.util.SimpleThreadSafeDateFormat">
+				<property name="datePattern" value="yyyy-MM-dd HH:mm:ss"/>
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- themesService: service to administer themes. -->
+	
+	<bean id="themesService" parent="baseServiceController" 
+		class="magoffin.matt.ma2.web.admin.ThemesController">
+		<property name="systemBiz" ref="systemBiz"/>
+	</bean>
+	
+	<!-- userIndexService: service to get the user index. -->
+	
+	<bean id="userIndexService" parent="baseServiceController" 
+		class="magoffin.matt.ma2.web.admin.UserIndexController">
+		<property name="searchBiz" ref="searchBiz"/>
+	</bean>
+	
+	<!-- userFormService: service to administer a user. -->
+	
+	<bean id="userFormService" parent="baseController" 
+		class="magoffin.matt.ma2.web.admin.UserForm">
+		<property name="userBiz" ref="userBiz"/>
+		<property name="formView" value="xml-service"/>
+		<property name="successView" value="xml-service"/>
+	</bean>
+	
+</beans>

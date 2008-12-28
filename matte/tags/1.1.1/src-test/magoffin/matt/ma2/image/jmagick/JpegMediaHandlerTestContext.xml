@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	
+	<bean id="testJpegMediaHandler" class="magoffin.matt.ma2.image.jmagick.JpegMediaHandler">
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="mediaBiz" ref="testMediaBiz"/>
+		<property name="jmagickMediaEffectMap">
+			<map>
+				<entry key="scale">
+					<bean class="magoffin.matt.ma2.image.jmagick.ScaleEffect">
+						<property name="mediaBiz" ref="testMediaBiz"/>
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="testMediaBiz" class="magoffin.matt.ma2.biz.impl.MockMediaBiz">
+		<property name="baseDir" value="/tmp"/>
+	</bean>
+	
+</beans>
