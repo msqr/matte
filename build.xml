@@ -1005,7 +1005,7 @@
 		description="Build the JavaDocs from SVN tag versions">
 
 		<echo />
-		<echo message="Building JavaDocs for version ${cvs.build.version}..."/>
+		<echo message="Building JavaDocs for version ${svn.tag}..."/>
 
 		<ant dir="${svn.dir.build}" target="javadoc" inheritall="no">
 			<property name="build.version" value="${svn.tag}"/>
