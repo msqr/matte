@@ -52,7 +52,6 @@ public class MediaItemRatingController extends AbstractCommandController {
 	
 	private MediaBiz mediaBiz = null;
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected ModelAndView handle(HttpServletRequest request,
 			HttpServletResponse response, Object command, BindException errors)

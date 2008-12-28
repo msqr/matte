@@ -62,7 +62,6 @@ public class HomeController extends AbstractCommandController {
 	private MediaBiz mediaBiz = null;
 	private AlbumDao albumDao = null;
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	protected ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object command, BindException errors) throws Exception {
 		Command cmd = (Command)command;
@@ -189,7 +188,6 @@ public class HomeController extends AbstractCommandController {
 			return myController.getSuccessView().equalsIgnoreCase(viewName);
 		}
 
-		@SuppressWarnings("unchecked")
 		public void process(XData xData, HttpServletRequest request) {
 			BizContext context = myController.getWebHelper().getBizContext(request,true);
 			

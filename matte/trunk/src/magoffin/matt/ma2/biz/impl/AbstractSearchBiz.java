@@ -64,7 +64,6 @@ public abstract class AbstractSearchBiz implements SearchBiz {
 	/* (non-Javadoc)
 	 * @see magoffin.matt.ma2.biz.SearchBiz#findAlbumsForBrowsing(magoffin.matt.ma2.support.BrowseAlbumsCommand, magoffin.matt.ma2.domain.PaginationCriteria, magoffin.matt.ma2.biz.BizContext)
 	 */
-	@SuppressWarnings("unchecked")
 	public SearchResults findAlbumsForBrowsing(final BrowseAlbumsCommand command, PaginationCriteria pagination, BizContext context) {
 		// look for BrowseModePlugin to support this mode
 		List<BrowseModePlugin> browsePlugins = systemBiz.getPluginsOfType(

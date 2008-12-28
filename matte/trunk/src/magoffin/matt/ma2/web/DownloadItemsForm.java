@@ -100,7 +100,6 @@ public class DownloadItemsForm extends AbstractForm {
 		return viewModel;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected ModelAndView onSubmit(HttpServletRequest request,
 			HttpServletResponse response, Object command,	BindException errors)

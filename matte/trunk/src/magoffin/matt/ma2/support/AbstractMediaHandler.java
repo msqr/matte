@@ -249,8 +249,8 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 	 */
 	protected MediaMetadata getMediaMetadataInstance(
 			MediaRequest request,
-			@SuppressWarnings("unused") Resource mediaResource, 
-			@SuppressWarnings("unused") MediaItem item) {
+			Resource mediaResource, 
+			MediaItem item) {
 		if ( request != null 
 				&& request.getParameters().containsKey(METADATA_PARAMETER_KEY) ) {
 			return (MediaMetadata)request.getParameters().get(METADATA_PARAMETER_KEY);
@@ -478,9 +478,7 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 	 * @param request the request
 	 * @return boolean
 	 */
-	@SuppressWarnings("unchecked")
-	protected boolean needToRotate(@SuppressWarnings("unused")
-			MediaItem item, MediaRequest request) {
+	protected boolean needToRotate(MediaItem item, MediaRequest request) {
 		if ( request.getParameters().containsKey(
 				MediaEffect.MEDIA_REQUEST_PARAM_ROTATE_DEGREES) ) {
 			return true;

@@ -579,7 +579,6 @@ public class MediaBizImpl implements MediaBiz {
 	/* (non-Javadoc)
 	 * @see magoffin.matt.ma2.biz.MediaBiz#getAlbumWithItems(java.lang.Long, magoffin.matt.ma2.biz.BizContext)
 	 */
-	@SuppressWarnings("unchecked")
 	public Album getAlbumWithItems(Long albumId, BizContext context) {
 		Album result = albumDao.getAlbumWithItems(albumId);
 		if ( result == null ) return null;

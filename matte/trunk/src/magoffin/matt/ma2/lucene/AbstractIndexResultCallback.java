@@ -99,8 +99,7 @@ implements IndexResults, magoffin.matt.dao.BatchableDao.BatchCallback<T> {
 	 * @return the result
 	 */
 	protected BatchCallbackResult getExceptionResult(
-			@SuppressWarnings("unused") T domainObject, 
-			@SuppressWarnings("unused") Exception e ) {
+			T domainObject, Exception e ) {
 		return BatchCallbackResult.CONTINUE;
 	}
 	
