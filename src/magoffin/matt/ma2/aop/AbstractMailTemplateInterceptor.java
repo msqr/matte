@@ -125,9 +125,9 @@ public abstract class AbstractMailTemplateInterceptor implements MethodIntercept
 	 * @return a Locale to use for the mail merge
 	 */
 	protected Locale getLocale(
-			@SuppressWarnings("unused") MethodInvocation invocation, 
-			@SuppressWarnings("unused") Map<String,Object> model, 
-			@SuppressWarnings("unused") Object result) {
+			MethodInvocation invocation, 
+			Map<String,Object> model, 
+			Object result) {
 		return Locale.getDefault();
 	}
 	

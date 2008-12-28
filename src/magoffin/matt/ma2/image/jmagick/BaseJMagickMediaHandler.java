@@ -108,7 +108,6 @@ public abstract class BaseJMagickMediaHandler extends BaseImageMediaHandler {
 	 * calls {@link #setupBaseItemProperties(MediaItem, ImageInfo)}
 	 * followed by {@link #handleMetadata(MediaRequest, Resource, MediaItem)}.</p>
 	 */
-	@SuppressWarnings("unchecked")
 	public MediaItem createNewMediaItem(File inputFile) {
 		MediaItem item = getDomainObjectFactory().newMediaItemInstance();
 		ImageInfo info = null;
@@ -194,9 +193,9 @@ public abstract class BaseJMagickMediaHandler extends BaseImageMediaHandler {
 	 * @return MIME
 	 */
 	protected String getResponseMime(
-			@SuppressWarnings("unused") MediaItem item, 
-			@SuppressWarnings("unused") MediaRequest request, 
-			@SuppressWarnings("unused") Resource itemResource) {
+			MediaItem item, 
+			MediaRequest request, 
+			Resource itemResource) {
 		return getMime();
 	}
 

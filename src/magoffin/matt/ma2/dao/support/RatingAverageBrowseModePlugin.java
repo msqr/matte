@@ -233,7 +233,6 @@ public class RatingAverageBrowseModePlugin extends AbstractJdbcBrowseModePlugin 
 				return psmt;
 			}	
 		}, new ResultSetExtractor() {
-			@SuppressWarnings("unchecked")
 			public Object extractData(ResultSet rs) throws SQLException, DataAccessException {
 				PaginationIndexSection section = null;
 				while ( rs.next() ) {

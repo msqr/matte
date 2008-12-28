@@ -199,7 +199,6 @@ ApplicationContextAware, ApplicationListener {
 	/**
 	 * Call to initialize the class after configuring properties.
 	 */
-	@SuppressWarnings("unchecked")
 	public synchronized void init() {
 		if ( domainObjectFactory == null ) {
 			throw new ConfigurationException(null,"domainObjectFactory");

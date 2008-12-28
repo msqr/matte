@@ -164,10 +164,10 @@ public abstract class AbstractForm extends SimpleFormController {
 	 * @param errors the errors
 	 * @return a ModelAndView for handling the cancel request
 	 */
-	protected ModelAndView processCancel(@SuppressWarnings("unused") HttpServletRequest request, 
-			@SuppressWarnings("unused") HttpServletResponse response, 
-			@SuppressWarnings("unused") Object command, 
-			@SuppressWarnings("unused") BindException errors) {
+	protected ModelAndView processCancel(HttpServletRequest request, 
+			HttpServletResponse response, 
+			Object command, 
+			BindException errors) {
 		// default implementation is to simply return cancel view
 		return new ModelAndView(getCancelView());
 	}

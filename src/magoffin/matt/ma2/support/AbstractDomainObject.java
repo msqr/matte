@@ -36,5 +36,7 @@ import magoffin.matt.lucene.SearchMatch;
  * @version $Revision$ $Date$
  */
 public abstract class AbstractDomainObject implements SearchMatch {
-	// nothing to add
+
+	private static final long serialVersionUID = 7241163421884934097L;
+
 }

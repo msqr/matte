@@ -80,7 +80,6 @@ public class RotateEffect extends BaseJMagickMediaEffect {
 	 * @param request the current request
 	 * @return integer value, or <em>null</em> if no rotation should be performed
 	 */
-	@SuppressWarnings("unchecked")
 	private Integer getRotateDegrees(MediaItem item, MediaRequest request) {
 		if ( request.getParameters().containsKey(MediaEffect.MEDIA_REQUEST_PARAM_ROTATE_DEGREES) ) {
 			Object val = request.getParameters().get(MediaEffect.MEDIA_REQUEST_PARAM_ROTATE_DEGREES);

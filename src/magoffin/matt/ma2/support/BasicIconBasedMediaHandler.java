@@ -266,7 +266,7 @@ public class BasicIconBasedMediaHandler extends AbstractMediaHandler {
 	 * @param response the response
 	 */
 	protected void defaultHandleIconResponse(MediaItem item, 
-			@SuppressWarnings("unused") MediaRequest request, 
+			MediaRequest request, 
 			MediaResponse response) {
 		String itemMime = item.getMime();
 		byte[] icon = iconCache.get(itemMime);
