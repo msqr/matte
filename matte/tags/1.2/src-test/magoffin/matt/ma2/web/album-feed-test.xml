@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:x-data xmlns:x="http://msqr.us/xsd/jaxb-web" xmlns:ma="http://msqr.us/xsd/matte">
+	<x:x-context>
+		<x:server-name>localhost</x:server-name>
+		<x:server-port>8989</x:server-port>
+		<x:user-agent>Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en) AppleWebKit/418.9 (KHTML, like Gecko) Safari/419.3</x:user-agent>
+		<x:user-locale>en</x:user-locale>
+		<x:web-context>/ma2</x:web-context>
+		<x:path>/albumFeed.do</x:path>
+	</x:x-context>
+	<x:x-auxillary/>
+	<x:x-messages/>
+	<x:x-request>
+		<x:param key="_"/>
+		<x:param key="comment"/>
+		<x:param key="name">Album 4</x:param>
+	</x:x-request>
+	<x:x-model>
+		<ma:model>
+			<ma:album album-id="1590" allow-anonymous="false" allow-feed="false" allow-original="false" creation-date="2006-11-03T18:14:00.717+13:00" name="Album 4" sort-mode="0">
+				<ma:owner access-level="0" country="US" creation-date="2006-10-10T18:12:05.407+13:00" email="matt@msqr.us" language="en" login="matt" name="Matt" password="{SHA}H6LvR1WpImy5oKSEC9ibFYrHE5E=" quota="0" user-id="1100">
+					<ma:tz code="Pacific/Auckland" name="Pacific/Auckland" offset="43200000" ordering="559"/>
+					<ma:thumbnail-setting quality="GOOD" size="THUMB_NORMAL"/>
+					<ma:view-setting quality="GOOD" size="NORMAL"/>
+					<ma:default-theme author="Matte Development Team" author-email="matte@noplace" base-path="/core/woosh" creation-date="2006-10-10T17:21:22.121+13:00" name="Woosh" theme-id="1">
+						<ma:description>Default theme.</ma:description>
+					</ma:default-theme>
+					<ma:browse-theme author="Matte Development Team" author-email="matte@noplace" base-path="/core/woosh" creation-date="2006-10-10T17:21:22.121+13:00" name="Woosh" theme-id="1">
+						<ma:description>Default theme.</ma:description>
+					</ma:browse-theme>
+				</ma:owner>
+			</ma:album>
+			<ma:album album-id="1589" allow-anonymous="false" allow-feed="false" allow-original="false" creation-date="2006-11-02T18:14:00.717+13:00" name="Album 3" sort-mode="0">
+				<ma:owner access-level="0" country="US" creation-date="2006-10-10T18:12:05.407+13:00" email="matt@msqr.us" language="en" login="matt" name="Matt" password="{SHA}H6LvR1WpImy5oKSEC9ibFYrHE5E=" quota="0" user-id="1100">
+					<ma:tz code="Pacific/Auckland" name="Pacific/Auckland" offset="43200000" ordering="559"/>
+					<ma:thumbnail-setting quality="GOOD" size="THUMB_NORMAL"/>
+					<ma:view-setting quality="GOOD" size="NORMAL"/>
+					<ma:default-theme author="Matte Development Team" author-email="matte@noplace" base-path="/core/woosh" creation-date="2006-10-10T17:21:22.121+13:00" name="Woosh" theme-id="1">
+						<ma:description>Default theme.</ma:description>
+					</ma:default-theme>
+					<ma:browse-theme author="Matte Development Team" author-email="matte@noplace" base-path="/core/woosh" creation-date="2006-10-10T17:21:22.121+13:00" name="Woosh" theme-id="1">
+						<ma:description>Default theme.</ma:description>
+					</ma:browse-theme>
+				</ma:owner>
+			</ma:album>
+			<ma:album album-id="1588" allow-anonymous="false" allow-feed="false" allow-original="false" creation-date="2006-11-01T18:14:00.717+13:00" name="Album 2" sort-mode="0">
+				<ma:owner access-level="0" country="US" creation-date="2006-10-10T18:12:05.407+13:00" email="matt@msqr.us" language="en" login="matt" name="Matt" password="{SHA}H6LvR1WpImy5oKSEC9ibFYrHE5E=" quota="0" user-id="1100">
+					<ma:tz code="Pacific/Auckland" name="Pacific/Auckland" offset="43200000" ordering="559"/>
+					<ma:thumbnail-setting quality="GOOD" size="THUMB_NORMAL"/>
+					<ma:view-setting quality="GOOD" size="NORMAL"/>
+					<ma:default-theme author="Matte Development Team" author-email="matte@noplace" base-path="/core/woosh" creation-date="2006-10-10T17:21:22.121+13:00" name="Woosh" theme-id="1">
+						<ma:description>Default theme.</ma:description>
+					</ma:default-theme>
+					<ma:browse-theme author="Matte Development Team" author-email="matte@noplace" base-path="/core/woosh" creation-date="2006-10-10T17:21:22.121+13:00" name="Woosh" theme-id="1">
+						<ma:description>Default theme.</ma:description>
+					</ma:browse-theme>
+				</ma:owner>
+			</ma:album>
+			<ma:album album-id="1587" allow-anonymous="false" allow-feed="false" allow-original="false" creation-date="2006-11-01T12:10:00.717+13:00" name="Album 1" sort-mode="0">
+				<ma:owner access-level="0" country="US" creation-date="2006-10-10T18:12:05.407+13:00" email="matt@msqr.us" language="en" login="matt" name="Matt" password="{SHA}H6LvR1WpImy5oKSEC9ibFYrHE5E=" quota="0" user-id="1100">
+					<ma:tz code="Pacific/Auckland" name="Pacific/Auckland" offset="43200000" ordering="559"/>
+					<ma:thumbnail-setting quality="GOOD" size="THUMB_NORMAL"/>
+					<ma:view-setting quality="GOOD" size="NORMAL"/>
+					<ma:default-theme author="Matte Development Team" author-email="matte@noplace" base-path="/core/woosh" creation-date="2006-10-10T17:21:22.121+13:00" name="Woosh" theme-id="1">
+						<ma:description>Default theme.</ma:description>
+					</ma:default-theme>
+					<ma:browse-theme author="Matte Development Team" author-email="matte@noplace" base-path="/core/woosh" creation-date="2006-10-10T17:21:22.121+13:00" name="Woosh" theme-id="1">
+						<ma:description>Default theme.</ma:description>
+					</ma:browse-theme>
+				</ma:owner>
+			</ma:album>
+		</ma:model>
+	</x:x-model>
+</x:x-data>
