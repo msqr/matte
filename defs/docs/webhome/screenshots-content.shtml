@@ -272,6 +272,12 @@
 			</div>
 		</th>
 		<th>
+			<div class="versioned">
+				<a href="img/exif-gps.png" title="Image GPS support">
+					<img src="img/exif-gps-icon.png" alt="Image GPS support" width="240" height="180"/>
+				</a>
+				<div class="version-number">1.2</div>
+			</div>
 		</th>
 	</tr>
 	<tr>
@@ -283,6 +289,9 @@
 			Matte albums.
 		</td>
 		<td>
+			<strong>Image GPS support:</strong> For images with embedded GPS metadata, Matte
+			will display the latitude/longitude of the image along with a link to that 
+			location in Google Maps.
 		</td>
 	</tr>
 
