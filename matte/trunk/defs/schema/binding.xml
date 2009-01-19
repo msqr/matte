@@ -21,16 +21,10 @@
 			<xjc:superClass name="magoffin.matt.ma2.support.AbstractDomainObject"/>
 		</jaxb:globalBindings>
 		
-		<jaxb:bindings node="xs:complexType[@name='album-search-result']">
-			<hj:ignored/>
-		</jaxb:bindings>
 		<jaxb:bindings node="xs:complexType[@name='key-name-type']">
 			<hj:ignored/>
 		</jaxb:bindings>
 		<jaxb:bindings node="xs:complexType[@name='init-param-config']">
-			<hj:ignored/>
-		</jaxb:bindings>
-		<jaxb:bindings node="xs:complexType[@name='media-item-search-result']">
 			<hj:ignored/>
 		</jaxb:bindings>
 		<jaxb:bindings node="xs:complexType[@name='pagination-index']">
@@ -40,18 +34,6 @@
 			<hj:ignored/>
 		</jaxb:bindings>
 		<jaxb:bindings node="xs:complexType[@name='pagination-criteria']">
-			<hj:ignored/>
-		</jaxb:bindings>
-		<jaxb:bindings node="xs:complexType[@name='poster-search-result']">
-			<hj:ignored/>
-		</jaxb:bindings>
-		<jaxb:bindings node="xs:complexType[@name='search-results']">
-			<hj:ignored/>
-		</jaxb:bindings>
-		<jaxb:bindings node="xs:complexType[@name='shared-album-search-result']">
-			<hj:ignored/>
-		</jaxb:bindings>
-		<jaxb:bindings node="xs:complexType[@name='user-search-result']">
 			<hj:ignored/>
 		</jaxb:bindings>
 		<jaxb:bindings node="xs:complexType[@name='work-info']">
@@ -206,7 +188,26 @@
 			unique version of these objects. ->
 			<xjc:serializable uid="200605201"/>
 		</jaxb:globalBindings-->
-		
+
+		<jaxb:bindings node="xs:complexType[@name='album-search-result']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='media-item-search-result']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='poster-search-result']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='search-results']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='shared-album-search-result']">
+			<hj:ignored/>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='user-search-result']">
+			<hj:ignored/>
+		</jaxb:bindings>
+
 		<jaxb:bindings node="xs:complexType[@name='album']">
 			<hj:class>
 				<hj:table name="album"/>
