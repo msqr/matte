@@ -42,8 +42,6 @@
 		</xs:appinfo>
 	</xs:annotation>
 	
-	<xs:include schemaLocation="domain.xsd"/>
-	
 	<xs:element name="job-info" type="m:work-info"/>
 	
 	<xs:complexType name="key-name-type">
@@ -165,73 +163,4 @@
 		<xs:attribute name="max-results" type="xs:nonNegativeInteger" use="optional"/>
 	</xs:complexType>
 	
-	<xs:complexType name="album-search-result">
-		<xs:complexContent>
-			<xs:extension base="m:album">
-				<xs:sequence>
-					<xs:element name="search-poster" type="m:poster-search-result" minOccurs="0"/>
-					<xs:element name="search-album" type="m:album-search-result"
-						minOccurs="0" maxOccurs="unbounded"/>
-					<!--xs:element name="search-item" type="m:media-item-search-result"
-						minOccurs="0" maxOccurs="unbounded"/-->
-				</xs:sequence>
-				<xs:attribute name="item-count" type="xs:nonNegativeInteger"
-					use="optional"/>
-				<xs:attribute name="item-min-date" type="xs:dateTime"
-					use="optional"/>
-				<xs:attribute name="item-max-date" type="xs:dateTime"
-					use="optional"/>
-			</xs:extension>			
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="poster-search-result">
-		<xs:attribute name="item-id" type="xs:long" use="required"/>
-		<xs:attribute name="name" type="xs:string" use="required"/>
-	</xs:complexType>
-	
-	<xs:complexType name="user-search-result">
-		<xs:complexContent>
-			<xs:extension base="m:user"/>			
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="media-item-search-result">
-		<xs:complexContent>
-			<xs:extension base="m:media-item">
-				<xs:sequence>
-					<xs:element name="shared-album" type="m:shared-album-search-result"
-						minOccurs="0" maxOccurs="unbounded"/>
-				</xs:sequence>
-			</xs:extension>			
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="shared-album-search-result">
-		<xs:attribute name="anonymous-key" type="xs:string" use="required"/>
-		<xs:attribute name="name" type="xs:string" use="required"/>
-	</xs:complexType>
-	
-	<xs:complexType name="search-results">
-		<xs:annotation>
-			<xs:documentation>
-				Search results object.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="pagination" type="m:pagination-criteria"/>
-			<xs:element name="index" type="m:pagination-index" minOccurs="0"/>
-			<xs:element name="album" type="m:album-search-result" 
-				minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="item" type="m:media-item-search-result" 
-				minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="user" type="m:user-search-result" 
-				minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="total-results" type="xs:nonNegativeInteger"/>
-		<xs:attribute name="returned-results" type="xs:nonNegativeInteger"/>
-		<xs:attribute name="search-time" type="xs:long"/>
-		<xs:attribute name="is-partial-result" type="xs:boolean" default="false"/>
-	</xs:complexType>
-		
 </xs:schema>
