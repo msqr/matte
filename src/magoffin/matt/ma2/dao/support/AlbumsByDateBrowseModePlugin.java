@@ -132,11 +132,9 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 			handleSearchForAlbumsForUserByDate(user.getUserId(), command.getMaxEntries(), 
 					true, false, true, albums, albumMap, null);
 		}
-		if ( albums != null ) {
-			results.getAlbum().addAll(albums);
-			results.setTotalResults(Long.valueOf(albums.size()));
-			results.setReturnedResults(results.getTotalResults());
-		}
+		results.getAlbum().addAll(albums);
+		results.setTotalResults(Long.valueOf(albums.size()));
+		results.setReturnedResults(results.getTotalResults());
 		return results;
 	}
 

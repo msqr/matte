@@ -206,14 +206,12 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 		} catch ( IOException e ) {
 			throw new RuntimeException(e);
 		} finally {
-			if ( zout != null ) {
-				try {
-					zout.flush();
-					zout.finish();
-					zout.close();
-				} catch ( IOException e ) {
-					ioBizImpl.log.warn("IOException closing zip output stream: " +e);
-				}
+			try {
+				zout.flush();
+				zout.finish();
+				zout.close();
+			} catch ( IOException e ) {
+				ioBizImpl.log.warn("IOException closing zip output stream: " +e);
 			}
 		}
 	}

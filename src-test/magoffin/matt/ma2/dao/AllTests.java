@@ -62,7 +62,6 @@ public class AllTests {
 	/**
 	 * @param args
 	 */
-	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		junit.textui.TestRunner.run(suite());
 		AbstractSpringEnabledTransactionalTest.shutdown();
