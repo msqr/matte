@@ -327,9 +327,11 @@ public class IOBizImpl implements IOBiz {
 			throw new ObjectNotFoundException("Item ["
 					+request.getMediaItemId() +"] not available");
 		}
-		response.setItem(item);
 		MediaHandler handler = this.mediaBiz.getMediaHandler(item.getMime());
 		if ( !request.isOriginal() && !item.isUseIcon() ) {
+			String responseFilename = getResponseFilename(item, request, handler);
+			response.setFilename(responseFilename);
+			
 			File cacheFile = null;
 			if ( systemBiz.getCacheDirectory() != null ) {
 				// see if already cached and can return that
@@ -371,6 +373,9 @@ public class IOBizImpl implements IOBiz {
 						public OutputStream getOutputStream() {
 							return cacheOutput;
 						}
+						public void setFilename(String filename) {
+							// no need
+						}
 					};
 					request.getParameters().put(MediaRequest.OUTPUT_FILE_KEY, cacheFile);
 					try {
@@ -393,9 +398,21 @@ public class IOBizImpl implements IOBiz {
 		}
 		if ( response.getOutputStream() != null ) {
 			// no cache file to be used, so handle without
+			response.setItem(item);
 			handler.handleMediaRequest(item,request,response);
 		}
 		return;
+	}
+
+	private String getResponseFilename(MediaItem item, MediaRequest request, MediaHandler handler) {
+		String name = item.getName().toLowerCase();
+		String extension = '.'+handler.getFileExtension(item, request);
+		if ( name != null && !name.endsWith(extension) ) {
+			name = item.getName() +extension;
+		} else {
+			name = item.getName();
+		}
+		return name;
 	}
 
 	private void handleCacheFile(MediaItem item, MediaResponse response, File cacheFile) {

@@ -94,19 +94,18 @@ public class MediaServerController extends AbstractCommandController implements 
 			public void setMediaLength(long length) {
 				// ignore
 			}
-
 			public void setModifiedDate(long date) {
 				result.setValue(date);
 			}
-
 			public void setItem(MediaItem item) {
 				// ignore
 			}
-
 			public OutputStream getOutputStream() {
 				return null;
 			}
-			
+			public void setFilename(String filename) {
+				// ignore
+			}
 		}, context);
 		
 		// wait for export to complete...

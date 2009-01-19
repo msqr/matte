@@ -90,6 +90,16 @@ public interface MediaResponse {
 	public void setItem(MediaItem item);
 	
 	/**
+	 * Set a file name to associate with the response.
+	 * 
+	 * <p>This can be used to associate a filename with the response that
+	 * is different from the name of the item.</p>
+	 * 
+	 * @param filename the file name
+	 */
+	public void setFilename(String filename);
+	
+	/**
 	 * Get the output stream.
 	 * 
 	 * <p>This is the {@link OutputStream} that the result of processing the 

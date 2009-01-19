@@ -194,6 +194,9 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 					public void setModifiedDate(long date) {
 						// ignore
 					}
+					public void setFilename(String filename) {
+						// ignore
+					}
 				}, context);
 				processedItems.add(item.getItemId());
 			}

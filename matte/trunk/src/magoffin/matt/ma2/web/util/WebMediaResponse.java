@@ -84,24 +84,30 @@ public class WebMediaResponse implements MediaResponse {
 	}
 
 	public void setItem(MediaItem item) {
-		if ( this.filename == null && this.download ) {
-			webResponse.setHeader(
-				"Content-Disposition","attachment; filename=\"" 
-				+item.getName()+ "\"");
+		if ( this.filename == null ) {
+			this.filename = item.getName();
 		}
 	}
 
 	public OutputStream getOutputStream() {
-		if ( filename != null ) {
+		if ( this.filename != null && this.download ) {
+			// for download responses, add a filename header
 			webResponse.setHeader(
 				"Content-Disposition","attachment; filename=\"" 
-				+filename+ "\"");
+				+this.filename+ "\"");
 		}
 		try {
 			return webResponse.getOutputStream();
 		} catch ( IOException e ) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see magoffin.matt.ma2.MediaResponse#setFilename(java.lang.String)
+	 */
+	public void setFilename(String filename) {
+		this.filename = filename;
 	}
 
 	public void setModifiedDate(long date) {
