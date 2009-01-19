@@ -1,0 +1,10 @@
+Matte Release Notes
+
+@VERSION@ @BUILD_DATE@
+
+This is a minor update to the 1.2 release.
+
+Updates since 1.2 release
+
+- When downloading images make sure download file name HTTP header set
+  to a sensible value (with a proper file extension).
