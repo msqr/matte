@@ -40,6 +40,7 @@ import magoffin.matt.ma2.domain.MediaItem;
 public class BasicMediaResponse implements MediaResponse {
 	
 	private String mime = null;
+	private String filename = null;
 	private long length = 0;
 	private long modifiedDate = 0;
 	private MediaItem item = null;
@@ -95,6 +96,13 @@ public class BasicMediaResponse implements MediaResponse {
 		return outputStream;
 	}
 
+	/* (non-Javadoc)
+	 * @see magoffin.matt.ma2.MediaResponse#setFilename(java.lang.String)
+	 */
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
 	/**
 	 * @return Returns the length.
 	 */
@@ -142,6 +150,13 @@ public class BasicMediaResponse implements MediaResponse {
 	 */
 	public void setOutputStream(OutputStream outputStream) {
 		this.outputStream = outputStream;
+	}
+
+	/**
+	 * @return the filename
+	 */
+	public String getFilename() {
+		return filename;
 	}
 
 }
