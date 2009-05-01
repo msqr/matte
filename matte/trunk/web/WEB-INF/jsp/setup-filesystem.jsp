@@ -27,7 +27,7 @@
 						</ul>
 					</c:when>
 					<c:when test="${status.errors.errorCount == 1}">
-						<c:set property="error" value="${status.errors.allErrors[0]}"/>
+						<c:set var="error" value="${status.errors.allErrors[0]}"/>
 						<spring:message code="${error.code}" arguments="${error.arguments}"/><br />
 					</c:when>
 				</c:choose>
