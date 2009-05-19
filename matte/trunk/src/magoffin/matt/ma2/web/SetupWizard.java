@@ -106,12 +106,20 @@ public class SetupWizard extends AbstractWizardForm {
 	/** Validator class for SetupCommand. */
 	public static class SetupCommandValidator implements Validator {
 
+		private int featurePage = 1;
 	    private int fileSystemPage = 3;
 
 		public void validate(Object obj, Errors errors) {
 			Command command = (Command)obj;
 			
-			if ( command.page == fileSystemPage ) {
+			if ( command.page == featurePage ) {
+				// verify for all feature settings that NULL replaced by FALSE
+				for ( Map.Entry<String, String> me : command.settings.entrySet() ) {
+					if ( me.getKey().startsWith("feature.") && me.getValue() == null ) {
+						me.setValue(Boolean.FALSE.toString());
+					}
+				}
+			} else if ( command.page == fileSystemPage ) {
 				// verify index directory
 				String indexPath = command.getSettings().get("lucene.index.base.path");
 				File indexDir = new File(indexPath);
@@ -179,6 +187,20 @@ public class SetupWizard extends AbstractWizardForm {
 		 */
 		public void setFileSystemPage(int fileSystemPage) {
 			this.fileSystemPage = fileSystemPage;
+		}	
+
+		/**
+		 * @return the featurePage
+		 */
+		public int getFeaturePage() {
+			return featurePage;
+		}
+
+		/**
+		 * @param featurePage the featurePage to set
+		 */
+		public void setFeaturePage(int featurePage) {
+			this.featurePage = featurePage;
 		}
 		
 	}
