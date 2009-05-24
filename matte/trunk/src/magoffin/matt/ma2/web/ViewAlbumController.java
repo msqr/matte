@@ -130,7 +130,7 @@ public class ViewAlbumController extends AbstractCommandController {
 			}
 		}
 		
-		Theme theme = album.getTheme();
+		Theme theme = album != null ? album.getTheme() : null;
 		if ( cmd.getThemeId() != null ) {
 			Theme customTheme = getSystemBiz().getThemeById(cmd.getThemeId());
 			if ( customTheme != null ) {

@@ -234,10 +234,10 @@ public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 			return root;
 		}
 		
-		if ( itemCriteria.getStartDate() != null || itemCriteria.getEndDate() != null ) {
-			// add date range, granular to day
-			root.add(getDateRangeQuery(IndexField.ITEM_DATE, 
-					IndexField.ITEM_DATE_MONTH, itemCriteria), Occur.MUST);
+		Query dateRangeQuery = getDateRangeQuery(IndexField.ITEM_DATE, 
+				IndexField.ITEM_DATE_MONTH, itemCriteria);
+		if ( dateRangeQuery != null ) {
+			root.add(dateRangeQuery, Occur.MUST);
 		}
 
 		// now start "should" gropuing, of which one "must" match
@@ -279,7 +279,9 @@ public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 		Calendar end = criteria.getEndDate();
 		
 		// check if using start and end of month, and thus can use month dates shortcut
-		if ( start != null && end != null ) {
+		if ( start == null && end == null ) {
+			return null;
+		} else if ( start != null && end != null ) {
 			if ( start.get(Calendar.YEAR) == end.get(Calendar.YEAR)
 					&& start.get(Calendar.DAY_OF_YEAR) == end.get(Calendar.DAY_OF_YEAR)) {
 				// same day, use single day term
@@ -308,19 +310,21 @@ public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 						new Term(monthField.getFieldName(),
 						getLucene().formatDateToMonth(start.getTime())));
 			}
-		} else if ( end == null && start.get(Calendar.DAY_OF_MONTH) == 1) {
+		} else if ( end == null && start != null
+				&& start.get(Calendar.DAY_OF_MONTH) == 1) {
 			// use open ended month range
 			return new ConstantScoreRangeQuery(
 					monthField.getFieldName(),
 					getLucene().formatDateToMonth(start.getTime()),
 					null, true, false);
-		} else if ( end == null ) {
+		} else if ( end == null && start != null ) {
 			// use open ended day range
 			return new ConstantScoreRangeQuery(
 					dayField.getFieldName(),
 					getLucene().formatDateToDay(start.getTime()),
 					null, true, false);
-		} else if ( start == null && end.get(Calendar.DAY_OF_MONTH)
+		} else if ( start == null && end != null 
+				&& end.get(Calendar.DAY_OF_MONTH)
 				== end.getActualMaximum(Calendar.DAY_OF_MONTH)) {
 			// use open starting month range
 			return new ConstantScoreRangeQuery(
@@ -328,13 +332,15 @@ public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 					null,
 					getLucene().formatDateToMonth(end.getTime()),
 					false, true);
+		} else if ( end != null ) {
+			// use open starting day range
+			return new ConstantScoreRangeQuery(
+					dayField.getFieldName(),
+					null,
+					getLucene().formatDateToDay(end.getTime()),
+					false, true);
 		}
-		// use open starting day range
-		return new ConstantScoreRangeQuery(
-				dayField.getFieldName(),
-				null,
-				getLucene().formatDateToDay(end.getTime()),
-				false, true);
+		return null;
 	}
 	
 	/* (non-Javadoc)

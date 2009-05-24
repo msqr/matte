@@ -78,7 +78,8 @@ public class SetAlbumParentController extends AbstractCommandController {
 			
 			msg = new DefaultMessageSourceResolvable(
 					new String[] {"album.parent.set"}, 
-					new Object[] {parent.getName(), child.getName()},
+					new Object[] {parent.getName(), 
+							child != null ? child.getName() : ""},
 					"The album has been moved.");
 		} else {
 			Album child = mediaBiz.getAlbum(cmd.getAlbumId(), context);

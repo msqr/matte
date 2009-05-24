@@ -190,6 +190,11 @@ public class UploadMedia extends javax.swing.JApplet {
 				}
 			}
 		}
+		
+		if ( doc == null ) {
+			LOG.severe("Unable to load XML.");
+			return;
+		}
 
 		if (LOG.isLoggable(Level.FINE)) {
 			StringWriter out = new StringWriter();
