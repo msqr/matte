@@ -102,12 +102,14 @@ class GenerateUploadDataThread extends Thread {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
-			try {
-				zout.flush();
-				zout.closeEntry();
-				zout.close();
-			} catch (IOException e) {
-				// ignore
+			if ( zout != null ) {
+				try {
+					zout.flush();
+					zout.closeEntry();
+					zout.close();
+				} catch (IOException e) {
+					// ignore
+				}
 			}
 		}
 	}
