@@ -12,7 +12,7 @@
 	<dd>The <a href="http://www.hibernate.org/">Hibernate</a> OR persistence framework is used by Matte.</dd>
 
 	<dt>HyperJAXB 2</dt>
-	<dd>I've used HyperJAXB often on projects, and <a href="https://hyperjaxb.dev.java.net/">HyperJAXB 2</a> is an excellent platform for building XML-based relational Java applications.</dd>
+	<dd>I've used HyperJAXB often on projects, and <a href="https://hyperjaxb2.dev.java.net/">HyperJAXB 2</a> is an excellent platform for building XML-based relational Java applications.</dd>
 
 	<dt>Jakarta Commons</dt>
 	<dd>The <a href="http://jakarta.apache.org/commons/">Apache Jakarta Commons</a> project provides many, many useful Java packages. Matte uses <a href="http://jakarta.apache.org/commons/codec/">Codec</a> and
