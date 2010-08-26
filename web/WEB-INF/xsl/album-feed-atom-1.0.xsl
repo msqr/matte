@@ -21,19 +21,18 @@
 	===================================================================
 	$Id: album-feed-atom-1.0.xsl,v 1.10 2007/07/03 07:36:02 matt Exp $   
 -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:m="http://msqr.us/xsd/matte"
 	xmlns:x="http://msqr.us/xsd/jaxb-web"
-	xmlns:date="http://exslt.org/dates-and-times"
-	exclude-result-prefixes="m x date"
-	extension-element-prefixes="date">
+	exclude-result-prefixes="m x">
 	
 	<xsl:import href="../themes/theme-util.xsl"/>
 	
 	<xsl:output method="xml" omit-xml-declaration="no" indent="yes"/>
 	
 	<xsl:variable name="author" select="x:x-data/x:x-model[1]/m:model[1]/m:user[1]"/>
-	<xsl:variable name="date.format" select="'d MMM yyyy'"/>
+	<xsl:variable name="date.format" select="'[D01] [MNn,*-3] [Y0001]'"/>
 	
 	<xsl:template match="x:x-data">
 		<!--?xml-stylesheet href="first-x.css" type="text/css" ?-->
@@ -181,7 +180,7 @@
 					</div>
 					<div style="font-size: 60%;">
 						<br/>
-						<xsl:value-of select="date:format-date(substring($album.date,1,19),$date.format)"/>
+						<xsl:value-of select="format-date(xs:date(substring-before($album.date,'T')),$date.format)"/>
 						<xsl:text> - </xsl:text>
 						<xsl:value-of select="$total-item-count"/>
 						<xsl:text> </xsl:text>
@@ -207,19 +206,17 @@
 							<xsl:text> - </xsl:text>
 							<xsl:value-of select="key('i18n','browse.album.lastupdated')"/>
 							<xsl:text> </xsl:text>
-							<xsl:value-of select="date:format-date(substring(@modify-date, 1, 19),$date.format)"/>
+							<xsl:value-of select="format-date(xs:date(substring-before(@modify-date,'T')),$date.format)"/>
 						</xsl:if>
 						<xsl:if test="@item-count &gt; 0 and $min-date != $max-date">
 							<div class="browse-album-info">
 								<xsl:value-of select="key('i18n', 'browse.items.itemrange')"/>
 								<xsl:text> </xsl:text>
-								<xsl:value-of select="date:format-date(
-									substring($min-date, 1, 19), $date.format)"/>
+								<xsl:value-of select="format-date(xs:date(substring-before($min-date,'T')),$date.format)"/>
 								<xsl:text> </xsl:text>
 								<xsl:value-of select="key('i18n', 'to')"/>
 								<xsl:text> </xsl:text>
-								<xsl:value-of select="date:format-date(
-									substring($max-date, 1, 19), $date.format)"/>
+								<xsl:value-of select="format-date(xs:date(substring-before($max-date,'T')),$date.format)"/>
 							</div>
 						</xsl:if>
 					</div>

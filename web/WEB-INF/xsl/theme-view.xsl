@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:x="http://msqr.us/xsd/jaxb-web" 
 	xmlns:m="http://msqr.us/xsd/matte"
-	xmlns:xalan="http://xml.apache.org/xslt" 
-	xmlns:date="http://exslt.org/dates-and-times"
-	exclude-result-prefixes="m x xalan date"
-	version="1.0">
+	exclude-result-prefixes="m x"
+	version="2.0">
 	
 	<xsl:import href="tmpl/global-variables.xsl"/>
 	<xsl:import href="../themes/theme-util.xsl"/>
 	
-	<xsl:output method="xml" omit-xml-declaration="no" indent="yes" 
-		xalan:indent-amount="2"/>
+	<xsl:output method="xml" omit-xml-declaration="no" indent="yes"/>
 	
 	<!-- Entry point -->
 	<xsl:template match="x:x-data">
@@ -71,8 +69,8 @@
 				<xsl:value-of select="key('i18n','createdDate.displayName')"/>
 			</div>
 			<div>
-				<xsl:value-of select="date:format-date(substring-before(
-					@creation-date,'.'),'dd MMM yyyy')"/>
+				<xsl:value-of select="format-date(xs:date(substring-before(
+					@creation-date,'T')),'[D01] [MNn,*-3] [Y0001]')"/>
 			</div>
 		</div>
 	</xsl:template>

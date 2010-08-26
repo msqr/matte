@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:m="http://msqr.us/xsd/matte"
 	xmlns:xweb="http://msqr.us/xsd/jaxb-web"
-	xmlns:date="http://exslt.org/dates-and-times"
-	exclude-result-prefixes="m xweb date">
+	exclude-result-prefixes="m xweb">
 	
 	<xsl:import href="global-variables.xsl"/>
 
@@ -31,7 +31,8 @@
 		<xsl:if test="@createdDate">
 			<div>
 				<div class="label"><xsl:value-of select="key('i18n','createdDate.displayName')"/></div>
-				<div><xsl:value-of select="date:format-date(string(@creation-date),'d MMM yyyy')"/></div>
+				<div><xsl:value-of select="format-date(xs:date(substring-before(
+					@creation-date,'T')),'[D01] [MNn,*-3] [Y0001]')"/></div>
 			</div>
 		</xsl:if>
 		<xsl:if test="string(m:tz/@name)">

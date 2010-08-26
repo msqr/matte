@@ -19,12 +19,11 @@
 
   $Id: theme-util.xsl,v 1.15 2007/09/30 08:11:10 matt Exp $   
 -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:m="http://msqr.us/xsd/matte"
-	xmlns:date="http://exslt.org/dates-and-times"
 	xmlns:x="http://msqr.us/xsd/jaxb-web"
-	extension-element-prefixes="date"
-	exclude-result-prefixes="m x date">
+	exclude-result-prefixes="m x">
 
 	<!-- standard data vars -->
 	<xsl:variable name="aux" select="x:x-data/x:x-auxillary"/>
@@ -321,7 +320,7 @@
 			</xsl:call-template>
 		</xsl:if>
 		<xsl:text>","</xsl:text>
-		<xsl:value-of select="date:format-date(substring(@creation-date,1,19),'dd MMM yyyy')"/>
+		<xsl:value-of select="format-date(xs:date(substring-before(@creation-date,'T')),'[D01] [MNn,*-3] [Y0001]')"/>
 		<xsl:text>",</xsl:text>
 		<xsl:value-of select="@icon-width"/>
 		<xsl:text>,</xsl:text>

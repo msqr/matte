@@ -3,8 +3,7 @@
 	xmlns:x="http://msqr.us/xsd/jaxb-web" 
 	xmlns:m="http://msqr.us/xsd/matte"
 	xmlns:xalan="http://xml.apache.org/xslt" 
-	xmlns:date="http://exslt.org/dates-and-times"
-	exclude-result-prefixes="m x xalan date"
+	exclude-result-prefixes="m x xalan"
 	version="1.0">
 	
 	<xsl:import href="tmpl/global.xsl"/>
