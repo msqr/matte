@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:m="http://msqr.us/xsd/matte"
 	xmlns:x="http://msqr.us/xsd/jaxb-web"
-	xmlns:date="http://exslt.org/dates-and-times"
-	exclude-result-prefixes="m x date"
-	extension-element-prefixes="date">
+	exclude-result-prefixes="m x">
 	
 	<xsl:import href="../../theme-util.xsl"/>
 	
@@ -423,7 +422,7 @@
 					<xsl:call-template name="render-index-links">
 						<xsl:with-param name="page" select="1"/>
 						<xsl:with-param name="selected-page" select="1"/>
-						<xsl:with-param name="theme" select="$theme"/>
+						<!--xsl:with-param name="theme" select="$theme"/-->
 					</xsl:call-template>
 				</div>
 				
@@ -759,7 +758,7 @@
 				</xsl:when>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:value-of select="date:format-date(substring($date, 1, 19), 'yyyy.MM.dd')"/>
+		<xsl:value-of select="format-date(xs:date(substring-before($date, 'T')), '[Y0001].[M01].[D01]')"/>
 	</xsl:template>
 	
 	<xsl:template match="m:album" mode="child-albums">

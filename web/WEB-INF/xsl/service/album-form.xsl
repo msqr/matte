@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:x="http://msqr.us/xsd/jaxb-web" 
 	xmlns:m="http://msqr.us/xsd/matte"
-	xmlns:xalan="http://xml.apache.org/xslt" 
-	xmlns:date="http://exslt.org/dates-and-times"
-	exclude-result-prefixes="m x xalan"
-	version="1.0">
+	exclude-result-prefixes="m x"
+	version="2.0">
 
 	<xsl:import href="../tmpl/global.xsl"/>
 			
-	<xsl:output method="xml" omit-xml-declaration="no" indent="yes" 
-		xalan:indent-amount="2"/>
+	<xsl:output method="xml" omit-xml-declaration="no" indent="yes"/>
 	
 	<xsl:variable name="edit-album" 
 		select="x:x-data/x:x-model[1]/m:edit[1]/m:album[1]"/>
@@ -25,7 +23,7 @@
 			class="simple-form">
 			<p style="max-width: 300px;">
 				<xsl:choose>
-					<xsl:when test="$is-new = 'true'">
+					<xsl:when test="$is-new">
 						<xsl:value-of select="key('i18n','add.album.intro')"/>
 					</xsl:when>
 					<xsl:otherwise>
@@ -37,7 +35,7 @@
 			<div><xsl:comment>This is here to "clear" the floats.</xsl:comment></div>
 			<div class="submit">
 				<xsl:choose>
-					<xsl:when test="$is-new = 'true'">
+					<xsl:when test="$is-new">
 						<input type="submit" value="{key('i18n','add.displayName')}"/>
 					</xsl:when>
 					<xsl:otherwise>
@@ -90,7 +88,7 @@
 					<xsl:if test="@album-date">
 						<xsl:attribute name="value">
 							<xsl:value-of 
-								select="date:format-date(string(@album-date),'yyyy-MM-dd')"/>
+								select="format-date(xs:date(@album-date),'[Y0001]-[M01]-[D01]')"/>
 						</xsl:attribute>
 					</xsl:if>
 				</input>

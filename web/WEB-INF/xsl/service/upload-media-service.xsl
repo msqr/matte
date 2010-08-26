@@ -2,14 +2,12 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 	xmlns:x="http://msqr.us/xsd/jaxb-web" 
 	xmlns:m="http://msqr.us/xsd/matte"
-	xmlns:xalan="http://xml.apache.org/xslt" 
-	exclude-result-prefixes="m x xalan"
+	exclude-result-prefixes="m x"
 	version="1.0">
 	
 	<xsl:import href="../tmpl/upload-media-form.xsl"/>
 	
-	<xsl:output method="xml" omit-xml-declaration="no" indent="yes" 
-		xalan:indent-amount="2"/>
+	<xsl:output method="xml" omit-xml-declaration="no" indent="yes"/>
 	
 	<!-- Entry point -->
 	<xsl:template match="x:x-data">

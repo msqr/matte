@@ -2,8 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 	xmlns:x="http://msqr.us/xsd/jaxb-web" 
 	xmlns:m="http://msqr.us/xsd/matte"
-	xmlns:xalan="http://xml.apache.org/xslt" 
-	exclude-result-prefixes="m x xalan"
+	exclude-result-prefixes="m x"
 	version="1.0">
 	
 	<xsl:import href="tmpl/global.xsl"/>

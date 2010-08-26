@@ -2,8 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 	xmlns:x="http://msqr.us/xsd/jaxb-web" 
 	xmlns:m="http://msqr.us/xsd/matte"
-	xmlns:xalan="http://xml.apache.org/xslt" 
-	exclude-result-prefixes="m x xalan"
+	exclude-result-prefixes="m x"
 	version="1.0">
 	
 	<xsl:import href="../tmpl/global.xsl"/>
@@ -12,8 +11,7 @@
 		for AJAX response into browser running in XHTM mode (Firefox)
 		otherwise .innerHTML called by Prototype will fail -->
 	
-	<xsl:output method="xml" omit-xml-declaration="yes" indent="yes" 
-		xalan:indent-amount="2"/>
+	<xsl:output method="xml" omit-xml-declaration="yes" indent="yes"/>
 	
 	<xsl:variable name="mediaspec.view" select="$acting-user/m:view-setting"/>
 	<xsl:variable name="album" select="$mod/m:model/m:album[1]"/>
