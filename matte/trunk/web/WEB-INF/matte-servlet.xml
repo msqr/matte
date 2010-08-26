@@ -81,8 +81,8 @@
 				<prop key="/mediaItemInfo.do">mediaItemInfoService</prop>
 				<prop key="/mediaItems.json">mediaItemsService</prop>
 				<prop key="/messages.json">messagesService</prop>
-				<prop key="/newAlbum.do">newAlbumService</prop>
-				<prop key="/newCollection.do">newCollectionService</prop>
+				<!--prop key="/newAlbum.do">newAlbumService</prop>
+				<prop key="/newCollection.do">newCollectionService</prop-->
 				<prop key="/removeFromAlbum.do">removeFromAlbumService</prop>
 				<prop key="/reindex.do">reindexService</prop>
 				<prop key="/saveMediaInfo.do">saveMediaInfoService</prop>
@@ -855,7 +855,7 @@
 	
 	<!--==============================================================================
 		newAlbumService: service to create a new Album.
-		==============================================================================-->
+		==============================================================================->
 	
 	<bean id="newAlbumService" parent="baseServiceController" 
 			class="magoffin.matt.ma2.web.service.NewAlbumController">
@@ -865,9 +865,9 @@
 		</property>
 	</bean>
 	
-	<!--==============================================================================
+	<!-==============================================================================
 		newCollectionService: service to create a new Collection.
-		==============================================================================-->
+		==============================================================================->
 	
 	<bean id="newCollectionService" parent="baseServiceController" 
 			class="magoffin.matt.ma2.web.service.NewCollectionController">
@@ -875,7 +875,7 @@
 		<property name="validator">
 			<bean class="magoffin.matt.ma2.web.service.NewCollectionController$CommandValidator"/>
 		</property>
-	</bean>
+	</bean-->
 	
 	<!--==============================================================================
 		removeFromAlbumService: service to create a new Collection.

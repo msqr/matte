@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:m="http://msqr.us/xsd/matte"
 	xmlns:x="http://msqr.us/xsd/jaxb-web"
-	xmlns:date="http://exslt.org/dates-and-times"
-	exclude-result-prefixes="m x date"
-	extension-element-prefixes="date">
+	exclude-result-prefixes="m x">
 	
 	<xsl:import href="../../theme-util.xsl"/>
 	
@@ -17,8 +16,8 @@
 	<!-- helper vars -->
 	<xsl:variable name="author" select="x:x-data/x:x-model[1]/m:model[1]/m:user[1]"/>
 	<xsl:variable name="theme" select="x:x-data/x:x-model[1]/m:model[1]/m:theme[1]"/>
-	<xsl:variable name="date.format" select="'d MMM yyyy'"/>
-	<xsl:variable name="time.format" select="'H:MM'"/>
+	<xsl:variable name="date.format" select="'[D] [MNn,*-3] [Y0001]'"/>
+	<xsl:variable name="time.format" select="'[H]:[m01]'"/>
 	<xsl:variable name="mode">
 		<xsl:choose>
 			<xsl:when test="$req[@key='mode']">
@@ -518,7 +517,7 @@
 		<xsl:variable name="is.odd" select="boolean(position() mod 2 = 1)"/>
 		<xsl:variable name="oddness">
 			<xsl:choose>
-				<xsl:when test="$is.odd = 'true'">
+				<xsl:when test="$is.odd">
 					<xsl:text>odd</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
@@ -561,7 +560,7 @@
 				</h2>
 				<div class="browse-album-info">
 					<xsl:if test="string-length($album.date) &gt; 0">
-						<xsl:value-of select="date:format-date(substring($album.date,1,19),$date.format)"/>
+						<xsl:value-of select="format-date(xs:date($album.date),$date.format)"/>
 						<xsl:text> - </xsl:text>
 					</xsl:if>
 					<xsl:value-of select="$total-item-count"/>
@@ -588,19 +587,17 @@
 						<xsl:text> - </xsl:text>
 						<xsl:value-of select="key('i18n','browse.album.lastupdated')"/>
 						<xsl:text> </xsl:text>
-						<xsl:value-of select="date:format-date(substring(@modify-date, 1, 19),$date.format)"/>
+						<xsl:value-of select="format-date(xs:date(@modify-date),$date.format)"/>
 					</xsl:if>
 					<xsl:if test="@item-count &gt; 0 and $min-date != $max-date">
 						<div class="browse-album-info">
 							<xsl:value-of select="key('i18n', 'browse.items.itemrange')"/>
 							<xsl:text> </xsl:text>
-							<xsl:value-of select="date:format-date(
-								substring($min-date, 1, 19), $date.format)"/>
+							<xsl:value-of select="format-date(xs:date($min-date), $date.format)"/>
 							<xsl:text> </xsl:text>
 							<xsl:value-of select="key('i18n', 'to')"/>
 							<xsl:text> </xsl:text>
-							<xsl:value-of select="date:format-date(
-								substring($max-date, 1, 19), $date.format)"/>
+							<xsl:value-of select="format-date(xs:date($max-date), $date.format)"/>
 						</div>
 					</xsl:if>
 				</div>

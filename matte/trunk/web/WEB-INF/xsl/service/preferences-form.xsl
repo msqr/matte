@@ -2,16 +2,13 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 	xmlns:x="http://msqr.us/xsd/jaxb-web" 
 	xmlns:m="http://msqr.us/xsd/matte"
-	xmlns:xalan="http://xml.apache.org/xslt" 
-	xmlns:date="http://exslt.org/dates-and-times"
-	exclude-result-prefixes="m x xalan"
+	exclude-result-prefixes="m x"
 	version="1.0">
 	
 	<xsl:import href="../tmpl/global.xsl"/>
 	<xsl:import href="../tmpl/time-zone.xsl"/>
 	
-	<xsl:output method="xml" omit-xml-declaration="no" indent="yes" 
-		xalan:indent-amount="2"/>
+	<xsl:output method="xml" omit-xml-declaration="no" indent="yes"/>
 	
 	<xsl:variable name="mediaspec.thumb" select="$acting-user/m:thumbnail-setting"/>
 	<xsl:variable name="mediaspec.view" select="$acting-user/m:view-setting"/>
