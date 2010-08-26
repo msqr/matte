@@ -5,7 +5,7 @@
 	
 	<xsl:template match="/">
 		<xsl:copy>
-			<xsl:copy-of select="@*|node()"/>
+			<xsl:copy-of select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 	
