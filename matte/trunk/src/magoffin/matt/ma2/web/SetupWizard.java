@@ -167,11 +167,7 @@ public class SetupWizard extends AbstractWizardForm {
 			}
 		}
 
-		/* (non-Javadoc)
-		 * @see org.springframework.validation.Validator#supports(java.lang.Class)
-		 */
-		@SuppressWarnings("unchecked")
-		public boolean supports(Class clazz) {
+		public boolean supports(@SuppressWarnings("rawtypes") Class clazz) {
 			return Command.class.isAssignableFrom(clazz);
 		}
 		
@@ -243,7 +239,7 @@ public class SetupWizard extends AbstractWizardForm {
 		return targetPage;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected Map referenceData(HttpServletRequest request, int page)
 			throws Exception {

@@ -65,9 +65,9 @@ public class BitwiseAndSQLFunction extends StandardSQLFunction {
 		super(name, typeValue);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public String render(List args, SessionFactoryImplementor factory) {
+	public String render(@SuppressWarnings("rawtypes") List args, 
+			SessionFactoryImplementor factory) {
 		if (args.size() != 2) {
 			throw new IllegalArgumentException("Function must be passed 2 arguments");
 		}

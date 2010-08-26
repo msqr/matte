@@ -40,11 +40,7 @@ import org.springframework.validation.Validator;
  */
 public class AddMediaValidator implements Validator {
 
-	/* (non-Javadoc)
-	 * @see org.springframework.validation.Validator#supports(java.lang.Class)
-	 */
-	@SuppressWarnings("unchecked")
-	public boolean supports(Class clazz) {
+	public boolean supports(@SuppressWarnings("rawtypes") Class clazz) {
 		return AddMediaCommand.class.isAssignableFrom(clazz);
 	}
 

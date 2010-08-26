@@ -147,9 +147,9 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
     @SuppressWarnings("unchecked")
 	private String getHeaderValue(TransportInputStream transportInputStream, String header) throws IOException {
         String contentType = null;
-        Iterator iterator = transportInputStream.getHeaders(header);
+        Iterator<String> iterator = transportInputStream.getHeaders(header);
         if (iterator.hasNext()) {
-            contentType = (String) iterator.next();
+            contentType = iterator.next();
         }
         return contentType;
     }

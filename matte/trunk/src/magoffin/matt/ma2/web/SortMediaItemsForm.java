@@ -177,7 +177,7 @@ public class SortMediaItemsForm extends AbstractForm {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	protected Map referenceData(HttpServletRequest request, Object command, Errors errors) throws Exception {
 		Command cmd = (Command)command;

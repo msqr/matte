@@ -67,7 +67,7 @@ public class MediaItemDeleteIndexInterceptor extends AbstractIndexInterceptor {
 			}
 			return;
 		} else if ( returnValue instanceof List ) {
-			List resultList = (List)returnValue;
+			List<?> resultList = (List<?>)returnValue;
 			if ( resultList.size() > 0 && resultList.get(0) instanceof MediaItem ) {
 				for ( MediaItem item : (List<MediaItem>)resultList ) {
 					if ( item.getItemId() != null ) {

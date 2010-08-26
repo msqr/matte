@@ -50,7 +50,7 @@ public class LogonForm extends AbstractForm {
 	
 	private UserBiz userBiz;
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected Map referenceData(HttpServletRequest request, Object command,
 			Errors errors) throws Exception {

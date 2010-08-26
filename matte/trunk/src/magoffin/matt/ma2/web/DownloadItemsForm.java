@@ -84,7 +84,7 @@ public class DownloadItemsForm extends AbstractForm {
 		return super.isFormSubmission(request);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	protected Map referenceData(HttpServletRequest request, Object command,
 			Errors errors) throws Exception {

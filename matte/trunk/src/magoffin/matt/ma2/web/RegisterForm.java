@@ -79,7 +79,7 @@ public class RegisterForm extends AbstractWizardForm {
 		return edit;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	protected Map referenceData(HttpServletRequest request, Object command, Errors errors, int page) throws Exception {
 		Map<String,Object> ref =  new LinkedHashMap<String,Object>();

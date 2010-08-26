@@ -201,7 +201,7 @@ public class SortAlbumsForm extends AbstractForm {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected Map referenceData(HttpServletRequest request, Object command, Errors errors) throws Exception {
 		Command cmd = (Command)command;

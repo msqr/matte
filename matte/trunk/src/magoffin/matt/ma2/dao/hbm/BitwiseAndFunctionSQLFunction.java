@@ -53,9 +53,9 @@ public class BitwiseAndFunctionSQLFunction extends BitwiseAndSQLFunction {
 	
 	private String sqlFunctionName = DEFAULT_SQL_FUNCTION_NAME;
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public String render(List args, SessionFactoryImplementor factory) {
+	public String render(@SuppressWarnings("rawtypes") List args, 
+			SessionFactoryImplementor factory) {
 		if (args.size() != 2) {
 			throw new IllegalArgumentException("Function must be passed 2 arguments");
 		}
