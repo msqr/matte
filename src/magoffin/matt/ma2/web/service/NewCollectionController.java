@@ -137,8 +137,7 @@ public class NewCollectionController extends AbstractCommandController {
 	/** Validator class. */
 	public static class CommandValidator implements Validator {
 
-		@SuppressWarnings("unchecked")
-		public boolean supports(Class clazz) {
+		public boolean supports(@SuppressWarnings("rawtypes") Class clazz) {
 			return Command.class.isAssignableFrom(clazz);
 		}
 

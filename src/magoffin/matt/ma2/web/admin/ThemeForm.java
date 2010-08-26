@@ -75,7 +75,7 @@ public class ThemeForm extends AbstractForm {
 		return cmd;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	protected Map referenceData(HttpServletRequest request, Object command, Errors errors) 
 	throws Exception {

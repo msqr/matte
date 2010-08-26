@@ -202,7 +202,7 @@ extends GenericHibernateDao<T,PK> implements IndexableDao<PK> {
 	 * @throws SQLException if an error occurs
 	 */
 	@SuppressWarnings("unchecked")
-	protected void populateIndexRow(ResultSet rs, int rowNum, BasicIndexData callbackData, RowMapper rowMapper) 
+	protected void populateIndexRow(ResultSet rs, int rowNum, @SuppressWarnings("rawtypes") BasicIndexData callbackData, RowMapper rowMapper) 
 	throws SQLException {
 		callbackData.setId(new Long(rs.getLong(this.indexObjectIdColumnName)));
 		callbackData.getDataMap().clear();

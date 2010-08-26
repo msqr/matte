@@ -37,11 +37,7 @@ import org.springframework.validation.Validator;
  */
 public class LogonValidator implements Validator {
 
-	/* (non-Javadoc)
-	 * @see org.springframework.validation.Validator#supports(java.lang.Class)
-	 */
-	@SuppressWarnings("unchecked")
-	public boolean supports(Class clazz) {
+	public boolean supports(@SuppressWarnings("rawtypes") Class clazz) {
 		return LogonCommand.class.isAssignableFrom(clazz);
 	}
 

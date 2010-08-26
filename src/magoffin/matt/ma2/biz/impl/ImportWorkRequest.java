@@ -152,7 +152,7 @@ class ImportWorkRequest implements WorkRequest {
 	}
 	
 	private void doWork() throws Exception {
-		collectionDirURL = collectionDir.toURL();
+		collectionDirURL = collectionDir.toURI().toURL();
 		
 		collection = ioBizImpl.getCollectionDao().get(command.getCollectionId());
 		collectionOwner = collection.getOwner();
@@ -527,7 +527,7 @@ class ImportWorkRequest implements WorkRequest {
 		item.setHits(0);
 		
 		// set the path using URLs so path normalized between OSes
-		URL fileUrl = mediaFile.toURL();
+		URL fileUrl = mediaFile.toURI().toURL();
 		String path = fileUrl.toString().substring(collectionDirURL.toString().length());
 		item.setPath(path);
 		if ( item.getName() == null ) {

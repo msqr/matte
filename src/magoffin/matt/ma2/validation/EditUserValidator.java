@@ -38,9 +38,8 @@ import org.springframework.validation.Errors;
  */
 public class EditUserValidator extends UserValidator {
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public boolean supports(Class clazz) {
+	public boolean supports(@SuppressWarnings("rawtypes") Class clazz) {
 		return Edit.class.isAssignableFrom(clazz);
 	}
 

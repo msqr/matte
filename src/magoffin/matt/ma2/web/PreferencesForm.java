@@ -58,7 +58,7 @@ public class PreferencesForm extends AbstractForm {
 	
 	private UserBiz userBiz;
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	protected Map referenceData(HttpServletRequest request, Object command, 
 			Errors errors) throws Exception {

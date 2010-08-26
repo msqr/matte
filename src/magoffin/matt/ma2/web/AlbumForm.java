@@ -79,7 +79,7 @@ public class AlbumForm extends AbstractForm {
 	private ThreadSafeDateFormat albumDateFormat 
 		= new SimpleThreadSafeDateFormat(DEFAULT_ALBUM_DATE_FORMAT);
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	protected Map referenceData(HttpServletRequest request, Object command, Errors errors) 
 	throws Exception {

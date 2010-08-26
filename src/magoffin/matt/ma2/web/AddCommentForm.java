@@ -53,7 +53,7 @@ public class AddCommentForm extends AbstractForm {
 
 	private MediaBiz mediaBiz;
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	protected Map referenceData(HttpServletRequest request, Object command,
 			Errors errors) throws Exception {
