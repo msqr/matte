@@ -763,7 +763,7 @@
 	</xsl:template>
 	
 	<xsl:template match="m:album" mode="child-albums">
-		<li>
+		<li xmlns="http://www.w3.org/1999/xhtml">
 			<a href="{$web-context}/album.do?key={$root-album/@anonymous-key}&amp;childKey={@anonymous-key}">
 				<xsl:value-of select="@name"/>
 			</a>
@@ -776,10 +776,10 @@
 		</xsl:if>
 		<xsl:choose>
 			<xsl:when test="$display-album = .">
-				<span class="current"><xsl:value-of select="@name"/></span>
+				<span xmlns="http://www.w3.org/1999/xhtml" class="current"><xsl:value-of select="@name"/></span>
 			</xsl:when>
 			<xsl:otherwise>
-				<a href="{$web-context}/album.do?key={$root-album/@anonymous-key}&amp;childKey={@anonymous-key}">
+				<a xmlns="http://www.w3.org/1999/xhtml" href="{$web-context}/album.do?key={$root-album/@anonymous-key}&amp;childKey={@anonymous-key}">
 					<xsl:value-of select="@name"/>
 				</a>
 			</xsl:otherwise>
@@ -811,7 +811,7 @@
 	<xsl:template name="render-slider-page-contents">
 		<xsl:param name="idx"/>
 		<div xmlns="http://www.w3.org/1999/xhtml" class="tb-thumbBox"><a href="#">
-			<xsl:text></xsl:text>
+			<xsl:text> </xsl:text>
 		</a></div>
 		<xsl:if test="$idx &lt; $page-size">
 			<xsl:call-template name="render-slider-page-contents">
