@@ -51,4 +51,7 @@ public final class WebConstants extends XwebConstants {
 	/** Session key for user's work tickets set. */
 	public static final String SES_KEY_WORK_TICKETS = "magoffin.matt.ma2.WorkTickets";
 	
+	/** Request key for a theme resource content type. */
+	public static final String REQ_KEY_THEME_RESOURCE_CONTENT_TYPE = "magoffin.matt.ma2.ThemeResourceContentType";
+	
 }

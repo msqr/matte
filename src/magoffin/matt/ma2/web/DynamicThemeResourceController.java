@@ -50,6 +50,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class DynamicThemeResourceController extends AbstractCommandController {
 	
 	private String themeResourceName = "css";
+	private String themeResourceContentType = "text/css";
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -71,6 +72,7 @@ public class DynamicThemeResourceController extends AbstractCommandController {
 		
 		Map<String,Object> viewModel = errors.getModel();
 		viewModel.put(WebConstants.DEFALUT_MODEL_OBJECT, model);
+		request.setAttribute(WebConstants.REQ_KEY_THEME_RESOURCE_CONTENT_TYPE, themeResourceContentType);
 		return new ModelAndView(
 				getSuccessView()+theme.getBasePath()+"/"+themeResourceName,
 				viewModel);
@@ -109,6 +111,20 @@ public class DynamicThemeResourceController extends AbstractCommandController {
 	 */
 	public void setThemeResourceName(String themeResourceName) {
 		this.themeResourceName = themeResourceName;
+	}
+
+	/**
+	 * @return the themeResourceContentType
+	 */
+	public String getThemeResourceContentType() {
+		return themeResourceContentType;
+	}
+
+	/**
+	 * @param themeResourceContentType the themeResourceContentType to set
+	 */
+	public void setThemeResourceContentType(String themeResourceContentType) {
+		this.themeResourceContentType = themeResourceContentType;
 	}
 	
 }
