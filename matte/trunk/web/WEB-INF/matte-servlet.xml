@@ -242,26 +242,16 @@
 		<property name="xsltPathSuffix" value=".xsl"/>
 	</bean>
 	
-	<bean id="themeDynamicCssViewTemplate" parent="defaultXsltViewTemplate" singleton="false">
+	<bean id="themeDynamicContentTypeResolver" class="magoffin.matt.ma2.web.util.ThemeXsltContentTypeResolver"/>
+	
+	<bean id="themeDynamicViewTemplate" parent="defaultXsltViewTemplate" singleton="false">
+		<property name="contentTypeResolver" ref="themeDynamicContentTypeResolver"/>
 		<property name="messagesSource" ref="themeMessageSource"/>
-		<property name="contentType" value="text/css"/>
 	</bean>
 	
-	<bean id="themeDynamicCssViewResolver" class="magoffin.matt.xweb.util.DefaultXsltViewResolver">
+	<bean id="themeDynamicViewResolver" class="magoffin.matt.xweb.util.DefaultXsltViewResolver">
 		<property name="order" value="5"/>
-		<property name="xsltViewTemplateName" value="themeDynamicCssViewTemplate"/>
-		<property name="xsltPathPrefix" value="/WEB-INF/"/>
-		<property name="xsltPathSuffix" value="-dynamic.xsl"/>
-	</bean>
-	
-	<bean id="themeDynamicJavaScriptViewTemplate" parent="defaultXsltViewTemplate" singleton="false">
-		<property name="messagesSource" ref="themeMessageSource"/>
-		<property name="contentType" value="text/javascript"/>
-	</bean>
-	
-	<bean id="themeDynamicJavaScriptViewResolver" class="magoffin.matt.xweb.util.DefaultXsltViewResolver">
-		<property name="order" value="6"/>
-		<property name="xsltViewTemplateName" value="themeDynamicJavaScriptViewTemplate"/>
+		<property name="xsltViewTemplateName" value="themeDynamicViewTemplate"/>
 		<property name="xsltPathPrefix" value="/WEB-INF/"/>
 		<property name="xsltPathSuffix" value="-dynamic.xsl"/>
 	</bean>
@@ -274,17 +264,9 @@
 		<property name="useAbsolutePaths" value="true"/>
 	</bean>
 	
-	<bean id="customThemeDynamicCssViewResolver" class="magoffin.matt.xweb.util.DefaultXsltViewResolver">
+	<bean id="customThemeDynamicViewResolver" class="magoffin.matt.xweb.util.DefaultXsltViewResolver">
 		<property name="order" value="8"/>
-		<property name="xsltViewTemplateName" value="themeDynamicCssViewTemplate"/>
-		<property name="xsltPathPrefix" value="file://${theme.path}/"/>
-		<property name="xsltPathSuffix" value="-dynamic.xsl"/>
-		<property name="useAbsolutePaths" value="true"/>
-	</bean>
-	
-	<bean id="customThemeDynamicJavaScriptViewResolver" class="magoffin.matt.xweb.util.DefaultXsltViewResolver">
-		<property name="order" value="9"/>
-		<property name="xsltViewTemplateName" value="themeDynamicJavaScriptViewTemplate"/>
+		<property name="xsltViewTemplateName" value="themeDynamicViewTemplate"/>
 		<property name="xsltPathPrefix" value="file://${theme.path}/"/>
 		<property name="xsltPathSuffix" value="-dynamic.xsl"/>
 		<property name="useAbsolutePaths" value="true"/>
@@ -542,6 +524,7 @@
 	<bean id="themeDynamicCss" parent="baseController" 
 		class="magoffin.matt.ma2.web.DynamicThemeResourceController">
 		<property name="themeResourceName" value="css"/>
+		<property name="themeResourceContentType" value="text/css"/>
 		<property name="successView" value="themes"/>
 		<property name="cacheSeconds" value="${theme.cache.seconds}"/>
 	</bean>
@@ -550,6 +533,7 @@
 	<bean id="themeDynamicJavaScript" parent="baseController" 
 		class="magoffin.matt.ma2.web.DynamicThemeResourceController">
 		<property name="themeResourceName" value="javascript"/>
+		<property name="themeResourceContentType" value="text/javascript"/>
 		<property name="successView" value="themes"/>
 		<property name="cacheSeconds" value="${theme.cache.seconds}"/>
 	</bean>
