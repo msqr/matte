@@ -19,16 +19,6 @@ J2EE servlet container to run in, such as Tomcat or JBoss. Matte also
 requires a relational database to store the data in. Matte has been 
 tested with PostgreSQL, MySQL, and Apache Derby.
 
-***** Note on Java 6 *****
-  
-  A bug in the Java 6 JAXP XSLT implementation prevents Matte from
-  running. This is Sun bug 6537167:
-
-  http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6537167
-
-  Until this bug is fixed, Matte will only work in a Java 5 runtime.
-
-
 FIRST-TIME DATABASE CREATION ==========================================
 
   You must initialize your database for first-time use. Currently 
