@@ -94,7 +94,7 @@
 	<property name="svn.username" value=""/>
 	<property name="svn.password" value=""/>
 	<property name="svn.revision" value="HEAD"/>
-	<property name="svn.dir.build" value="${dir.build}/svn"/>
+	<property name="svn.dir.build" value="${dir.base}/svn"/>
 	<property name="svn.env.src" value="example"/>
 	
 	<tstamp>
