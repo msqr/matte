@@ -228,12 +228,12 @@ the media item or downloading the entire album.</p>
 &lt;div id="ii-imageDate"&gt;
 	&lt;xsl:choose&gt;
 		&lt;xsl:when test="string-length($meta-item/@item-date) &gt;= 19"&gt;
-			&lt;xsl:value-of select="date:format-date(substring($meta-item/@item-date, 1, 19), 
-				'd MMM yyyy H:mm')"/&gt;
+			&lt;xsl:value-of select="format-dateTime(xs:dateTime($meta-item/@item-date), 
+				'[D] [MNn,*-3] [Y0001] [H]:[m01]')"/&gt;
 		&lt;/xsl:when&gt;
 		&lt;xsl:otherwise&gt;
-			&lt;xsl:value-of select="date:format-date(substring($meta-item/@creation-date, 1, 19), 
-				'd MMM yyyy H:mm')"/&gt;
+			&lt;xsl:value-of select="format-dateTime(xs:dateTime($meta-item/@creation-date), 
+				'[D] [MNn,*-3] [Y0001] [H]:[m01]')"/&gt;
 		&lt;/xsl:otherwise&gt;
 	&lt;/xsl:choose&gt;
 	&lt;xsl:if test="(not($acting-user/m:tz/@code = $meta-item/m:tz/@code))
@@ -794,7 +794,7 @@ the media item or downloading the entire album.</p>
 	&lt;xsl:value-of select="@rating"/&gt;
 	&lt;em&gt;
 		&lt;xsl:text&gt; (&lt;/xsl:text&gt;
-		&lt;xsl:value-of select="date:format-date(substring(@creation-date,1,19),'d MMM yyyy, h:mm a')"/&gt;
+		&lt;xsl:value-of select="format-dateTime(xs:dateTime(@creation-date),'[D] [MNn,*-3] [Y0001], [H]:[m01]')"/&gt;
 		&lt;xsl:text&gt;)&lt;/xsl:text&gt;
 	&lt;/em&gt;
 	&lt;br /&gt;
