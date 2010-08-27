@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC 
+	"-//SPRING//DTD BEAN//EN" 
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<bean id="myViewPropertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:/env.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!--
+		parentRedirectView: default settings for redirect views
+	-->
+	<bean id="parentRedirectView" class="magoffin.matt.xweb.util.RedirectView" 
+			abstract="true">
+		<property name="contextRelative" value="true"/>
+		<property name="webHelper" ref="webHelper"/>
+	</bean>
+	
+	<!-- home-redirect: redirect to home page -->
+	<bean id="home-redirect" parent="parentRedirectView">
+		<property name="url" value="/home.do"/>
+		<property name="modelQueryParameters">
+			<set>
+				<value>albumId</value>
+				<value>collectionId</value>
+			</set>
+		</property>
+	</bean>
+		
+	<!-- logon-redirect: redirect to logon page -->
+	<bean id="logon-redirect" parent="parentRedirectView">
+		<property name="url" value="/logon.do"/>
+	</bean>
+	
+	<!-- home-redirect: redirect to home page -->
+	<bean id="view-settings-redirect" parent="parentRedirectView">
+		<property name="url" value="/viewPreferences.do"/>
+	</bean>
+	
+	<!-- 
+		xml-service: return XML content
+	-->
+	<bean id="xml-service" parent="defaultXsltViewTemplate" 
+		class="magoffin.matt.xweb.util.XwebServiceView">
+		<property name="contentType" value="text/xml; charset=UTF-8"/>
+		<property name="stylesheetLocation" value="/WEB-INF/xsl/xml-service-response.xsl"/>
+	</bean>	
+	
+	<!-- 
+		xml-service-messages: return XML content with message resources
+	-->
+	<bean id="xml-service-messages" parent="xml-service">
+		<property name="includeXwebMessages" value="true"/>
+	</bean>	
+	
+	<!-- 
+		xml-service-session: return XML content with session resources
+	-->
+	<bean id="xml-service-session" parent="xml-service">
+		<property name="includeXwebSession" value="true"/>
+	</bean>	
+	
+	<!--
+		json: return JSON encoded data
+	-->
+	<bean id="json" class="magoffin.matt.xweb.util.JSONView">
+		<property name="contentType" value="text/javascript"/>
+		<property name="indentAmount" value="2"/>
+		<!--property name="javaBeanIgnoreProperties">
+			<set>
+				<value>class</value>
+				<value>primaryInterface</value>
+			</set>
+		</property-->
+	</bean>
+	
+	<!-- 
+		xml-service-messages: return XML content with message resources
+	-->
+	<bean id="messages" parent="jsonXsltViewTemplate"
+		class="magoffin.matt.xweb.util.XwebServiceView">
+		<property name="stylesheetLocation" value="/WEB-INF/xsl/json/messages.xsl"/>
+		<property name="includeXwebMessages" value="true"/>
+	</bean>	
+	
+</beans>

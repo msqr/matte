@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<!--
+	Example Matte environment configuration showing JMagick support.
+	
+	JMagick support depends on JMagick being correctly installed and available 
+	to the application server Matte is running in.
+-->
+<beans>
+	
+	<!-- 
+		sqlFunctionsMap
+		
+		A mapping of custom Hibernate SQL functions. This might vary between 
+		different database flavors.
+	-->
+	<bean id="sqlFunctionsMap" class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="bitwise_and">
+					<bean class="magoffin.matt.ma2.dao.hbm.BitwiseAndSQLFunction"/>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<!--
+		mediaHandlerFileExtensionMap
+		
+		A mapping of file extensions to media handlers.
+	-->
+	<bean id="mediaHandlerFileExtensionMap" 
+		class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="jpg" value-ref="jpegMediaHandler"/>
+				<entry key="png" value-ref="pngMediaHandler"/>
+			</map>
+		</property>
+	</bean>
+	
+	<!--
+		mediaHandlerMimeMap
+		
+		A mapping of MIME types to media handlers.
+	-->
+	<bean id="mediaHandlerMimeMap"
+		class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="image/jpeg" value-ref="jpegMediaHandler"/>
+				<entry key="image/png" value-ref="pngMediaHandler"/>
+			</map>
+		</property>
+	</bean>
+	
+	<!--======================================================================
+		JMagick media handler implementations
+		======================================================================-->
+	
+	<!-- JMagick JPEG handler -->
+	<bean id="jpegMediaHandler" class="magoffin.matt.ma2.image.jmagick.JpegMediaHandler">
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="mediaBiz" ref="mediaBizTarget"/>
+		<property name="userBiz" ref="userBizTarget"/>
+		<property name="jmagickMediaEffectMap" ref="jmagickEffectMap"/>
+		<property name="useJpeg2000" value="true"/>
+		<property name="jpeg2000UserAgentRegExp">
+			<list>
+				<value>Macintosh.*WebKit</value>
+			</list>
+		</property>
+		<property name="smetaPropertyMap">
+			<map>
+				<entry key="creationDateKey" value="DATE_TAKEN"/>
+			</map>
+		</property>
+	</bean>
+
+	<!-- JMagick PNG handler -->
+	<bean id="pngMediaHandler" class="magoffin.matt.ma2.image.jmagick.PngMediaHandler"
+		parent="jpegMediaHandler"/>
+	
+	<!--
+		jmagickEffectMap
+		
+		A mapping of MediaEffect handlers.
+	-->
+	<bean id="jmagickEffectMap"
+		class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="scale">
+					<bean class="magoffin.matt.ma2.image.jmagick.ScaleEffect">
+						<property name="mediaBiz" ref="mediaBizTarget"/>
+					</bean>
+				</entry>
+				<entry key="rotate">
+					<bean class="magoffin.matt.ma2.image.jmagick.RotateEffect">
+						<property name="mediaBiz" ref="mediaBizTarget"/>
+					</bean>
+				</entry>
+				<entry key="watermark">
+					<bean class="magoffin.matt.ma2.image.jmagick.BumpMapEffect">
+						<property name="mediaBiz" ref="mediaBizTarget"/>
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	
+</beans>

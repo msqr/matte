@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Matte: iPhoto AppleScript export</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" type="text/css" href="whoosh-matte.css" />
+	<link type="text/css" rel="stylesheet" href="css/SyntaxHighlighter.css"></link>
+	<script type="text/javascript" src="js/shCore.js"></script>
+	<script type="text/javascript" src="js/shBrushJava.js"></script>
+	<script type="text/javascript" src="js/shBrushXml.js"></script>
+</head>
+<body class="full">
+
+<h1>Matte: iPhoto AppleScript export</h1>
+
+<p>The binary distribution of Matte comes with a simple AppleScript that you can use to export
+an album in iPhoto so you can then import that album into Matte, preserving the name, comments, 
+and keywords you enter in iPhoto. The script is located in the <b>scripts</b> directory of 
+the binary distribution, named <b>iphoto-export.applescript</b>.</p>
+
+<h2>Requirements</h2>
+
+<p>The script requires the following:</p>
+
+<dl>
+	<dt>OS X</dt>
+	<dd>This script has been tested on OS X 10.4 and OS X 10.5. It may or may not work on 
+	other versions of OS X.</dd>
+	
+	<dt>iPhoto</dt>
+	<dd>This script has been tested only with iPhoto 5. It may or may not work on 
+	other versions of iPhoto.</dd>
+	
+	<dt>XML Tools scripting addition</dt>
+	<dd>The <a href="http://www.latenightsw.com/freeware/XMLTools2/">XML Tools</a> scripting
+	addition from Late Night Software is required. This is a free scripting addition, just 
+	follow the installation steps on their website to download and install it.</dd>
+</dl>
+
+<h2>Performing the export from iPhoto</h2>
+
+<p>Follow these steps to export an album from iPhoto:</p>
+
+<h3>Select album to export in iPhoto</h3>
+
+<p>Click on the album (or albums) you want to export in iPhoto. This can be any album, 
+including "smart" albums. Note that nested albums will not be exoprted.</p>
+
+<div class="screenshot">
+	<img src="img/iphoto-asexport-selectalbum.jpg" 
+		alt="Selecting album to export in iPhoto" width="743" height="433" />
+	<div>Selecting album to export in iPhoto.</div>
+</div>
+
+<h3>Run the iphoto-export.applescript script</h3>
+
+<p>Go to the Finder and open the <b>iphoto-export.applescript</b> file. This will open the 
+script in the <b>Script Editor</b> application. Click the <b>Run</b> button to exectue the
+script.</p>
+
+<div class="screenshot">
+	<img src="img/iphoto-asexport-runscript.png" alt="The export script in Script Editor" width="521" height="520" />
+	<div>The export script in Script Editor. Click the <b>Run</b> button to start.</div>
+</div>
+
+<p>The script will gather the details of the album you selected, and then ask you to 
+choose a foler to export the album items to. It's a good idea to create a new folder for
+the export, because it will create a new folder for the album and a new XML file that 
+contains the album detail information.</p>
+
+<div class="screenshot">
+	<img src="img/iphoto-asexport-newfolder.png" alt="Choose a folder to export to" width="517" height="400" />
+	<div>Choose a folder to export to.</div>
+</div>
+
+<p>The script will then copy the album items to your chosen folder, and create a file named
+<b>metadata.xml</b> that contains the detail information about the items.</p>
+
+<div class="screenshot">
+	<img src="img/iphoto-asexport-output.png" alt="Export results" width="363" height="192" />
+	<div>The export results.</div>
+</div>
+
+<h3>Create zip archive to upload into Matte</h3>
+
+<p>In order to import your items, you need to create a zip archive out of the exported album
+folder(s) and the metadata.xml file. You can easily do this by selecting those items in the 
+Finder, right-clicking (or control-clicking) on them and choosing <b>Create Archive</b> 
+(OS X 10.4) or <b>Compress</b> (OS X 10.5.</p>
+
+<div class="screenshot">
+	<img src="img/iphoto-asexport-makezip.jpg" alt="Create zip archive" width="364" height="192" />
+	<div>Create a zip archive.</div>
+</div>
+
+<p>This will create a zip file named <b>Archive.zip</b>.</p>
+
+<h3>Import the zip archive into Matte</h3>
+
+<p>Now you can import the <b>Archive.zip</b> file into Matte. From the <b>Add</b> screen, select
+the <b>Archive.zip</b> file you just created, and be sure to check the <b>Auto Album</b>
+checkbox so that Matte re-creates your albums for you.</p>
+
+<div class="screenshot">
+	<img src="img/iphoto-asexport-addmedia.png" alt="Import items into Matte" width="535" height="340" />
+	<div>Import the items into Matte.</div>
+</div>
+
+<p>After the import completes, you will have the album available in Matte, ready to be shared.</p>
+
+<div>
+<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=103583&amp;type=1" 
+	width="88" height="31" alt="SourceForge.net Logo" /></a>
+</div>
+<script type="text/javascript">
+	dp.SyntaxHighlighter.ClipboardSwf = 'js/clipboard.swf';
+	dp.SyntaxHighlighter.HighlightAll('code');
+</script>
+</body>
+</html>

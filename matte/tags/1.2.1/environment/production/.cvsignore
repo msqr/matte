@@ -1,0 +1,5 @@
+mime.types
+*.properties
+*.xml
+*.dtd
+*.jar
