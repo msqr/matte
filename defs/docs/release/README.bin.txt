@@ -106,7 +106,7 @@ FIRST-TIME APPSERVER SETUP ============================================
   Session for sending mail with. Thus you must configure the DataSource
   and Session the first time you install Matte.
   
-  For Tomcat 5.5, create the DataSource first by creating a deployment
+  For Tomcat 5.5+, create the DataSource first by creating a deployment
   context file named <TOMCAT HOME>/conf/Catalina/localhost/matte.xml.
   Add the below XML (adjust the parameter values as necessary for your 
   environment, but if you are following these directions from the start, 
@@ -120,7 +120,10 @@ FIRST-TIME APPSERVER SETUP ============================================
   
   page (the JavaMail Sessions section) for more information and links
   to the associated download pages. Place the JARs in the 
-  <TOMCAT HOME>/common/lib directory.
+  <TOMCAT HOME>/common/lib directory (Tomcat 5.5) or in the
+  <TOMCAT HOME>/lib directory (Tomcat 6+).
+  
+  Note that Java 6 comes with the Activation Framework already.
   
   
   POSTGRES ------------------------------------------------------------
@@ -154,7 +157,8 @@ FIRST-TIME APPSERVER SETUP ============================================
     
   Then, if you don't already have the Postgres JDBC driver added to 
   Tomcat, copy setup/lib/postgresql-8.1-407.jdbc3.jar to the 
-  <TOMCAT HOME>/common/lib directory.
+  <TOMCAT HOME>/common/lib directory (Tomcat 5.5) or in the
+  <TOMCAT HOME>/lib directory (Tomcat 6+).
 
 
   MYSQL ---------------------------------------------------------------
@@ -176,7 +180,8 @@ FIRST-TIME APPSERVER SETUP ============================================
 
   Then, if you don't already have the MySQL JDBC driver added to
   Tomcat, copy setup/lib/mysql-connector-java-5.0.5-bin.jar to the
-  <TOMCAT HOME>/common/lib directory.
+  <TOMCAT HOME>/common/lib directory (Tomcat 5.5) or in the
+  <TOMCAT HOME>/lib directory (Tomcat 6+).
   
   
 APPLICATION SETUP =====================================================
