@@ -786,6 +786,12 @@
 	<!-- Copy environment properties (to catch local env) -->
 	<target name="svn-prepare">
 		<mkdir dir="${svn.dir.build}/${dir.env.src}"/>
+		<delete>
+			<fileset dir="${svn.dir.build}/${dir.env.src}">
+			    <include name="**"/>
+			    <exclude name="README*"/>
+			</fileset>
+		</delete>
 		<copy todir="${svn.dir.build}/${dir.env.src}">
 			<fileset dir="${dir.base}/${dir.env.src}" includes="**" excludes="README*"/>
 		</copy>
