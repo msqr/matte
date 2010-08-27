@@ -3,7 +3,7 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:m="http://msqr.us/xsd/matte"
 	xmlns:x="http://msqr.us/xsd/jaxb-web"
-	exclude-result-prefixes="m x">
+	exclude-result-prefixes="m x xs">
 	
 	<xsl:import href="../../theme-util.xsl"/>
 	
@@ -17,7 +17,6 @@
 	<xsl:variable name="author" select="x:x-data/x:x-model[1]/m:model[1]/m:user[1]"/>
 	<xsl:variable name="theme" select="x:x-data/x:x-model[1]/m:model[1]/m:theme[1]"/>
 	<xsl:variable name="date.format" select="'[D] [MNn,*-3] [Y0001]'"/>
-	<xsl:variable name="time.format" select="'[H]:[m01]'"/>
 	<xsl:variable name="mode">
 		<xsl:choose>
 			<xsl:when test="$req[@key='mode']">
@@ -384,7 +383,7 @@
 	</xsl:template>
 	
 	<xsl:template match="m:index">
-		<div class="browse-index">
+		<div xmlns="http://www.w3.org/1999/xhtml" class="browse-index">
 			<xsl:variable name="name-key">
 				<xsl:text>browse.mode.</xsl:text>
 				<xsl:value-of select="$mode"/>
@@ -398,7 +397,7 @@
 	</xsl:template>
 	
 	<xsl:template name="render-browse-modes-link">
-		<span id="browse-mode-link" style="display: none;">
+		<span xmlns="http://www.w3.org/1999/xhtml" id="browse-mode-link" style="display: none;">
 			<xsl:text> | </xsl:text>
 			<span class="clickable" title="{key('i18n','browse.modes.link.title')}">
 				<xsl:value-of select="key('i18n','browse.modes.link')"/>
@@ -415,7 +414,7 @@
 			<xsl:value-of select="."/>
 			<xsl:text>.displayName</xsl:text>
 		</xsl:variable>
-		<span id="browsemodelink-{.}">
+		<span xmlns="http://www.w3.org/1999/xhtml" id="browsemodelink-{.}">
 			<xsl:attribute name="class">
 				<xsl:choose>
 					<xsl:when test="$mode = string(.)">
@@ -436,12 +435,12 @@
 		</xsl:if>
 		<xsl:choose>
 			<xsl:when test="@selected = 'true'">
-				<span class="selected">
+				<span xmlns="http://www.w3.org/1999/xhtml" class="selected">
 					<xsl:value-of select="@index-key"/>
 				</span>
 			</xsl:when>
 			<xsl:otherwise>
-				<a>
+				<a xmlns="http://www.w3.org/1999/xhtml">
 					<xsl:attribute name="href">
 						<xsl:value-of select="$web-context"/>
 						<xsl:value-of select="$web-path"/>
@@ -462,7 +461,7 @@
 		<!--div class="close-x">
 			<span class="alt-hide"><xsl:value-of select="key('i18n','close')"/></span>
 		</div-->
-		<form id="search-form" action="{$web-context}/find.do" method="post" class="simple-form">
+		<form xmlns="http://www.w3.org/1999/xhtml" id="search-form" action="{$web-context}/find.do" method="post" class="simple-form">
 			<div>
 				<label for="quick-search">
 					<xsl:value-of select="key('i18n','search.items.quick.displayName')"/>
@@ -510,7 +509,7 @@
 			<div><xsl:comment>This is here to "clear" the floats.</xsl:comment></div>
 		</form>
 		
-		<div id="search-results"/>
+		<div xmlns="http://www.w3.org/1999/xhtml" id="search-results"/>
 	</xsl:template>
 	
 	<xsl:template match="m:album">
@@ -553,14 +552,14 @@
 			</xsl:for-each>
 		</xsl:variable>
 		<xsl:variable name="total-album-count" select="count(m:search-album) + 1"/>
-		<div class="browse-album-frame {$oddness}">
+		<div xmlns="http://www.w3.org/1999/xhtml" class="browse-album-frame {$oddness}">
 			<div class="browse-{$oddness}">
 				<h2>
 					<xsl:value-of select="@name"/>
 				</h2>
 				<div class="browse-album-info">
 					<xsl:if test="string-length($album.date) &gt; 0">
-						<xsl:value-of select="format-date(xs:date($album.date),$date.format)"/>
+						<xsl:value-of select="format-date(xs:date(substring-before($album.date,'T')),$date.format)"/>
 						<xsl:text> - </xsl:text>
 					</xsl:if>
 					<xsl:value-of select="$total-item-count"/>
@@ -587,17 +586,17 @@
 						<xsl:text> - </xsl:text>
 						<xsl:value-of select="key('i18n','browse.album.lastupdated')"/>
 						<xsl:text> </xsl:text>
-						<xsl:value-of select="format-date(xs:date(@modify-date),$date.format)"/>
+						<xsl:value-of select="format-date(xs:date(substring-before(@modify-date,'T')),$date.format)"/>
 					</xsl:if>
 					<xsl:if test="@item-count &gt; 0 and $min-date != $max-date">
 						<div class="browse-album-info">
 							<xsl:value-of select="key('i18n', 'browse.items.itemrange')"/>
 							<xsl:text> </xsl:text>
-							<xsl:value-of select="format-date(xs:date($min-date), $date.format)"/>
+							<xsl:value-of select="format-date(xs:date(substring-before($min-date,'T')), $date.format)"/>
 							<xsl:text> </xsl:text>
 							<xsl:value-of select="key('i18n', 'to')"/>
 							<xsl:text> </xsl:text>
-							<xsl:value-of select="format-date(xs:date($max-date), $date.format)"/>
+							<xsl:value-of select="format-date(xs:date(substring-before($max-date,'T')), $date.format)"/>
 						</div>
 					</xsl:if>
 				</div>
@@ -610,7 +609,7 @@
 			<xsl:apply-templates select="m:search-poster"/>
 		</div>
 		<xsl:if test="position() != last()">
-			<div class="album-sep"><xsl:text> </xsl:text></div>
+			<div xmlns="http://www.w3.org/1999/xhtml" class="album-sep"><xsl:text> </xsl:text></div>
 		</xsl:if>
 		
 	</xsl:template>
@@ -624,7 +623,7 @@
 				<xsl:otherwise>even</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<div class="poster-{$oddness}">
+		<div xmlns="http://www.w3.org/1999/xhtml" class="poster-{$oddness}">
 			<a>
 				<xsl:attribute name="title">
 					<xsl:value-of select="key('i18n','browse.album.view')"/>
@@ -711,12 +710,12 @@
 		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="$sel.year = $year">
-				<span class="selected">
+				<span xmlns="http://www.w3.org/1999/xhtml" class="selected">
 					<xsl:value-of select="$sel.year"/>
 				</span>
 			</xsl:when>
 			<xsl:otherwise>
-				<a>
+				<a xmlns="http://www.w3.org/1999/xhtml">
 					<xsl:attribute name="href">
 						<xsl:value-of select="$web-context"/>
 						<xsl:value-of select="$web-path"/>
