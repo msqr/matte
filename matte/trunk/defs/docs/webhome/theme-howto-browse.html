@@ -406,10 +406,9 @@ function setShadow(el) {
 		</li>
 		
 		<li>
-			<p><b>Album date:</b> the album date is stored as the <code></code> attribute.
-			Woosh uses the <a href="http://www.exslt.org/">EXSLT</a> 
-			<code>date:format-date()</code> extension functions (included with the
-			Java 5 built-in XSLT engine) to render the date into a display-friendly format:</p>
+			<p><b>Album date:</b> the album date is stored as the <code>@album-date</code> attribute.
+			Woosh uses the XSLT 2.0 <code>format-date()</code> function to render the date into a 
+			display-friendly format:</p>
 			
 <textarea name="code" rows="1" cols="80" class="xslt">
 &lt;xsl:variable name="album.date"&gt;
@@ -422,14 +421,12 @@ function setShadow(el) {
     &lt;/xsl:otherwise&gt;
   &lt;/xsl:choose&gt;
 &lt;/xsl:variable&gt;
-&lt;xsl:value-of select="date:format-date(substring($album.date,1,19),$date.format)"/&gt;
+&lt;xsl:value-of select="format-date(xs:date(substring-before($album.date,'T')),$date.format)"/&gt;
 </textarea>
 			
-			<div class="note">This XSLT uses the <code>substring()</code> function to use just 
-			the date's first 19 characters, because the EXSLT <code>date:format-date()</code> 
-			function does not parse xs:dateTime values with precision greater than seconds. Thus, 
-			if the date contains milliseconds, they would start at character 20 of the date string, 
-			so we only want the first 19 characters here.</div>
+			<div class="note">This XSLT uses the <code>substring-before()</code> function to use just 
+			the xs:dateTime value's date component, because the <code>format-date()</code> 
+			function expects an xs:date parameter.</div>
 		</li>
 		
 		<li>
@@ -483,13 +480,13 @@ function setShadow(el) {
   &lt;div class="browse-album-info"&gt;
     &lt;xsl:value-of select="key('i18n', 'browse.items.itemrange')"/&gt;
     &lt;xsl:text&gt; &lt;/xsl:text&gt;
-    &lt;xsl:value-of select="date:format-date(
-      substring($min-date, 1, 19), $date.format)"/&gt;
+    &lt;xsl:value-of select="format-date(xs:date(
+      substring-before($min-date, 'T')), $date.format)"/&gt;
     &lt;xsl:text&gt; &lt;/xsl:text&gt;
     &lt;xsl:value-of select="key('i18n', 'to')"/&gt;
     &lt;xsl:text&gt; &lt;/xsl:text&gt;
-    &lt;xsl:value-of select="date:format-date(
-      substring($max-date, 1, 19), $date.format)"/&gt;
+    &lt;xsl:value-of select="format-date(xs:date(
+      substring-before($max-date, 'T')), $date.format)"/&gt;
   &lt;/div&gt;
 &lt;/xsl:if&gt;
 </textarea>

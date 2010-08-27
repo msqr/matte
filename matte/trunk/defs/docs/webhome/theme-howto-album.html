@@ -234,7 +234,7 @@ items from this snippet in more detail:</p>
 			&lt;/xsl:when&gt;
 		&lt;/xsl:choose&gt;
 	&lt;/xsl:variable&gt;
-	&lt;xsl:value-of select="date:format-date(substring($date, 1, 19), 'yyyy.MM.dd')"/&gt;
+	&lt;xsl:value-of select="format-date(xs:date(substring-before($date, 'T')), '[Y0001].[M01].[D01]')"/&gt;
 &lt;/xsl:template&gt;
 </textarea>
 	</li>
@@ -286,7 +286,7 @@ items from this snippet in more detail:</p>
 		&lt;/xsl:call-template&gt;
 	&lt;/xsl:if&gt;
 	&lt;xsl:text&gt;","&lt;/xsl:text&gt;
-	&lt;xsl:value-of select="date:format-date(substring(@creation-date,1,19),'dd MMM yyyy')"/&gt;
+	&lt;xsl:value-of select="format-date(xs:date(substring-before(@creation-date,'T')),'[D] [MNn,*-3] [Y0001]')"/&gt;
 	&lt;xsl:text&gt;",&lt;/xsl:text&gt;
 	&lt;xsl:value-of select="@icon-width"/&gt;
 	&lt;xsl:text&gt;,&lt;/xsl:text&gt;
