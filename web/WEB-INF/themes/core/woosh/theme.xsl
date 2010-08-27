@@ -3,7 +3,8 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:m="http://msqr.us/xsd/matte"
 	xmlns:x="http://msqr.us/xsd/jaxb-web"
-	exclude-result-prefixes="m x">
+	xpath-default-namespace="http://www.w3.org/1999/xhtml"
+	exclude-result-prefixes="m x xs">
 	
 	<xsl:import href="../../theme-util.xsl"/>
 	
@@ -799,7 +800,7 @@
 			<xsl:with-param name="css" select="'woosh.css'"/>
 			<xsl:with-param name="web-context" select="$web-context"/>
 		</xsl:call-template>
-		<script type="text/javascript">
+		<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript">
 			var webContext = '<xsl:value-of select="$web-context"/>';
 			var serverName = '<xsl:value-of select="$server-name"/>'
 			var serverPort = '<xsl:value-of select="$server-port"/>'
@@ -809,7 +810,7 @@
 	
 	<xsl:template name="render-slider-page-contents">
 		<xsl:param name="idx"/>
-		<div class="tb-thumbBox"><a href="#">
+		<div xmlns="http://www.w3.org/1999/xhtml" class="tb-thumbBox"><a href="#">
 			<xsl:text></xsl:text>
 		</a></div>
 		<xsl:if test="$idx &lt; $page-size">
@@ -820,7 +821,7 @@
 	</xsl:template>
 	
 	<xsl:template match="m:model" mode="js-data">
-		<script type="text/javascript">
+		<script xmlns="http://www.w3.org/1999/xhtml" type="text/javascript">
 			var themeId = <xsl:value-of select="$theme/@theme-id"/>;
 			var slider_width = 468;
 			var max_step = 40;
@@ -847,7 +848,6 @@
 			var imgSize = '<xsl:value-of select="$single-size"/>';
 			var imgCompress = '<xsl:value-of select="$single-quality"/>';
 			var cancelAddComment = false;
-			var themeId = <xsl:value-of select="$display-album/m:theme[1]/@theme-id"/>;
 			var imageData = [
 			[-1,-1,-1,"dummy/path","dummy name","dummy comment","dummy date"],
 			<xsl:apply-templates select="$display-album/m:item" mode="album-data"/>
@@ -872,7 +872,7 @@
 	<xsl:template name="render-index-links">
 		<xsl:param name="page"/>
 		<xsl:param name="selected-page"/>
-		<a href="javascript:showIndex({$page});" title="Show Page {$page}">
+		<a xmlns="http://www.w3.org/1999/xhtml" href="javascript:showIndex({$page});" title="Show Page {$page}">
 			<img id="index{$page}" alt="Show Page {$page}">
 				<xsl:attribute name="src">
 					<xsl:call-template name="get-resource-url">
@@ -902,7 +902,7 @@
 	
 	<xsl:template name="error-dialog">
 		<xsl:if test="m:action-messages[@key='org.apache.struts.action.GLOBAL_ERROR'] or m:action-messages[@key='org.apache.struts.action.GLOBAL_MESSAGE']">
-			<div id="msg-box-dialog" class="dialog-content">
+			<div xmlns="http://www.w3.org/1999/xhtml" id="msg-box-dialog" class="dialog-content">
 				<h3 class="dialog-title">Message</h3>
 				
 				<xsl:if test="m:action-messages[@key='org.apache.struts.action.GLOBAL_ERROR']">
@@ -938,14 +938,14 @@
 				</div>
 				
 			</div>
-			<div id="msg-box-shadow" class="dialog-shadow">
+			<div xmlns="http://www.w3.org/1999/xhtml" id="msg-box-shadow" class="dialog-shadow">
 				<xsl:text> </xsl:text>
 			</div>
 		</xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="msg" mode="global-error">
-		<li><xsl:value-of select="." disable-output-escaping="yes"/></li>
+		<li xmlns="http://www.w3.org/1999/xhtml"><xsl:value-of select="." disable-output-escaping="yes"/></li>
 	</xsl:template>
 	
 	<xsl:template match="msg" mode="global-message">
@@ -953,7 +953,7 @@
 	</xsl:template>
 	
 	<xsl:template match="msg" mode="global-messsage-list">
-		<li><xsl:value-of select="." disable-output-escaping="yes"/></li>
+		<li xmlns="http://www.w3.org/1999/xhtml"><xsl:value-of select="." disable-output-escaping="yes"/></li>
 	</xsl:template>
 	
 </xsl:stylesheet>

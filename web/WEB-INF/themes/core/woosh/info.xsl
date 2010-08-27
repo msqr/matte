@@ -3,7 +3,7 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:m="http://msqr.us/xsd/matte"
 	xmlns:x="http://msqr.us/xsd/jaxb-web"
-	exclude-result-prefixes="m x">
+	exclude-result-prefixes="m x xs">
 	
 	<xsl:import href="../../theme-util.xsl"/>
 	
@@ -130,10 +130,10 @@
 			<div id="ii-imageDate">
 				<xsl:choose>
 					<xsl:when test="string-length($meta-item/@item-date) &gt;= 19">
-						<xsl:value-of select="format-date(xs:date($meta-item/@item-date), $date.time.format)"/>
+						<xsl:value-of select="format-dateTime(xs:dateTime($meta-item/@item-date), $date.time.format)"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="format-date(xs:date($meta-item/@creation-date), $date.time.format)"/>
+						<xsl:value-of select="format-dateTime(xs:dateTime($meta-item/@creation-date), $date.time.format)"/>
 					</xsl:otherwise>
 				</xsl:choose>
 				<xsl:if test="(not($acting-user/m:tz/@code = $meta-item/m:tz/@code))
@@ -314,7 +314,7 @@
 				</xsl:when>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:value-of select="format-date(xs:date($date), '[Y0001].[M01].[D01]')"/>
+		<xsl:value-of select="format-date(xs:date(substring-before($date,'T')), '[Y0001].[M01].[D01]')"/>
 	</xsl:template>
 	
 	<xsl:template match="m:model" mode="head-common">
@@ -563,7 +563,7 @@
 		<xsl:value-of select="@rating"/>
 		<em>
 			<xsl:text> (</xsl:text>
-			<xsl:value-of select="format-date(xs:date(@creation-date),$date.time.format)"/>
+			<xsl:value-of select="format-dateTime(xs:dateTime(@creation-date),$date.time.format)"/>
 			<xsl:text>)</xsl:text>
 		</em>
 		<br />
@@ -587,7 +587,7 @@
 		<xsl:value-of select="m:comment"/>
 		<em>
 			<xsl:text> (</xsl:text>
-			<xsl:value-of select="format-date(xs:date(@creation-date),$date.time.format)"/>
+			<xsl:value-of select="format-dateTime(xs:dateTime(@creation-date),$date.time.format)"/>
 			<xsl:text>)</xsl:text>
 		</em>
 		<br />

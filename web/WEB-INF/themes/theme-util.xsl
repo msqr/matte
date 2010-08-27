@@ -206,7 +206,7 @@
 		<xsl:param name="ua-version"/>
 		<xsl:param name="ua-platform"/>
 		<xsl:param name="web-context"/>
-		<link rel="stylesheet">
+		<link  xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet">
 			<xsl:attribute name="href">
 				<xsl:call-template name="get-resource-url">
 					<xsl:with-param name="theme" select="$theme"/>
@@ -578,7 +578,7 @@
 		<xsl:variable name="first" select="substring-before($value-list,',')"/>
 		<xsl:variable name="rest" select="substring-after($value-list,',')"/>
 		
-		<option value="{$first}">
+		<option  xmlns="http://www.w3.org/1999/xhtml" value="{$first}">
 			<xsl:if test="$first = $selected-value">
 				<xsl:attribute name="selected">selected</xsl:attribute>
 			</xsl:if>
