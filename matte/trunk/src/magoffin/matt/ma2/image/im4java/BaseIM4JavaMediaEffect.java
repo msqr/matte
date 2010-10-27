@@ -26,16 +26,74 @@
 
 package magoffin.matt.ma2.image.im4java;
 
-import magoffin.matt.ma2.MediaEffect;
+import magoffin.matt.ma2.MediaRequest;
+import magoffin.matt.ma2.MediaResponse;
+import magoffin.matt.ma2.biz.MediaBiz;
+import magoffin.matt.ma2.domain.MediaItem;
+
+import org.apache.log4j.Logger;
+import org.im4java.core.IMOperation;
 
 /**
- * FIXME
+ * Base implementation of {@link magoffin.matt.ma2.image.im4java.IM4JavaMediaEffect}.
  * 
- * <p>TODO</p>
+ * <p>The configurable properties of this class are:</p>
+ * 
+ * <dl class="class-properties">
+ *   <dt>mediaBiz</dt>
+ *   <dd>The {@link MediaBiz} implementation to use.</dd>
+ * </dl>
  *
  * @author matt
  * @version $Revision$ $Date$
  */
-public abstract class BaseIM4JavaMediaEffect implements MediaEffect {
+public abstract class BaseIM4JavaMediaEffect implements IM4JavaMediaEffect {
 
+	private String key;
+	private MediaBiz mediaBiz;
+
+	/** A class logger. */
+	protected final Logger log = Logger.getLogger(getClass());
+	
+	/* (non-Javadoc)
+	 * @see magoffin.matt.ma2.MediaEffect#apply(magoffin.matt.ma2.domain.MediaItem, magoffin.matt.ma2.MediaRequest, magoffin.matt.ma2.MediaResponse)
+	 */
+	public final void apply(MediaItem item, MediaRequest request, MediaResponse response) {
+		IMOperation baseOperation = (IMOperation)request.getParameters().get(IM_OPERATION);
+		if ( baseOperation == null ) {
+			throw new RuntimeException("IMOperation not available on request");
+		}
+		applyEffect(item, request, baseOperation);
+	}
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param key the key to use
+	 */
+	public BaseIM4JavaMediaEffect(String key) {
+		this.key = "image.im4java." +key;
+	}
+	
+	/* (non-Javadoc)
+	 * @see magoffin.matt.ma2.MediaEffect#getKey()
+	 */
+	public final String getKey() {
+		return key;
+	}
+	
+	/**
+	 * @return the mediaBiz
+	 */
+	public MediaBiz getMediaBiz() {
+		return mediaBiz;
+	}
+	
+	/**
+	 * @param mediaBiz the mediaBiz to set
+	 */
+	public void setMediaBiz(MediaBiz mediaBiz) {
+		this.mediaBiz = mediaBiz;
+	}	
+	
 }

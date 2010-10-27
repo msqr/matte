@@ -48,6 +48,7 @@ import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.DomainObjectFactory;
 import magoffin.matt.ma2.biz.MediaBiz;
 import magoffin.matt.ma2.biz.UserBiz;
+import magoffin.matt.ma2.domain.Collection;
 import magoffin.matt.ma2.domain.MediaItem;
 import magoffin.matt.ma2.domain.Metadata;
 import magoffin.matt.ma2.domain.User;
@@ -355,18 +356,21 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 		// handle watermark
 		if ( CollectionUtils.isEmpty(this.noWatermarkSizes)
 				|| !this.noWatermarkSizes.contains(request.getSize()) ) {
-			User owner = mediaBiz.getMediaItemCollection(item).getOwner();
-			Resource watermark = userBiz.getUserWatermark(owner.getUserId());
-			if ( watermark != null && watermark.exists() ) {
-				MediaEffect watermarkEffect = getEffect(MediaEffect.KEY_WATERMARK, 
-						request.getParameters());
-				if ( watermarkEffect != null ) {
-					request.getParameters().put(
-						MediaEffect.MEDIA_REQUEST_PARAM_WATERMARK_RESOURCE, watermark);
-					effects.add(watermarkEffect);
-				} else {
-					log.warn("Effect [" +MediaEffect.KEY_WATERMARK 
-							+"] not configured, skipping");
+			Collection collection = mediaBiz.getMediaItemCollection(item);
+			if ( collection != null && collection.getOwner() != null ) {
+				User owner = collection.getOwner();
+				Resource watermark = userBiz.getUserWatermark(owner.getUserId());
+				if ( watermark != null && watermark.exists() ) {
+					MediaEffect watermarkEffect = getEffect(MediaEffect.KEY_WATERMARK, 
+							request.getParameters());
+					if ( watermarkEffect != null ) {
+						request.getParameters().put(
+							MediaEffect.MEDIA_REQUEST_PARAM_WATERMARK_RESOURCE, watermark);
+						effects.add(watermarkEffect);
+					} else {
+						log.warn("Effect [" +MediaEffect.KEY_WATERMARK 
+								+"] not configured, skipping");
+					}
 				}
 			}
 		}

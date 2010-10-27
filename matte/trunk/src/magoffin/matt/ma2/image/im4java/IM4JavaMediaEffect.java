@@ -27,15 +27,31 @@
 package magoffin.matt.ma2.image.im4java;
 
 import magoffin.matt.ma2.MediaEffect;
+import magoffin.matt.ma2.MediaRequest;
+import magoffin.matt.ma2.domain.MediaItem;
+
+import org.im4java.core.IMOperation;
 
 /**
- * FIXME
- * 
- * <p>TODO</p>
+ * MediaEffect API for IM4Java effects.
  *
  * @author matt
  * @version $Revision$ $Date$
  */
 public interface IM4JavaMediaEffect extends MediaEffect {
+
+	/** The MediaRequest parameter key for the base IMOperation. */
+	public static final String IM_OPERATION = 
+		"magoffin.matt.ma2.image.im4java.IMOperation";
+
+	/**
+	 * Apply effect with IM4Java.
+	 * 
+	 * @param item the MediaItem the effect is being applied to
+	 * @param request the request
+	 * @param baseOperation the IMOperation to add the effect commands to
+	 */
+	public void applyEffect(MediaItem item, MediaRequest request, 
+			IMOperation baseOperation);
 
 }

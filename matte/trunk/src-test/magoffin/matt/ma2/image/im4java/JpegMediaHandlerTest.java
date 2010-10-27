@@ -26,17 +26,36 @@
 
 package magoffin.matt.ma2.image.im4java;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.util.FileCopyUtils;
 
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
+import magoffin.matt.ma2.MediaEffect;
+import magoffin.matt.ma2.MediaQuality;
+import magoffin.matt.ma2.MediaRequest;
+import magoffin.matt.ma2.MediaSize;
 import magoffin.matt.ma2.domain.MediaItem;
 import magoffin.matt.ma2.domain.Metadata;
 import magoffin.matt.ma2.image.ImageConstants;
 import magoffin.matt.ma2.image.im4java.JpegMediaHandler;
+import magoffin.matt.ma2.support.BasicMediaRequest;
+import magoffin.matt.ma2.support.BasicMediaResponse;
+import magoffin.matt.ma2.support.Geometry;
+import magoffin.matt.ma2.support.MutableGeometry;
 
 /**
  * Test case for the {@link magoffin.matt.ma2.image.im4java.JpegMediaHandler}
@@ -54,7 +73,6 @@ public class JpegMediaHandlerTest extends AbstractSpringEnabledTransactionalTest
 	 * Test the media handler can correctly read image dimensions.
 	 * @throws IOException if an error occurs
 	 */
-	@SuppressWarnings("unchecked")
 	public void testReadDimensions() throws IOException {
 		Resource testReadDimensions 
 			= new ClassPathResource("magoffin/matt/ma2/image/dylan2.jpg");
@@ -68,6 +86,7 @@ public class JpegMediaHandlerTest extends AbstractSpringEnabledTransactionalTest
 			logger.debug("Got WxH: " +item.getWidth() +"x" +item.getHeight());
 		}
 		
+		@SuppressWarnings("unchecked")
 		List<Metadata> metaList = item.getMetadata();
 		for ( Metadata meta : metaList ) {
 			logger.debug("Got metadata [" +meta.getKey() +"]: " +meta.getValue());
@@ -76,5 +95,103 @@ public class JpegMediaHandlerTest extends AbstractSpringEnabledTransactionalTest
 		assertEquals(ImageConstants.JPEG_MIME, item.getMime());
 	}
 	
+	/**
+	 * Test the media handler can correctly scale images.
+	 * @throws IOException if an error occurs
+	 */
+	@SuppressWarnings("null")
+	public void testAllSizesAndQualities() throws IOException {
+		Enumeration<URL> imageDirs = getClass().getClassLoader().getResources("magoffin/matt/ma2/image/");
+		File[] images = null;
+		while ( imageDirs.hasMoreElements() ) {
+			URL imageDir = imageDirs.nextElement();
+			UrlResource r = new UrlResource(imageDir);
+			images = r.getFile().listFiles(new FilenameFilter() {
+				private Set<String> types = new HashSet<String>(
+						Arrays.asList("jpg", "png"));
+				public boolean accept(File dir, String name) {
+					int idx = name.lastIndexOf('.');
+					return idx > 0 && idx < (name.length()-1)
+						&& types.contains(name.substring(idx+1).toLowerCase());
+				}
+			});
+		}
 
+		assertNotNull(images);
+		assertTrue(images.length > 0);
+		
+		StringBuilder outMsg = new StringBuilder();
+		
+		for ( File imageFile : images ) {
+			// copy to tmp file so MediaBiz finds
+			File tmpFile = File.createTempFile(imageFile.getName()+"-", 
+					".jpg", new File("/tmp"));
+			tmpFile.deleteOnExit();
+			FileCopyUtils.copy(imageFile, tmpFile);
+			
+			MediaItem item = testJpegMediaHandler.createNewMediaItem(tmpFile);
+			item.setPath(tmpFile.getName());
+			
+			@SuppressWarnings("unchecked")
+			List<Metadata> metaList = item.getMetadata();
+			for ( Metadata meta : metaList ) {
+				logger.debug("Got metadata [" +meta.getKey() +"]: " +meta.getValue());
+			}
+			
+			Set<MediaQuality> qualitySet = EnumSet.allOf(MediaQuality.class);
+			Set<MediaSize> sizeSet = EnumSet.allOf(MediaSize.class);
+			
+			for ( MediaSize size : sizeSet ) {
+				for ( MediaQuality quality : qualitySet ) {
+					File tmpOutputFile = File.createTempFile(imageFile.getName()+"-"
+							+size +"-" +quality +"-", ".jpg");
+					BasicMediaRequest request = new BasicMediaRequest(null, size, quality);
+					request.getParameters().put(MediaRequest.OUTPUT_FILE_KEY, tmpOutputFile);
+					BasicMediaResponse response = new BasicMediaResponse(
+							new FileOutputStream(tmpOutputFile));
+					
+					long time = System.currentTimeMillis();
+					testJpegMediaHandler.handleMediaRequest(item,  request, response);
+					time = System.currentTimeMillis() - time;
+					
+					assertTrue(tmpOutputFile.length() > 0);
+					if ( logger.isDebugEnabled() ) {
+						String msg = "Created size " +size +" quality [" +quality +"] in "
+							+time +"ms: " +tmpOutputFile.getAbsolutePath();
+						logger.debug(msg);
+						outMsg.append(msg).append("\n");
+					}
+					
+					// verify dimensions
+					MutableGeometry inGeo = new MutableGeometry(item.getWidth(), item.getHeight());
+					Geometry outGeo = testJpegMediaHandler.getMediaBiz().getScaledGeometry(item, request);
+					if ( request.getParameters().containsKey(MediaEffect.MEDIA_REQUEST_PARAM_ROTATE_DEGREES) ) {
+						Integer degrees = (Integer)request.getParameters().get(
+								MediaEffect.MEDIA_REQUEST_PARAM_ROTATE_DEGREES);
+						if ( Math.abs(degrees) == 90 ) {
+							MutableGeometry copy = new MutableGeometry(outGeo);
+							copy.swapWidthAndHeight();
+							outGeo = copy;
+							inGeo.swapWidthAndHeight();
+						}
+					}
+					MediaItem outItem = testJpegMediaHandler.createNewMediaItem(tmpOutputFile);
+					if ( inGeo.getWidth() > outGeo.getWidth() ) {
+						assertEquals(outGeo.getWidth(), outItem.getWidth());
+					} else {
+						assertEquals(inGeo.getWidth(), outItem.getWidth());
+					}
+					if ( inGeo.getHeight() > outGeo.getHeight() ) {
+						assertEquals(outGeo.getHeight(), outItem.getHeight());
+					} else {
+						assertEquals(inGeo.getHeight(), outItem.getHeight());
+					}
+				}
+			}
+		}
+		if ( logger.isDebugEnabled() ) {
+			logger.debug("Output images: \n" +outMsg);
+		}
+	}
+		
 }

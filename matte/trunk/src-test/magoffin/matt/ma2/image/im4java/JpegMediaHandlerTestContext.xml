@@ -8,11 +8,14 @@
 		<property name="mediaBiz" ref="testMediaBiz"/>
 		<property name="im4JavaMediaEffectMap">
 			<map>
-				<!--entry key="scale">
-					<bean class="magoffin.matt.ma2.image.jmagick.ScaleEffect">
+				<entry key="rotate">
+					<bean class="magoffin.matt.ma2.image.im4java.RotateEffect"/>
+				</entry>
+				<entry key="scale">
+					<bean class="magoffin.matt.ma2.image.im4java.ScaleEffect">
 						<property name="mediaBiz" ref="testMediaBiz"/>
 					</bean>
-				</entry-->
+				</entry>
 			</map>
 		</property>
 	</bean>

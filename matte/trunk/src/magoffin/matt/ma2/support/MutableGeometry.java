@@ -1,7 +1,9 @@
 /* ===================================================================
- * Geometry.java
+ * MutableGeometry.java
  * 
- * Copyright (c) 2002 Matt Magoffin.
+ * Created Oct 28, 2010 11:30:41 AM
+ * 
+ * Copyright (c) 2010 Matt Magoffin.
  * 
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License as 
@@ -24,61 +26,31 @@
 
 package magoffin.matt.ma2.support;
 
+import magoffin.matt.ma2.support.Geometry.Mode;
+
 /**
- * Simple class to represent a width and height.
- * 
- * <p>This class is immuntable. See {@link MutableGeometry} for a geometry
- * object whose values are changable.</p>
- * 
- * @author Matt Magoffin (spamsqr@msqr.us)
+ * Mutable version of {@link Geometry}.
+ *
+ * @author matt
+ * @version $Revision$ $Date$
  */
-public class Geometry {
-
-	/**
-	 * Geometry mode.
-	 */
-	public enum Mode {
-		/** Max geometry. */
-		MAX,
-
-		/** Minimum geometry. */
-		MIN,
-
-		/** Exact geometry. */
-		EXACT
-	}
-
-	/** The default mode value. */
-	public static final Mode DEFAULT_MODE = Mode.MAX;
-	
-	/** The default height and width dimensions. */
-	public static final int DEFAULT_DIMENSION = -1;
-
-	/** The width value. */
-	protected int width = DEFAULT_DIMENSION;
-	
-	/** The height value. */
-	protected int height = DEFAULT_DIMENSION;
-	
-	/** The mode. */
-	protected Mode mode = DEFAULT_MODE;
+public class MutableGeometry extends Geometry {
 
 	/**
 	 * Default constructor.
 	 */
-	public Geometry() {
-		// nothing to do
+	public MutableGeometry() {
+		super();
 	}
-
+	
 	/**
 	 * Construct a Geometry with width and height.
 	 * 
 	 * @param width
 	 * @param height
 	 */
-	public Geometry(int width, int height) {
-		this.width = width;
-		this.height = height;
+	public MutableGeometry(int width, int height) {
+		super(width, height);
 	}
 
 	/**
@@ -88,47 +60,65 @@ public class Geometry {
 	 * @param height
 	 * @param mode
 	 */
-	public Geometry(int width, int height, Mode mode) {
-		this.width = width;
-		this.height = height;
-		this.mode = mode;
+	public MutableGeometry(int width, int height, Mode mode) {
+		super(width, height, mode);
 	}
 	
 	/**
-	 * Returns the height.
-	 * 
-	 * @return int
+	 * Construct a mutable copy of another Geometry instance.
+	 * @param other
 	 */
-	public int getHeight() {
-		return height;
+	public MutableGeometry(Geometry other) {
+		super(other.width, other.height, other.mode);
+	}
+	
+	/**
+	 * Swap the width and height values.
+	 */
+	public void swapWidthAndHeight() {
+		int tmp = this.width;
+		this.width = this.height;
+		this.height = tmp;
 	}
 
 	/**
-	 * Returns the width.
+	 * Sets the height.
 	 * 
-	 * @return int
+	 * @param height The height to set
 	 */
-	public int getWidth() {
-		return width;
+	public void setHeight(int height) {
+		this.height = height;
 	}
 
 	/**
-	 * Returns the mode.
+	 * Sets the width.
+	 * 
+	 * @param width The width to set
+	 */
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	/**
+	 * Sets the mode.
 	 * 
 	 * <p>
 	 * The mode should be one of the defined constants {@link Mode#MAX},
 	 * {@link Mode#MIN}, or {@link Mode#EXACT}.
 	 * </p>
 	 * 
-	 * @return the mode
+	 * @param mode the new mode
 	 */
-	public Mode getMode() {
-		return mode;
+	public void setMode(Mode mode) {
+		this.mode = mode;
 	}
 
-	@Override
-	public String toString() {
-		return width + "x" + height;
+	/**
+	 * Reset this object to its default state.
+	 */
+	public void reset() {
+		width = height = DEFAULT_DIMENSION;
+		mode = DEFAULT_MODE;
 	}
 
 }

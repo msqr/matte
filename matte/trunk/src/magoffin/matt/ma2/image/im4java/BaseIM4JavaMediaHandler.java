@@ -31,19 +31,23 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import magoffin.matt.ma2.MediaEffect;
 import magoffin.matt.ma2.MediaRequest;
 import magoffin.matt.ma2.MediaResponse;
+import magoffin.matt.ma2.MediaSize;
 import magoffin.matt.ma2.biz.MediaBiz;
 import magoffin.matt.ma2.domain.MediaItem;
 import magoffin.matt.ma2.image.BaseImageMediaHandler;
 import magoffin.matt.ma2.support.Geometry;
 
+import org.im4java.core.ConvertCmd;
 import org.im4java.core.IM4JavaException;
 import org.im4java.core.IMOperation;
 import org.im4java.core.IdentifyCmd;
@@ -62,7 +66,18 @@ import org.springframework.util.FileCopyUtils;
  */
 public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 
+	/** For thumbnails, remove all profiles except color (ICM). */
+	public static final String DEFAULT_THUMBNAIL_PROFILE = "!icm,*";
+	
+	/** For normal images, remove all profiles except color (ICM). */
+	public static final String DEFAULT_NORMAL_PROFILE = DEFAULT_THUMBNAIL_PROFILE;
+	
 	private Map<String, IM4JavaMediaEffect> im4JavaMediaEffectMap;
+	private Set<MediaSize> thumbnailSizes = EnumSet.of(
+			MediaSize.THUMB_BIGGER, MediaSize.THUMB_BIG, 
+			MediaSize.THUMB_NORMAL, MediaSize.THUMB_SMALL);
+	private String thumbnailProfile = DEFAULT_THUMBNAIL_PROFILE;
+	private String normalProfile = DEFAULT_NORMAL_PROFILE;
 	
 	/**
 	 * Construct with a MIME type.
@@ -151,7 +166,7 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 	}
 	
 	/**
-	 * Default handler for JMagick requests.
+	 * Default handler for IM4Java requests.
 	 * 
 	 * <p>This implementation gets a {@link Resource} via 
 	 * {@link MediaBiz#getMediaItemResource(MediaItem)} and passes that 
@@ -212,15 +227,25 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 			Geometry geometry = getMediaBiz().getGeometry(request.getSize());
 
 			IMOperation baseOperation = new IMOperation();
-			baseOperation.quality(Double.valueOf(quality));
 			baseOperation.size(geometry.getWidth(), geometry.getHeight());
+			baseOperation.quality(Double.valueOf(quality));
+			request.getParameters().put(IM4JavaMediaEffect.IM_OPERATION, baseOperation);
 			
 			if ( log.isDebugEnabled() ) {
 				log.debug("Size: " +geometry.toString() +", quality: " +quality);
 			}
 			
+			// add input image placeholder
+			baseOperation.addImage();
+			
 			needToRotate(item, request);
 			applyEffects(item, request, response);
+			
+			String profileValue = thumbnailSizes.contains(request.getSize())
+				? thumbnailProfile : normalProfile;
+			if ( profileValue != null ) {
+				baseOperation.p_profile(profileValue);
+			}
 			
 			// set filename for output
 			File outFile = null;
@@ -231,6 +256,17 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 				outFile = File.createTempFile("IM4JavaTemp-", 
 						"."+getFileExtension(item, request));
 			}
+			
+			// add output image placeholder
+			baseOperation.addImage();
+			
+			ConvertCmd cmd = new ConvertCmd();
+			if ( log.isTraceEnabled() ) {
+				StringWriter writer = new StringWriter();
+				cmd.createScript(new PrintWriter(writer), baseOperation, new Properties());
+				log.debug("Convert command: " +writer.toString());
+			}
+			cmd.run(baseOperation, itemResource.getFile().getAbsolutePath(), outFile.getAbsolutePath());
 			
 			// if used temp file, then copy to output stream and delete now
 			if ( !request.getParameters().containsKey(MediaRequest.OUTPUT_FILE_KEY) ) {
