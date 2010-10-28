@@ -2,7 +2,7 @@ Matte Release Notes
 
 @VERSION@ @BUILD_DATE@
 
-This is a minor update to the 1.2 release. A new XSLT 2.0 processor
+This is a small update to the 1.2 release. A new XSLT 2.0 processor
 is now included with Matte to work around a bug in the Sun XSLT
 processor included in Java 6. Custom themes may break because of
 this change (most notably EXSLT extensions are no longer available).
@@ -20,6 +20,10 @@ Updates since 1.2 release
   with a text/css MIME type.
   
 - Include sMeta 0.7 for support of MP4 metadata extraction.
+
+- Support im4java for image processing, which means both ImageMagick
+  and GraphicsMagick can be used. This is a good alternative to
+  using JMagick.
 
 
 Notes on XSLT 2.0 update
