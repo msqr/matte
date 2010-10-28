@@ -31,7 +31,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -226,47 +228,102 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 			int quality = Math.round(getMediaBiz().getQualityValue(request.getQuality()) * 100.0f);
 			Geometry geometry = getMediaBiz().getGeometry(request.getSize());
 
+			// set up base convert command operation
 			IMOperation baseOperation = new IMOperation();
 			baseOperation.size(geometry.getWidth(), geometry.getHeight());
 			baseOperation.quality(Double.valueOf(quality));
-			request.getParameters().put(IM4JavaMediaEffect.IM_OPERATION, baseOperation);
+			
+			IMOperation effectOperation = new IMOperation();
+			request.getParameters().put(IM4JavaMediaEffect.IM_OPERATION, effectOperation);
+			
+			// set up support for effect command operations
+			List<ImageCommandAndOperation> secondaryCommands = new ArrayList<ImageCommandAndOperation>();
+			request.getParameters().put(IM4JavaMediaEffect.SUB_COMMAND_LIST, secondaryCommands);
 			
 			if ( log.isDebugEnabled() ) {
 				log.debug("Size: " +geometry.toString() +", quality: " +quality);
 			}
 			
-			// add input image placeholder
-			baseOperation.addImage();
-			
 			needToRotate(item, request);
 			applyEffects(item, request, response);
+			
+			// create final full convert operation
+			IMOperation op = new IMOperation();
+			op.addOperation(baseOperation);
+			op.addImage();	// source image placeholder
+			op.addOperation(effectOperation);
 			
 			String profileValue = thumbnailSizes.contains(request.getSize())
 				? thumbnailProfile : normalProfile;
 			if ( profileValue != null ) {
-				baseOperation.p_profile(profileValue);
+				op.p_profile(profileValue);
 			}
+
+			// add output image placeholder
+			op.addImage();
 			
 			// set filename for output
 			File outFile = null;
-			if ( request.getParameters().containsKey(MediaRequest.OUTPUT_FILE_KEY) ) {
+			if ( request.getParameters().containsKey(MediaRequest.OUTPUT_FILE_KEY)
+					&& secondaryCommands.size() == 0 ) {
 				outFile = (File)request.getParameters().get(MediaRequest.OUTPUT_FILE_KEY);
 			} else {
 				// use temp file
-				outFile = File.createTempFile("IM4JavaTemp-", 
-						"."+getFileExtension(item, request));
+				String extension = secondaryCommands.size() == 0
+					? getFileExtension(item, request) : "miff";
+				outFile = File.createTempFile("IM4JavaTemp-convert-", "."+extension);
 			}
-			
-			// add output image placeholder
-			baseOperation.addImage();
 			
 			ConvertCmd cmd = new ConvertCmd();
 			if ( log.isTraceEnabled() ) {
 				StringWriter writer = new StringWriter();
-				cmd.createScript(new PrintWriter(writer), baseOperation, new Properties());
+				cmd.createScript(new PrintWriter(writer), op, new Properties());
 				log.debug("Convert command: " +writer.toString());
 			}
-			cmd.run(baseOperation, itemResource.getFile().getAbsolutePath(), outFile.getAbsolutePath());
+			cmd.run(op, itemResource.getFile().getAbsolutePath(), outFile.getAbsolutePath());
+			
+			for ( ImageCommandAndOperation secondaryCmd : secondaryCommands ) {
+				File tmpFile = File.createTempFile("IM4JavaTemp-"
+						+secondaryCmd.getCommand().getCommand()+"-", ".miff");
+				try {
+					if ( log.isTraceEnabled() ) {
+						StringWriter writer = new StringWriter();
+						secondaryCmd.getCommand().createScript(new PrintWriter(writer), secondaryCmd.getOp(), new Properties());
+						log.debug(secondaryCmd.getCommand().getCommand() 
+								+" command: " +writer.toString());
+					}
+					secondaryCmd.getCommand().run(secondaryCmd.getOp(),
+							outFile.getAbsolutePath(),
+							tmpFile.getAbsolutePath());
+					FileCopyUtils.copy(tmpFile, outFile);
+				} finally {
+					tmpFile.delete();
+				}
+				
+				// now run convert command to convert to desired output format
+				IMOperation encode = new IMOperation();
+				encode.addOperation(baseOperation);
+				encode.addImage(2);
+
+				File encodeFile = null;
+				if ( request.getParameters().containsKey(MediaRequest.OUTPUT_FILE_KEY) ) {
+					encodeFile = (File)request.getParameters().get(MediaRequest.OUTPUT_FILE_KEY);
+				} else {
+					// use temp file
+					encodeFile = File.createTempFile("IM4JavaTemp-encode-", 
+							"."+getFileExtension(item, request));
+				}
+				
+				ConvertCmd encodeCmd = new ConvertCmd();
+				if ( log.isTraceEnabled() ) {
+					StringWriter writer = new StringWriter();
+					encodeCmd.createScript(new PrintWriter(writer), encode, new Properties());
+					log.debug(encodeCmd.getCommand() +" command: " +writer.toString());
+				}
+				cmd.run(encode, outFile.getAbsolutePath(), encodeFile.getAbsolutePath());
+				outFile.delete();
+				outFile = encodeFile;
+			}
 			
 			// if used temp file, then copy to output stream and delete now
 			if ( !request.getParameters().containsKey(MediaRequest.OUTPUT_FILE_KEY) ) {

@@ -16,6 +16,9 @@
 						<property name="mediaBiz" ref="testMediaBiz"/>
 					</bean>
 				</entry>
+				<entry key="watermark">
+					<bean class="magoffin.matt.ma2.image.im4java.BumpMapEffect"/>
+				</entry>
 			</map>
 		</property>
 	</bean>

@@ -356,21 +356,25 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 		// handle watermark
 		if ( CollectionUtils.isEmpty(this.noWatermarkSizes)
 				|| !this.noWatermarkSizes.contains(request.getSize()) ) {
-			Collection collection = mediaBiz.getMediaItemCollection(item);
-			if ( collection != null && collection.getOwner() != null ) {
-				User owner = collection.getOwner();
-				Resource watermark = userBiz.getUserWatermark(owner.getUserId());
-				if ( watermark != null && watermark.exists() ) {
-					MediaEffect watermarkEffect = getEffect(MediaEffect.KEY_WATERMARK, 
-							request.getParameters());
-					if ( watermarkEffect != null ) {
-						request.getParameters().put(
-							MediaEffect.MEDIA_REQUEST_PARAM_WATERMARK_RESOURCE, watermark);
-						effects.add(watermarkEffect);
-					} else {
-						log.warn("Effect [" +MediaEffect.KEY_WATERMARK 
-								+"] not configured, skipping");
-					}
+			Resource watermark = (Resource)request.getParameters().get(
+					MediaEffect.MEDIA_REQUEST_PARAM_WATERMARK_RESOURCE);
+			if ( watermark == null ) {
+				Collection collection = mediaBiz.getMediaItemCollection(item);
+				if ( collection != null && collection.getOwner() != null ) {
+					User owner = collection.getOwner();
+					watermark = userBiz.getUserWatermark(owner.getUserId());
+				}
+			}
+			if ( watermark != null && watermark.exists() ) {
+				MediaEffect watermarkEffect = getEffect(MediaEffect.KEY_WATERMARK, 
+						request.getParameters());
+				if ( watermarkEffect != null ) {
+					request.getParameters().put(
+						MediaEffect.MEDIA_REQUEST_PARAM_WATERMARK_RESOURCE, watermark);
+					effects.add(watermarkEffect);
+				} else {
+					log.warn("Effect [" +MediaEffect.KEY_WATERMARK 
+							+"] not configured, skipping");
 				}
 			}
 		}
