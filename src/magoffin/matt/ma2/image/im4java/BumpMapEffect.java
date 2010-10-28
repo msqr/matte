@@ -1,7 +1,7 @@
 /* ===================================================================
- * RotateEffect.java
+ * BumpMapEffect.java
  * 
- * Created Oct 28, 2010 9:43:03 AM
+ * Created Oct 28, 2010 12:27:09 PM
  * 
  * Copyright (c) 2010 Matt Magoffin.
  * 
@@ -26,27 +26,31 @@
 
 package magoffin.matt.ma2.image.im4java;
 
+import java.io.File;
+import java.io.IOException;
+
 import magoffin.matt.ma2.MediaEffect;
 import magoffin.matt.ma2.MediaRequest;
 import magoffin.matt.ma2.domain.MediaItem;
 
+import org.im4java.core.CompositeCmd;
 import org.im4java.core.IMOperation;
+import org.springframework.core.io.Resource;
 
 /**
- * Effect that rotates an image, based on the degrees specified by
- * the {@link MediaEffect#MEDIA_REQUEST_PARAM_ROTATE_DEGREES} request 
- * parameter.
- *
+ * A watermark effect for IM4Java based processing, that creates a 3D bump map
+ * from the watermark image.
+ * 
  * @author matt
  * @version $Revision$ $Date$
  */
-public class RotateEffect extends BaseIM4JavaMediaEffect {
+public class BumpMapEffect extends BaseIM4JavaMediaEffect {
 
 	/**
 	 * Default constructor.
 	 */
-	public RotateEffect() {
-		super(MediaEffect.KEY_ROTATE);
+	public BumpMapEffect() {
+		super("bump." +MediaEffect.KEY_WATERMARK);
 	}
 	
 	/* (non-Javadoc)
@@ -54,39 +58,23 @@ public class RotateEffect extends BaseIM4JavaMediaEffect {
 	 */
 	public ImageCommandAndOperation applyEffect(MediaItem item, MediaRequest request,
 			IMOperation baseOperation) {
-		Integer degrees = getRotateDegrees(item, request);	
-		if ( degrees == null ) return null;
-		
-		if ( log.isDebugEnabled() ) {
-			log.debug("Applying rotate effect on item [" +item.getItemId() +"] of " 
-					+degrees +" degrees");
+		Resource watermarkResource = (Resource)request.getParameters().get(
+				MediaEffect.MEDIA_REQUEST_PARAM_WATERMARK_RESOURCE);
+		if ( watermarkResource == null || !watermarkResource.exists() ) {
+			return null;
 		}
-		baseOperation.rotate(degrees.doubleValue());
-		return null;
-	}
-
-	/**
-	 * Get the degrees necessary for rotation of a media item that has a 
-	 * {@link MediaEffect#MEDIA_REQUEST_PARAM_ROTATE_DEGREES} request 
-	 * parameter set.
-	 * 
-	 * @param item the item being processed
-	 * @param request the current request
-	 * @return integer value, or <em>null</em> if no rotation should be performed
-	 */
-	private Integer getRotateDegrees(MediaItem item, MediaRequest request) {
-		if ( request.getParameters().containsKey(MediaEffect.MEDIA_REQUEST_PARAM_ROTATE_DEGREES) ) {
-			Object val = request.getParameters().get(MediaEffect.MEDIA_REQUEST_PARAM_ROTATE_DEGREES);
-			if ( val instanceof Integer ) {
-				return (Integer)val;
-			}
-			try {
-				return Integer.valueOf(val.toString());
-			} catch ( Exception e ) {
-				log.warn("Unable to parse integer from degree [" +val +"]");
-			}
-		}	
-		return null;
+		File watermarkFile = null;
+		try {
+			watermarkFile = watermarkResource.getFile();
+		} catch ( IOException e ) {
+			throw new RuntimeException(e);
+		}
+		IMOperation op = new IMOperation();
+		op.compose("Bumpmap");
+		op.gravity("SouthEast");
+		op.addImage(watermarkFile.getAbsolutePath());
+		op.addImage(2); // add source and destination image placeholders
+		return new ImageCommandAndOperation(new CompositeCmd(), op);
 	}
 
 }

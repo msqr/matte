@@ -107,8 +107,7 @@ public class JpegMediaHandlerTest extends AbstractSpringEnabledTransactionalTest
 			URL imageDir = imageDirs.nextElement();
 			UrlResource r = new UrlResource(imageDir);
 			images = r.getFile().listFiles(new FilenameFilter() {
-				private Set<String> types = new HashSet<String>(
-						Arrays.asList("jpg", "png"));
+				private Set<String> types = new HashSet<String>(Arrays.asList("jpg"));
 				public boolean accept(File dir, String name) {
 					int idx = name.lastIndexOf('.');
 					return idx > 0 && idx < (name.length()-1)
@@ -194,4 +193,37 @@ public class JpegMediaHandlerTest extends AbstractSpringEnabledTransactionalTest
 		}
 	}
 		
+	/**
+	 * Test can apply a watermark.
+	 * @throws IOException if an error occurs
+	 */
+	public void testWatermark() throws IOException {
+		Resource testReadDimensions 
+			= new ClassPathResource("magoffin/matt/ma2/image/bee-action.jpg");
+		MediaItem item = testJpegMediaHandler.createNewMediaItem(
+				testReadDimensions.getFile());
+		assertNotNull(item);
+
+		File tmpFile = File.createTempFile(testReadDimensions.getFilename()+"-", 
+				".jpg", new File("/tmp"));
+		tmpFile.deleteOnExit();
+		FileCopyUtils.copy(testReadDimensions.getFile(), tmpFile);
+		item.setPath(tmpFile.getName());
+		
+		Resource watermarkResource = new ClassPathResource(
+				"magoffin/matt/ma2/image/test-watermark.png");
+		
+		File tmpOutputFile = File.createTempFile("bee-action-watermark-", ".jpg");
+		
+		BasicMediaRequest request = new BasicMediaRequest(null, 
+				MediaSize.NORMAL, MediaQuality.HIGH);
+		request.getParameters().put(MediaEffect.MEDIA_REQUEST_PARAM_WATERMARK_RESOURCE, 
+				watermarkResource);
+		request.getParameters().put(MediaRequest.OUTPUT_FILE_KEY, tmpOutputFile);
+		BasicMediaResponse response = new BasicMediaResponse(
+				new FileOutputStream(tmpOutputFile));
+		
+		testJpegMediaHandler.handleMediaRequest(item,  request, response);
+	}
+	
 }

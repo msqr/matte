@@ -157,7 +157,7 @@ public class ScaleEffect extends BaseIM4JavaMediaEffect {
 	/* (non-Javadoc)
 	 * @see magoffin.matt.ma2.image.im4java.IM4JavaMediaEffect#applyEffect(magoffin.matt.ma2.domain.MediaItem, magoffin.matt.ma2.MediaRequest, org.im4java.core.IMOperation)
 	 */
-	public void applyEffect(MediaItem item, MediaRequest request,
+	public ImageCommandAndOperation applyEffect(MediaItem item, MediaRequest request,
 			IMOperation baseOperation) {
 		Geometry geometry = getMediaBiz().getScaledGeometry(item, request);
 		int width = geometry.getWidth();
@@ -194,6 +194,7 @@ public class ScaleEffect extends BaseIM4JavaMediaEffect {
 				baseOperation.unsharp(unsharp[0], unsharp[1], unsharp[2], unsharp[3]);
 			}
 		}
+		return null;
 	}
 
 	/**

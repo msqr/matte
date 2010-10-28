@@ -26,6 +26,8 @@
 
 package magoffin.matt.ma2.image.im4java;
 
+import java.util.List;
+
 import magoffin.matt.ma2.MediaRequest;
 import magoffin.matt.ma2.MediaResponse;
 import magoffin.matt.ma2.biz.MediaBiz;
@@ -63,7 +65,16 @@ public abstract class BaseIM4JavaMediaEffect implements IM4JavaMediaEffect {
 		if ( baseOperation == null ) {
 			throw new RuntimeException("IMOperation not available on request");
 		}
-		applyEffect(item, request, baseOperation);
+		ImageCommandAndOperation cmd = applyEffect(item, request, baseOperation);
+		if ( cmd != null ) {
+			@SuppressWarnings("unchecked")
+			List<ImageCommandAndOperation> list = (List<ImageCommandAndOperation>)
+				request.getParameters().get(SUB_COMMAND_LIST);
+			if ( list == null ) {
+				throw new RuntimeException("Sub command list not available on request.");
+			}
+			list.add(cmd);
+		}
 	}
 	
 	/**

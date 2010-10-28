@@ -1,7 +1,7 @@
 /* ===================================================================
- * IM4JavaMediaEffect.java
+ * ImageCommandAndOperation.java
  * 
- * Created Oct 21, 2010 10:49:33 AM
+ * Created Oct 28, 2010 12:59:07 PM
  * 
  * Copyright (c) 2010 Matt Magoffin.
  * 
@@ -26,39 +26,42 @@
 
 package magoffin.matt.ma2.image.im4java;
 
-import magoffin.matt.ma2.MediaEffect;
-import magoffin.matt.ma2.MediaRequest;
-import magoffin.matt.ma2.domain.MediaItem;
-
 import org.im4java.core.IMOperation;
+import org.im4java.core.ImageCommand;
 
 /**
- * MediaEffect API for IM4Java effects.
+ * An ImageCommand paired with an IMOperation to run.
  *
  * @author matt
  * @version $Revision$ $Date$
  */
-public interface IM4JavaMediaEffect extends MediaEffect {
+public class ImageCommandAndOperation {
 
-	/** The MediaRequest parameter key for the base IMOperation. */
-	public static final String IM_OPERATION = 
-		"magoffin.matt.ma2.image.im4java.IMOperation";
-
-	/** The MediaRequest parameter key for the List&lt;ImageCommandAndOperation&gt;. */
-	public static final String SUB_COMMAND_LIST = 
-		"magoffin.matt.ma2.image.im4java.SubCommandList";
-
+	private ImageCommand command;
+	private IMOperation op;
+	
 	/**
-	 * Apply effect with IM4Java.
+	 * Constructor.
 	 * 
-	 * @param item the MediaItem the effect is being applied to
-	 * @param request the request
-	 * @param baseOperation the IMOperation to add the effect commands to,
-	 * as part of a "convert" command
-	 * @return an optional additional command to execute after the 
-	 * base operations have been completed
+	 * @param command the command
+	 * @param op the operation
 	 */
-	public ImageCommandAndOperation applyEffect(MediaItem item, MediaRequest request, 
-			IMOperation baseOperation);
-
+	public ImageCommandAndOperation(ImageCommand command, IMOperation op) {
+		this.command = command;
+		this.op = op;
+	}
+	
+	/**
+	 * @return the command
+	 */
+	public ImageCommand getCommand() {
+		return command;
+	}
+	/**
+	 * @return the op
+	 */
+	public IMOperation getOp() {
+		return op;
+	}
+	
 }
