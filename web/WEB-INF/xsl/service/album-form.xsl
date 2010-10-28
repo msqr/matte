@@ -88,7 +88,8 @@
 					<xsl:if test="@album-date">
 						<xsl:attribute name="value">
 							<xsl:value-of 
-								select="format-date(xs:date(@album-date),'[Y0001]-[M01]-[D01]')"/>
+								select="format-date(xs:date(substring-before(@album-date,'T')),
+									'[Y0001]-[M01]-[D01]')"/>
 						</xsl:attribute>
 					</xsl:if>
 				</input>
