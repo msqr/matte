@@ -33,6 +33,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -53,15 +54,53 @@ import org.im4java.core.ConvertCmd;
 import org.im4java.core.IM4JavaException;
 import org.im4java.core.IMOperation;
 import org.im4java.core.IdentifyCmd;
+import org.im4java.core.ImageCommand;
 import org.im4java.process.ArrayListOutputConsumer;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 
 /**
- * FIXME
+ * Base implementation of {@link magoffin.matt.ma2.MediaHandler} that uses the JMagick
+ * for image processing.
  * 
- * <p>TODO</p>
+ * <p>The configurable properties of this class are:</p>
+ * 
+ * <dl class="class-properties">
+ *   <dt>im4javaMediaEffectMap</dt>
+ *   <dd>A Map of effect keys to {@link IM4JavaMediaEffect} implementations.</dd>
+ *   
+ *   <dt>thumbnailProfile</dt>
+ *   <dd>The +profile setting to use for stripping out profile information
+ *   from processed thumbnail images. Defaults to <code>!icm,*</code> which strips out
+ *   all profiles except for the color (ICM) profile.</dd>
+ *   
+ *   <dt>normalProfile</dt>
+ *   <dd>The +profile setting to use for stripping out profile information
+ *   from processed normal images. Defaults to <code>!icm,*</code> which strips out
+ *   all profiles except for the color (ICM) profile.</dd>
+ *   
+ *   <dt>profileThumbnailSizes</dt>
+ *   <dd>A set of {@link MediaSize} for which to treat as thumbnail sizes
+ *   and profile with the <code>thumbnailProfile</code> as opposed to 
+ *   the <code>normalProfile</code>. Defaults to a set containing
+ *   {@link MediaSize#THUMB_SMALL}, {@link MediaSize#THUMB_NORMAL},
+ *   and {@link MediaSize#THUMB_BIG} and {@link MediaSize#THUMB_BIGGER}.</dd>
+ *   
+ *   <dt>useSizeHint</dt>
+ *   <dd>If <em>true</em> then use the <code>-size</code> operator with a 
+ *   geometry value double the desired output, for efficiently reading large
+ *   files while producing smaller copies of them. Defaults to <em>true</em>.
+ *   This is the parameter GraphicsMagick uses for this hint, as well as 
+ *   older ImageMagick versions.</dd>
+ *   
+ *   <dt>useJpegSizeHint</dt>
+ *   <dd>If <em>true</em> then use the <code>-define jpeg:size=</code> operator
+ *   with a geometry value bould the desired output, for efficiently reading
+ *   large JPEG files while producing smaller copies of them. This is the value
+ *   newer versions of ImageMagick use for this hint, but having it enabled
+ *   for GraphicsMagick should not cause any effect. Defaults to <em>true</em>.</dd>
+ * </dl>
  *
  * @author matt
  * @version $Revision$ $Date$
@@ -74,12 +113,14 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 	/** For normal images, remove all profiles except color (ICM). */
 	public static final String DEFAULT_NORMAL_PROFILE = DEFAULT_THUMBNAIL_PROFILE;
 	
-	private Map<String, IM4JavaMediaEffect> im4JavaMediaEffectMap;
-	private Set<MediaSize> thumbnailSizes = EnumSet.of(
+	private Map<String, IM4JavaMediaEffect> im4javaMediaEffectMap;
+	private Set<MediaSize> profileThumbnailSizes = EnumSet.of(
 			MediaSize.THUMB_BIGGER, MediaSize.THUMB_BIG, 
 			MediaSize.THUMB_NORMAL, MediaSize.THUMB_SMALL);
 	private String thumbnailProfile = DEFAULT_THUMBNAIL_PROFILE;
 	private String normalProfile = DEFAULT_NORMAL_PROFILE;
+	private boolean useSizeHint = true;
+	private boolean useJpegSizeHint = true;
 	
 	/**
 	 * Construct with a MIME type.
@@ -91,7 +132,7 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 
 	@Override
 	public MediaEffect getEffect(String key, Map<String, ?> effectParameters) {
-		return im4JavaMediaEffectMap.get(key);
+		return im4javaMediaEffectMap.get(key);
 	}
 
 	/**
@@ -225,14 +266,6 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 			// set response MIME
 			response.setMimeType(getResponseMime(item, request, itemResource));
 
-			int quality = Math.round(getMediaBiz().getQualityValue(request.getQuality()) * 100.0f);
-			Geometry geometry = getMediaBiz().getGeometry(request.getSize());
-
-			// set up base convert command operation
-			IMOperation baseOperation = new IMOperation();
-			baseOperation.size(geometry.getWidth(), geometry.getHeight());
-			baseOperation.quality(Double.valueOf(quality));
-			
 			IMOperation effectOperation = new IMOperation();
 			request.getParameters().put(IM4JavaMediaEffect.IM_OPERATION, effectOperation);
 			
@@ -240,20 +273,42 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 			List<ImageCommandAndOperation> secondaryCommands = new ArrayList<ImageCommandAndOperation>();
 			request.getParameters().put(IM4JavaMediaEffect.SUB_COMMAND_LIST, secondaryCommands);
 			
+			int quality = Math.round(getMediaBiz().getQualityValue(request.getQuality()) * 100.0f);
+			Geometry geometry = getMediaBiz().getScaledGeometry(item, request);
+
 			if ( log.isDebugEnabled() ) {
-				log.debug("Size: " +geometry.toString() +", quality: " +quality);
+				log.debug("Request output size: " +geometry.toString() +", quality: " +quality);
 			}
 			
 			needToRotate(item, request);
 			applyEffects(item, request, response);
 			
+			// set up base convert command operation
+			IMOperation baseOperation = new IMOperation();
+			
+			// if a scale effect has been used, add a size hint to efficiently read large images
+			if ( (useSizeHint || useJpegSizeHint) && (geometry.getWidth() < item.getWidth() 
+					|| geometry.getHeight() < item.getHeight()) ) {
+				int hintWidth = geometry.getWidth() * 2;
+				int hintHeight = geometry.getHeight() * 2;
+				if ( useSizeHint ) {
+					baseOperation.size(hintWidth, hintHeight);
+				}
+				if ( useJpegSizeHint ) {
+					baseOperation.define("jpeg:size=" +hintWidth +'x' +hintHeight);
+				}
+			}
+			
+			baseOperation.quality(Double.valueOf(quality));
+			
 			// create final full convert operation
 			IMOperation op = new IMOperation();
 			op.addOperation(baseOperation);
+			
 			op.addImage();	// source image placeholder
 			op.addOperation(effectOperation);
 			
-			String profileValue = thumbnailSizes.contains(request.getSize())
+			String profileValue = profileThumbnailSizes.contains(request.getSize())
 				? thumbnailProfile : normalProfile;
 			if ( profileValue != null ) {
 				op.p_profile(profileValue);
@@ -276,53 +331,53 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 			
 			ConvertCmd cmd = new ConvertCmd();
 			if ( log.isTraceEnabled() ) {
-				StringWriter writer = new StringWriter();
-				cmd.createScript(new PrintWriter(writer), op, new Properties());
-				log.debug("Convert command: " +writer.toString());
+				debugCommandAndOperation(cmd, op);
 			}
 			cmd.run(op, itemResource.getFile().getAbsolutePath(), outFile.getAbsolutePath());
 			
-			for ( ImageCommandAndOperation secondaryCmd : secondaryCommands ) {
-				File tmpFile = File.createTempFile("IM4JavaTemp-"
-						+secondaryCmd.getCommand().getCommand()+"-", ".miff");
-				try {
-					if ( log.isTraceEnabled() ) {
-						StringWriter writer = new StringWriter();
-						secondaryCmd.getCommand().createScript(new PrintWriter(writer), secondaryCmd.getOp(), new Properties());
-						log.debug(secondaryCmd.getCommand().getCommand() 
-								+" command: " +writer.toString());
-					}
-					secondaryCmd.getCommand().run(secondaryCmd.getOp(),
-							outFile.getAbsolutePath(),
-							tmpFile.getAbsolutePath());
-					FileCopyUtils.copy(tmpFile, outFile);
-				} finally {
-					tmpFile.delete();
-				}
+			for ( Iterator<ImageCommandAndOperation> cmdItr = secondaryCommands.iterator(); cmdItr.hasNext(); ) {
+				ImageCommandAndOperation secondaryCmd = cmdItr.next();
 				
-				// now run convert command to convert to desired output format
-				IMOperation encode = new IMOperation();
-				encode.addOperation(baseOperation);
-				encode.addImage(2);
-
-				File encodeFile = null;
-				if ( request.getParameters().containsKey(MediaRequest.OUTPUT_FILE_KEY) ) {
-					encodeFile = (File)request.getParameters().get(MediaRequest.OUTPUT_FILE_KEY);
+				File secondaryOutFile = null;
+				if ( cmdItr.hasNext() ) {
+					// we still have other secondary commands to process, so use a
+					// temporary MIFF file to hold the intermediate transformation
+					secondaryOutFile = File.createTempFile("IM4JavaTemp-"
+							+secondaryCmd.getCommand().getCommand()+"-", ".miff");
+				} else if ( request.getParameters().containsKey(MediaRequest.OUTPUT_FILE_KEY) ) {
+					secondaryOutFile = (File)request.getParameters().get(MediaRequest.OUTPUT_FILE_KEY);
 				} else {
-					// use temp file
-					encodeFile = File.createTempFile("IM4JavaTemp-encode-", 
+					// use temp file with desired output encoding
+					secondaryOutFile = File.createTempFile("IM4JavaTemp-encode-", 
 							"."+getFileExtension(item, request));
 				}
 				
-				ConvertCmd encodeCmd = new ConvertCmd();
-				if ( log.isTraceEnabled() ) {
-					StringWriter writer = new StringWriter();
-					encodeCmd.createScript(new PrintWriter(writer), encode, new Properties());
-					log.debug(encodeCmd.getCommand() +" command: " +writer.toString());
+				IMOperation secondaryOp = new IMOperation();
+				if ( !cmdItr.hasNext() ) {
+					// add base operation for quality setting
+					secondaryOp.addOperation(baseOperation);
 				}
-				cmd.run(encode, outFile.getAbsolutePath(), encodeFile.getAbsolutePath());
-				outFile.delete();
-				outFile = encodeFile;
+				secondaryOp.addOperation(secondaryCmd.getOp());
+				
+				if ( log.isTraceEnabled() ) {
+					debugCommandAndOperation(secondaryCmd.getCommand(), secondaryOp);
+				}
+				secondaryCmd.getCommand().run(secondaryCmd.getOp(),
+						outFile.getAbsolutePath(),
+						secondaryOutFile.getAbsolutePath());
+				
+				/*if ( !request.getParameters().containsKey(MediaRequest.OUTPUT_FILE_KEY) ) {
+					secondaryOutFile = (File)request.getParameters().get(MediaRequest.OUTPUT_FILE_KEY);
+				} else {
+					// use temp file with desired output encoding
+					secondaryOutFile = File.createTempFile("IM4JavaTemp-encode-", 
+							"."+getFileExtension(item, request));
+				}*/
+
+				if ( outFile != secondaryOutFile ) {
+					outFile.delete();
+				}
+				outFile = secondaryOutFile;
 			}
 			
 			// if used temp file, then copy to output stream and delete now
@@ -337,20 +392,68 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 			throw new RuntimeException("Exception writing media: "+e, e);
 		}
 	}
-
-	/**
-	 * @return the im4JavaMediaEffectMap
-	 */
-	public Map<String, IM4JavaMediaEffect> getIm4JavaMediaEffectMap() {
-		return im4JavaMediaEffectMap;
+	
+	private void debugCommandAndOperation(ImageCommand cmd, IMOperation op) {
+		StringWriter writer = new StringWriter();
+		cmd.createScript(new PrintWriter(writer), op, new Properties());
+		log.trace(cmd.getCommand() +" command: " +writer.toString());
 	}
 
 	/**
-	 * @param im4JavaMediaEffectMap the im4JavaMediaEffectMap to set
+	 * @return the im4javaMediaEffectMap
 	 */
-	public void setIm4JavaMediaEffectMap(
-			Map<String, IM4JavaMediaEffect> im4JavaMediaEffectMap) {
-		this.im4JavaMediaEffectMap = im4JavaMediaEffectMap;
+	public Map<String, IM4JavaMediaEffect> getIm4javaMediaEffectMap() {
+		return im4javaMediaEffectMap;
+	}
+
+	/**
+	 * @param im4javaMediaEffectMap the im4javaMediaEffectMap to set
+	 */
+	public void setIm4javaMediaEffectMap(
+			Map<String, IM4JavaMediaEffect> im4javaMediaEffectMap) {
+		this.im4javaMediaEffectMap = im4javaMediaEffectMap;
+	}
+
+	/**
+	 * @return the profileThumbnailSizes
+	 */
+	public Set<MediaSize> getProfileThumbnailSizes() {
+		return profileThumbnailSizes;
+	}
+
+	/**
+	 * @param profileThumbnailSizes the profileThumbnailSizes to set
+	 */
+	public void setProfileThumbnailSizes(Set<MediaSize> profileThumbnailSizes) {
+		this.profileThumbnailSizes = profileThumbnailSizes;
+	}
+
+	/**
+	 * @return the thumbnailProfile
+	 */
+	public String getThumbnailProfile() {
+		return thumbnailProfile;
+	}
+
+	/**
+	 * @param thumbnailProfile the thumbnailProfile to set
+	 */
+	public void setThumbnailProfile(String thumbnailProfile) {
+		this.thumbnailProfile = thumbnailProfile;
+	}
+
+	/**
+	 * @return the normalProfile
+	 */
+	public String getNormalProfile() {
+		return normalProfile;
+	}
+
+	/**
+	 * @param normalProfile the normalProfile to set
+	 */
+	public void setNormalProfile(String normalProfile) {
+		this.normalProfile = normalProfile;
 	}
 	
 }
