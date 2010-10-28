@@ -28,7 +28,8 @@ package magoffin.matt.ma2.biz.impl;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.net.URL;
+import java.net.URI;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -90,7 +91,7 @@ class ImportWorkRequest implements WorkRequest {
 	private int numProcessed = 0;
 	private int numExported = 0;
 	private List<String> errors = new LinkedList<String>();
-	private URL collectionDirURL;
+	private URI collectionDirURI;
 	private Collection collection;
 	private List<MediaItem> itemsAddedToCollection = new LinkedList<MediaItem>();
 	private List<Long> savedItemIdList = Collections.synchronizedList(
@@ -152,7 +153,7 @@ class ImportWorkRequest implements WorkRequest {
 	}
 	
 	private void doWork() throws Exception {
-		collectionDirURL = collectionDir.toURI().toURL();
+		collectionDirURI = collectionDir.toURI();
 		
 		collection = ioBizImpl.getCollectionDao().get(command.getCollectionId());
 		collectionOwner = collection.getOwner();
@@ -527,8 +528,8 @@ class ImportWorkRequest implements WorkRequest {
 		item.setHits(0);
 		
 		// set the path using URLs so path normalized between OSes
-		URL fileUrl = mediaFile.toURI().toURL();
-		String path = fileUrl.toString().substring(collectionDirURL.toString().length());
+		URI fileUri = collectionDirURI.relativize(mediaFile.toURI());
+		String path = URLDecoder.decode(fileUri.toString(), "UTF-8");
 		item.setPath(path);
 		if ( item.getName() == null ) {
 			item.setName(StringUtils.getFilename(path));
