@@ -248,13 +248,9 @@
 							<a target="matte_map" title="{key('i18n','meta.gps.maplink.title')}">
 								<xsl:attribute name="href">
 									<xsl:text>http://maps.google.com/?ie=UTF8&amp;ll=</xsl:text>
-									<xsl:call-template name="dms.to.decimal">
-										<xsl:with-param name="dms" select="normalize-space($meta-item/m:metadata[@key='GPS_LATITUDE']/text())"/>
-									</xsl:call-template>
+									<xsl:value-of select="m:dms-to-decimal(normalize-space($meta-item/m:metadata[@key='GPS_LATITUDE']/text()))"/>
 									<xsl:text>,</xsl:text>
-									<xsl:call-template name="dms.to.decimal">
-										<xsl:with-param name="dms" select="normalize-space($meta-item/m:metadata[@key='GPS_LONGITUDE']/text())"/>
-									</xsl:call-template>
+									<xsl:value-of select="m:dms-to-decimal(normalize-space($meta-item/m:metadata[@key='GPS_LONGITUDE']/text()))"/>
 									<xsl:text>&amp;spn=0.025911,0.030727&amp;t=h&amp;z=15</xsl:text>
 								</xsl:attribute>
 								<xsl:value-of select="key('i18n','meta.gps.maplink')"/>
@@ -528,25 +524,28 @@
 		</xsl:if>
 	</xsl:template>
 	
-	<xsl:template name="dms.to.decimal">
+	<xsl:function name="m:dms-to-decimal" as="xs:double?">
 		<xsl:param name="dms"/><!-- Data format: S 36°47'7.2" -->
-		<xsl:variable name="dmstok" select="normalize-space(translate($dms, translate($dms, 'NSEW0123456789. ', ''), '     '))"/>	
-		<xsl:variable name="degraw" select="substring-before(substring-after($dmstok, ' '), ' ')"/>
-		<xsl:variable name="deg">
-			<xsl:if test="starts-with($dmstok, 'S') or starts-with($dmstok, 'W')">-</xsl:if>
-			<xsl:value-of select="$degraw"/>
-		</xsl:variable>
-		<xsl:variable name="min" select="substring-before(substring-after($dmstok, concat($degraw, ' ')), ' ')"/>
-		<xsl:variable name="sec" select="substring-after($dmstok, concat($degraw, ' ', $min, ' '))"/>
+		<xsl:variable name="tokens" as="xs:double*" select="
+			for $str in tokenize(normalize-space($dms), '[^0-9.]+') 
+			return m:double-or-nothing($str)"/>
+		<xsl:variable name="sign" as="xs:integer" select="
+			if (starts-with($dms, 'S') or starts-with($dms, 'W')) then -1 else 1"/>
+		<xsl:sequence select="if (count($tokens) ne 3) then 0.0 
+			else ($sign * ($tokens[1] + ($tokens[2] div 60) + ($tokens[3] div 3600)))"/>
+	</xsl:function>
+	
+	<xsl:function name="m:double-or-nothing" as="xs:double?">
+		<xsl:param name="str" as="xs:string"/>
 		<xsl:choose>
-			<xsl:when test="$deg &lt; 0">
-				<xsl:value-of select="$deg - ($min div 60) - ($min div 3600)"/>
+			<xsl:when test="$str castable as xs:double">
+				<xsl:sequence select="$str cast as xs:double"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="$deg + ($min div 60) + ($min div 3600)"/>
+				<xsl:sequence select="()"/>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+	</xsl:function>
 	
 	<xsl:template match="m:user-rating" mode="meta">
 		<span class="ii-attribute">
