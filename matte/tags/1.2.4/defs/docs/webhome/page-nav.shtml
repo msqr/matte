@@ -1,0 +1,72 @@
+<div id="nav-frame">
+	<div class="frame-t">
+		<img class="frame-tl" alt="frame" src="img/tb_03.gif" />
+		<img class="frame-tr" alt="frame" src="img/tb_06.gif" />
+	</div>
+	<div class="frame-m">
+		<!--#if expr="$currPage = home" -->
+		<div class="section-selected">Home</div>
+		<div class="subsection">
+			<!--Test Drive<br /-->
+			Live Demo<br />
+			Project Info / Support<br />
+		</div>
+		<!--#else -->
+		<div class="section"><a href="home.shtml">Home</a></div>
+		<!--#endif -->
+
+		<!--#if expr="$currPage = screenshots" -->
+		<div class="section-selected">Screen Shots</div>
+		<!--#else -->
+		<div class="section"><a href="screenshots.shtml">Screen Shots</a></div>
+		<!--#endif -->
+
+		<!--#if expr="$currPage = download" -->
+		<div class="section-selected">Download</div>
+		<div class="subsection">
+			Requirements<br />
+			Download<br />
+			Live Demo<br />
+		</div>
+		<!--#else -->
+		<div class="section"><a href="download.shtml">Download</a></div>
+		<!--#endif -->
+
+		<!--#if expr="$currPage = iphoto" -->
+		<div class="section-selected">iPhoto export</div>
+		<!--#else -->
+		<div class="section"><a href="iphoto.shtml">iPhoto export</a></div>
+		<!--#endif -->
+
+		<!--#if expr="$currPage = docs" -->
+		<div class="section-selected">Documentation</div>
+		<!--#else -->
+		<div class="section"><a href="docs.shtml">Documentation</a></div>
+		<!--#endif -->
+
+		<!--#if expr="$currPage = faq" -->
+		<div class="section-selected">FAQ</div>
+		<!--#else -->
+		<div class="section"><a href="faq.shtml">FAQ</a></div>
+		<!--#endif -->
+
+		<!--#if expr="$currPage = credits" -->
+		<div class="section-selected">Credits</div>
+		<!--#else -->
+		<div class="section"><a href="credits.shtml">Credits</a></div>
+		<!--#endif -->
+
+		<!--#if expr="$currPage = developers" -->
+		<div class="section-selected">Developers</div>
+		<!--#else -->
+		<div class="section"><a href="developers.shtml">Developers</a></div>
+		<!--#endif -->
+
+	</div>
+	<div class="frame-ml"></div>
+	<div class="frame-mr"></div>
+	<div class="frame-b">
+		<img class="frame-bl" alt="frame" src="img/tb_24.gif" />
+		<img class="frame-br" alt="frame" src="img/tb_26.gif" />
+	</div>
+</div>
