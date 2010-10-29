@@ -34,6 +34,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -378,6 +379,19 @@ class ImportWorkRequest implements WorkRequest {
 				"normalize-space(m:comment)", XPathConstants.STRING);
 		if ( StringUtils.hasText(comment) ) {
 			item.setDescription(comment);
+		}
+		
+		if ( itemNode.hasAttribute("item-date") ) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+			sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+			try {
+				Date date = sdf.parse(itemNode.getAttribute("item-date"));
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(date);
+				item.setCreationDate(cal);
+			} catch ( ParseException e ) {
+				// we ignore the date
+			}
 		}
 
 		// handle keywords
