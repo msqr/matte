@@ -36,7 +36,7 @@
 	<xsl:variable name="user-locale" select="string($ctx/x:user-locale)"/>
 	<xsl:variable name="web-context" select="string($ctx/x:web-context)"/>
 	<xsl:variable name="acting-user" select="x:x-data/x:x-session/m:session/m:acting-user"/>
-	<xsl:variable name="date.time.format" select="'[d] [MNn,*-3] [Y0001] [H]:[m01]'"/>
+	<xsl:variable name="date.time.format" select="'[D] [MNn,*-3] [Y0001] [H]:[m01]'"/>
 	
 	<xsl:key name="item-meta" 
 		match="x:x-data/x:x-model[1]/m:model[1]/m:item[1]/m:metadata" use="@key"/>
