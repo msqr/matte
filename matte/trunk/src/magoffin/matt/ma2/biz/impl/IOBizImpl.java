@@ -328,9 +328,9 @@ public class IOBizImpl implements IOBiz {
 					+request.getMediaItemId() +"] not available");
 		}
 		MediaHandler handler = this.mediaBiz.getMediaHandler(item.getMime());
+		String responseFilename = getResponseFilename(item, request, handler);
+		response.setFilename(responseFilename);
 		if ( !request.isOriginal() && !item.isUseIcon() ) {
-			String responseFilename = getResponseFilename(item, request, handler);
-			response.setFilename(responseFilename);
 			
 			File cacheFile = null;
 			if ( systemBiz.getCacheDirectory() != null ) {
