@@ -35,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Deque;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -236,7 +237,7 @@ class ImportWorkRequest implements WorkRequest {
 							if ( metadata != null ) {
 								handleMetadata(zipEntryName, item, metadata);
 							} else if ( command.isAutoAlbum() ) {
-								handleAutoAlbum(zipEntryName, item);
+								handleAutoAlbum(zipEntryName.split("/"), item);
 							}
 						} else {
 							numZipEntries--;
@@ -310,40 +311,67 @@ class ImportWorkRequest implements WorkRequest {
 
 	@SuppressWarnings("unchecked")
 	private void handleMetadata(String zipEntryName, MediaItem item, Document metadata) {
+		String[] itemPath = zipEntryName.split("/");
+		
 		// look for item via XPath
 		String itemXPath = "//m:item[@archive-path=\"" 
 			+ioBizImpl.escapeItemNameForXPath(zipEntryName) +"\"]";
-		Element itemNode = (Element)ioBizImpl.getXmlHelper().evaluateXPath(
+		NodeList itemNodes = (NodeList)ioBizImpl.getXmlHelper().evaluateXPath(
 				metadata.getDocumentElement(), 
-				itemXPath, XPathConstants.NODE);
-		if ( itemNode == null ) {
-			handleAutoAlbum(zipEntryName, item);
+				itemXPath, XPathConstants.NODESET);
+		if ( itemNodes == null || itemNodes.getLength() < 1 ) {
+			handleAutoAlbum(itemPath, item);
 			return;
 		}
 		
-		// handle album
-		Element albumNode = (Element)itemNode.getParentNode();
-		Album album = handleAutoAlbum(zipEntryName, item);
-		if ( album != null ) {
-			// Don't set album name... messes up auto album
-			if ( !StringUtils.hasText(album.getComment()) ) {
-				String comment = (String)ioBizImpl.getXmlHelper().evaluateXPath(albumNode, 
-						"normalize-space(m:comment)", XPathConstants.STRING);
-				if ( StringUtils.hasText(comment) ) {
-					album.setComment(comment);
+		// handle albums
+		Element itemNode = null;
+		for ( int i = 0, len = itemNodes.getLength(); i < len; i++ ) {
+			Element currItemNode = (Element)itemNodes.item(i);
+			if ( i == 0 ) {
+				itemNode = currItemNode;
+			}
+			
+			// create item path from <album> elements, because zip path
+			// might point to an item also in another album, i.e. one
+			// item shared between multiple albums
+			Element albumNode = (Element)currItemNode.getParentNode();
+			Deque<String> albums = new LinkedList<String>();
+			while ( albumNode.getLocalName().equals("album") ) {
+				albums.addFirst(albumNode.getAttribute("name"));
+				albumNode = (Element)albumNode.getParentNode();
+				if ( albumNode.getParentNode() == null ) {
+					break;
 				}
 			}
-			if ( StringUtils.hasText(albumNode.getAttribute("creation-date")) ) {
-				album.setCreationDate(ioBizImpl.parseDate(albumNode.getAttribute("creation-date")));
-			}
-			if ( StringUtils.hasText(albumNode.getAttribute("modify-date")) ) {
-				album.setModifyDate(ioBizImpl.parseDate(albumNode.getAttribute("modify-date")));
-			}
-			if ( StringUtils.hasText(albumNode.getAttribute("album-date")) ) {
-				album.setAlbumDate(ioBizImpl.parseDate(albumNode.getAttribute("album-date")));
+			albums.addLast(itemPath[itemPath.length-1]);
+			String[] albumPath = albums.toArray(new String[albums.size()]);
+			
+			Album album = handleAutoAlbum(albumPath, item);
+			if ( album != null ) {
+				// Don't set album name... messes up auto album
+				if ( !StringUtils.hasText(album.getComment()) ) {
+					String comment = (String)ioBizImpl.getXmlHelper().evaluateXPath(albumNode, 
+							"normalize-space(m:comment)", XPathConstants.STRING);
+					if ( StringUtils.hasText(comment) ) {
+						album.setComment(comment);
+					}
+				}
+				if ( StringUtils.hasText(albumNode.getAttribute("creation-date")) ) {
+					album.setCreationDate(ioBizImpl.parseDate(albumNode.getAttribute("creation-date")));
+				}
+				if ( StringUtils.hasText(albumNode.getAttribute("modify-date")) ) {
+					album.setModifyDate(ioBizImpl.parseDate(albumNode.getAttribute("modify-date")));
+				}
+				if ( StringUtils.hasText(albumNode.getAttribute("album-date")) ) {
+					album.setAlbumDate(ioBizImpl.parseDate(albumNode.getAttribute("album-date")));
+				}
 			}
 		}
 		
+		if ( itemNode == null ) {
+			return;
+		}
 		
 		// set name
 		if ( itemNode.hasAttribute("name") ) {
@@ -448,13 +476,16 @@ class ImportWorkRequest implements WorkRequest {
 			}
 		}
 	}
-
+	
 	@SuppressWarnings("unchecked")
-	private Album handleAutoAlbum(String zipEntryName, MediaItem item) {
+	private Album handleAutoAlbum(String[] albumNames, MediaItem item) {
 		Album album = null;
-		String[] albumNames = zipEntryName.split("/");
 		if ( albumNames != null && albumNames.length > 1 ) {				
-			String archiveAlbumPath = zipEntryName.substring(0, zipEntryName.lastIndexOf('/'));
+			StringBuilder buf = new StringBuilder(albumNames[0]);
+			for ( int i = 1, len = albumNames.length - 1; i < len; i++ ) {
+				buf.append('/').append(albumNames[i]);
+			}
+			String archiveAlbumPath = buf.toString();
 			if ( archiveAlbumPathMapping.containsKey(archiveAlbumPath) ) {
 				album = ioBizImpl.getAlbumDao().get(archiveAlbumPathMapping.get(archiveAlbumPath));
 			} else {						
