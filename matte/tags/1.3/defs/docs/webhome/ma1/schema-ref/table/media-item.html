@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Media Album: XML Schema Reference: ma:media-item</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<link rel="stylesheet" type="text/css" href="../../global.css"/>
+	<link rel="stylesheet" type="text/css" href="../../dev.css"/>
+</head>
+<body>
+	<h1>ma:media-item</h1>
+
+	<div>
+		This object represents a single media item (picture, movie, etc.) in the
+		Media Album application. A media item belongs to one and only one <a
+		class="code" href="collection.html">ma:collection</a> object, but can live
+		in any number of <a class="code" href="album.html">ma:album</a> objects.
+	</div>
+
+	<div class="function-info">
+		<table>
+			<tbody>
+				<tr>
+					<th>Attributes</th>
+					<td>
+						<table>
+							<tbody>
+								<tr>
+									<th>creationDate</th>
+									<td>The date the item was created. If the item supports embedded
+				metadata and this metadata provides a creation date, that date is
+				used. Otherwise the creation date will be set to the date the media
+				item was added to Media Album.</td>
+								</tr>
+								<tr>
+									<th>displayOrder</th>
+									<td>A display ordering, used for media items within <a
+									class="code" href="album.html">ma:album</a> objects.</td>
+								</tr>
+								<tr>
+									<th>fileSize</th>
+									<td>The natural size of this item, in bytes.</td>
+								</tr>
+								<tr>
+									<th>collection</th>
+									<td>The <code>@collectionId</code> of the <a
+									class="code" href="collection.html">ma:collection</a> object this item
+									belongs to.</td>
+								</tr>
+								<tr>
+									<th>itemId</th>
+									<td>A unique number among all media item objects.</td>
+								</tr>
+								<tr>
+									<th>height</th>
+									<td>The natural height of this item, in pixels.</td>
+								</tr>
+								<tr>
+									<th>hits</th>
+									<td>The number of times this item has been viewed, not including
+				thumbnail-sized views.</td>
+								</tr>
+								<tr>
+									<th>tz</th>
+									<td>A time zone offset, in number of milliseconds offset from
+				GMT.</td>
+								</tr>
+								<tr>
+									<th>tzName</th>
+									<td>A display representation of the <code>@tz</code> time zone
+									offset value. This is automatically populated by
+									Media Album.</td>
+								</tr>
+								<tr>
+									<th>width</th>
+									<td>The natural width of this item, in pixels.</td>
+								</tr>
+								<tr>
+									<th></th>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<th>Elements</th>
+					<td>
+						<table>
+							<tbody>
+								<tr>
+									<th>path</th>
+									<td>A file path where this media album resides, relative from the
+				file path of this item's collection.</td>
+								</tr>
+								<tr>
+									<th>mime</th>
+									<td>The MIME type of this item.</td>
+								</tr>
+								<tr>
+									<th>name</th>
+									<td>The display name.</td>
+								</tr>
+								<tr>
+									<th>comment</th>
+									<td>A comment or caption.</td>
+								</tr>
+								<tr>
+									<th>meta</th>
+									<td>The raw metadata extracted from the media item, encoded as a
+				string. This value is usually not used as the
+				<code>metadata</code> element provides an easier data format for
+				this information.</td>
+								</tr>
+								<tr>
+									<th>metadata</th>
+									<td>The metadata extracted from the media item, in the form of <a
+									class="code" href="media-item-metadata.html">ma:media-item-metadata</a>
+									objects.</td>
+								</tr>
+								<tr>
+									<th>user-rating</th>
+									<td>List of user ratings assigned to this media item, in the form of <a
+									class="code" href="item-rating.html">ma:item-rating</a>
+									objects.</td>
+								</tr>
+								<tr>
+									<th>user-comment</th>
+									<td>List of user comments assigned to this media item, in the form
+									of <a class="code" href="item-comment.html">ma:item-comment</a>
+									objects.</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<h2>Definition</h2>
+
+	<div class="function-source"><span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">complexType</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;media-item&quot;</span><span class="synIdentifier">&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">sequence</span><span class="synIdentifier">&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">element</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;path&quot;</span><span class="synIdentifier"> </span><span class="synType">type</span>=<span class="synConstant">&quot;xsd:string&quot;</span><span class="synIdentifier">/&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">element</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;mime&quot;</span><span class="synIdentifier"> </span><span class="synType">type</span>=<span class="synConstant">&quot;xsd:string&quot;</span><span class="synIdentifier">/&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">element</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;name&quot;</span><span class="synIdentifier"> </span><span class="synType">type</span>=<span class="synConstant">&quot;xsd:string&quot;</span><span class="synIdentifier"> </span><span class="synType">minOccurs</span>=<span class="synConstant">&quot;0&quot;</span><span class="synIdentifier">/&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">element</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;comment&quot;</span><span class="synIdentifier"> </span><span class="synType">type</span>=<span class="synConstant">&quot;xsd:string&quot;</span><span class="synIdentifier"> </span><span class="synType">minOccurs</span>=<span class="synConstant">&quot;0&quot;</span><span class="synIdentifier">/&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">element</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;meta&quot;</span><span class="synIdentifier"> </span><span class="synType">type</span>=<span class="synConstant">&quot;xsd:string&quot;</span><span class="synIdentifier"> </span><span class="synType">minOccurs</span>=<span class="synConstant">&quot;0&quot;</span><span class="synIdentifier">/&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">element</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;metadata&quot;</span><span class="synIdentifier"> </span><span class="synType">type</span>=<span class="synConstant">&quot;media-item-metadata&quot;</span><span class="synIdentifier"> </span>
+        <span class="synType">minOccurs</span>=<span class="synConstant">&quot;0&quot;</span><span class="synIdentifier"> </span><span class="synType">maxOccurs</span>=<span class="synConstant">&quot;unbounded&quot;</span><span class="synIdentifier">/&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">element</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;user-rating&quot;</span><span class="synIdentifier"> </span><span class="synType">type</span>=<span class="synConstant">&quot;item-rating&quot;</span><span class="synIdentifier"> </span>
+        <span class="synType">minOccurs</span>=<span class="synConstant">&quot;0&quot;</span><span class="synIdentifier"> </span><span class="synType">maxOccurs</span>=<span class="synConstant">&quot;unbounded&quot;</span><span class="synIdentifier">/&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">element</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;user-comment&quot;</span><span class="synIdentifier"> </span><span class="synType">type</span>=<span class="synConstant">&quot;item-comment&quot;</span><span class="synIdentifier"> </span>
+        <span class="synType">minOccurs</span>=<span class="synConstant">&quot;0&quot;</span><span class="synIdentifier"> </span><span class="synType">maxOccurs</span>=<span class="synConstant">&quot;unbounded&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">sequence</span><span class="synIdentifier">&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">attribute</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;id&quot;</span><span class="synIdentifier"> </span><span class="synType">type</span>=<span class="synConstant">&quot;xsd:integer&quot;</span><span class="synIdentifier"> </span><span class="synType">use</span>=<span class="synConstant">&quot;optional&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">attribute</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;itemId&quot;</span><span class="synIdentifier"> </span><span class="synType">type</span>=<span class="synConstant">&quot;xsd:integer&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">attribute</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;collection&quot;</span><span class="synIdentifier"> </span><span class="synType">type</span>=<span class="synConstant">&quot;xsd:integer&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">attribute</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;width&quot;</span><span class="synIdentifier"> </span><span class="synType">type</span>=<span class="synConstant">&quot;xsd:integer&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">attribute</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;height&quot;</span><span class="synIdentifier"> </span><span class="synType">type</span>=<span class="synConstant">&quot;xsd:integer&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">attribute</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;hits&quot;</span><span class="synIdentifier"> </span><span class="synType">type</span>=<span class="synConstant">&quot;xsd:integer&quot;</span><span class="synIdentifier"> </span><span class="synType">use</span>=<span class="synConstant">&quot;optional&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">attribute</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;displayOrder&quot;</span><span class="synIdentifier"> </span><span class="synType">type</span>=<span class="synConstant">&quot;xsd:integer&quot;</span><span class="synIdentifier"> </span><span class="synType">use</span>=<span class="synConstant">&quot;optional&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">attribute</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;fileSize&quot;</span><span class="synIdentifier"> </span><span class="synType">type</span>=<span class="synConstant">&quot;xsd:integer&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">attribute</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;creationDate&quot;</span><span class="synIdentifier"> </span><span class="synType">type</span>=<span class="synConstant">&quot;xsd:dateTime&quot;</span><span class="synIdentifier"> </span><span class="synType">use</span>=<span class="synConstant">&quot;optional&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">attribute</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;tz&quot;</span><span class="synIdentifier"> </span><span class="synType">type</span>=<span class="synConstant">&quot;xsd:integer&quot;</span><span class="synIdentifier"> </span><span class="synType">use</span>=<span class="synConstant">&quot;optional&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">attribute</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;tzName&quot;</span><span class="synIdentifier"> </span><span class="synType">type</span>=<span class="synConstant">&quot;xsd:string&quot;</span><span class="synIdentifier"> </span><span class="synType">use</span>=<span class="synConstant">&quot;optional&quot;</span><span class="synIdentifier">/&gt;</span>
+<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsd</span><span class="synComment">:</span><span class="synStatement">complexType</span><span class="synIdentifier">&gt;</span></div>
+
+	<h2>Example instance</h2>
+
+	<div class="function-example"><span class="synIdentifier">&lt;item </span><span class="synType">creationDate</span>=<span class="synConstant">&quot;2002-12-11T21:18:54.000-08:00&quot;</span>
+  <span class="synType">fileSize</span>=<span class="synConstant">&quot;740951&quot;</span><span class="synIdentifier"> </span><span class="synType">collection</span>=<span class="synConstant">&quot;1&quot;</span><span class="synIdentifier"> </span><span class="synType">height</span>=<span class="synConstant">&quot;1600&quot;</span><span class="synIdentifier"> </span><span class="synType">hits</span>=<span class="synConstant">&quot;7&quot;</span>
+  <span class="synType">itemId</span>=<span class="synConstant">&quot;1&quot;</span><span class="synIdentifier"> </span><span class="synType">tzName</span>=<span class="synConstant">&quot;GMT-08:00&quot;</span><span class="synIdentifier"> </span><span class="synType">width</span>=<span class="synConstant">&quot;1200&quot;</span><span class="synIdentifier">&gt;</span>
+  <span class="synIdentifier">&lt;path&gt;</span>IMG_0900.jpg<span class="synIdentifier">&lt;/path&gt;</span>
+  <span class="synIdentifier">&lt;mime&gt;</span>image/jpeg<span class="synIdentifier">&lt;/mime&gt;</span>
+  <span class="synIdentifier">&lt;name&gt;</span>Yee haw<span class="synIdentifier">&lt;/name&gt;</span>
+  <span class="synIdentifier">&lt;meta&gt;</span>|aCanon|bCanon PowerShot S330|c6|d6|e2|f89<span class="synIdentifier">&lt;/meta&gt;</span>
+<span class="synIdentifier">&lt;/item&gt;</span></div>
+	
+<hr>
+<div>
+	<div class="float-r">
+		<a href="http://sourceforge.net"><img
+			src="http://sourceforge.net/sflogo.php?group_id=103583&amp;type=2" 
+			width="125" height="37" alt="SourceForge.net Logo" /></a>
+	</div>
+	<small>$Id: media-item.html,v 1.1 2007/01/08 04:39:00 matt Exp $</small>
+</div>
+</body>
+</html>
+

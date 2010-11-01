@@ -1,0 +1,8 @@
+mime.types
+*.properties
+*.xml
+*.dtd
+*.jar
+*.mp3
+META-INF
+hbm

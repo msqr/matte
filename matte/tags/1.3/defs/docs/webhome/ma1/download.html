@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Media Album: Download</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<link rel="stylesheet" type="text/css" href="whoosh.css"/>
+</head>
+<body>
+
+<div id="nav-frame">
+	<div class="frame-t">
+		<img class="frame-tl" alt="frame" src="img/tb_03.gif" />
+		<img class="frame-tr" alt="frame" src="img/tb_06.gif" />
+	</div>
+	<div class="frame-m">
+		<div class="section"><a href="index.html">Home</a></div>
+
+		<div class="section"><a href="test-drive.html">Test Drive</a></div>
+
+		<div class="section"><a href="screenshots.html">Screen Shots</a></div>
+
+		<div class="section"><a href="features.html">Features</a></div>
+
+		<div class="section-selected">Download</div>
+		<div class="subsection"><a href="#requirements">Requirements</a></div>
+		<div class="subsection"><a href="#optional">Optional software</a></div>
+		<div class="subsection"><a href="#download">Download</a></div>
+
+		<div class="section"><a href="credits.html">Credits</a></div>
+
+		<div class="section"><a href="developers.html">Developers</a></div>
+	</div>
+	<div class="frame-ml"></div>
+	<div class="frame-mr"></div>
+	<div class="frame-b">
+		<img class="frame-bl" alt="frame" src="img/tb_24.gif" />
+		<img class="frame-br" alt="frame" src="img/tb_26.gif" />
+	</div>
+</div>
+
+<a name="top"></a>
+<h1>Download Media Album</h1>
+
+<p class="intro">You can download and run Media Album for free on your own web server. Media Album has been tested extensively on Linux and Mac OS X. It also runs on Windows but this is not recommended.</p>
+
+<a name="requirements"></a>
+<h2>Requirements</h2>
+<p>Media Album is a 100% Java web application that requires a database backend. Currently the requirements are as follows:</p>
+
+<dl>
+	<dt>Java 1.4</dt>
+	<dd>
+		Get the appropriate Java SDK/JDK for your server platform. You can get this from <a title="Sun's Java" href="http://java.sun.com/">Sun</a>, <a href="IBM's Java" href="http://www-106.ibm.com/developerworks/java/jdk/">IBM</a>, or <a title="Blackdown's Java" href="http://www.blackdown.org/">Blackdown</a>.
+	</dd>
+
+	<dt>PostgreSQL database</dt>
+	<dd>
+		Media Album has been tested with both the 7.3 and 7.4 series of PostgreSQL. You can download PostgreSQL from <a href="http://www.postgresql.org/">postgresql.org</a>.
+		<br />
+		<br />
+		<b>Note</b> Media Album does have initial support for MySQL, but some work needs to be done to get it working completely. Anyone willing to help out in this fashion should contact <a href="mailto:msqr@users.sourceforge.net">msqr@users.sourceforge.net</a>.
+	</dd>
+
+	<dt>Java servlet container</dt>
+	<dd>
+		Media Album is distributed as a Java web application (WAR). To use this you'll need a servlet container to deploy it into. Media Album has been extensively tested with the <a href="http://jakarta.apache.org/tomcat/">Tomcat</a> 4.1 and 5 series. Any J2EE servlet container should work, but the installation script that comes with Media Album currently only supports Tomcat.
+	</dd>
+
+</dl>
+
+<a name="optional"></a>
+<h2>Optional packages</h2>
+<p>Media Album can run without any of the following, but they provide additional functionality that you might want to use:</p>
+
+<dl>
+	<dt>ImageMagick &amp; JMagick</dt>
+	<dd>
+		<a href="http://www.imagemagick.org/">ImageMagick</a> can be used instead of Java's built-in ImageIO classes to handle reading/scaling image media items (eg. JPG, PNG, etc). Most often ImageMagick outperforms the built-in Java ImageIO classes by a huge factor and with better quality. Media Album can use ImageMagick by way of <a href="http://www.yeo.id.au/jmagick/">JMagick</a>. Be warned that sometimes setting up ImageMagick and JMagick can be an <em>interesting</em> experience.
+		Once it's running, however, the speed/quality benefits can be significant. Read the <code>README-JMagick</code> file included in the Media Album binary package for more information.
+	</dd>
+
+	<dt>Java Media Framework (JMF)</dt>
+	<dd>
+		If you install Sun's <a href="http://java.sun.com/products/java-media/jmf/index.jsp">Java Media Framework</a> Media Album can be used to publish video files. Installing JMF is easy, and the <code>README-JMF</code> file included in the Media Album binary package has information about configuring Media Album to use it.
+	</dd>
+</dl>
+
+<a name="download"></a>
+<h2>Download</h2>
+<p>You can <a href="http://sourceforge.net/project/showfiles.php?group_id=103583">download Media Album from
+Sourceforge</a>. The binary package (named like <em>malbum-1.0.0.tbz2</em>) contains the Media Album WAR along with a setup script to get your installation going for the first time. The source package (named like <em>malbum-1.0.0-src.tbz2</em>) contains all of Media Album's source.</p>
+
+<p>For installation instructions look in the <code>README</code> file that comes with the binary distribution.</p>
+
+</body>
+</html>

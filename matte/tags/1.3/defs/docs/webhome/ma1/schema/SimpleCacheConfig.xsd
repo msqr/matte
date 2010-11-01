@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  Copyright (c) 2004 Matt Magoffin
+  
+  This program is free software; you can redistribute it and/or 
+  modify it under the terms of the GNU General Public License as 
+  published by the Free Software Foundation; either version 2 of 
+  the License, or (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful, 
+  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+  General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License 
+  along with this program; if not, write to the Free Software 
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
+  02111-1307 USA
+
+  Id: build.xml,v 1.10 2004/02/06 18:49:56 matt Exp   
+-->
+<xsd:schema targetNamespace="http://msqr.us/xsd/SimpleCacheConfig" 
+			xmlns:cache="http://msqr.us/xsd/SimpleCacheConfig"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+			elementFormDefault="qualified">
+	 
+	<xsd:annotation>
+		<xsd:documentation>
+			This is the XML Schema for SimpleCache configurations.
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:complexType name="cache-config">
+		<xsd:attribute name="impl" type="xsd:string" use="optional"/>
+		<xsd:attribute name="size" type="xsd:integer" use="optional"/>
+		<xsd:attribute name="ttl" type="xsd:integer" use="optional"/>
+		<xsd:attribute name="access-ttl" type="xsd:boolean" default="false"/>
+	</xsd:complexType>
+	
+	<xsd:complexType name="keyed-cache-config">
+		<xsd:complexContent>
+			<xsd:extension base="cache:cache-config">
+				<xsd:attribute name="key" type="xsd:string"/>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+					
+
+	<xsd:complexType name="cache-factory-config">
+		<xsd:sequence>
+			<xsd:element name="default-settings" type="cache:cache-config"/>
+			<xsd:element name="cache" type="cache:keyed-cache-config" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="cache-status">
+		<xsd:sequence>
+			<xsd:element name="bucket" type="cache:cache-bucket-status" minOccurs="0" 
+				maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string"/>
+		<xsd:attribute name="max" type="xsd:integer"/>
+		<xsd:attribute name="used" type="xsd:integer"/>
+		<xsd:attribute name="ttl" type="xsd:long"/>
+		<xsd:attribute name="type" type="xsd:string"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="cache-bucket-status">
+		<xsd:sequence>
+			<xsd:element name="object" type="xsd:string" minOccurs="0" />
+		</xsd:sequence>
+		<xsd:attribute name="key" type="xsd:string"/>
+		<xsd:attribute name="hits" type="xsd:integer"/>
+		<xsd:attribute name="created" type="xsd:dateTime"/>
+		<xsd:attribute name="accessed" type="xsd:dateTime"/>
+		<xsd:attribute name="expires" type="xsd:dateTime"/>
+	</xsd:complexType>
+
+</xsd:schema>
+
