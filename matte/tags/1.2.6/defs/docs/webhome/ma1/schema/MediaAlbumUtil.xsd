@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  Copyright (c) 2002 Matt Magoffin
+  
+  This program is free software; you can redistribute it and/or 
+  modify it under the terms of the GNU General Public License as 
+  published by the Free Software Foundation; either version 2 of 
+  the License, or (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful, 
+  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+  General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License 
+  along with this program; if not, write to the Free Software 
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
+  02111-1307 USA
+
+  Id: MediaAlbumUtil.xsd,v 1.7 2004/03/02 21:44:29 matt Exp   
+-->
+<xsd:schema targetNamespace="http://msqr.us/xsd/MediaAlbum" 
+	xmlns:ma="http://msqr.us/xsd/MediaAlbum"
+	xmlns:cache="http://msqr.us/xsd/SimpleCacheConfig" 
+	xmlns:pool="http://msqr.us/xsd/ObjectPoolConfig" 
+	xmlns:db="http://msqr.us/xsd/DataBaseConfig" 
+	xmlns:gdal="http://msqr.us/xsd/GerdalConfig" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	elementFormDefault="unqualified">
+	 
+	<xsd:annotation>
+		<xsd:documentation>
+			This is the XML Schema for the Media Album application
+			basic elements.
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:complexType name="action-msgs">
+		<xsd:annotation>
+			<xsd:documentation>
+				A message to display, analagous to the Struts ActionMessage class.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="msg" type="xsd:string" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="key" type="xsd:string" use="optional"/>
+	</xsd:complexType>
+	
+	<xsd:complexType name="image-spec">
+		<xsd:attributeGroup ref="ma:WidthHeightAttributes"/>
+		<xsd:attribute name="compress" type="xsd:string" use="optional" default="normal"/>
+		<xsd:attribute name="size" type="xsd:string" use="optional" default="normal"/>
+	</xsd:complexType>
+
+	<xsd:simpleType name = "media-compress-type">
+		<xsd:restriction base = "xsd:string">
+			<xsd:enumeration value = "high"/>
+			<xsd:enumeration value = "medium"/>
+			<xsd:enumeration value = "normal"/>
+			<xsd:enumeration value = "none"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name = "media-size-type">
+		<xsd:restriction base = "xsd:string">
+			<xsd:enumeration value = "big"/>
+			<xsd:enumeration value = "medium"/>
+			<xsd:enumeration value = "normal"/>
+			<xsd:enumeration value = "small"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:attributeGroup name="WidthHeightAttributes">
+		<xsd:attribute name="width" type="xsd:nonNegativeInteger" use="optional"/>
+		<xsd:attribute name="height" type="xsd:nonNegativeInteger" use="optional"/>
+	</xsd:attributeGroup>
+
+	<xsd:complexType name="init-param-config">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="name" type="xsd:string"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+
+	<xsd:attributeGroup name="SearchResultAttributes">
+		<xsd:attribute name="total-results" type="xsd:nonNegativeInteger"/>
+		<xsd:attribute name="returned-results" type="xsd:nonNegativeInteger"/>
+		<xsd:attribute name="starting-offset" type="xsd:nonNegativeInteger"/>
+		<xsd:attribute name="search-time" type="xsd:long"/>
+		<xsd:attribute name="is-partial-result" type="xsd:boolean"/>
+	</xsd:attributeGroup>
+
+	<xsd:complexType name="search-results" abstract="true">
+		<xsd:attributeGroup ref="ma:SearchResultAttributes"/>
+	</xsd:complexType>
+	
+</xsd:schema>
+	

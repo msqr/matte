@@ -1,0 +1,25 @@
+Matte Release Notes
+
+@VERSION@ @BUILD_DATE@
+
+This is the final 1.0 release of Matte, and can be considered ready for
+production use.
+
+Updates since 0.9 release
+
+- Support "Download album" when viewing virtual albums in Woosh theme.
+
+- Fix ocassional ConcurrentModificationException in WorkBiz.
+
+- Support user ratings in Woosh theme.
+
+- Corrections and updates to documentation and JavaDocs.
+
+- Ignore __MACOSX resources when importing zip archives.
+
+- Begin foundation work on Matte iPhoto Export plugin. This is not 
+  complete and will appear in a later release.
+  
+- Fix for Commons File Upload "unknown size" error.
+
+- When exporting an album, also generate metadata.xml file.

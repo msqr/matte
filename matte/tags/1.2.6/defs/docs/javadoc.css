@@ -1,0 +1,68 @@
+/* Javadoc style sheet */
+
+/* Define colors, fonts and other style attributes here to override the defaults */
+
+/* Page background color */
+body { background-color: #FFFFFF }
+
+/* Headings */
+h1 { font-size: 145% }
+
+/* Table colors */
+.TableHeadingColor     { background: #CCCCFF } /* Dark mauve */
+.TableSubHeadingColor  { background: #EEEEFF } /* Light mauve */
+.TableRowColor         { background: #FFFFFF } /* White */
+
+/* Font used in left-hand frame lists */
+.FrameTitleFont   { font-size: 100%; font-family: Helvetica, Arial, sans-serif }
+.FrameHeadingFont { font-size:  90%; font-family: Helvetica, Arial, sans-serif }
+.FrameItemFont    { font-size:  90%; font-family: Helvetica, Arial, sans-serif }
+
+/* Navigation bar fonts and colors */
+.NavBarCell1    { background-color:#EEEEFF;} /* Light mauve */
+.NavBarCell1Rev { background-color:#00008B;} /* Dark Blue */
+.NavBarFont1    { font-family: Arial, Helvetica, sans-serif; color:#000000;}
+.NavBarFont1Rev { font-family: Arial, Helvetica, sans-serif; color:#FFFFFF;}
+
+.NavBarCell2    { font-family: Arial, Helvetica, sans-serif; background-color:#FFFFFF;}
+.NavBarCell3    { font-family: Arial, Helvetica, sans-serif; background-color:#FFFFFF;}
+
+li + li {
+	margin-top: 0.5em;
+}
+
+dl.class-properties dd {
+	margin-bottom: 1em;
+	font-size: 10pt;
+	line-height: 14pt;
+	font-family: arial, helvetica, sans-serif;
+}
+
+dl.class-properties dd code {
+	font-size: 9pt;
+	font-family: "courier new", monospace;
+}
+
+dl.class-properties dd + dt {
+	margin-top: 1em;
+}
+
+dl.class-properties {
+	margin-left: 20pt;
+}
+
+dl.class-properties + p {
+	margin-top: 2em;
+}
+
+dl.class-properties > dt {
+	color:#5D88A8;
+	background-color: inherit;
+}
+
+dl.class-properties  dt {
+	font-size: 10pt;
+	font-weight: bold;
+	font-family: verdana, helvetica, sans-serif;
+	margin-bottom: 0.2em;
+}
