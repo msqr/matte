@@ -24,6 +24,8 @@ Updates since 1.2 release
 - Support im4java for image processing, which means both ImageMagick
   and GraphicsMagick can be used. This is a good alternative to
   using JMagick.
+  
+- Improved support for the Matte iPhoto Export Plugin.
 
 
 Notes on XSLT 2.0 update
