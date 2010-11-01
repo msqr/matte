@@ -122,7 +122,12 @@ public class SystemBizImplTest extends AbstractSpringEnabledTransactionalTest {
 				}
 			}
 		});
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context;
+		try {
+			context = new TestBizContext(getContext(contextKey()),null);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		Long themeId = testSystemBizImpl.storeTheme(cmd, context);
 		return themeId;
 	}

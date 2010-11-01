@@ -123,11 +123,6 @@ public abstract class AbstractSpringEnabledTransactionalTest extends
 	}
 
 	@Override
-	public boolean isPopulateProtectedVariables() {
-		return true;
-	}
-
-	@Override
 	protected final String[] getConfigLocations() {
 		return TestConstants.DEFAULT_APP_CONTEXT_PATHS;
 	}
@@ -189,7 +184,11 @@ public abstract class AbstractSpringEnabledTransactionalTest extends
 	@SuppressWarnings("unchecked")
 	private synchronized ConfigurableApplicationContext getBaseContext(String[] configLocations) {
 		if ( baseContext == null ) {
-			baseContext = getContext(configLocations);
+			try {
+				baseContext = getContext(configLocations);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 		}
 		Map<String,JdbcTemplate> map = baseContext.getBeansOfType(
 				JdbcTemplate.class,false,false);

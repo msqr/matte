@@ -103,11 +103,6 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	private Collection testCollection;
 
 	@Override
-	public boolean isPopulateProtectedVariables() {
-		return true;
-	}
-
-	@Override
 	protected void onSetUpInTransaction() throws Exception {
 		super.onSetUpInTransaction();
 		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);

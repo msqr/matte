@@ -57,9 +57,12 @@
 		<constructor-arg ref="wsMarshaller"/>
 	</bean>
 	
-	<bean id="messageFactory" class="magoffin.matt.ma2.web.service.AxiomSoapMessageFactory"> 
-		<property name="payloadCaching" value="false"/> 
+	<bean id="messageFactory" class="org.springframework.ws.soap.axiom.AxiomSoapMessageFactory">
+		<property name="payloadCaching" value="false" />
+		<property name="attachmentCaching" value="true" />
+		<property name="attachmentCacheThreshold" value="4096"/>
 	</bean>
+	
 	
 	<bean id="wsMarshaller" class="org.springframework.oxm.jaxb.Jaxb1Marshaller">
 		<property name="contextPath" value="magoffin.matt.ma2.domain"/>
