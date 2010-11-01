@@ -1,0 +1,15 @@
+Matte Release Notes
+
+@VERSION@ @BUILD_DATE@
+
+This is a minor update to the 1.0 release to add some support for the
+Matte Add Files applet and also the iPhoto Export Plugin. Aside from
+those minor additions, this is functionally the same as version 1.0.
+
+If you do not plan to use either of these features, there is no reason
+to upgrade from the 1.0 release.
+
+If you are interested in these features, see the documentation at
+
+http://malbum.sourceforge.net/upload-applet.html
+http://malbum.sourceforge.net/iphoto-export.html
