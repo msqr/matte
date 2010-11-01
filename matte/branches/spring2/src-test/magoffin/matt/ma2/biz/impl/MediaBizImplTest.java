@@ -100,11 +100,6 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	private int counter = 0;
 	
 	@Override
-	public boolean isPopulateProtectedVariables() {
-		return true;
-	}
-
-	@Override
 	protected void onSetUpInTransaction() throws Exception {
 		super.onSetUpInTransaction();
 		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);

@@ -86,11 +86,6 @@ public class UserBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	protected CollectionDao collectionDao;
 	
 	@Override
-	public boolean isPopulateProtectedVariables() {
-		return true;
-	}
-
-	@Override
 	protected void onSetUpInTransaction() throws Exception {
 		super.onSetUpInTransaction();
 		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);

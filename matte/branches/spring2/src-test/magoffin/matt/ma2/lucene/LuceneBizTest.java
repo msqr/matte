@@ -82,12 +82,13 @@ public class LuceneBizTest extends AbstractSpringEnabledTransactionalTest {
 	/** The CollectionDao. */
 	protected CollectionDao collectionDao;
 	
-	private TestBizContext myBizContext = new TestBizContext(getContext(contextKey()),null);
+	private TestBizContext myBizContext;
 	private IndexUpdateTracker updateTracker = new IndexUpdateTracker();
 
 	@Override
-	public boolean isPopulateProtectedVariables() {
-		return true;
+	protected void prepareTestInstance() throws Exception {
+		myBizContext = new TestBizContext(getContext(contextKey()), null);
+		super.prepareTestInstance();
 	}
 
 	@Override
