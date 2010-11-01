@@ -336,11 +336,12 @@ class ImportWorkRequest implements WorkRequest {
 			// might point to an item also in another album, i.e. one
 			// item shared between multiple albums
 			Element albumNode = (Element)currItemNode.getParentNode();
+			Element currNode = albumNode;
 			Deque<String> albums = new LinkedList<String>();
-			while ( albumNode.getLocalName().equals("album") ) {
-				albums.addFirst(albumNode.getAttribute("name"));
-				albumNode = (Element)albumNode.getParentNode();
-				if ( albumNode.getParentNode() == null ) {
+			while ( currNode.getLocalName().equals("album") ) {
+				albums.addFirst(currNode.getAttribute("name"));
+				currNode = (Element)currNode.getParentNode();
+				if ( currNode.getParentNode() == null ) {
 					break;
 				}
 			}
