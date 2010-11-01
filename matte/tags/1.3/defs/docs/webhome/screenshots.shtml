@@ -1,0 +1,3 @@
+<!--#set var="currPage" value="screenshots"-->
+<!--#set var="pageTitle" value="Matte: screen shots"-->
+<!--#include virtual="layout.shtml"-->

@@ -1,0 +1,3 @@
+<!--#set var="currPage" value="credits"-->
+<!--#set var="pageTitle" value="Matte: credits, thanks, etc."-->
+<!--#include virtual="layout.shtml"-->
