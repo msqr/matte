@@ -1,0 +1,254 @@
+DIV, P {
+	font-family: serif;
+	font-size: medium;
+	margin-bottom: 0.2cm;
+	margin-left: 0.2cm;
+	margin-right: 0.2cm;
+}
+
+TD > DIV {
+	margin-left: 0cm;
+}
+
+TABLE + DIV {
+	margin-top: 0.5em;
+}
+
+DIV.function-info {
+	margin-left: 0.2cm;
+	border: thin dashed #999;
+	background-color: transparent;
+	padding: 0.1em;
+}
+
+	DIV.function-info TABLE {
+		border: none;
+	}
+		
+	DIV.function-info > TABLE > TBODY > TR + TR {
+		border-top: thin solid #ccc;
+	}
+		
+	DIV.function-info > TABLE > TBODY > TR > TH {
+		background-color: transparent;
+		border: none;
+		font-family: sans-serif;
+		font-size: medium;
+		font-variant: normal;
+		font-style: normal;
+		font-weight: bold;
+		padding-right: 2em;
+	}
+		
+	DIV.function-info > TABLE > TBODY > TR > TD {
+		background-color: transparent;
+		border: none;
+		font-family: sans-serif;
+		font-size: medium;
+		font-variant: normal;
+		font-style: normal;
+		font-weight: normal;
+		width: 100%;
+	}
+		
+	DIV.function-info * TABLE > TBODY > TR > TH {
+		background-color: transparent;
+		border: none;
+		font-family: sans-serif;
+		font-size: small;
+		font-variant: normal;
+		font-style: normal;
+		font-weight: bold;
+		padding: 0.1cm 2em 0.1cm 0cm;
+	}
+		
+	DIV.function-info * TABLE > TBODY > TR > TD {
+		background-color: transparent;
+		border: none;
+		font-family: sans-serif;
+		font-size: small;
+		font-variant: normal;
+		font-style: normal;
+		font-weight: normal;
+		padding: 0.1cm;
+	}
+		
+	DIV.function-info DT {
+		float: left;
+		font-family: sans-serif;
+		font-size: medium;
+		font-variant: normal;
+		font-style: normal;
+		padding: 0em;
+		margin: 0em 1em 0em 0em;
+		border: thin solid blue;
+	}
+
+	DIV.function-info DD {
+		font-family: sans-serif;
+		font-size: medium;
+		font-variant: normal;
+		font-style: normal;
+		padding: 0em;
+		margin: 0em;
+		border: thin solid red;
+	}
+
+DIV.function-example {
+	border: thin dashed #999;
+	background-color: #ffc;
+	padding: 0.1em;
+	font-family: monospace;
+	font-size: normal;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	white-space: pre;
+}
+
+DIV.function-example-out {
+	border: thin dashed #999;
+	background-color: #ffc;
+	padding: 0.1em;
+	font-family: monospace;
+	font-size: normal;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	white-space: pre;
+}
+
+DIV.function-source {
+	border: thin dashed #999;
+	background-color: #ffc;
+	padding: 0.1em;
+	font-family: monospace;
+	font-size: normal;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	white-space: pre;
+}
+
+H1 {
+	clear: both;
+	font-family: sans-serif;
+	font-size: x-large;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: bold;
+	text-transform: uppercase;
+	border: 1px solid #666;
+	background-color: #cdcebd;
+	padding: 0.2em;
+	-moz-border-radius-topleft: 9px;
+	-moz-border-radius-bottomleft: 9px;
+	-moz-border-radius-topright: 9px;
+	-moz-border-radius-bottomright: 9px;
+}
+
+BODY[class=index-list] H1 {
+	clear: both;
+	font-family: sans-serif;
+	font-size: medium;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: bold;
+	border: 1px solid #666;
+	background-color: #cdcebd;
+	margin: 0cm;
+	margin-bottom: 0.1cm;
+	padding: 0.2em;
+	padding-top: 0em;
+	text-transform: none;
+	-moz-border-radius-topleft: 9px;
+	-moz-border-radius-bottomleft: 9px;
+	-moz-border-radius-topright: 9px;
+	-moz-border-radius-bottomright: 9px;
+}
+
+H2 {
+	clear: both;
+	font-family: sans-serif;
+	font-size: large;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: bold;
+	border: 1px solid #666;
+	background-color: #cdcebd;
+	margin-top: 1cm;
+	padding: 0.2em;
+	-moz-border-radius-topleft: 9px;
+	-moz-border-radius-bottomleft: 9px;
+	-moz-border-radius-topright: 9px;
+	-moz-border-radius-bottomright: 9px;
+}
+
+H3 {
+	font-family: sans-serif;
+	font-size: medium;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: bold;
+	margin-top: 1.5em;
+	margin-left: 0.75cm;
+	border: 1px solid #666;
+	background-color: #cdcebd;
+	padding: 0.2em;
+	-moz-border-radius-topleft: 9px;
+	-moz-border-radius-bottomleft: 9px;
+	-moz-border-radius-topright: 9px;
+	-moz-border-radius-bottomright: 9px;
+}
+
+BODY[class=index-list] OL {
+	margin-left: 0.1cm;
+	font-size: small;
+}
+
+.flag {
+	font-style: italic;
+	color: #066;
+}
+
+/* VIM SYNTAX VALUES */
+
+.synComment {
+	color: #999;
+}
+
+/* XML attribute values */
+.synConstant {
+	color: #066;
+}
+
+/* XML elements */
+.synIdentifier {
+	color: #390;
+}
+
+.synStatement {
+	color: #63f;
+}
+
+.synPreProc {
+}
+
+/* XML attributes */
+.synType {
+	color: #c30;
+}
+
+.synSpecial {
+	color: #f90;
+}
+
+.synUndefined {
+}
+
+.synError {
+}
+
+.synTodo {
+}
+
