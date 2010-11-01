@@ -27,10 +27,21 @@
 		class="org.springframework.beans.factory.config.MapFactoryBean">
 		<property name="sourceMap">
 			<map>
+				<!-- image support -->
 				<entry key="jpg" value-ref="jpegMediaHandler"/>
 				<entry key="png" value-ref="pngMediaHandler"/>
-				<entry key="mp3" value-ref="mp3MediaHandler"/>
 				<entry key="svg" value-ref="svgMediaHandler"/>
+
+				<!-- audio support -->
+				<entry key="mp3" value-ref="mp3MediaHandler"/>
+
+				<!-- video support -->
+				<entry key="mov" value-ref="movMediaHandler"/>
+				<entry key="qt" value-ref="movMediaHandler"/>
+				<entry key="mpg" value-ref="mpegMediaHandler"/>
+				<entry key="3gp" value-ref="threeGpMediaHandler"/>
+				<entry key="mp4" value-ref="mp4MediaHandler"/>
+				<entry key="m4v" value-ref="mp4MediaHandler"/>
 			</map>
 		</property>
 	</bean>
@@ -44,10 +55,20 @@
 		class="org.springframework.beans.factory.config.MapFactoryBean">
 		<property name="sourceMap">
 			<map>
+				<!-- image support -->
 				<entry key="image/jpeg" value-ref="jpegMediaHandler"/>
 				<entry key="image/png" value-ref="pngMediaHandler"/>
-				<entry key="audio/mpeg" value-ref="mp3MediaHandler"/>
 				<entry key="image/svg+xml" value-ref="svgMediaHandler"/>
+
+				<!-- audio support -->
+				<entry key="audio/mpeg" value-ref="mp3MediaHandler"/>
+
+				<!-- video support -->
+				<entry key="video/quicktime" value-ref="movMediaHandler"/>
+				<entry key="video/mpeg" value-ref="mpegMediaHandler"/>
+				<entry key="video/3gpp" value-ref="threeGpMediaHandler"/>
+				<entry key="video/mp4" value-ref="mp4MediaHandler"/>
+				<entry key="video/x-m4v" value-ref="mp4MediaHandler"/>
 			</map>
 		</property>
 	</bean>
@@ -117,6 +138,41 @@
 		</property>
 	</bean>
 	
+	<!--======================================================================
+		Video handler implementations
+		======================================================================-->
+	
+	<bean id="abstractIconBasedMediaHandler" abstract="true"
+		class="magoffin.matt.ma2.support.BasicIconBasedMediaHandler">
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="mediaBiz" ref="mediaBizTarget"/>
+		<property name="userBiz" ref="userBizTarget"/>
+		<property name="imageMediaRequestDelegate">
+			<bean class="magoffin.matt.ma2.support.MimeTypeMediaHandlerDelegate">
+				<property name="delegateMap" ref="mediaHandlerDelegateMimeMap"/>
+			</bean>
+		</property>
+	</bean>
+		
+	<bean id="mpegMediaHandler" parent="abstractIconBasedMediaHandler">
+		<constructor-arg index="0" value="video/mpeg"/>
+		<constructor-arg index="1" value="mpg"/>
+	</bean>
+	
+	<bean id="threeGpMediaHandler" parent="abstractIconBasedMediaHandler">
+		<constructor-arg index="0" value="video/3gpp"/>
+		<constructor-arg index="1" value="3gp"/>
+	</bean>
+	
+	<bean id="mp4MediaHandler" parent="abstractIconBasedMediaHandler">
+		<constructor-arg index="0" value="video/mp4"/>
+		<constructor-arg index="1" value="mp4"/>
+	</bean>
+	
+	<bean id="movMediaHandler" parent="abstractIconBasedMediaHandler">
+		<constructor-arg index="0" value="video/quicktime"/>
+		<constructor-arg index="1" value="mov"/>
+	</bean>
 	
 	<!--======================================================================
 		ImageIO media handler implementations
@@ -177,6 +233,5 @@
 	
 	<bean id="imageMediaHelper" 
 		class="magoffin.matt.ma2.image.ImageMediaHelper"/>
-	
 	
 </beans>

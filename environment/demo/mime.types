@@ -23,5 +23,8 @@ text/css 							css
 text/html							html htm HTML HTM
 text/plain							txt text TXT TEXT
 video/mpeg							mpg mpeg mpe
+video/mp4							mp4
+video/3gpp							3gp
 video/quicktime						mov qt
+video/x-m4v							m4v
 video/x-msvideo						avi
