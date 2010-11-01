@@ -15,16 +15,6 @@ version 1.5) or higher. You can get a JRE from Sun at
 http://java.sun.com/. Other vendors make JREs, any one of them should
 work as long as they are version 1.5 or higher.
 
-***** Note on Java 6 *****
-  
-  A bug in the Java 6 JAXP XSLT implementation prevents Matte from
-  running. This is Sun bug 6537167:
-
-  http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6537167
-
-  Until this bug is fixed, Matte will only work in a Java 5 runtime.
-
-
 Starting the Live Demo  -----------------------------------------------
 
 To start Matte simply run './start.sh' or '.\start.bat' script (as 
