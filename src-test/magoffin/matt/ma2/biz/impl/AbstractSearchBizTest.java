@@ -26,6 +26,11 @@
 
 package magoffin.matt.ma2.biz.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
@@ -53,8 +58,11 @@ import magoffin.matt.ma2.support.AddMediaCommand;
 import magoffin.matt.ma2.support.BasicAlbumSearchCriteria;
 import magoffin.matt.util.TemporaryFile;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Test case for the {@link AbstractSearchBiz} class.
@@ -62,31 +70,25 @@ import org.springframework.core.io.Resource;
  * @author Matt Magoffin (spamsqr@msqr.us)
  * @version $Revision$ $Date$
  */
+@ContextConfiguration
 public class AbstractSearchBizTest extends
 		AbstractSpringEnabledTransactionalTest {
 
-	/** The AbstractSearchBiz to test. */
-	protected SearchBiz testAbstractSearchBiz;
-	
-	/** The DomainObjectFactory instance. */
-	protected DomainObjectFactory domainObjectFactory;
-
-	/** The MediaBiz. */
-	protected MediaBiz testMediaBiz;
-	
-	/** The UserBiz. */
-	protected UserBiz testUserBiz;
-	
-	/** The IOBiz. */
-	protected IOBiz testIOBiz;
-	
-	/** Test AlbumDao. */
-	protected AlbumDao albumDao;
+	@javax.annotation.Resource private SearchBiz testAbstractSearchBiz;
+	@javax.annotation.Resource private DomainObjectFactory domainObjectFactory;
+	@javax.annotation.Resource private MediaBiz testMediaBiz;
+	@javax.annotation.Resource private UserBiz testUserBiz;
+	@javax.annotation.Resource private IOBiz testIOBiz;
+	@javax.annotation.Resource private AlbumDao albumDao;
 	
 	private int counter = 0;
 	
+	/**
+	 * Clean up DB before test.
+	 */
+	@Before
 	@Override
-	protected void onSetUpInTransaction() throws Exception {
+	public void onSetUpInTransaction() {
 		super.onSetUpInTransaction();
 		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);
 	}
@@ -96,10 +98,11 @@ public class AbstractSearchBizTest extends
 	 * 
 	 * @throws Exception if any error occurs
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testSearchForAlbumById() throws Exception {
 		User user = registerAndConfirmUser();
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext, null);
 		List<Collection> collections = testUserBiz.getCollectionsForUser(user,context);
 		Album album = saveNewAlbum(user);
 
@@ -150,7 +153,7 @@ public class AbstractSearchBizTest extends
 	@SuppressWarnings("unchecked")
 	public void testSearchForAlbumByIdWithChildren() throws Exception {
 		User user = registerAndConfirmUser();
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext ,null);
 		List<Collection> collections = testUserBiz.getCollectionsForUser(user,context);
 		Album album = saveNewAlbum(user);
 		Album album2 = saveNewAlbum(user);
@@ -210,7 +213,7 @@ public class AbstractSearchBizTest extends
 
 	private User registerAndConfirmUser(String login, String email) throws Exception {
 		User newUser = getTestUser(login, email);
-		BizContext context = new TestBizContext(getContext(contextKey()),null);		
+		BizContext context = new TestBizContext(applicationContext, null);		
 		String confKey = testUserBiz.registerUser(newUser,context);
 		User confirmedUser = testUserBiz.confirmRegisteredUser(newUser.getLogin(),
 				confKey,context);

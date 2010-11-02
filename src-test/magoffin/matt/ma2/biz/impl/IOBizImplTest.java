@@ -26,6 +26,8 @@
 
 package magoffin.matt.ma2.biz.impl;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -65,9 +67,12 @@ import magoffin.matt.ma2.support.BasicMediaResponse;
 import magoffin.matt.ma2.support.ExportItemsCommand;
 import magoffin.matt.util.TemporaryFile;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.FileCopyUtils;
 
 /**
@@ -76,34 +81,23 @@ import org.springframework.util.FileCopyUtils;
  * @author Matt Magoffin (spamsqr@msqr.us)
  * @version $Revision$ $Date$
  */
+@ContextConfiguration
 public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	
-	/** The IOBiz. */
-	protected IOBizImpl testIOBizImpl;
-	
-	/** The WorkBiz. */
-	protected WorkBiz testWorkBiz;
-	
-	/** The UserBiz. */
-	protected UserBiz testUserBiz;
-	
-	/** The SystemBiz. */
-	protected SystemBiz testSystemBiz;
-	
-	/** The CollectionDao. */
-	protected CollectionDao collectionDao;
-	
-	/** The AlbumDao. */
-	protected AlbumDao albumDao;
-	
-	/** The DomainObjectFactory. */
-	protected DomainObjectFactory domainObjectFactory;
+	@javax.annotation.Resource private IOBizImpl testIOBizImpl;
+	@javax.annotation.Resource private WorkBiz testWorkBiz;
+	@javax.annotation.Resource private UserBiz testUserBiz;
+	@javax.annotation.Resource private SystemBiz testSystemBiz;
+	@javax.annotation.Resource private CollectionDao collectionDao;
+	@javax.annotation.Resource private AlbumDao albumDao;
+	@javax.annotation.Resource private DomainObjectFactory domainObjectFactory;
 	
 	private User testUser;
 	private Collection testCollection;
 
+	@Before
 	@Override
-	protected void onSetUpInTransaction() throws Exception {
+	public void onSetUpInTransaction() {
 		super.onSetUpInTransaction();
 		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);
 
@@ -113,7 +107,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		newUser.setPassword("test");
 		newUser.setLogin("nobody");
 		
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext, null);
 		String confKey = null;
 		try {
 			confKey = testUserBiz.registerUser(newUser,context);
@@ -132,6 +126,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test importing a single JPEG image.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testImportSingleJpeg() throws Exception {
 		importImage("magoffin/matt/ma2/image/bee-action.jpg", collectionDao, 
 				testIOBizImpl, testCollection, testUser);
@@ -141,6 +136,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test importing a Zip of JPEG images.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testImportZip() throws Exception {
 		File tempZipFile = File.createTempFile("IOBizImplTest-",".zip");
 		ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(tempZipFile));
@@ -188,7 +184,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 			}
 		});
 		
-		BizContext context = new TestBizContext(getContext(contextKey()),testUser);
+		BizContext context = new TestBizContext(applicationContext,testUser);
 		WorkInfo info = testIOBizImpl.importMedia(addCmd, context);
 		
 		assertNotNull("Returned WorkInfo must not be null", info);
@@ -203,6 +199,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test importing a Zip of JPEG images with AutoAlbum mode enabled
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testImportZipAutoAlbum() throws Exception {
 		File tempZipFile = File.createTempFile("IOBizImplTest-",".zip");
 		ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(tempZipFile));
@@ -250,7 +247,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 			}
 		});
 		
-		BizContext context = new TestBizContext(getContext(contextKey()),testUser);
+		BizContext context = new TestBizContext(applicationContext,testUser);
 		WorkInfo info = testIOBizImpl.importMedia(addCmd, context);
 		
 		assertNotNull("Returned WorkInfo must not be null", info);
@@ -273,6 +270,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test importing a Zip of JPEG images with AutoAlbum mode enabled
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testImportZipAutoAlbumNestedAlbums() throws Exception {
 		File tempZipFile = File.createTempFile("IOBizImplTest-",".zip");
 		ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(tempZipFile));
@@ -332,7 +330,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 			}
 		});
 		
-		BizContext context = new TestBizContext(getContext(contextKey()),testUser);
+		BizContext context = new TestBizContext(applicationContext,testUser);
 		WorkInfo info = testIOBizImpl.importMedia(addCmd, context);
 		
 		assertNotNull("Returned WorkInfo must not be null", info);
@@ -365,6 +363,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test importing a Zip of JPEG images with an album XML metadata file.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testImportZipWithAlbumXml() throws Exception {
 		File tempZipFile = File.createTempFile("IOBizImplTest-",".zip");
 		ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(tempZipFile));
@@ -418,7 +417,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 			}
 		});
 		
-		BizContext context = new TestBizContext(getContext(contextKey()),testUser);
+		BizContext context = new TestBizContext(applicationContext,testUser);
 		WorkInfo info = testIOBizImpl.importMedia(addCmd, context);
 		
 		assertNotNull("Returned WorkInfo must not be null", info);
@@ -443,6 +442,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * (skipping resource forks).
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testImportMacZip() throws Exception {
 		AddMediaCommand addCmd = new AddMediaCommand();
@@ -472,7 +472,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 			}
 		});
 		
-		BizContext context = new TestBizContext(getContext(contextKey()),testUser);
+		BizContext context = new TestBizContext(applicationContext,testUser);
 		WorkInfo info = testIOBizImpl.importMedia(addCmd, context);
 		
 		assertNotNull("Returned WorkInfo must not be null", info);
@@ -493,6 +493,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test exporting an item.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testExportItem() throws Exception {
 		// import first...
 		importImage("magoffin/matt/ma2/image/bee-action.jpg", collectionDao, 
@@ -505,7 +506,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		// output to tmp file so can visually inspect results if needed
 		File outputFile = new File("/var/tmp/IOBizImplTest_testExportItem.jpg");
 		MediaResponse response = new BasicMediaResponse(new FileOutputStream(outputFile));
-		BizContext context = new TestBizContext(getContext(contextKey()),testUser);
+		BizContext context = new TestBizContext(applicationContext,testUser);
 		testIOBizImpl.exportMedia(request,response,context);
 		
 		assertTrue("Should have exported something", outputFile.length() > 0);
@@ -515,6 +516,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test exporting an image with roration of 270 degrees.
 	 * @throws Exception if any error occurs
 	 */
+	@Test
 	public void testExportItemWithRotate270() throws Exception {
 		// import first...
 		importImage("magoffin/matt/ma2/image/IMG_ORIENTATION_8.JPG", collectionDao, 
@@ -526,7 +528,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		// output to tmp file so can visually inspect results if needed
 		File outputFile = new File("/var/tmp/IOBizImplTest_testExportItem_orientation_270.jpg");
 		MediaResponse response = new BasicMediaResponse(new FileOutputStream(outputFile));
-		BizContext context = new TestBizContext(getContext(contextKey()),testUser);
+		BizContext context = new TestBizContext(applicationContext,testUser);
 		testIOBizImpl.exportMedia(request,response,context);
 		
 		assertTrue("Should have exported something", outputFile.length() > 0);
@@ -536,6 +538,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test exporting an image with roration of 180 degrees.
 	 * @throws Exception if any error occurs
 	 */
+	@Test
 	public void testExportItemWithRotate180() throws Exception {
 		// import first...
 		importImage("magoffin/matt/ma2/image/IMG_ORIENTATION_3.JPG", collectionDao, 
@@ -547,7 +550,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		// output to tmp file so can visually inspect results if needed
 		File outputFile = new File("/var/tmp/IOBizImplTest_testExportItem_orientation_180.jpg");
 		MediaResponse response = new BasicMediaResponse(new FileOutputStream(outputFile));
-		BizContext context = new TestBizContext(getContext(contextKey()),testUser);
+		BizContext context = new TestBizContext(applicationContext,testUser);
 		testIOBizImpl.exportMedia(request,response,context);
 		
 		assertTrue("Should have exported something", outputFile.length() > 0);
@@ -557,6 +560,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test exporting an image with roration of 90 degrees.
 	 * @throws Exception if any error occurs
 	 */
+	@Test
 	public void testExportItemWithRotate90() throws Exception {
 		// import first...
 		importImage("magoffin/matt/ma2/image/IMG_ORIENTATION_6.JPG", collectionDao, 
@@ -568,7 +572,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		// output to tmp file so can visually inspect results if needed
 		File outputFile = new File("/var/tmp/IOBizImplTest_testExportItem_orientation_90.jpg");
 		MediaResponse response = new BasicMediaResponse(new FileOutputStream(outputFile));
-		BizContext context = new TestBizContext(getContext(contextKey()),testUser);
+		BizContext context = new TestBizContext(applicationContext,testUser);
 		testIOBizImpl.exportMedia(request,response,context);
 		
 		assertTrue("Should have exported something", outputFile.length() > 0);
@@ -578,6 +582,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test exporting of an album.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testExportAlbum() throws Exception {
 		testImportZip();
@@ -596,7 +601,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		
 		album = albumDao.get(albumDao.store(album));
 		
-		BizContext context = new TestBizContext(getContext(contextKey()),testUser);
+		BizContext context = new TestBizContext(applicationContext,testUser);
 		
 		// now export album in "normal" size
 		File outputZip = File.createTempFile("IOBizImplTest-", ".zip");
@@ -646,6 +651,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test exporting a set of items.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testExportItems() throws Exception {
 		testImportZip();
@@ -657,7 +663,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 			itemIds[i] = itr.next().getItemId();
 		}
 		
-		BizContext context = new TestBizContext(getContext(contextKey()),testUser);
+		BizContext context = new TestBizContext(applicationContext,testUser);
 		
 		// now export album in "normal" size
 		File outputZip = File.createTempFile("IOBizImplTest-", ".zip");
@@ -702,6 +708,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test exporting a set of items in two-phase style.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testExportItemsTwoPhase() throws Exception {
 		testImportZip();
@@ -713,7 +720,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 			itemIds[i] = itr.next().getItemId();
 		}
 		
-		BizContext context = new TestBizContext(getContext(contextKey()),testUser);
+		BizContext context = new TestBizContext(applicationContext,testUser);
 		
 		// now export album in "normal" size
 		File outputZip = File.createTempFile("IOBizImplTest-", ".zip");
@@ -770,6 +777,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test able to move media files.
 	 * @throws Exception if any error occurs
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testMoveMedia() throws Exception {
 		testImportZip();	
