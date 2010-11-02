@@ -45,6 +45,7 @@ import magoffin.matt.ma2.support.BasicMediaResponse;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.FileCopyUtils;
 
@@ -55,6 +56,7 @@ import org.springframework.util.FileCopyUtils;
  * @version $Revision$ $Date$
  */
 @ContextConfiguration
+@IfProfileValue(name="jmagick", value="true")
 public class MP3JMagickMediaHandlerTest extends
 		AbstractSpringEnabledTransactionalTest {
 	

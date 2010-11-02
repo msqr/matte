@@ -44,6 +44,7 @@ import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.FileCopyUtils;
 
@@ -69,6 +70,7 @@ import magoffin.matt.ma2.support.MutableGeometry;
  * @version $Revision$ $Date$
  */
 @ContextConfiguration
+@IfProfileValue(name="im4java", value="true")
 public class JpegMediaHandlerTest extends AbstractSpringEnabledTransactionalTest {
 
 	@javax.annotation.Resource private JpegMediaHandler testJpegMediaHandler;
