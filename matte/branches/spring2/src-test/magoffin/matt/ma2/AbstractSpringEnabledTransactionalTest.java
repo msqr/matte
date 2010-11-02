@@ -69,7 +69,7 @@ import org.springframework.util.StringUtils;
 		"classpath:magoffin/matt/ma2/TestContext.xml",
 		"file:web/WEB-INF/applicationContext.xml",
 		"file:web/WEB-INF/dataAccessContext.xml",
-		"classpath:environmentContext.xml",
+		"classpath:testContext.xml",
 })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional

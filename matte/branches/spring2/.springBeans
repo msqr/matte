@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beansProjectDescription>
 	<version>1</version>
-	<pluginVersion><![CDATA[2.0.5.v200805211800]]></pluginVersion>
+	<pluginVersion><![CDATA[2.3.2.201003220227-RELEASE]]></pluginVersion>
 	<configSuffixes>
 		<configSuffix><![CDATA[xml]]></configSuffix>
 	</configSuffixes>
@@ -27,9 +27,9 @@
 				<config>web/WEB-INF/matte-servlet.xml</config>
 				<config>web/WEB-INF/views.xml</config>
 				<config>web/WEB-INF/webEnvironmentContext.xml</config>
-				<config>environment/local/environmentContext.xml</config>
 				<config>web/WEB-INF/jobContext.xml</config>
 				<config>web/WEB-INF/matte-ws-servlet.xml</config>
+				<config>environment/local/environmentContext.xml</config>
 			</configs>
 		</configSet>
 	</configSets>

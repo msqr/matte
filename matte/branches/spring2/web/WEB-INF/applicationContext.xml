@@ -6,7 +6,8 @@
 		http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-	<bean id="messageSource" class="magoffin.matt.xweb.util.ResourceBundleMessagesSource">
+	<bean id="messageSource" name="messagesSource" 
+		class="magoffin.matt.xweb.util.ResourceBundleMessagesSource">
 		<property name="basenames">
 			<list>
 				<value>messages</value>
