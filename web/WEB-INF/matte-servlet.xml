@@ -152,7 +152,7 @@
 		<property name="userBiz" ref="userBiz"/>
 		<property name="systemBiz" ref="systemBiz"/>
 		<property name="workBiz" ref="workBiz"/>
-		<property name="messageSource" ref="messageSource"/>
+		<property name="messageSource" ref="messagesSource"/>
 		<property name="domainObjectFactory" ref="domainObjectFactory"/>
 	</bean>
 
@@ -180,7 +180,7 @@
 		<property name="cache" value="${xslt.cache}"/>
 		<property name="indent" value="false"/>
 		<property name="jaxbContext" value="magoffin.matt.ma2.domain"/>
-		<property name="messagesSource" ref="messageSource"/>
+		<property name="messagesSource" ref="messagesSource"/>
 		<property name="webHelper" ref="webHelper"/>
 		<property name="debugMessageResource" value="false"/>
 		<property name="transformerFactory" ref="transformerFactory"/>
@@ -217,7 +217,7 @@
 		<property name="xsltPathSuffix" value=".xsl"/>
 	</bean>
 	
-	<bean id="themeMessageSource" parent="messageSource">
+	<bean id="themeMessageSource" parent="messagesSource">
 		<property name="bundleClassLoader">
 			<bean class="magoffin.matt.ma2.web.util.ThemeAwareResourceLoader">
 				<property name="webHelper" ref="webHelper"/>
@@ -228,7 +228,7 @@
 				<value>theme-messages</value>
 			</list>
 		</property>
-		<property name="parent" ref="messageSource"/>
+		<property name="parent" ref="messagesSource"/>
 	</bean>
 	
 	<bean id="themeXsltViewTemplate" parent="defaultXsltViewTemplate" scope="prototype">

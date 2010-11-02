@@ -7,8 +7,12 @@
 		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 	
 	<bean id="webHelper" class="magoffin.matt.ma2.web.util.WebHelper">
+		<property name="mediaBiz" ref="mediaBiz"/>
 		<property name="userBiz" ref="userBiz"/>
 		<property name="systemBiz" ref="systemBiz"/>
+		<property name="workBiz" ref="workBiz"/>
+		<property name="messageSource" ref="messageSource"/>
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
 	</bean>
 
 	<bean id="testHomeController"  class="magoffin.matt.ma2.web.HomeController">

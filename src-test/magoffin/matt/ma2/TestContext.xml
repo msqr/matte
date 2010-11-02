@@ -11,7 +11,7 @@
 		<property name="order" value="1"/>
 		<property name="locations">
 			<list>
-				<value>classpath:/env.properties</value>
+				<value>classpath:/test.properties</value>
 			</list>
 		</property>
 	</bean>
