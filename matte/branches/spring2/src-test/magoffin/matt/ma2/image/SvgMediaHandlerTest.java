@@ -26,6 +26,8 @@
 
 package magoffin.matt.ma2.image;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,8 +43,10 @@ import magoffin.matt.ma2.domain.MediaItem;
 import magoffin.matt.ma2.support.BasicMediaRequest;
 import magoffin.matt.ma2.support.BasicMediaResponse;
 
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.FileCopyUtils;
 
 /**
@@ -51,15 +55,16 @@ import org.springframework.util.FileCopyUtils;
  * @author Matt Magoffin (spamsqr@msqr.us)
  * @version $Revision$ $Date$
  */
+@ContextConfiguration
 public class SvgMediaHandlerTest extends AbstractSpringEnabledTransactionalTest {
 
-	/** The MediaHandler to test. */
-	protected MediaHandler testSvgMediaHandler;
+	@javax.annotation.Resource private MediaHandler testSvgMediaHandler;
 	
 	/**
 	 * Test the media handler can correctly create a new item.
 	 * @throws IOException if an error occurs
 	 */
+	@Test
 	public void testCreateNewItem() throws IOException {
 		Resource testReadDimensions 
 			= new ClassPathResource("magoffin/matt/ma2/image/batikBatik.svg");
@@ -74,6 +79,7 @@ public class SvgMediaHandlerTest extends AbstractSpringEnabledTransactionalTest 
 	 * Test able to scale an image to a thumbnail size.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testAllSizesAndQualities() throws Exception {
 		// copy to tmp file so MediaBiz finds
 		File tmpFile = File.createTempFile("SvgMediaHandlerTest-input-", 
