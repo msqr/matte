@@ -26,6 +26,9 @@
 
 package magoffin.matt.ma2.dao;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.BitSet;
 import java.util.Calendar;
 import java.util.List;
@@ -44,6 +47,8 @@ import magoffin.matt.ma2.domain.User;
 
 import org.apache.commons.lang.mutable.MutableInt;
 import org.apache.log4j.Logger;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Unit test for the {@link MediaItemDao} class.
@@ -53,38 +58,21 @@ import org.apache.log4j.Logger;
  */
 public class MediaItemDaoTest extends AbstractSpringEnabledTransactionalTest {
 
-	/** The Collection DAO to test. */
-	protected CollectionDao collectionDao;
-	
-	/** The MediaItemDao to test. */
-	protected MediaItemDao mediaItemDao;
-	
-	/** The DomainObjectFactory instance. */
-	protected DomainObjectFactory domainObjectFactory;
-	
-	/** The ThemeDao to test with. */
-	protected ThemeDao themeDao;
-
-	/** The TimeZoneDao to test with. */
-	protected TimeZoneDao timeZoneDao;
-	
-	/** The UserDao to test with. */
-	protected UserDao userDao;
+	@javax.annotation.Resource private CollectionDao collectionDao;
+	@javax.annotation.Resource private MediaItemDao mediaItemDao;
+	@javax.annotation.Resource private DomainObjectFactory domainObjectFactory;
+//	@javax.annotation.Resource private ThemeDao themeDao;
+	@javax.annotation.Resource private TimeZoneDao timeZoneDao;
+	@javax.annotation.Resource private UserDao userDao;
 	
 	private final Logger log = Logger.getLogger(MediaItemDaoTest.class);
 	
 	private int counter = 1;
 	private User testUser = null;
 
-	/**
-	 * Default constructor.
-	 */
-	public MediaItemDaoTest() {
-		setPopulateProtectedVariables(true);
-	}
-
+	@Before
 	@Override
-	protected void onSetUpInTransaction() throws Exception {
+	public void onSetUpInTransaction() {
 		super.onSetUpInTransaction();
 		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);
 		saveTestUser();
@@ -93,6 +81,7 @@ public class MediaItemDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test getting items for a set of IDs.
 	 */
+	@Test
 	public void testGetItemsForIds() {
 		BatchCallback<MediaItem> callback = new BatchCallback<MediaItem>() {
 			public BatchCallbackResult handle(MediaItem domainObject) {
@@ -125,6 +114,7 @@ public class MediaItemDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test can index MediaItem data.
 	 */
+	@Test
 	public void testIndexAllMediaItemData() {
 		Collection col = saveNewCollection();
 		final MediaItem item1 = saveNewMediaItem(col);
