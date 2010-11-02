@@ -26,8 +26,13 @@
 
 package magoffin.matt.ma2.dao;
 
+import static org.junit.Assert.*;
+
 import java.util.Calendar;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
 import magoffin.matt.ma2.TestConstants;
@@ -47,42 +52,22 @@ import magoffin.matt.ma2.domain.User;
  */
 public class AlbumDaoTest extends AbstractSpringEnabledTransactionalTest {
 
-	/** The album DAO to test. */
-	protected AlbumDao albumDao;
-	
-	/** The DomainObjectFactory instance. */
-	protected DomainObjectFactory domainObjectFactory;
-	
-	/** The ThemeDao to test with. */
-	protected ThemeDao themeDao;
-
-	/** The TimeZoneDao to test with. */
-	protected TimeZoneDao timeZoneDao;
-	
-	/** The UserDao to test with. */
-	protected UserDao userDao;
-	
-	/** The Collection DAO to test. */
-	protected CollectionDao collectionDao;
-	
-	/** The MediaItemDao to test. */
-	protected MediaItemDao mediaItemDao;
+	@javax.annotation.Resource private AlbumDao albumDao;
+	@javax.annotation.Resource private DomainObjectFactory domainObjectFactory;
+	@javax.annotation.Resource private ThemeDao themeDao;
+	@javax.annotation.Resource private TimeZoneDao timeZoneDao;
+	@javax.annotation.Resource private UserDao userDao;
+	@javax.annotation.Resource private CollectionDao collectionDao;
+	@javax.annotation.Resource private MediaItemDao mediaItemDao;
 	
 	private int themeCounter = 1;
 	private int albumCounter = 1;
 	private int colCounter = 1;
 	private int itemCounter = 1;
 
-	/**
-	 * Default constructor.
-	 */
-	public AlbumDaoTest() {
-		super();
-		setPopulateProtectedVariables(true);
-	}
-
+	@Before
 	@Override
-	protected void onSetUpInTransaction() throws Exception {
+	public void onSetUpInTransaction() {
 		super.onSetUpInTransaction();
 		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);
 	}
@@ -112,6 +97,7 @@ public class AlbumDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test persisting a new Album instance.
 	 */
+	@Test
 	public void testCreate() {
 		Long savedAlbumId = saveNewAlbum(null, null);
 		assertNotNull("Returned album ID should not be null",savedAlbumId);
@@ -120,6 +106,7 @@ public class AlbumDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test getting an album by it's primary key.
 	 */
+	@Test
 	public void testGetByPrimaryKey() {
 		Long savedAlbumId = saveNewAlbum(null, null);
 		
@@ -132,6 +119,7 @@ public class AlbumDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test finding for a user by date.
 	 */
+	@Test
 	public void testFindForUserByDate() {
 		Long savedUserId = saveNewUser();
 		User user = userDao.get(savedUserId);
@@ -226,6 +214,7 @@ public class AlbumDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test persisting an existing Album instance.
 	 */
+	@Test
 	public void testSave() {
 		Long savedAlbumId = saveNewAlbum(null, null);
 		
@@ -241,6 +230,7 @@ public class AlbumDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test persisting an existing Album instance.
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testSaveNested() {
 		User owner = userDao.get(saveNewUser());
@@ -263,6 +253,7 @@ public class AlbumDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test able to reassign themes.
 	 */
+	@Test
 	public void testReassignTheme() {
 		Long savedUserId = saveNewUser();
 		User user = userDao.get(savedUserId);
@@ -281,6 +272,7 @@ public class AlbumDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test finding for shared MediaItem.
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testFindSharedAlbumsContainingMediaItem() {
 		User user = userDao.get(saveNewUser());
@@ -310,6 +302,7 @@ public class AlbumDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test able to find a parent album from a child album.
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testFindParentAlbum() {
 		User owner = userDao.get(saveNewUser());
