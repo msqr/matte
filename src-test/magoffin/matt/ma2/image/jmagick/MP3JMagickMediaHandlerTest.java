@@ -26,6 +26,8 @@
 
 package magoffin.matt.ma2.image.jmagick;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -40,28 +42,29 @@ import magoffin.matt.ma2.domain.MediaItem;
 import magoffin.matt.ma2.support.BasicMediaRequest;
 import magoffin.matt.ma2.support.BasicMediaResponse;
 
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.FileCopyUtils;
 
 /**
- * line.
- * 
- * <p>info</p>
+ * Test for using JMagick as a delegate handler for MP3 album art.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
  * @version $Revision$ $Date$
  */
+@ContextConfiguration
 public class MP3JMagickMediaHandlerTest extends
 		AbstractSpringEnabledTransactionalTest {
 	
-	/** The MP3 media handler to use for extracting album images. */
-	protected MediaHandler testMP3MediaHandler;
+	@javax.annotation.Resource private MediaHandler testMP3MediaHandler;
 
 	/**
 	 * Test the media handler can correctly read meta data.
 	 * @throws IOException if an error occurs
 	 */
+	@Test
 	public void testReadMetadata_22() throws IOException {
 		Resource testReadDimensions 
 			= new ClassPathResource("id3-test-2.2.mp3");
@@ -82,6 +85,7 @@ public class MP3JMagickMediaHandlerTest extends
 	 * Test the media handler can correctly read meta data.
 	 * @throws IOException if an error occurs
 	 */
+	@Test
 	public void testReadMetadata_23() throws IOException {
 		Resource testReadDimensions 
 			= new ClassPathResource("id3-test-2.3.mp3");

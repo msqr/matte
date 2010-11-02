@@ -43,12 +43,14 @@ import magoffin.matt.ma2.support.AddMediaCommand;
 import magoffin.matt.util.TemporaryFile;
 import magoffin.matt.xweb.util.XwebJaxbView;
 
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -57,27 +59,20 @@ import org.springframework.web.servlet.ModelAndView;
  * @author Matt Magoffin (spamsqr@msqr.us)
  * @version $Revision$ $Date$
  */
+@ContextConfiguration
 public class HomeViewTest extends AbstractSpringEnabledTransactionalTest {
 	
-	/** The home controller. */
-	protected HomeController testHomeController;
-	
-	/** The logon form. */
-	protected LogonForm testLogonForm;
-	
-	/** The DomainObjectFactory. */
-	protected DomainObjectFactory domainObjectFactory;
-	
-	/** The home view to test with. */
-	protected XwebJaxbView testHomeView;
-	
-	/** The IOBiz. */
-	protected IOBiz ioBiz;
+	@javax.annotation.Resource private HomeController testHomeController;
+	@javax.annotation.Resource private LogonForm testLogonForm;
+	@javax.annotation.Resource private DomainObjectFactory domainObjectFactory;
+	@javax.annotation.Resource private XwebJaxbView testHomeView;
+	@javax.annotation.Resource private IOBiz ioBiz;
 
 	/**
 	 * Test.
 	 * @throws Exception
 	 */
+	@Test
 	public void testViewHomeNoParameters() throws Exception {
 		MockHttpServletRequest request = setupUserRequest("GET","/home.do");
 		MockHttpServletResponse response = new MockHttpServletResponse();
@@ -89,7 +84,7 @@ public class HomeViewTest extends AbstractSpringEnabledTransactionalTest {
 	
 	private MockHttpServletRequest setupUserRequest(String method, String path) throws Exception {
 		User newUser = getTestUser();
-		BizContext context = new TestBizContext(getContext(contextKey()),null);		
+		BizContext context = new TestBizContext(applicationContext,null);		
 		String confKey = testHomeController.getUserBiz().registerUser(newUser,context);
 		User confirmedUser = testHomeController.getUserBiz().confirmRegisteredUser(newUser.getLogin(),
 				confKey,context);

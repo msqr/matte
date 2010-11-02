@@ -1,5 +1,5 @@
 /* ===================================================================
- * XmlUtilTest.java
+ * XmlHelperTest.java
  * 
  * Created May 1, 2006 11:34:28 AM
  * 
@@ -26,33 +26,34 @@
 
 package magoffin.matt.ma2.util;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
+import org.junit.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
 import magoffin.matt.ma2.biz.DomainObjectFactory;
 import magoffin.matt.ma2.domain.Album;
 
 /**
- * line.
- * 
- * <p>info</p>
+ * Test for the XmlHelper class.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
  * @version $Revision$ $Date$
  */
-public class XmlUtilTest extends AbstractSpringEnabledTransactionalTest {
+@ContextConfiguration
+public class XmlHelperTest extends AbstractSpringEnabledTransactionalTest {
 
-	/** The XmlHelper instance to test. */
-	protected XmlHelper testXmlUtil;
+	@Resource private XmlHelper testXmlUtil;
+	@Resource private DomainObjectFactory domainObjectFactory;
 	
-	/** The DomainObjectFactory. */
-	protected DomainObjectFactory domainObjectFactory;
-	
-	private final Logger log = Logger.getLogger(XmlUtilTest.class);
+	private final Logger log = Logger.getLogger(XmlHelperTest.class);
 	
 	/**
 	 * Test debugging a JAXB object.
 	 */
+	@Test
 	public void testDebugJAXBObject() {
 		Album a = domainObjectFactory.newAlbumInstance();
 		a.setName("My Test Album");

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC 
-	"-//SPRING//DTD BEAN//EN" 
-	"http://www.springframework.org/dtd/spring-beans.dtd">
-
-<beans>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
 	<bean id="myWebPropertyConfigurer" class="magoffin.matt.xweb.util.XwebParamPropertiesPlaceholderConfigurer">
 		<property name="order" value="1"/>
@@ -163,7 +164,7 @@
 		then the AbstractXsltView bean defined by <xsltViewTemplateName> will be obtained, 
 		the <stylesheetLocation> method will be set with the resolved XSLT resource, 
 		and the view returned. Obviously the <xsltViewTemplateName> bean definition 
-		should have the singleton="false" property set so that new instances are created
+		should have the scope="prototype" property set so that new instances are created
 		for each view.
 	-->
 	<bean id="viewResolver" class="magoffin.matt.xweb.util.DefaultXsltViewResolver">
@@ -173,7 +174,7 @@
 		<property name="xsltPathSuffix" value=".xsl"/>
 	</bean>
 	<bean id="xhtmlContentTypeResolver" class="magoffin.matt.xweb.util.XhtmlContentTypeResolver"/>
-	<bean id="defaultXsltViewTemplate" class="magoffin.matt.xweb.util.XwebJaxbView" singleton="false">
+	<bean id="defaultXsltViewTemplate" class="magoffin.matt.xweb.util.XwebJaxbView" scope="prototype">
 		<property name="contentType" value="text/html; charset=UTF-8"/>
 		<property name="requestContextAttribute" value="magoffin.matt.xweb.REQ"/>
 		<property name="cache" value="${xslt.cache}"/>
@@ -197,7 +198,7 @@
 			</bean>
 		</property>
 	</bean>
-	<bean id="serviceXsltViewTemplate" parent="defaultXsltViewTemplate" singleton="false">
+	<bean id="serviceXsltViewTemplate" parent="defaultXsltViewTemplate" scope="prototype">
 		<property name="contentType" value="text/xml; charset=UTF-8"/>
 	</bean>
 	<bean id="serviceViewResolver" parent="viewResolver">
@@ -206,7 +207,7 @@
 		<property name="xsltPathPrefix" value="/WEB-INF/xsl/service/"/>
 		<property name="xsltPathSuffix" value=".xsl"/>
 	</bean>
-	<bean id="jsonXsltViewTemplate" parent="defaultXsltViewTemplate" singleton="false">
+	<bean id="jsonXsltViewTemplate" parent="defaultXsltViewTemplate" scope="prototype">
 		<property name="contentType" value="text/javascript; charset=UTF-8"/>
 	</bean>
 	<bean id="jsonViewResolver" parent="viewResolver">
@@ -230,7 +231,7 @@
 		<property name="parent" ref="messageSource"/>
 	</bean>
 	
-	<bean id="themeXsltViewTemplate" parent="defaultXsltViewTemplate" singleton="false">
+	<bean id="themeXsltViewTemplate" parent="defaultXsltViewTemplate" scope="prototype">
 		<property name="contentTypeResolver" ref="xhtmlContentTypeResolver"/>
 		<property name="messagesSource" ref="themeMessageSource"/>
 	</bean>
@@ -244,7 +245,7 @@
 	
 	<bean id="themeDynamicContentTypeResolver" class="magoffin.matt.ma2.web.util.ThemeXsltContentTypeResolver"/>
 	
-	<bean id="themeDynamicViewTemplate" parent="defaultXsltViewTemplate" singleton="false">
+	<bean id="themeDynamicViewTemplate" parent="defaultXsltViewTemplate" scope="prototype">
 		<property name="contentTypeResolver" ref="themeDynamicContentTypeResolver"/>
 		<property name="messagesSource" ref="themeMessageSource"/>
 	</bean>

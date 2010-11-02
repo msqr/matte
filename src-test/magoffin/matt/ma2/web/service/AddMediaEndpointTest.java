@@ -26,6 +26,8 @@
 
 package magoffin.matt.ma2.web.service;
 
+import static org.junit.Assert.*;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -60,8 +62,11 @@ import magoffin.matt.ma2.util.BizContextUtil;
 import magoffin.matt.ma2.util.XmlHelper;
 
 import org.apache.log4j.Logger;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.ContextConfiguration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -71,36 +76,25 @@ import org.w3c.dom.Element;
  * @author Matt Magoffin (spamsqr@msqr.us)
  * @version $Revision$ $Date$
  */
+@ContextConfiguration
 public class AddMediaEndpointTest extends AbstractSpringEnabledTransactionalTest {
 	
-	/** The IOBiz. */
-	protected IOBiz testIOBiz;
-
-	/** The DomainObjectFactory. */
-	protected DomainObjectFactory domainObjectFactory;
-	
-	/** The UserBiz. */
-	protected UserBiz testUserBiz;
-	
-	/** The XmlHelper to help with XML. */
-	protected XmlHelper xmlHelper;
-	
-	/** The WorkBiz. */
-	protected WorkBiz testWorkBiz;
-	
-	/** The CollectionDao. */
-	protected CollectionDao collectionDao;
-	
-	/** The AlbumDao. */
-	protected AlbumDao albumDao;
+	@javax.annotation.Resource private IOBiz testIOBiz;
+	@javax.annotation.Resource private DomainObjectFactory domainObjectFactory;
+	@javax.annotation.Resource private UserBiz testUserBiz;
+	@javax.annotation.Resource private XmlHelper xmlHelper;
+	@javax.annotation.Resource private WorkBiz testWorkBiz;
+	@javax.annotation.Resource private CollectionDao collectionDao;
+	@javax.annotation.Resource private AlbumDao albumDao;
 	
 	private User testUser;
 	private Collection testCollection;
 	
 	private final Logger log = Logger.getLogger(getClass());
 
+	@Before
 	@Override
-	protected void onSetUpInTransaction() throws Exception {
+	public void onSetUpInTransaction() {
 		super.onSetUpInTransaction();
 		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);
 		
@@ -110,7 +104,7 @@ public class AddMediaEndpointTest extends AbstractSpringEnabledTransactionalTest
 		newUser.setPassword("test");
 		newUser.setLogin("nobody");
 		
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext,null);
 		String confKey = null;
 		try {
 			confKey = testUserBiz.registerUser(newUser,context);
@@ -130,6 +124,7 @@ public class AddMediaEndpointTest extends AbstractSpringEnabledTransactionalTest
 	 * Test able to add media, normal situation.
 	 * @throws Exception if any error occurs
 	 */
+	@Test
 	public void testAddMedia() throws Exception {
 		AddMediaEndpoint endpoint = new AddMediaEndpoint();
 		endpoint.setIoBiz(testIOBiz);

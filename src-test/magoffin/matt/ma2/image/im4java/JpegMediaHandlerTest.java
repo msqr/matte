@@ -26,6 +26,8 @@
 
 package magoffin.matt.ma2.image.im4java;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
@@ -38,9 +40,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.FileCopyUtils;
 
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
@@ -64,15 +68,16 @@ import magoffin.matt.ma2.support.MutableGeometry;
  * @author matt
  * @version $Revision$ $Date$
  */
+@ContextConfiguration
 public class JpegMediaHandlerTest extends AbstractSpringEnabledTransactionalTest {
 
-	/** The JpegMediaHandler to test. */
-	protected JpegMediaHandler testJpegMediaHandler;
+	@javax.annotation.Resource private JpegMediaHandler testJpegMediaHandler;
 	
 	/**
 	 * Test the media handler can correctly read image dimensions.
 	 * @throws IOException if an error occurs
 	 */
+	@Test
 	public void testReadDimensions() throws IOException {
 		Resource testReadDimensions 
 			= new ClassPathResource("magoffin/matt/ma2/image/dylan2.jpg");
@@ -99,6 +104,7 @@ public class JpegMediaHandlerTest extends AbstractSpringEnabledTransactionalTest
 	 * Test the media handler can correctly scale images.
 	 * @throws IOException if an error occurs
 	 */
+	@Test
 	@SuppressWarnings("null")
 	public void testAllSizesAndQualities() throws IOException {
 		Enumeration<URL> imageDirs = getClass().getClassLoader().getResources("magoffin/matt/ma2/image/");
