@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
-
-<beans>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 	
-	<!-- 
-		xmlUtil: default XmlUtil instance
-	-->
 	<bean id="testXmlUtil" class="magoffin.matt.ma2.util.XmlHelper" init-method="init">
 		<property name="documentBuilderFactory" ref="nonValidatingDocumentBuilderFactory"/>
 		<property name="transformerFactory" ref="transformerFactory"/>
@@ -14,11 +14,11 @@
 		<property name="objectFactory">
 			<bean class="magoffin.matt.ma2.domain.ObjectFactory"/>
 		</property>
+		<property name="xpathNamespaceContext" ref="namespaceContext"/>
 		<property name="marshallerProperties">
 			<map>
-				<entry key="com.sun.xml.bind.namespacePrefixMapper">
-					<bean class="magoffin.matt.ma2.util.JAXBNamespacePrefixMapper"/>
-				</entry>
+				<entry key="com.sun.xml.bind.namespacePrefixMapper" 
+					value-ref="jaxbNamespacePrefixMapper"/>
 			</map>
 		</property>
 	</bean>

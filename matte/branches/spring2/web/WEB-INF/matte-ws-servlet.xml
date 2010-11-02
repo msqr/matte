@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC 
-	"-//SPRING//DTD BEAN//EN" 
-	"http://www.springframework.org/dtd/spring-beans.dtd">
 <!--
 	Copyright (c) 2007 Matt Magoffin
 	
@@ -22,7 +19,12 @@
 	
 	$Id: web.xml,v 1.58 2007/08/27 04:04:21 matt Exp $
 -->
-<beans>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 	
 	<bean id="endpointMapping"
 		class="org.springframework.ws.soap.server.endpoint.mapping.SoapActionEndpointMapping">

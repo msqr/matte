@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
-
-<beans>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 	
 	<bean id="webHelper" class="magoffin.matt.ma2.web.util.WebHelper">
 		<property name="userBiz" ref="userBiz"/>
@@ -27,7 +30,6 @@
 		<property name="successView" value="home-redirect"/>
 	</bean>
 	
-	<bean id="jaxbNamespacePrefixMapper" class="magoffin.matt.ma2.util.JAXBNamespacePrefixMapper"/>
 	<bean id="testHomeView" class="magoffin.matt.xweb.util.XwebJaxbView">
 		<property name="contentType" value="text/html; charset=UTF-8"/>
 		<property name="cache" value="false"/>	
@@ -38,7 +40,7 @@
 		<property name="marshallerProperties">
 			<map>
 				<entry key="com.sun.xml.bind.namespacePrefixMapper">
-					<ref local="jaxbNamespacePrefixMapper"/>
+					<ref bean="jaxbNamespacePrefixMapper"/>
 				</entry>
 			</map>
 		</property>
