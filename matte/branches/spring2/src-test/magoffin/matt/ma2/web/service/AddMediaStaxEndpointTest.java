@@ -29,11 +29,17 @@ package magoffin.matt.ma2.web.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,7 +47,6 @@ import java.util.regex.Pattern;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
 
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
 import magoffin.matt.ma2.ProcessingException;
@@ -69,17 +74,21 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.soap.SoapMessageFactory;
+import org.springframework.ws.transport.TransportInputStream;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Test the AddMediaEndpoint.
+ * Test the AddMediaStaxEndpoint.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
  * @version $Revision$ $Date$
  */
 @ContextConfiguration
-public class AddMediaEndpointTest extends AbstractSpringEnabledTransactionalTest {
+public class AddMediaStaxEndpointTest extends AbstractSpringEnabledTransactionalTest {
 	
 	@javax.annotation.Resource private IOBiz testIOBiz;
 	@javax.annotation.Resource private DomainObjectFactory domainObjectFactory;
@@ -88,9 +97,13 @@ public class AddMediaEndpointTest extends AbstractSpringEnabledTransactionalTest
 	@javax.annotation.Resource private WorkBiz testWorkBiz;
 	@javax.annotation.Resource private CollectionDao collectionDao;
 	@javax.annotation.Resource private AlbumDao albumDao;
+	@javax.annotation.Resource private SoapMessageFactory testMessageFactory;
 	
 	private User testUser;
 	private Collection testCollection;
+	
+	// if this file exists, the testAddUserMedia will process it
+	private Resource testUserMedia = new FileSystemResource("test/ws-import.zip.b64");
 	
 	private final Logger log = Logger.getLogger(getClass());
 
@@ -128,14 +141,37 @@ public class AddMediaEndpointTest extends AbstractSpringEnabledTransactionalTest
 	 */
 	@Test
 	public void testAddMedia() throws Exception {
-		AddMediaEndpoint endpoint = new AddMediaEndpoint();
+		AddMediaStaxEndpoint endpoint = new AddMediaStaxEndpoint();
 		endpoint.setIoBiz(testIOBiz);
 		
-		File xmlIn = getTestXml();
-		Source in = new StreamSource(xmlIn);
-		Source out = endpoint.invoke(in);
-		assertNotNull(out);
+		final File xmlIn = getTestXml(new ClassPathResource("add-media-test-02.xml", getClass()), null);
+		WebServiceMessage request = testMessageFactory.createWebServiceMessage(new TransportInputStream() {
+			
+			@SuppressWarnings("rawtypes")
+			@Override
+			public Iterator getHeaders(String name) throws IOException {
+				return Collections.EMPTY_LIST.iterator();
+			}
+			
+			@SuppressWarnings("rawtypes")
+			@Override
+			public Iterator getHeaderNames() throws IOException {
+				return Collections.EMPTY_LIST.iterator();
+			}
+			
+			@Override
+			protected InputStream createInputStream() throws IOException {
+				return new BufferedInputStream(new FileInputStream(xmlIn));
+			}
+		});
+				
+		DefaultMessageContext messageContext = new DefaultMessageContext(request, testMessageFactory);
+		endpoint.invoke(messageContext);
 		
+		WebServiceMessage response = messageContext.getResponse();
+		assertNotNull(response);
+		Source out = response.getPayloadSource();
+		assertNotNull(out);
 		DOMResult result = new DOMResult();
 		xmlHelper.transformXml(out, result);
 		if ( log.isDebugEnabled() ) {
@@ -156,6 +192,7 @@ public class AddMediaEndpointTest extends AbstractSpringEnabledTransactionalTest
 		Collection c = collectionDao.get(testCollection.getCollectionId());
 		assertNotNull(c);
 		assertNotNull(c.getItem());
+		//log.debug("Imported " +c.getItem().size() +" items.");
 		assertEquals(1, c.getItem().size());
 		MediaItem testItem = (MediaItem)c.getItem().get(0);
 		assertEquals("AddMediaTestAlbum/arrow-closed.png", testItem.getPath());
@@ -173,10 +210,96 @@ public class AddMediaEndpointTest extends AbstractSpringEnabledTransactionalTest
 		assertEquals(1, userAlbum.getItem().size());
 		MediaItem albumItem = (MediaItem)userAlbum.getItem().get(0);
 		assertEquals(testItem.getItemId(), albumItem.getItemId());
+		xmlIn.delete();
 	}
 	
-	private File getTestXml() throws Exception {
-		Resource r = new ClassPathResource("add-media-test-01.xml", getClass());
+	/**
+	 * Test able to add media, normal situation.
+	 * @throws Exception if any error occurs
+	 */
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testAddUserMediaMedia() throws Exception {
+		if ( !testUserMedia.exists() ) {
+			return;
+		}
+		AddMediaStaxEndpoint endpoint = new AddMediaStaxEndpoint();
+		endpoint.setIoBiz(testIOBiz);
+		
+		final File xmlIn = getTestXml(new ClassPathResource("add-media-test-02.xml", getClass()), 
+				testUserMedia);
+		WebServiceMessage request = testMessageFactory.createWebServiceMessage(
+				new TransportInputStream() {
+			
+			@SuppressWarnings("rawtypes")
+			@Override
+			public Iterator getHeaders(String name) throws IOException {
+				return Collections.EMPTY_LIST.iterator();
+			}
+			
+			@SuppressWarnings("rawtypes")
+			@Override
+			public Iterator getHeaderNames() throws IOException {
+				return Collections.EMPTY_LIST.iterator();
+			}
+			
+			@Override
+			protected InputStream createInputStream() throws IOException {
+				return new BufferedInputStream(new FileInputStream(xmlIn));
+			}
+		});
+				
+		DefaultMessageContext messageContext = new DefaultMessageContext(request, 
+				testMessageFactory);
+		endpoint.invoke(messageContext);
+		
+		WebServiceMessage response = messageContext.getResponse();
+		assertNotNull(response);
+		Source out = response.getPayloadSource();
+		assertNotNull(out);
+		DOMResult result = new DOMResult();
+		xmlHelper.transformXml(out, result);
+		if ( log.isDebugEnabled() ) {
+			xmlHelper.debugXml("Got response XML: ", new DOMSource(result.getNode()), log);
+		}		
+		Element addMediaResponse = ((Document)result.getNode()).getDocumentElement();
+		assertEquals("true", addMediaResponse.getAttribute("success"));
+		assertNotNull(addMediaResponse.getAttribute("ticket"));
+		
+		Long ticket = Long.valueOf(addMediaResponse.getAttribute("ticket"));
+		WorkInfo workInfo = testWorkBiz.getInfo(ticket);
+		assertNotNull(workInfo);
+		
+		// wait for work to complete
+		workInfo.get();
+		
+		// verify collection item has been imported
+		Collection c = collectionDao.get(testCollection.getCollectionId());
+		assertNotNull(c);
+		assertNotNull(c.getItem());
+		if ( log.isDebugEnabled() ) {
+			StringBuilder buf = new StringBuilder("Imported " +c.getItem().size() +" items:\n");
+			for ( MediaItem item : (List<MediaItem>)c.getItem() ) {
+				buf.append(item.getItemId() +": " +item.getPath() + "\n");
+			}
+			log.debug(buf);
+		}
+		
+		// verify album has been created, with test item in it
+		List<Album> userAlbums = albumDao.findAlbumsForUser(testUser.getUserId());
+		assertNotNull(userAlbums);
+		if ( log.isDebugEnabled() ) {
+			StringBuilder buf = new StringBuilder("User has " +userAlbums.size() +" albums:\n");
+			for ( Album album : userAlbums ) {
+				buf.append(album.getAlbumId() +": " +album.getName() +" (" 
+						+album.getItem().size() +" items)\n");
+			}
+			log.debug(buf);
+		}
+		xmlIn.delete();
+	}
+	
+	private File getTestXml(Resource r, Resource mediaData) throws Exception {
 		// copy resource, replacing collection-id with the test one
 		File tmp = File.createTempFile("AddMediaEndpointTest-input-", ".xml");
 		tmp.deleteOnExit();
@@ -194,9 +317,8 @@ public class AddMediaEndpointTest extends AbstractSpringEnabledTransactionalTest
 		// look for a resource test/ws-import.zip.b64 as a Base64-coded zip
 		// file to import, instead of the default one mentioned, so we
 		// can test very large files without checking that into source control
-		Resource testData = new FileSystemResource("test/ws-import.zip.b64");
 		Pattern dataTag = Pattern.compile("</?m:media-data");
-		boolean dataFound = !testData.exists();
+		boolean dataFound = mediaData == null || !mediaData.exists();
 		boolean dataReplaced = dataFound;
 		
 		while ( line != null ) {
@@ -224,7 +346,9 @@ public class AddMediaEndpointTest extends AbstractSpringEnabledTransactionalTest
 						out.write("\n");
 						
 						// copy test Base64 data into temp file
-						BufferedReader in2 = new BufferedReader(new InputStreamReader(testData.getInputStream()));
+						@SuppressWarnings("null")
+						BufferedReader in2 = new BufferedReader(new InputStreamReader(
+								mediaData.getInputStream()));
 						String line2 = in2.readLine();
 						while ( line2 != null ) {
 							out.write(line2);

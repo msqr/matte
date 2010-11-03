@@ -22,9 +22,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans
-		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/util
+		http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 	
 	<bean id="endpointMapping"
 		class="org.springframework.ws.soap.server.endpoint.mapping.SoapActionEndpointMapping">
@@ -59,10 +62,17 @@
 		<constructor-arg ref="wsMarshaller"/>
 	</bean>
 	
-	<bean id="messageFactory" class="org.springframework.ws.soap.axiom.AxiomSoapMessageFactory">
+	<bean id="messageFactory" class="magoffin.matt.ma2.web.service.AxiomSoapMessageFactory">
 		<property name="payloadCaching" value="false" />
 		<property name="attachmentCaching" value="true" />
 		<property name="attachmentCacheThreshold" value="4096"/>
+		<property name="inputFactoryProperties">
+			<map>
+				<entry key="javax.xml.stream.isCoalescing">
+					<util:constant static-field="java.lang.Boolean.FALSE"/>
+				</entry>
+			</map>
+		</property>
 	</bean>
 	
 	
