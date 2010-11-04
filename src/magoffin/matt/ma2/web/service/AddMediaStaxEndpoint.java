@@ -229,14 +229,19 @@ public class AddMediaStaxEndpoint extends AbstractStaxStreamPayloadEndpoint {
 				} else if ( SystemConstants.MATTE_XML_NAMESPACE_URI.equals(uri)
 						&& COLLECTION_IMPORT_ELEMENT_NAME.equals(localName)) {
 					copyElement();
+					int len = streamReader.getNamespaceCount();
 					boolean needsMapping = prefix != null;
-					for ( int i = 0, len = streamReader.getNamespaceCount(); needsMapping && i < len; i++ ) {
+					for ( int i = 0; needsMapping && i < len; i++ ) {
 						if ( SystemConstants.MATTE_XML_NAMESPACE_URI.equals(streamReader.getNamespaceURI(i)) ) {
 							needsMapping = false;
 						}
 					}
 					if ( needsMapping ) {
 						xmlWriter.writeNamespace(prefix, SystemConstants.MATTE_XML_NAMESPACE_URI);
+					} else if ( len == 0 ) {
+						// since we're starting a new document and we're using the default namespace, 
+						// need to specify the namespace now
+						xmlWriter.writeDefaultNamespace(SystemConstants.MATTE_XML_NAMESPACE_URI);
 					}
 					mode = ContentHandlerMode.COPY_COLLECTION_IMPORT;
 				}
