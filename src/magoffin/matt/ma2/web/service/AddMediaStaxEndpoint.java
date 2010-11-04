@@ -55,7 +55,21 @@ import org.springframework.ws.server.endpoint.AbstractStaxStreamPayloadEndpoint;
 /**
  * Web service endpoint for adding media.
  * 
- * <p>Uses StAX to handle potentially large amount of data encoded into the request.</p>
+ * <p>Uses StAX to handle potentially large amount of data encoded into the request's
+ * <code>&lt;/AddMediaRequest/media-data</code> element. This endpoint will extract
+ * the <code>&lt;/AddMediaRequest/collection-import</code> into a temporary file
+ * and decode the Base64 encoded <code>&lt;/AddMediaRequest/media-data</code> content
+ * into a temporary file, and then create a {@link AddMediaCommand} instance with
+ * that data and pass that to {@link IOBiz#importMedia(AddMediaCommand, BizContext)}.</p>
+ * 
+ * <p>Note that the StAX {@link XMLStreamReader} passed to this class <em>must</em>
+ * have text coalescing turned <b>off</b> in order to process the <code>media-data</code>
+ * element with any non-trivial amount of data in it. Without coalescing turned off
+ * the XMLStreamReader will attempt to load the entire element content into memory,
+ * resulting in an <code>OutOfMemoryError</code>. Usually this is configured on the
+ * {@link javax.xml.stream.XMLInputFactory} that created the {@link XMLStreamReader}
+ * by setting the property <code>javax.xml.stream.isCoalescing</code> to 
+ * <code>Boolean.FALSE</code>.</p>
  * 
  * <p>Note that a {@link BizContext} must be available via {@link BizContextUtil#getBizContext()}
  * prior to invoking this service, to pass the user authentication to the import.</p> 
