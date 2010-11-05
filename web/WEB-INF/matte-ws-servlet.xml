@@ -97,9 +97,8 @@
 		<property name="wsdl" value="/WEB-INF/xsd/matte.wsdl"/>
 	</bean>
 	
-	<bean id="addMediaEndpoint" class="magoffin.matt.ma2.web.service.AddMediaMessageEndpoint">
+	<bean id="addMediaEndpoint" class="magoffin.matt.ma2.web.service.AddMediaStaxEndpoint">
 		<property name="ioBiz" ref="ioBiz"/>
-		<property name="xmlHelper" ref="xmlHelper"/>
 	</bean>
 	
 	<bean id="getCollectionListEndpoint" 
