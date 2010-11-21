@@ -290,20 +290,26 @@ function displayImage(imageNumber) {
 	workingUpdaterAjaxHandler.manualStart();
 	currentImage = imageNumber;
 	
-	var newImg = document.createElement("img");
-	var newImgUrl = webContext +"/media.do?id="+imageData[imageNumber][0]
-			+"&albumKey=" +albumKey
-			+"&size=" +imgSize 
-			+"&quality=" +imgCompress;
-	var title = imageData[imageNumber][4]
-		? imageData[imageNumber][4]
-		: imageData[imageNumber][3];
-	newImg.title = title;
-	newImg.alt = title;
-	newImg.onload = function() {
-		handleDisplayImageLoad(newImg, imageNumber);
-	}
-	newImg.src = newImgUrl;
+	var mime = imageData[imageNumber][9];
+	
+	if ( mime.indexOf("image") !== 0 ) {
+		handleDisplayImageLoad(null, imageNumber);
+	} else {
+		var newImg = document.createElement("img");
+		var newImgUrl = webContext +"/media.do?id="+imageData[imageNumber][0]
+				+"&albumKey=" +albumKey
+				+"&size=" +imgSize 
+				+"&quality=" +imgCompress;
+		var title = imageData[imageNumber][4]
+			? imageData[imageNumber][4]
+			: imageData[imageNumber][3];
+		newImg.title = title;
+		newImg.alt = title;
+		newImg.onload = function() {
+			handleDisplayImageLoad(newImg, imageNumber);
+		}
+		newImg.src = newImgUrl;
+	}	
 	
 	var pageNumber = parseInt(((imageNumber - 1) / pageSize) + 1);
 	showIndex(pageNumber);
@@ -340,7 +346,7 @@ function handleDisplayImageLoad(newImg, imageNumber) {
 		height = mediaSizes[imgSize].height;
 	}
 
-	if ( mime.indexOf("video") == 0
+	if ( mime.indexOf("video") === 0
 		&& !!document.createElement('video').canPlayType 
 		&& document.createElement('video').canPlayType(mime) !== '' ) {
 		var videoElem = document.createElement('video');
@@ -351,7 +357,7 @@ function handleDisplayImageLoad(newImg, imageNumber) {
 		videoElem.src = originalUrl;
 		imgContainer.appendChild(videoElem);
 	} else if ( typeof(AC) == "object" 
-			&& mime.indexOf("video") == 0
+			&& mime.indexOf("video") === 0
 			&& haveQuickTime ) {
 		
 		var qtEmbed = AC.Quicktime.packageMovie('image-content', originalUrl, {
