@@ -292,8 +292,9 @@ function displayImage(imageNumber) {
 	
 	var mime = imageData[imageNumber][9];
 	
+	// if this is not an image, show directly if can (video, audio)
 	if ( mime.indexOf("image") !== 0 ) {
-		handleDisplayImageLoad(null, imageNumber);
+		handleDisplayImageLoad(undefined, imageNumber);
 	} else {
 		var newImg = document.createElement("img");
 		var newImgUrl = webContext +"/media.do?id="+imageData[imageNumber][0]
@@ -365,7 +366,16 @@ function handleDisplayImageLoad(newImg, imageNumber) {
 				height: height + 20,
 				autoplay: true});
 		$('image-frame').appendChild(qtEmbed);
-	} else {
+	} else if ( mime.indexOf("audio") === 0 
+			&& !!document.createElement('audio').canPlayType 
+			&& document.createElement('audio').canPlayType(mime) !== ''
+			) {
+		var audioElem = document.createElement('audio');
+		audioElem.id = 'image-content';
+		audioElem.controls = 'controls';
+		audioElem.src = originalUrl;
+		imgContainer.appendChild(audioElem);
+	} else if ( newImg !== undefined ) {
 		newImg.id = 'image-content';
 		imgContainer.appendChild(newImg);
 	}
