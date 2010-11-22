@@ -26,6 +26,9 @@
 
 package magoffin.matt.ma2.web.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -60,8 +63,12 @@ import magoffin.matt.ma2.util.BizContextUtil;
 import magoffin.matt.ma2.util.XmlHelper;
 
 import org.apache.log4j.Logger;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.ContextConfiguration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -71,36 +78,25 @@ import org.w3c.dom.Element;
  * @author Matt Magoffin (spamsqr@msqr.us)
  * @version $Revision$ $Date$
  */
+@ContextConfiguration
 public class AddMediaEndpointTest extends AbstractSpringEnabledTransactionalTest {
 	
-	/** The IOBiz. */
-	protected IOBiz testIOBiz;
-
-	/** The DomainObjectFactory. */
-	protected DomainObjectFactory domainObjectFactory;
-	
-	/** The UserBiz. */
-	protected UserBiz testUserBiz;
-	
-	/** The XmlHelper to help with XML. */
-	protected XmlHelper xmlHelper;
-	
-	/** The WorkBiz. */
-	protected WorkBiz testWorkBiz;
-	
-	/** The CollectionDao. */
-	protected CollectionDao collectionDao;
-	
-	/** The AlbumDao. */
-	protected AlbumDao albumDao;
+	@javax.annotation.Resource private IOBiz testIOBiz;
+	@javax.annotation.Resource private DomainObjectFactory domainObjectFactory;
+	@javax.annotation.Resource private UserBiz testUserBiz;
+	@javax.annotation.Resource private XmlHelper xmlHelper;
+	@javax.annotation.Resource private WorkBiz testWorkBiz;
+	@javax.annotation.Resource private CollectionDao collectionDao;
+	@javax.annotation.Resource private AlbumDao albumDao;
 	
 	private User testUser;
 	private Collection testCollection;
 	
 	private final Logger log = Logger.getLogger(getClass());
 
+	@Before
 	@Override
-	protected void onSetUpInTransaction() throws Exception {
+	public void onSetUpInTransaction() {
 		super.onSetUpInTransaction();
 		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);
 		
@@ -110,7 +106,7 @@ public class AddMediaEndpointTest extends AbstractSpringEnabledTransactionalTest
 		newUser.setPassword("test");
 		newUser.setLogin("nobody");
 		
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext,null);
 		String confKey = null;
 		try {
 			confKey = testUserBiz.registerUser(newUser,context);
@@ -130,6 +126,7 @@ public class AddMediaEndpointTest extends AbstractSpringEnabledTransactionalTest
 	 * Test able to add media, normal situation.
 	 * @throws Exception if any error occurs
 	 */
+	@Test
 	public void testAddMedia() throws Exception {
 		AddMediaEndpoint endpoint = new AddMediaEndpoint();
 		endpoint.setIoBiz(testIOBiz);
@@ -182,28 +179,70 @@ public class AddMediaEndpointTest extends AbstractSpringEnabledTransactionalTest
 		Resource r = new ClassPathResource("add-media-test-01.xml", getClass());
 		// copy resource, replacing collection-id with the test one
 		File tmp = File.createTempFile("AddMediaEndpointTest-input-", ".xml");
+		tmp.deleteOnExit();
 		if ( log.isDebugEnabled() ) {
 			log.debug("Generating test <m:collection-import> XML: " +tmp.getAbsolutePath());
 		}
 		BufferedReader in = new BufferedReader(new InputStreamReader(r.getInputStream()));
 		BufferedWriter out = new BufferedWriter(new FileWriter(tmp));
 		String line = in.readLine();
+		
+		// replace collection-id with our actual collection ID
 		Pattern p = Pattern.compile("collection-id=\"[^\"]+\"");
-		boolean doneReplacing = false;
+		boolean collectionReplaced = false;
+
+		// look for a resource test/ws-import.zip.b64 as a Base64-coded zip
+		// file to import, instead of the default one mentioned, so we
+		// can test very large files without checking that into source control
+		Resource testData = new FileSystemResource("test/ws-import.zip.b64");
+		Pattern dataTag = Pattern.compile("</?m:media-data");
+		boolean dataFound = !testData.exists();
+		boolean dataReplaced = dataFound;
+		
 		while ( line != null ) {
-			if ( doneReplacing ) {
+			if ( collectionReplaced && dataReplaced ) {
 				out.write(line);
 				out.write("\n");
 			} else {
-				Matcher m = p.matcher(line);
-				if ( m.find() ) {
-					out.write(m.replaceAll("collection-id=\""
-							+this.testCollection.getCollectionId().toString()
-							+"\""));
-					out.write("\n");
-				} else {
-					out.write(line);
-					out.write("\n");
+				if ( !collectionReplaced ) {
+					Matcher m = p.matcher(line);
+					if ( m.find() ) {
+						out.write(m.replaceAll("collection-id=\""
+								+this.testCollection.getCollectionId().toString()
+								+"\""));
+						out.write("\n");
+						collectionReplaced = true;
+					} else {
+						out.write(line);
+						out.write("\n");
+					}
+				} else if ( !dataFound ) {
+					// look for data
+					Matcher m = dataTag.matcher(line);
+					if ( m.find() ) {
+						out.write(line);
+						out.write("\n");
+						
+						// copy test Base64 data into temp file
+						BufferedReader in2 = new BufferedReader(new InputStreamReader(testData.getInputStream()));
+						String line2 = in2.readLine();
+						while ( line2 != null ) {
+							out.write(line2);
+							out.write("\n");
+							line2 = in2.readLine();
+						}
+						dataFound = true;
+					} else {
+						out.write(line);
+						out.write("\n");
+					}
+				} else if ( !dataReplaced ) {
+					Matcher m = dataTag.matcher(line);
+					if ( m.find() ) {
+						out.write(line);
+						out.write("\n");
+						dataReplaced = true;
+					}
 				}
 			}
 			line = in.readLine();

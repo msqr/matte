@@ -237,7 +237,8 @@ public class BasicIconBasedMediaHandler extends AbstractMediaHandler {
 			MediaResponse response) {
 		Resource itemResource = getMediaBiz().getMediaItemResource(item);
 		if ( request.isOriginal() ) {
-			defaultHandleRequestOriginal(item, itemResource, response);
+			defaultHandleRequestOriginal(item, itemResource, request, response);
+			return;
 		}
 		if ( item.isUseIcon() || getImageMediaRequestDelegate() == null ) {
 			defaultHandleIconResponse(item, request, response);

@@ -259,7 +259,7 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 			MediaResponse response, Resource itemResource) {
 		try {
 			if ( !needToAlter(item, request) ) {
-				defaultHandleRequestOriginal(item, itemResource, response);
+				defaultHandleRequestOriginal(item, itemResource, request, response);
 				return;
 			}
 			

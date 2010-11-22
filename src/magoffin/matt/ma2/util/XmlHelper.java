@@ -118,7 +118,7 @@ public class XmlHelper {
 	private JAXBContext jaxbContext = null;
 
 	/** A Map of properties to use with the JAXB Marshaller. */
-	private Map<String,String> marshallerProperties = null;
+	private Map<String, Object> marshallerProperties = null;
 
 	/** The MA2 package JAXB ObjectFactory. */
 	private ObjectFactory objectFactory = null;
@@ -202,10 +202,10 @@ public class XmlHelper {
 	public Marshaller getMarshaller() throws JAXBException {
 		Marshaller marshaller = jaxbContext.createMarshaller();
 		if ( marshallerProperties != null ) {
-			for ( Iterator<Map.Entry<String, String>> itr =
+			for ( Iterator<Map.Entry<String, Object>> itr =
 					marshallerProperties.entrySet().iterator(); itr.hasNext(); ) {
-				Map.Entry<String,String> me = itr.next();
-				marshaller.setProperty(me.getKey().toString(),me.getValue());
+				Map.Entry<String, Object> me = itr.next();
+				marshaller.setProperty(me.getKey().toString(), me.getValue());
 			}
 		}
 		return marshaller;
@@ -504,14 +504,14 @@ public class XmlHelper {
 	/**
 	 * @return the marshallerProperties
 	 */
-	public Map<String, String> getMarshallerProperties() {
+	public Map<String, Object> getMarshallerProperties() {
 		return marshallerProperties;
 	}
 
 	/**
 	 * @param marshallerProperties the marshallerProperties to set
 	 */
-	public void setMarshallerProperties(Map<String, String> marshallerProperties) {
+	public void setMarshallerProperties(Map<String, Object> marshallerProperties) {
 		this.marshallerProperties = marshallerProperties;
 	}
 

@@ -26,6 +26,8 @@
 
 package magoffin.matt.ma2.biz.impl;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -51,8 +53,10 @@ import magoffin.matt.ma2.support.AddThemeCommand;
 import magoffin.matt.util.TemporaryFile;
 
 import org.apache.log4j.Logger;
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Test the {@link magoffin.matt.ma2.biz.impl.SystemBizImpl} class.
@@ -60,22 +64,14 @@ import org.springframework.core.io.Resource;
  * @author Matt Magoffin (spamsqr@msqr.us)
  * @version $Revision$ $Date$
  */
+@ContextConfiguration
 public class SystemBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	
-	/** The SystemBiz. */
-	protected SystemBizImpl testSystemBizImpl;
-	
-	/** Test UserBiz. */
-	protected UserBiz testUserBiz;
-	
-	/** The domain object factory. */
-	protected DomainObjectFactory domainObjectFactory;
-	
-	/** The ThemeDao. */
-	protected ThemeDao themeDao;
-	
-	/** The AlbumDao. */
-	protected AlbumDao albumDao;
+	@javax.annotation.Resource private SystemBizImpl testSystemBizImpl;
+	@javax.annotation.Resource private UserBiz testUserBiz;
+	@javax.annotation.Resource private DomainObjectFactory domainObjectFactory;
+	@javax.annotation.Resource private ThemeDao themeDao;
+	@javax.annotation.Resource private AlbumDao albumDao;
 	
 	private final Logger log = Logger.getLogger(SystemBizImplTest.class);
 	
@@ -83,6 +79,7 @@ public class SystemBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test able to import a ThemePak.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testAddTheme() throws Exception {
 		Long themeId = addNewTheme();
 		
@@ -122,7 +119,12 @@ public class SystemBizImplTest extends AbstractSpringEnabledTransactionalTest {
 				}
 			}
 		});
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context;
+		try {
+			context = new TestBizContext(applicationContext,null);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		Long themeId = testSystemBizImpl.storeTheme(cmd, context);
 		return themeId;
 	}
@@ -131,6 +133,7 @@ public class SystemBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test exporting a theme.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testExportTheme() throws Exception {
 		Long themeId = addNewTheme();
 		
@@ -138,7 +141,7 @@ public class SystemBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		File tmpThemePakFile = File.createTempFile("ThemePak", ".zip");
 		tmpThemePakFile.deleteOnExit();
 		
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext,null);
 		OutputStream out = new FileOutputStream(tmpThemePakFile);
 		try {
 			testSystemBizImpl.exportTheme(themeDao.get(themeId), out, null, context);
@@ -163,6 +166,7 @@ public class SystemBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test able to delete an external theme.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testDeleteExternalTheme() throws Exception {
 		Long themeId = addNewTheme();
 		Theme theme = testSystemBizImpl.getThemeById(themeId);
@@ -172,7 +176,7 @@ public class SystemBizImplTest extends AbstractSpringEnabledTransactionalTest {
 				+theme.getBasePath()+"/theme.xsl");
 		assertTrue(testFile.exists());
 		
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext,null);
 		testSystemBizImpl.deleteTheme(theme, context);
 		
 		// test theme file now deleted
@@ -184,6 +188,7 @@ public class SystemBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * by some albums.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testDeleteExternalThemeInUse() throws Exception {
 		Long themeId = addNewTheme();
 		Theme theme = testSystemBizImpl.getThemeById(themeId);
@@ -204,7 +209,7 @@ public class SystemBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		newAlbum.setAllowOriginal(false);
 		Long albumId = albumDao.store(newAlbum);
 		
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext,null);
 		testSystemBizImpl.deleteTheme(theme, context);
 		
 		// test theme file now deleted
@@ -219,6 +224,7 @@ public class SystemBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test that the time zones are available.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testTimeZones() throws Exception {
 		List<TimeZone> tzList = testSystemBizImpl.getAvailableTimeZones();
 		
@@ -230,6 +236,7 @@ public class SystemBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test the default time zone.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testDefaultTimeZone() throws Exception {
 		TimeZone tz = testSystemBizImpl.getDefaultTimeZone();
 		assertNotNull("The default time zone should not be null", tz);
@@ -239,6 +246,7 @@ public class SystemBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test the default theme.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testDefaultTheme() throws Exception {
 		Theme theme = testSystemBizImpl.getDefaultTheme();
 		assertNotNull("The default theme should not be null", theme);
@@ -248,9 +256,10 @@ public class SystemBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test storing a new theme.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testStoreTheme() throws Exception {
 		User user = registerAndConfirmUser();
-		BizContext context = new TestBizContext(getContext(contextKey()), user);
+		BizContext context = new TestBizContext(applicationContext, user);
 		
 		Theme theme = domainObjectFactory.newThemeInstance();
 		theme.setAuthor("Unit Test");
@@ -273,10 +282,11 @@ public class SystemBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test able to generate shared album URL.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testGetSharedAlbumUrl() throws Exception {
 		Album album = domainObjectFactory.newAlbumInstance();
 		album.setAnonymousKey("MY_ANONYMOUS_KEY");
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext,null);
 		String url = testSystemBizImpl.getSharedAlbumUrl(album, context);
 		assertNotNull(url);
 		assertTrue(url.contains(album.getAnonymousKey()));
@@ -288,7 +298,7 @@ public class SystemBizImplTest extends AbstractSpringEnabledTransactionalTest {
 
 	private User registerAndConfirmUser(String login, String email) throws Exception {
 		User newUser = getTestUser(login, email);
-		BizContext context = new TestBizContext(getContext(contextKey()),null);		
+		BizContext context = new TestBizContext(applicationContext,null);		
 		String confKey = testUserBiz.registerUser(newUser,context);
 		User confirmedUser = testUserBiz.confirmRegisteredUser(newUser.getLogin(),
 				confKey,context);

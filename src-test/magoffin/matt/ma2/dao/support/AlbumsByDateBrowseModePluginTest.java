@@ -26,8 +26,14 @@
 
 package magoffin.matt.ma2.dao.support;
 
+import static org.junit.Assert.*;
+
 import java.util.Calendar;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
 import magoffin.matt.ma2.TestConstants;
@@ -49,28 +55,21 @@ import magoffin.matt.ma2.support.BrowseAlbumsCommand;
  * @author matt
  * @version $Revision$ $Date$
  */
-public class AlbumsByDateBrowseModePluginTest extends
-		AbstractSpringEnabledTransactionalTest {
+@ContextConfiguration
+public class AlbumsByDateBrowseModePluginTest
+extends AbstractSpringEnabledTransactionalTest {
 
-	/** The album DAO to test. */
-	protected AlbumDao albumDao;
-	
-	/** The DomainObjectFactory instance. */
-	protected DomainObjectFactory domainObjectFactory;
-	
-	/** The plugin to test. */
-	protected AlbumsByDateBrowseModePlugin testPlugin;
-	
-	/** The UserDao to test with. */
-	protected UserDao userDao;
-
-	/** The TimeZoneDao to test with. */
-	protected TimeZoneDao timeZoneDao;
+	@javax.annotation.Resource private AlbumDao albumDao;
+	@javax.annotation.Resource private DomainObjectFactory domainObjectFactory;
+	@javax.annotation.Resource private AlbumsByDateBrowseModePlugin testPlugin;
+	@javax.annotation.Resource private UserDao userDao;
+	@javax.annotation.Resource private TimeZoneDao timeZoneDao;
 	
 	private int albumCounter = 1;
 
+	@Before
 	@Override
-	protected void onSetUpInTransaction() throws Exception {
+	public void onSetUpInTransaction() {
 		super.onSetUpInTransaction();
 		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);
 	}
@@ -78,6 +77,7 @@ public class AlbumsByDateBrowseModePluginTest extends
 	/**
 	 * Test finding for a user by date.
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testSearchForAlbumsForUserByDate() {
 		Long savedUserId = saveNewUser();

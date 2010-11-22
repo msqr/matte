@@ -26,6 +26,8 @@
 
 package magoffin.matt.ma2.image.jmagick;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -44,8 +46,11 @@ import magoffin.matt.ma2.support.BasicMediaRequest;
 import magoffin.matt.ma2.support.BasicMediaResponse;
 import magoffin.matt.ma2.support.Geometry;
 
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.annotation.IfProfileValue;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.FileCopyUtils;
 
 /**
@@ -55,15 +60,17 @@ import org.springframework.util.FileCopyUtils;
  * @author matt.magoffin
  * @version $Revision$ $Date$
  */
+@ContextConfiguration
+@IfProfileValue(name="jmagick", value="true")
 public class PngMediaHandlerTest extends AbstractSpringEnabledTransactionalTest {
 
-	/** The PngMediaHandler to test. */
-	protected PngMediaHandler testPngMediaHandler;
+	@javax.annotation.Resource private PngMediaHandler testPngMediaHandler;
 	
 	/**
 	 * Test the media handler can correctly read image dimensions.
 	 * @throws IOException if an error occurs
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testReadDimensions() throws IOException {
 		Resource testReadDimensions 
@@ -90,6 +97,7 @@ public class PngMediaHandlerTest extends AbstractSpringEnabledTransactionalTest 
 	 * Test able to scale an image to a thumbnail size.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testAllSizesAndQualities() throws Exception {
 		// copy to tmp file so MediaBiz finds

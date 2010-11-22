@@ -31,6 +31,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.math.Range;
+
 import magoffin.matt.ma2.MediaEffect;
 import magoffin.matt.ma2.MediaQuality;
 import magoffin.matt.ma2.MediaRequest;
@@ -50,6 +52,7 @@ public class BasicMediaRequest implements MediaRequest {
 	private MediaQuality quality = MediaQuality.GOOD;
 	private Map<String,Object> parameters = new LinkedHashMap<String,Object>();
 	private List<MediaEffect> effects = new LinkedList<MediaEffect>();
+	private Range partialContentByteRange = null;
 	
 	/**
 	 * Default constructor.
@@ -128,6 +131,13 @@ public class BasicMediaRequest implements MediaRequest {
 		return parameters;
 	}
 
+	/* (non-Javadoc)
+	 * @see magoffin.matt.ma2.MediaRequest#partialContentByteRange()
+	 */
+	public Range getPartialContentByteRange() {
+		return partialContentByteRange;
+	}
+
 	/**
 	 * Generates a cache key based on the item's ID, size, and quality.
 	 */
@@ -188,6 +198,13 @@ public class BasicMediaRequest implements MediaRequest {
 	 */
 	public void setEffects(List<MediaEffect> effects) {
 		this.effects = effects;
+	}
+
+	/**
+	 * @param partialContentByteRange the partialContentByteRange to set
+	 */
+	public void setPartialContentByteRange(Range partialContentByteRange) {
+		this.partialContentByteRange = partialContentByteRange;
 	}
 
 }
