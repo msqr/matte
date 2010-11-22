@@ -28,6 +28,8 @@ package magoffin.matt.ma2.support;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.EnumSet;
@@ -55,6 +57,7 @@ import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.image.EmbeddedImageMetadata;
 import magoffin.matt.ma2.util.BizContextUtil;
 
+import org.apache.commons.lang.math.Range;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -520,24 +523,68 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 	 * 
 	 * @param item the item to handle
 	 * @param itemResource the item's Resource
+	 * @param request the request
 	 * @param response the response
 	 */
 	protected void defaultHandleRequestOriginal(MediaItem item, Resource itemResource, 
-			MediaResponse response) {
+			MediaRequest request, MediaResponse response) {
 		if ( log.isDebugEnabled() ) {
 			log.debug("Returning unaltered stream " +item.getPath());
 		}
-		response.setMimeType(getMime());
 		try {
-			response.setMediaLength(itemResource.getFile().length());
+			response.setMimeType(getMime());
 			response.setModifiedDate(itemResource.getFile().lastModified());
 		} catch ( IOException e ) {
 			// ignore
+			return;
 		}
+		
+		if ( !response.hasOutputStream() ) {
+			// happens on last-modified requests
+			return;
+		}
+		
+		long fileLength = -1;
 		try {
-			FileCopyUtils.copy(itemResource.getInputStream(),response.getOutputStream());
+			fileLength = itemResource.getFile().length();
 		} catch ( IOException e ) {
-			throw new RuntimeException(e);
+			// ignore
+		}
+		if ( request.getPartialContentByteRange() != null ) {
+			Range range = request.getPartialContentByteRange();
+			long start = range.getMinimumNumber() != null ? range.getMinimumLong() : 0;
+			long end = range.getMaximumNumber() != null ? range.getMaximumLong() + 1 : fileLength;
+			byte[] buf = new byte[4096];
+			response.setPartialResponse(start, end - 1, fileLength);
+			OutputStream out = response.getOutputStream();
+			try {
+				RandomAccessFile file = new RandomAccessFile(itemResource.getFile(), "r");
+				file.seek(start);
+				while ( start < end ) {
+					int max = start + buf.length > end ? (int)(end - start) : buf.length;
+					int len = file.read(buf, 0, max);
+					out.write(buf, 0, len);
+					start += len;
+				}
+				out.flush();
+				out.close();
+			} catch ( IOException e ) {
+				throw new RuntimeException(e);
+			}
+		} else {
+			try {
+				if ( fileLength > 0 ) {
+					response.setMediaLength(fileLength);
+				}
+				FileCopyUtils.copy(itemResource.getInputStream(),response.getOutputStream());
+			} catch ( IOException e ) {
+				// not much we can do, lets just log a message
+				if ( log.isDebugEnabled() ) {
+					log.debug("IOException sending media response", e);
+				} else if ( log.isInfoEnabled()  ) {
+					log.info("IOException sending media response: " +e.getMessage());
+				}
+			}
 		}
 	}
 

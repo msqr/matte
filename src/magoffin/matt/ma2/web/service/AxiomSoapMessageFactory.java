@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 the original author or authors.
+ * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,13 @@
 
 package magoffin.matt.ma2.web.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -37,40 +41,50 @@ import org.apache.axiom.soap.impl.llom.soap12.SOAP12Factory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.axiom.AxiomSoapMessageCreationException;
+import org.springframework.ws.soap.support.SoapUtils;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportInputStream;
 
 /**
- * This is a tweak of Spring-WS 1.0.2 to allow for setting the Axiom Attachment file cache 
- * settings.
+ * Extension of {@link org.springframework.ws.soap.axiom.AxiomSoapMessageFactory} that
+ * allows configuring the XMLInputFactory properties, to allow for handling very large
+ * element content by turning off text coalescing.
  * 
- * See http://opensource.atlassian.com/projects/spring/browse/SWS-246
+ * <p>See <a href="https://jira.springframework.org/browse/SWS-650">SWS-650</a>.</p>
  */
 public class AxiomSoapMessageFactory implements SoapMessageFactory, InitializingBean {
 
-    private static final String CHAR_SET_ENCODING = "charset";
+    private static final String CHARSET_PARAMETER = "charset";
 
-    private static final String DEFAULT_CHAR_SET_ENCODING = "UTF-8";
+    private static final String DEFAULT_CHARSET_ENCODING = "UTF-8";
 
     private static final String MULTI_PART_RELATED_CONTENT_TYPE = "multipart/related";
 
     private static final Log logger = LogFactory.getLog(AxiomSoapMessageFactory.class);
 
     private XMLInputFactory inputFactory;
-
+    
+    private Map<String, Object> inputFactoryProperties;
+    
     private boolean payloadCaching = true;
-    private boolean attachmentFileCaching = true;
-    private String attachmentCacheDir = System.getProperty("java.io.tmpdir");
-    private Integer attachmentCacheSizeThreashold = Integer.valueOf(4096);
+
+    private boolean attachmentCaching = false;
+
+    private File attachmentCacheDir;
+
+    private int attachmentCacheThreshold = 4096;
 
     // use SOAP 1.1 by default
     private SOAPFactory soapFactory = new SOAP11Factory();
+
+    private boolean langAttributeOnSoap11FaultString = true;
 
     /** Default constructor. */
     public AxiomSoapMessageFactory() {
@@ -78,26 +92,56 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
     }
 
     /**
-     * Indicates whether the SOAP Body payload should be cached or not. Default is <code>true</code>. Setting this to
-     * <code>false</code> will increase performance, but also result in the fact that the message payload can only be
-     * read once.
-     * @param payloadCaching the payloadCaching to set
+     * Indicates whether the SOAP Body payload should be cached or not. Default is <code>true</code>.
+     * <p/>
+     * Setting this to <code>false</code> will increase performance, but also result in the fact that the message
+     * payload can only be read once.
+     * @param payloadCaching the value
      */
     public void setPayloadCaching(boolean payloadCaching) {
         this.payloadCaching = payloadCaching;
     }
 
     /**
-     * Indicate whether SOAP attachments should make use of file caching. Default is <em>true</em>.
-     * Setting this to <em>false</em> will cause Axiom to load the entire attachment into
-     * memory, which is not suitable for large attachments.
-	 * @param attachmentFileCaching the attachmentFileCaching to set
-	 */
-	public void setAttachmentFileCaching(boolean attachmentFileCaching) {
-		this.attachmentFileCaching = attachmentFileCaching;
-	}
+     * Indicates whether SOAP attachments should be cached or not. Default is <code>false</code>.
+     * <p/>
+     * Setting this to <code>true</code> will cause Axiom to store larger attachments on disk, rather than in memory.
+     * This decreases memory consumption, but decreases performance.
+     * @param attachmentCaching the value
+     */
+    public void setAttachmentCaching(boolean attachmentCaching) {
+        this.attachmentCaching = attachmentCaching;
+    }
 
-	public void setSoapVersion(SoapVersion version) {
+    /**
+     * Sets the directory where SOAP attachments will be stored. Only used when {@link #setAttachmentCaching(boolean)
+     * attachmentCaching} is set to <code>true</code>.
+     * <p/>
+     * The parameter should be an existing, writable directory. This property defaults to the temporary directory of the
+     * operating system (i.e. the value of the <code>java.io.tmpdir</code> system property).
+     * @param attachmentCacheDir the value
+     */
+    public void setAttachmentCacheDir(File attachmentCacheDir) {
+        Assert.notNull(attachmentCacheDir, "'attachmentCacheDir' must not be null");
+        Assert.isTrue(attachmentCacheDir.isDirectory(), "'attachmentCacheDir' must be a directory");
+        Assert.isTrue(attachmentCacheDir.canWrite(), "'attachmentCacheDir' must be writable");
+        this.attachmentCacheDir = attachmentCacheDir;
+    }
+
+    /**
+     * Sets the threshold for attachments caching, in bytes. Attachments larger than this threshold will be cached in
+     * the {@link #setAttachmentCacheDir(File) attachment cache directory}. Only used when {@link
+     * #setAttachmentCaching(boolean) attachmentCaching} is set to <code>true</code>.
+     * <p/>
+     * Defaults to 4096 bytes (i.e. 4 kilobytes).
+     * @param attachmentCacheThreshold the value
+     */
+    public void setAttachmentCacheThreshold(int attachmentCacheThreshold) {
+        Assert.isTrue(attachmentCacheThreshold > 0, "'attachmentCacheThreshold' must be larger than 0");
+        this.attachmentCacheThreshold = attachmentCacheThreshold;
+    }
+
+    public void setSoapVersion(SoapVersion version) {
         if (SoapVersion.SOAP_11 == version) {
             soapFactory = new SOAP11Factory();
         }
@@ -110,26 +154,54 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
         }
     }
 
+    /**
+     * Defines whether a {@code xml:lang} attribute should be set on SOAP 1.1 {@code <faultstring>} elements.
+     * <p/>
+     * The default is {@code true}, to comply with WS-I, but this flag can be set to {@code false} to the older W3C SOAP
+     * 1.1 specification.
+     * @param langAttributeOnSoap11FaultString the value
+     *
+     * @see <a href="http://www.ws-i.org/Profiles/BasicProfile-1.1.html#SOAP_Fault_Language">WS-I Basic Profile 1.1</a>
+     */
+    public void setlangAttributeOnSoap11FaultString(boolean langAttributeOnSoap11FaultString) {
+        this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
+    }
+
     public void afterPropertiesSet() throws Exception {
         if (logger.isInfoEnabled()) {
             logger.info(payloadCaching ? "Enabled payload caching" : "Disabled payload caching");
         }
+        if (attachmentCacheDir == null) {
+            String tempDir = System.getProperty("java.io.tmpdir");
+            setAttachmentCacheDir(new File(tempDir));
+        }
+        if (inputFactoryProperties != null) {
+        	for (Map.Entry<String, Object> entry : inputFactoryProperties.entrySet() ) {
+        		inputFactory.setProperty(entry.getKey(), entry.getValue());
+        	}
+        }
     }
 
     public WebServiceMessage createWebServiceMessage() {
-        return new AxiomSoapMessage(soapFactory, payloadCaching);
+        return new AxiomSoapMessage(soapFactory, payloadCaching, langAttributeOnSoap11FaultString);
     }
 
     public WebServiceMessage createWebServiceMessage(InputStream inputStream) throws IOException {
-        if (!(inputStream instanceof TransportInputStream)) {
-            throw new IllegalArgumentException("AxiomSoapMessageFactory requires a TransportInputStream");
-        }
+        Assert.isInstanceOf(TransportInputStream.class, inputStream,
+                "AxiomSoapMessageFactory requires a TransportInputStream");
         TransportInputStream transportInputStream = (TransportInputStream) inputStream;
         String contentType = getHeaderValue(transportInputStream, TransportConstants.HEADER_CONTENT_TYPE);
         if (!StringUtils.hasLength(contentType)) {
-            throw new IllegalArgumentException("TransportInputStream contains no Content-Type header");
+            if (logger.isDebugEnabled()) {
+                logger.debug("TransportInputStream has no Content-Type header; defaulting to \"" +
+                        SoapVersion.SOAP_11.getContentType() + "\"");
+            }
+            contentType = SoapVersion.SOAP_11.getContentType();
         }
         String soapAction = getHeaderValue(transportInputStream, TransportConstants.HEADER_SOAP_ACTION);
+        if (!StringUtils.hasLength(soapAction)) {
+            soapAction = SoapUtils.extractActionFromContentType(contentType);
+        }
         try {
             if (isMultiPartRelated(contentType)) {
                 return createMultiPartAxiomSoapMessage(inputStream, contentType, soapAction);
@@ -144,17 +216,18 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
         }
     }
 
-    @SuppressWarnings("unchecked")
-	private String getHeaderValue(TransportInputStream transportInputStream, String header) throws IOException {
+    private String getHeaderValue(TransportInputStream transportInputStream, String header) throws IOException {
         String contentType = null;
-        Iterator<String> iterator = transportInputStream.getHeaders(header);
+        @SuppressWarnings("rawtypes")
+		Iterator iterator = transportInputStream.getHeaders(header);
         if (iterator.hasNext()) {
-            contentType = iterator.next();
+            contentType = (String) iterator.next();
         }
         return contentType;
     }
 
     private boolean isMultiPartRelated(String contentType) {
+        contentType = contentType.toLowerCase(Locale.ENGLISH);
         return contentType.indexOf(MULTI_PART_RELATED_CONTENT_TYPE) != -1;
     }
 
@@ -165,15 +238,16 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
         String envelopeNamespace = getSoapEnvelopeNamespace(contentType);
         StAXSOAPModelBuilder builder = new StAXSOAPModelBuilder(reader, soapFactory, envelopeNamespace);
         SOAPMessage soapMessage = builder.getSoapMessage();
-        return new AxiomSoapMessage(soapMessage, soapAction, payloadCaching);
+        return new AxiomSoapMessage(soapMessage, soapAction, payloadCaching, langAttributeOnSoap11FaultString);
     }
 
     /** Creates an AxiomSoapMessage with attachments. */
     private AxiomSoapMessage createMultiPartAxiomSoapMessage(InputStream inputStream,
                                                              String contentType,
                                                              String soapAction) throws XMLStreamException {
-        Attachments attachments = new Attachments(inputStream, contentType, attachmentFileCaching, 
-        		attachmentCacheDir, attachmentCacheSizeThreashold.toString());
+        Attachments attachments =
+                new Attachments(inputStream, contentType, attachmentCaching, attachmentCacheDir.getAbsolutePath(),
+                        Integer.toString(attachmentCacheThreshold));
         XMLStreamReader reader = inputFactory.createXMLStreamReader(attachments.getSOAPPartInputStream(),
                 getCharSetEncoding(attachments.getSOAPPartContentType()));
         StAXSOAPModelBuilder builder;
@@ -189,7 +263,8 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
             throw new AxiomSoapMessageCreationException(
                     "Unknown attachment type: [" + attachments.getAttachmentSpecType() + "]");
         }
-        return new AxiomSoapMessage(builder.getSoapMessage(), attachments, soapAction, payloadCaching);
+        return new AxiomSoapMessage(builder.getSoapMessage(), attachments, soapAction, payloadCaching,
+                langAttributeOnSoap11FaultString);
     }
 
     private String getSoapEnvelopeNamespace(String contentType) {
@@ -207,31 +282,34 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
     /**
      * Returns the character set from the given content type. Mostly copied
+     * @param contentType the value
      *
-     * @param contentType
      * @return the character set encoding
      */
     protected String getCharSetEncoding(String contentType) {
-        int index = contentType.indexOf(CHAR_SET_ENCODING);
-        if (index == -1) {
-            return DEFAULT_CHAR_SET_ENCODING;
+        int charSetIdx = contentType.indexOf(CHARSET_PARAMETER);
+        if (charSetIdx == -1) {
+            return DEFAULT_CHARSET_ENCODING;
         }
-        int idx = contentType.indexOf("=", index);
+        int eqIdx = contentType.indexOf("=", charSetIdx);
 
-        int indexOfSemiColon = contentType.indexOf(";", idx);
+        int indexOfSemiColon = contentType.indexOf(";", eqIdx);
         String value;
 
         if (indexOfSemiColon > 0) {
-            value = contentType.substring(idx + 1, indexOfSemiColon);
+            value = contentType.substring(eqIdx + 1, indexOfSemiColon);
         }
         else {
-            value = contentType.substring(idx + 1, contentType.length()).trim();
+            value = contentType.substring(eqIdx + 1, contentType.length()).trim();
         }
-        if (value.charAt(0) == '"' && value.charAt(value.length() - 1) == '"') {
-            return value.substring(1, value.length() - 1);
+        if (value.startsWith("\"")) {
+            value = value.substring(1);
+        }
+        if (value.endsWith("\"")) {
+            return value.substring(0, value.length() - 1);
         }
         if ("null".equalsIgnoreCase(value)) {
-            return DEFAULT_CHAR_SET_ENCODING;
+            return DEFAULT_CHARSET_ENCODING;
         }
         return value.trim();
     }
@@ -248,5 +326,12 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
         buffer.append(']');
         return buffer.toString();
     }
+
+	/**
+	 * @param inputFactoryProperties the inputFactoryProperties to set
+	 */
+	public void setInputFactoryProperties(Map<String, Object> inputFactoryProperties) {
+		this.inputFactoryProperties = inputFactoryProperties;
+	}
     
 }

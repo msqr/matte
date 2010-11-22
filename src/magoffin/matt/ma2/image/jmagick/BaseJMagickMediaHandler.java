@@ -213,7 +213,7 @@ public abstract class BaseJMagickMediaHandler extends BaseImageMediaHandler {
 	protected void defaultHandleResource(MediaItem item, MediaRequest request, MediaResponse response, Resource itemResource) {
 		try {
 			if ( !needToAlter(item, request) ) {
-				defaultHandleRequestOriginal(item, itemResource, response);
+				defaultHandleRequestOriginal(item, itemResource, request, response);
 				return;
 			}
 			

@@ -103,7 +103,7 @@ public abstract class BaseImageIOMediaHandler extends BaseAwtImageMediaHandler {
 			MediaRequest request, MediaResponse response) {
 		try {
 			if ( !needToAlter(item, request) ) {
-				defaultHandleRequestOriginal(item, mediaResource, response);
+				defaultHandleRequestOriginal(item, mediaResource, request, response);
 				return null;
 			}
 			
