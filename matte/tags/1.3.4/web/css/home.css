@@ -1,0 +1,1137 @@
+/* CSS for home screens.
+ * ===================================================================
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License as 
+ * published by the Free Software Foundation; either version 2 of 
+ * the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
+ * 02111-1307 USA
+ * ===================================================================
+ * $Id: home.css,v 1.33 2005/04/13 03:43:06 matt Exp $
+ * ===================================================================
+ */
+ 
+.alt-hide { 
+	display: none;
+}
+
+A.dialog-close {
+	display: block;
+	width: 18px;
+	height: 18px;
+	background-image: url('../img/corner-x-white-tr-combo.png');
+	background-position: 0px 0px;
+	margin: 0px auto;
+}
+
+A.dialog-close:hover {
+	background-position: 0px -19px;
+}
+
+TEXTAREA.comments {
+	width: 17em;
+	height: 12em;
+}
+
+/* ADD ITEMS TO ALBUM DIALOG */
+
+#add-items-album-dialog {
+	position: absolute;
+	visibility: hidden;
+	top: 30px;
+	left: 30px;
+	background-color: #ffc;
+	border: 1px solid #666;
+	z-index: 89;
+}
+
+#add-items-album-dialog P {
+	padding-left: 2px;
+}
+
+#add-items-album-dialog DIV {
+	padding: 5px 25px 5px 25px;
+	width: 300px;
+}
+
+#add-items-album-dialog-tl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-tl.png") no-repeat top left;
+	z-index: 90;
+}
+
+#add-items-album-dialog-tr {
+	position: absolute;
+	visibility: hidden;
+	height: 18px;
+	width: 18px;
+	background: url("../img/corner-x-white-tr.png") no-repeat top left;
+	z-index: 90;
+}
+
+#add-items-album-dialog-br {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-br.png") no-repeat top left;
+	z-index: 90;
+}
+
+#add-items-album-dialog-bl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-bl.png") no-repeat top left;
+	z-index: 90;
+}
+
+/* ADD ITEMS TO LIGHTBOX DIALOG */
+
+#add-items-lightbox-dialog {
+	position: absolute;
+	visibility: hidden;
+	top: 30px;
+	left: 30px;
+	background-color: #ffc;
+	border: 1px solid #666;
+	z-index: 89;
+}
+
+#add-items-lightbox-dialog P {
+	padding-left: 2px;
+}
+
+#add-items-lightbox-dialog DIV {
+	padding: 5px 25px 5px 25px;
+	width: 300px;
+}
+
+#add-items-lightbox-dialog-tl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-tl.png") no-repeat top left;
+	z-index: 90;
+}
+
+#add-items-lightbox-dialog-tr {
+	position: absolute;
+	visibility: hidden;
+	height: 18px;
+	width: 18px;
+	background: url("../img/corner-x-white-tr.png") no-repeat top left;
+	z-index: 90;
+}
+
+#add-items-lightbox-dialog-br {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-br.png") no-repeat top left;
+	z-index: 90;
+}
+
+#add-items-lightbox-dialog-bl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-bl.png") no-repeat top left;
+	z-index: 90;
+}
+
+/* ALBUM LIST */
+
+#album-list-title {
+	position: absolute;
+	top: 229px;
+	left: 10px;
+	width: 200px;
+	height: 20px;
+	/*background-color: #e5e5da;*/
+	background-color: #fff;
+	border-top: 1px solid #666666;
+	border-right: 1px solid #666666;
+	border-bottom: 1px solid #cccccc;
+	border-left: 1px solid #666666;
+	overflow: hidden;
+	padding: 0px;
+	z-index: 2;
+}
+
+#album-list {
+	position: absolute;
+	top: 249px;
+	left: 10px;
+	width: 200px;
+	height: 200px;
+	background-color: white;
+	border: 1px solid #666666;
+	overflow: auto;
+	padding: 0px;
+	z-index: 1;
+}
+	
+	#album-list DIV {
+		padding: 2px 2px 1px 4px;
+	}
+
+#album-list-tl {
+	position: absolute;
+	top: 229px;
+	left: 10px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background: url("../img/corner-tl.png") no-repeat top left;
+	z-index: 3;
+}
+	
+#album-list-tr {
+	position: absolute;
+	top: 229px;
+	left: 207px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background: url("../img/corner-tr.png") no-repeat top left;
+	z-index: 3;
+}
+	
+#album-list-br {
+	visibility: hidden;
+	position: absolute;
+	top: 446px;
+	left: 207px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background: url("../img/corner-br.png") no-repeat top-left;
+	z-index: 3;
+}
+	
+#album-list-bl {
+	position: absolute;
+	top: 446px;
+	left: 10px;
+	height: 5px;
+	width: 5px;
+	border: none;
+	background: url("../img/corner-bl.png") no-repeat top-left;
+	z-index: 3;
+}
+
+/* CREATE COLLECTION DIALOG */
+
+#create-collection-dialog {
+	position: absolute;
+	visibility: hidden;
+	top: 30px;
+	left: 30px;
+	background-color: #ffc;
+	border: 1px solid #666;
+	z-index: 99;
+}
+
+#create-collection-dialog P {
+	padding-left: 2px;
+}
+
+#create-collection-dialog DIV {
+	padding: 5px 25px 5px 25px;
+	width: 300px;
+}
+
+#create-collection-dialog-tl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-tl.png") no-repeat top left;
+	z-index: 100;
+}
+
+#create-collection-dialog-tr {
+	position: absolute;
+	visibility: hidden;
+	height: 18px;
+	width: 18px;
+	background: url("../img/corner-x-white-tr.png") no-repeat top left;
+	z-index: 100;
+}
+
+#create-collection-dialog-br {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-br.png") no-repeat top left;
+	z-index: 100;
+}
+
+#create-collection-dialog-bl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-bl.png") no-repeat top left;
+	z-index: 100;
+}
+
+/* COLLECTION LIST */
+
+#collection-list-title {
+	position: absolute;
+	top: 47px;
+	left: 10px;
+	width: 200px;
+	height: 20px;
+	/*background-color: #e5e5da;*/
+	background-color: #fff;
+	border-top: 1px solid #666666;
+	border-right: 1px solid #666666;
+	border-bottom: 1px solid #cccccc;
+	border-left: 1px solid #666666;
+	overflow: hidden;
+	padding: 0px;
+	z-index: 2;
+}
+
+#collection-list {
+	position: absolute;
+	top: 67px;
+	left: 10px;
+	width: 200px;
+	height: 150px;
+	background-color: white;
+	border: 1px solid #666666;
+	overflow: auto;
+	padding: 0px;
+	z-index: 1;
+}
+	
+	#collection-list DIV {
+		padding: 2px 2px 1px 4px;
+	}
+
+#collection-list-tl {
+	position: absolute;
+	top: 47px;
+	left: 10px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background: url("../img/corner-tl.png") no-repeat top left;
+	z-index: 3;
+}
+	
+#collection-list-tr {
+	position: absolute;
+	top: 47px;
+	left: 207px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background: url("../img/corner-tr.png") no-repeat top left;
+	z-index: 3;
+}
+	
+#collection-list-br {
+	visibility: hidden;
+	position: absolute;
+	top: 214px;
+	left: 207px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background: url("../img/corner-br.png") no-repeat top left;
+	z-index: 3;
+}
+	
+#collection-list-bl {
+	position: absolute;
+	top: 214px;
+	left: 10px;
+	height: 5px;
+	width: 5px;
+	border: none;
+	background: url("../img/corner-bl.png") no-repeat top left;
+	z-index: 3;
+}
+
+/* DELETE ALBUM DIALOG */
+
+#delete-album-dialog {
+	position: absolute;
+	visibility: hidden;
+	top: 30px;
+	left: 30px;
+	background-color: #ffc;
+	border: 1px solid #666;
+	z-index: 99;
+}
+
+#delete-album-dialog P {
+	padding-left: 2px;
+}
+
+#delete-album-dialog DIV {
+	padding: 5px 25px 5px 25px;
+	width: 300px;
+}
+
+#delete-album-dialog-tl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-tl.png") no-repeat top left;
+	z-index: 100;
+}
+
+#delete-album-dialog-tr {
+	position: absolute;
+	visibility: hidden;
+	height: 18px;
+	width: 18px;
+	background: url("../img/corner-x-white-tr.png") no-repeat top left;
+	z-index: 100;
+}
+
+#delete-album-dialog-br {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-br.png") no-repeat top left;
+	z-index: 100;
+}
+
+#delete-album-dialog-bl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-bl.png") no-repeat top left;
+	z-index: 100;
+}
+
+/* DELETE GALLERY DIALOG */
+
+#delete-collection-dialog {
+	position: absolute;
+	visibility: hidden;
+	top: 30px;
+	left: 30px;
+	background-color: #ffc;
+	border: 1px solid #666;
+	z-index: 99;
+}
+
+#delete-collection-dialog P {
+	padding-left: 2px;
+}
+
+#delete-collection-dialog DIV {
+	padding: 5px 25px 5px 25px;
+	width: 300px;
+}
+
+#delete-collection-dialog-tl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-tl.png") no-repeat top left;
+	z-index: 100;
+}
+
+#delete-collection-dialog-tr {
+	position: absolute;
+	visibility: hidden;
+	height: 18px;
+	width: 18px;
+	background: url("../img/corner-x-white-tr.png") no-repeat top left;
+	z-index: 100;
+}
+
+#delete-collection-dialog-br {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-br.png") no-repeat top left;
+	z-index: 100;
+}
+
+#delete-collection-dialog-bl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-bl.png") no-repeat top left;
+	z-index: 100;
+}
+
+/* EDIT GALLERY DIALOG */
+
+#edit-collection-dialog {
+	position: absolute;
+	visibility: hidden;
+	top: 30px;
+	left: 30px;
+	background-color: #ffc;
+	border: 1px solid #666;
+	z-index: 99;
+}
+
+#edit-collection-dialog P {
+	padding-left: 2px;
+}
+
+#edit-collection-dialog DIV {
+	padding: 5px 25px 5px 25px;
+	width: 300px;
+}
+
+#edit-collection-dialog-tl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-tl.png") no-repeat top left;
+	z-index: 100;
+}
+
+#edit-collection-dialog-tr {
+	position: absolute;
+	visibility: hidden;
+	height: 18px;
+	width: 18px;
+	background: url("../img/corner-x-white-tr.png") no-repeat top left;
+	z-index: 100;
+}
+
+#edit-collection-dialog-br {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-br.png") no-repeat top left;
+	z-index: 100;
+}
+
+#edit-collection-dialog-bl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-bl.png") no-repeat top left;
+	z-index: 100;
+}
+
+/* FRIEND ALBUM LIST */
+
+#friend-album-list-title {
+	position: absolute;
+	top: 461px;
+	left: 10px;
+	width: 200px;
+	height: 20px;
+	/*background-color: #e5e5da;*/
+	background-color: #fff;
+	border-top: 1px solid #666666;
+	border-right: 1px solid #666666;
+	border-bottom: 1px solid #cccccc;
+	border-left: 1px solid #666666;
+	overflow: hidden;
+	padding: 0px;
+	z-index: 2;
+}
+
+#friend-album-list {
+	position: absolute;
+	top: 481px;
+	left: 10px;
+	width: 200px;
+	height: 75px;
+	background-color: white;
+	border: 1px solid #666666;
+	overflow: auto;
+	padding: 0px;
+	z-index: 1;
+}
+	
+	#friend-album-list DIV {
+		padding: 2px 2px 1px 8px;
+	}
+
+#friend-album-list-tl {
+	position: absolute;
+	top: 461px;
+	left: 10px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background: url("../img/corner-tl.png") no-repeat top left;
+	z-index: 3;
+}
+	
+#friend-album-list-tr {
+	position: absolute;
+	top: 461px;
+	left: 207px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background: url("../img/corner-tr.png") no-repeat top left;
+	z-index: 3;
+}
+	
+#friend-album-list-br {
+	visibility: hidden;
+	position: absolute;
+	top: 553px;
+	left: 207px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background: url("../img/corner-br.png") no-repeat top left;
+	z-index: 3;
+}
+	
+#friend-album-list-bl {
+	position: absolute;
+	top: 553px;
+	left: 10px;
+	height: 5px;
+	width: 5px;
+	border: none;
+	background: url("../img/corner-bl.png") no-repeat top left;
+	z-index: 3;
+}
+
+/* LOGON */
+
+#logon {
+	position: absolute;
+	top: 30px;
+	left: 30px;
+	/*
+	width: 35%;
+	height: 200px;
+	*/
+	background-color: #fff;
+	border: 1px solid #666;
+	z-index: 1;
+}
+
+#logon P {
+	padding-left: 2px;
+}
+
+#logon > DIV {
+	padding: 5px 25px 5px 25px;
+}
+
+#logon-tl {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-tl.png") no-repeat top left;
+	background-repeat: no-repeat;
+	z-index: 3;
+}
+
+#logon-tr {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-tr.png") no-repeat top left;
+	background-repeat: no-repeat;
+	z-index: 3;
+}
+
+#logon-br {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-br.png") no-repeat top left;
+	background-repeat: no-repeat;
+	z-index: 3;
+}
+
+#logon-bl {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-bl.png") no-repeat top left;
+	background-repeat: no-repeat;
+	z-index: 3;
+}
+
+/* MAIN BODY */
+
+#main-title {
+	position: absolute;
+	top: 47px;
+	left: 220px;
+	right: 10px;
+	height: 20px;
+	/*background-color: #e5e5da;*/
+	background-color: #ffc;
+	border-top: 1px solid #666666;
+	border-right: 1px solid #666666;
+	border-bottom: 1px solid #cccccc;
+	border-left: 1px solid #666666;
+	overflow: hidden;
+	padding: 0px;
+	z-index: 3;
+}
+
+#main {
+	position: absolute;
+	top: 69px;
+	left: 220px;
+	right: 10px;
+	bottom: 10px;
+	background-color: white;
+	border: 1px solid #666;
+	overflow: hidden;
+	padding: 0px;
+	z-index: 1;
+}
+
+#main-info {
+	position: absolute;
+	top: 69px;
+	left: 220px;
+	right: 10px;
+	background-color: white;
+	border-left: 1px solid #666;
+	border-right: 1px solid #666;
+	border-bottom: 1px solid #ccc;
+	margin: 0px;
+	padding: 2px 1px 1px 4px;
+	z-index: 2;
+}
+		
+#main-content {
+	position: absolute;
+	overflow: auto;
+	top: 68px;
+	left: 220px;
+	right: 10px;
+	bottom: 10px;
+	background-color: white;
+	border: 1px solid #666;
+	margin: 0px;
+	padding: 4px 0px 4px 4px;
+}
+
+#main-content > DIV {
+	padding: 2px 2px 2px 8px;
+}
+
+/*
+#main-content > TABLE >TBODY > TR[class='even'] {
+	background-color: #efefff;
+}
+
+#main-content > TABLE >TBODY > TR > TD {
+	padding: 2px;
+	padding-left: 10px;
+}
+
+#main-content > TABLE >TBODY > TR > TD:first-child {
+	padding-left: 2px;
+}*/
+
+TABLE.item-table {
+	width: 100%;
+}
+
+TABLE.item-table >TBODY > TR[class='even'] {
+	background-color: #efefff;
+}
+
+TABLE.item-table >TBODY > TR > TD {
+	padding: 2px;
+	padding-left: 10px;
+}
+
+TABLE.item-table >TBODY > TR > TD:first-child {
+	padding-left: 2px;
+}
+
+#main-tl {
+	position: absolute;
+	top: 47px;
+	left: 220px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background: url("../img/corner-tl.png") no-repeat top left;
+	z-index: 10;
+}
+
+#main-tr {
+	position: absolute;
+	top: 47px;
+	right: 10px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background: url("../img/corner-tr.png") no-repeat top left;
+	z-index: 10;
+}
+
+#main-br {
+	visibility: hidden;
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background: url("../img/corner-br.png") no-repeat top left;
+	z-index: 10;
+}
+
+#main-bl {
+	position: absolute;
+	bottom: 10px;
+	left: 220px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background: url("../img/corner-bl.png") no-repeat top left;
+	z-index: 10;
+}
+
+/* MOVE COLLECTION ITEMS DIALOG */
+
+#move-collection-items-dialog {
+	position: absolute;
+	visibility: hidden;
+	top: 30px;
+	left: 30px;
+	background-color: #ffc;
+	border: 1px solid #666;
+	z-index: 89;
+}
+
+#move-collection-items-dialog P {
+	padding-left: 2px;
+}
+
+#move-collection-items-dialog DIV {
+	padding: 5px 25px 5px 25px;
+	width: 300px;
+}
+
+#move-collection-items-dialog-tl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-tl.png") no-repeat top left;
+	z-index: 90;
+}
+
+#move-collection-items-dialog-tr {
+	position: absolute;
+	visibility: hidden;
+	height: 18px;
+	width: 18px;
+	background: url("../img/corner-x-white-tr.png") no-repeat top left;
+	z-index: 90;
+}
+
+#move-collection-items-dialog-br {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-br.png") no-repeat top left;
+	z-index: 90;
+}
+
+#move-collection-items-dialog-bl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-bl.png") no-repeat top left;
+	z-index: 90;
+}
+
+
+/* REMOVE ITEMS FROM ALBUM DIALOG */
+
+#remove-items-album-dialog {
+	position: absolute;
+	visibility: hidden;
+	top: 30px;
+	left: 30px;
+	background-color: #ffc;
+	border: 1px solid #666;
+	z-index: 89;
+}
+
+#remove-items-album-dialog P {
+	padding-left: 2px;
+}
+
+#remove-items-album-dialog DIV {
+	padding: 5px 25px 5px 25px;
+	width: 300px;
+}
+
+#remove-items-album-dialog-tl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-tl.png") no-repeat top left;
+	z-index: 90;
+}
+
+#remove-items-album-dialog-tr {
+	position: absolute;
+	visibility: hidden;
+	height: 18px;
+	width: 18px;
+	background: url("../img/corner-x-white-tr.png") no-repeat top left;
+	z-index: 90;
+}
+
+#remove-items-album-dialog-br {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-br.png") no-repeat top left;
+	z-index: 90;
+}
+
+#remove-items-album-dialog-bl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-bl.png") no-repeat top left;
+	z-index: 90;
+}
+
+/* SET CUSTOM TYPE DIALOG */
+
+#set-cust-type-dialog {
+	position: absolute;
+	visibility: hidden;
+	top: 30px;
+	left: 30px;
+	background-color: #ffc;
+	border: 1px solid #666;
+	z-index: 89;
+}
+
+#set-cust-type-dialog P {
+	padding-left: 2px;
+}
+
+#set-cust-type-dialog DIV {
+	padding: 5px 25px 5px 25px;
+	width: 300px;
+}
+
+#set-cust-type-dialog-tl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-tl.png") no-repeat top left;
+	z-index: 90;
+}
+
+#set-cust-type-dialog-tr {
+	position: absolute;
+	visibility: hidden;
+	height: 18px;
+	width: 18px;
+	background: url("../img/corner-x-white-tr.png") no-repeat top left;
+	z-index: 90;
+}
+
+#set-cust-type-dialog-br {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-br.png") no-repeat top left;
+	z-index: 90;
+}
+
+#set-cust-type-dialog-bl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-bl.png") no-repeat top left;
+	z-index: 90;
+}
+
+
+
+/* SET ITEMS TIMEZONE DIALOG */
+
+#set-timezone-dialog {
+	position: absolute;
+	visibility: hidden;
+	top: 30px;
+	left: 30px;
+	background-color: #ffc;
+	border: 1px solid #666;
+	z-index: 89;
+}
+
+#set-timezone-dialog P {
+	padding-left: 2px;
+}
+
+#set-timezone-dialog DIV {
+	padding: 5px 25px 5px 25px;
+	width: 300px;
+}
+
+#set-timezone-dialog-tl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-tl.png") no-repeat top left;
+	z-index: 90;
+}
+
+#set-timezone-dialog-tr {
+	position: absolute;
+	visibility: hidden;
+	height: 18px;
+	width: 18px;
+	background: url("../img/corner-x-white-tr.png") no-repeat top left;
+	z-index: 90;
+}
+
+#set-timezone-dialog-br {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-br.png") no-repeat top left;
+	z-index: 90;
+}
+
+#set-timezone-dialog-bl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background: url("../img/corner-white-bl.png") no-repeat top left;
+	z-index: 90;
+}
+
+/* TITLE BAR */
+
+#title-bar {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	right: 10px;
+	height: 25px;
+	background-color: white;
+	border: 1px solid #666666;
+	overflow: hidden;
+	padding: 0px;
+	text-align: middle;
+	z-index: 1;
+}
+
+	#title-bar DIV {
+		padding: 4px 4px 4px 8px;
+		font-size: 14px;
+	}
+
+#title-bar-tl {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background: url("../img/corner-tl.png") no-repeat top left;
+	z-index: 2;
+}
+	
+#title-bar-tr {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background: url("../img/corner-tr.png") no-repeat top left;
+	z-index: 2;
+}
+	
+#title-bar-br {
+	position: absolute;
+	top: 32px;
+	right: 10px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background: url("../img/corner-br.png") no-repeat top left;
+	z-index: 2;
+}
+	
+#title-bar-bl {
+	position: absolute;
+	top: 32px;
+	left: 10px;
+	height: 5px;
+	width: 5px;
+	border: none;
+	background: url("../img/corner-bl.png") no-repeat top left;
+	z-index: 2;
+}
+
+/* UPDATE ITEM INFO */
+
+#update-item-info {
+	width: 500px;
+	height: 300px;
+	overflow: auto;
+}

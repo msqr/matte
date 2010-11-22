@@ -1,0 +1,211 @@
+body {
+	background-color: #fff;
+    margin: 18px 15px 15px 190px;
+    padding: 0px;
+    border: 0px;
+	font-family: Tohoma, Verdana, sans-serif;
+}
+
+#nav-frame {
+	font-size: 12px;
+}
+
+div.section {
+	margin-top: 4px;
+	margin-bottom: 4px;
+	margin-left: 2px;
+}
+
+div.subsection {
+	margin-left: 15px;
+	font-size: 11px;
+	margin-bottom: 2px;
+}
+
+div.section-selected {
+	font-weight: bold;
+	margin-bottom: 2px;
+	margin-left: 2px;
+}
+
+dd {
+	font-size: 0.8em;
+	margin-bottom: 1em;
+}
+
+dl {
+	margin-left: 20px;
+}
+
+dt {
+	font-size: 0.8em;
+	font-weight: bold;
+	margin-bottom: 0.5em;
+	color: #666;
+}
+
+h1 {
+	color: #666;
+	font-size: 1.2em;
+	font-weight: bold;
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 0.5em;
+}
+
+h2 {
+	color: #666;
+	font-size: 1em;
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 0.5em;
+	margin-top: 3em;
+}
+
+img {
+	border: 0px;
+}
+
+li {
+	font-size: 0.8em;
+	margin-bottom: 0.2em;
+}
+
+p {
+	font-size: 0.8em;
+	margin-top: 0px;
+	margin-bottom: 1em;
+}
+
+p.intro {
+	font-size: 1em;
+}
+
+table.thumbs {
+	border: none;
+	margin-top: 1em;
+}
+
+table.thumbs td {
+	border: none;
+	font-size: 0.8em;
+	padding: 0.2em;
+	text-align: center;
+	padding-bottom: 2em;
+	vertical-align: top;
+}
+
+table.thumbs th {
+	background-color: inherit;
+	border: none;
+	padding: 0.2em;
+	text-align: center;
+}
+
+/* ==============================
+ * ID objects
+ * ============================== */
+ 
+#nav-frame {
+    position: absolute;
+    top: 15px;
+    left: 10px;
+    width: 170px;
+    height: 220px;
+    border: 0px solid #909;
+    display: block;
+}
+
+/* ==============================
+ * Generic Frame classes
+ * ============================== */
+
+.frame-t {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+    width: 100%;
+    height: 23px;
+    border: 0px solid #060;
+    background: #fff url(img/tb_05.gif) repeat-x left top;
+    z-index: 2;
+}
+
+.frame-m {
+    position: absolute;
+    top: 24px;
+    bottom: 11px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: 0px solid #060;
+    background-color: #fff;
+    overflow: hidden;
+}
+
+.frame-ml {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 6px;
+    height: 99%;
+    bottom: 11px;
+    border: 0px solid #000;
+    background-color: #fff;
+    background-image: url(img/tb_18.gif);
+    z-index: 1;
+}
+.frame-mr {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 6px;
+    height: 99%;
+    border: 0px solid #000;
+    background-color: #FFF;
+    background-image: url(img/tb_23.gif);
+    z-index: 1;
+}
+.frame-b {
+    position: absolute;
+    width: 100%;
+    height: 11px;
+    bottom: 0px;
+    border: 0px solid #066;
+    background: #FFF url(img/tb_27.gif) repeat-x left bottom;
+    z-index: 2;
+}
+
+.frame-tl {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 11px;
+    height: 23px;
+    background: #FFF;
+    z-index: 2;
+}
+
+.frame-tr {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 11px;
+    height: 23px;
+    background: #FFF;
+}
+
+.frame-bl {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 11px;
+    height: 11px;
+    background: #FFF;
+}
+
+.frame-br {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 11px;
+    height: 11px;
+    background: #FFF;
+}
