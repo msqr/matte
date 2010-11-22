@@ -86,7 +86,7 @@ public class SvgMediaHandler extends BaseImageMediaHandler {
 			MediaResponse response) {
 		Resource itemResource = getMediaBiz().getMediaItemResource(item);
 		if ( request.isOriginal() ) {
-			defaultHandleRequestOriginal(item, itemResource, response);
+			defaultHandleRequestOriginal(item, itemResource, request, response);
 			return;
 		}
 		

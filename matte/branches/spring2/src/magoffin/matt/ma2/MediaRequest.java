@@ -29,6 +29,8 @@ package magoffin.matt.ma2;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.math.Range;
+
 /**
  * API for media requests.
  * 
@@ -78,6 +80,14 @@ public interface MediaRequest {
 	 * @return boolean
 	 */
 	boolean isOriginal();
+	
+	/**
+	 * If non-null, then only partial content is being requested, in the form
+	 * of a range of bytes.
+	 * 
+	 * @return the partial content range request, or <em>null</em> for full content
+	 */
+	Range getPartialContentByteRange();
 	
 	/**
 	 * Get the desired size constant.
