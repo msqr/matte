@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beansProjectDescription>
+	<version>1</version>
+	<pluginVersion><![CDATA[2.3.2.201003220227-RELEASE]]></pluginVersion>
+	<configSuffixes>
+		<configSuffix><![CDATA[xml]]></configSuffix>
+	</configSuffixes>
+	<enableImports><![CDATA[false]]></enableImports>
+	<configs>
+		<config>web/WEB-INF/dataAccessContext.xml</config>
+		<config>web/WEB-INF/applicationContext.xml</config>
+		<config>web/WEB-INF/jobContext.xml</config>
+		<config>web/WEB-INF/views.xml</config>
+		<config>web/WEB-INF/matte-servlet.xml</config>
+		<config>web/WEB-INF/webEnvironmentContext.xml</config>
+		<config>environment/local/environmentContext.xml</config>
+		<config>web/WEB-INF/matte-ws-servlet.xml</config>
+	</configs>
+	<configSets>
+		<configSet>
+			<name><![CDATA[MA2]]></name>
+			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
+			<incomplete>false</incomplete>
+			<configs>
+				<config>web/WEB-INF/applicationContext.xml</config>
+				<config>web/WEB-INF/dataAccessContext.xml</config>
+				<config>web/WEB-INF/matte-servlet.xml</config>
+				<config>web/WEB-INF/views.xml</config>
+				<config>web/WEB-INF/webEnvironmentContext.xml</config>
+				<config>web/WEB-INF/jobContext.xml</config>
+				<config>web/WEB-INF/matte-ws-servlet.xml</config>
+				<config>environment/local/environmentContext.xml</config>
+			</configs>
+		</configSet>
+	</configSets>
+</beansProjectDescription>

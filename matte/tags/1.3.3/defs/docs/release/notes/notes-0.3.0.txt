@@ -1,0 +1,7 @@
+Matte Release Notes
+
+@VERSION@ @BUILD_DATE@
+
+- Implement Setup Wizard
+
+- Implement Live Demo release

@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Media Album: XSL Template Reference: render-item-creation-date</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<link rel="stylesheet" type="text/css" href="../../global.css"/>
+	<link rel="stylesheet" type="text/css" href="../../dev.css"/>
+</head>
+<body>
+	<h1>render-item-creation-date</h1>
+
+	<div class="function-info">
+		<table>
+			<tbody>
+				<tr>
+					<th>Type</th>
+					<td>Named</td>
+				</tr>
+				<tr>
+					<th>Parameters</th>
+					<td>
+						<table>
+							<tbody>
+								<tr>
+									<th>item</th>
+									<td>The <a class="code"
+									href="../../schema-ref/table/media-item.html">ma:media-item</a>
+									to render the creation date for.</td>
+								</tr>
+								<tr>
+									<th>user</th>
+									<td>The <a class="code"
+									href="../../schema-ref/table/user.html">ma:user</a>
+									to render the creation date for.</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<th>Result</th>
+					<td>string</td>
+				</tr>
+				<tr>
+					<th>Requires</th>
+					<td>
+						<ol>
+							<li><a class="code"
+							href="render-timezone.html">render-timezone</a></li>
+							<li>date:format-date</li>
+						</ol>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<div>
+	Renders the creation date of a media item based on the
+	<code>@creationDate</code> attribute of the media item and the
+	<code>@tz</code> attribute of the media item and of a user. The time zone
+	will be appended to the date only if the time zone of the item is not the
+	same as that of the user.
+	</div>
+
+	<h2>Example usage</h2>
+
+	<div class="function-example"><span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">template</span><span class="synIdentifier"> </span><span class="synType">match</span>=<span class="synConstant">&quot;ma:item&quot;</span><span class="synIdentifier">&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>Created: <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">call-template</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;render-item-creation-date&quot;</span><span class="synIdentifier">&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">with-param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;item&quot;</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;.&quot;</span><span class="synIdentifier"> /&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">with-param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;user&quot;</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;/ma:media-album-data/ma:user&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">call-template</span><span class="synIdentifier">&gt;</span>
+<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">template</span><span class="synIdentifier">&gt;</span></div>
+
+	<h2>Example output</h2>
+
+	<div class="function-example-out">26 Dec 2002, 5:15:28 PM (GMT+12:00)</div>
+	
+	<h2>Source</h2>
+  
+  <div class="function-source"><span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">template</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;render-item-creation-date&quot;</span><span class="synIdentifier">&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;item&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;user&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">if</span><span class="synIdentifier"> </span><span class="synType">test</span>=<span class="synConstant">&quot;$item/@creationDate&quot;</span><span class="synIdentifier">&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">call-template</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;date:format-date&quot;</span><span class="synIdentifier">&gt;</span>
+      <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">with-param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;date-time&quot;</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;substring-before($item/@creationDate,'.')&quot;</span><span class="synIdentifier"> /&gt;</span>
+      <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">with-param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;pattern&quot;</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;'d MMM yyyy, h:mm:ss a'&quot;</span><span class="synIdentifier"> /&gt;</span>
+    <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">call-template</span><span class="synIdentifier">&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">if</span><span class="synIdentifier"> </span><span class="synType">test</span>=<span class="synConstant">&quot;$user/@tz != $item/@tz or (not($user/@tz) and $item/@tz) </span>
+<span class="synConstant">        or $item/../@owner != $user/@userId&quot;</span><span class="synIdentifier">&gt;</span>
+      <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span> (<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>
+      <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">choose</span><span class="synIdentifier">&gt;</span>
+        <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">when</span><span class="synIdentifier"> </span><span class="synType">test</span>=<span class="synConstant">&quot;$item/@tzName&quot;</span><span class="synIdentifier">&gt;</span>
+          <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">value-of</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;$item/@tzName&quot;</span><span class="synIdentifier">/&gt;</span>
+        <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">when</span><span class="synIdentifier">&gt;</span>
+        <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">otherwise</span><span class="synIdentifier">&gt;</span>
+          <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">call-template</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;render-timezone&quot;</span><span class="synIdentifier">&gt;</span>
+            <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">with-param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;offset&quot;</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;$item/@tz&quot;</span><span class="synIdentifier">/&gt;</span>
+          <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">call-template</span><span class="synIdentifier">&gt;</span>
+        <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">otherwise</span><span class="synIdentifier">&gt;</span>
+      <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">choose</span><span class="synIdentifier">&gt;</span>
+      <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>)<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>
+    <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">if</span><span class="synIdentifier">&gt;</span>
+  <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">if</span><span class="synIdentifier">&gt;</span>
+<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">template</span><span class="synIdentifier">&gt;</span></div>
+
+<hr>
+<div>
+	<div class="float-r">
+		<a href="http://sourceforge.net"><img
+			src="http://sourceforge.net/sflogo.php?group_id=103583&amp;type=2" 
+			width="125" height="37" alt="SourceForge.net Logo" /></a>
+	</div>
+	<small>$Id: render-item-creation-date.html,v 1.1 2007/01/08 04:39:04 matt Exp $</small>
+</div>
+</body>
+</html>
+
