@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  Copyright (c) 2002 Matt Magoffin
+  
+  This program is free software; you can redistribute it and/or 
+  modify it under the terms of the GNU General Public License as 
+  published by the Free Software Foundation; either version 2 of 
+  the License, or (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful, 
+  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+  General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License 
+  along with this program; if not, write to the Free Software 
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
+  02111-1307 USA
+
+  Id: BaseRdbDAOConfig.xsd,v 1.12 2004/03/02 20:07:42 matt Exp    
+-->
+<xsd:schema targetNamespace="http://msqr.us/xsd/GerdalConfig" 
+			xmlns:db="http://msqr.us/xsd/DataBaseConfig" 
+			xmlns:gdal="http://msqr.us/xsd/GerdalConfig"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+			elementFormDefault="qualified">
+	 
+	<xsd:annotation>
+		<xsd:documentation>
+			This is the XML Schema for MM-GeRDAL.
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:import namespace="http://msqr.us/xsd/DataBaseConfig" 
+		schemaLocation="DataBaseConfig.xsd"/>
+	
+	<xsd:element name="config" type="gdal:gerdal-config"/>
+
+	<xsd:complexType name="gerdal-config">
+		<xsd:sequence>
+			<xsd:element name="connection-provider-impl" type="xsd:string"/>
+			<xsd:element name="db-config" type="db:data-base-config"/>
+			<xsd:element name="serial-table" type="gdal:serial-table-config"
+				minOccurs="0"/>
+			<xsd:element name="table" type="gdal:table-config" minOccurs="0"
+				maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="serial-table-config">
+		<xsd:annotation>
+			<xsd:documentation>Defines the settings for the special serial
+				table.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="name" type="xsd:string"/>
+		<xsd:attribute name="keyColumn" type="xsd:string"/>
+		<xsd:attribute name="countColumn" type="xsd:string"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="table-config">
+		<xsd:annotation>
+			<xsd:documentation>Defines the settings for a whole table.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="impl" type="xsd:string"/>
+			<xsd:element name="display-name" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="description" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="related-table" type="gdal:related-table-config"
+				minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="search-equal" type="gdal:aliased-column-config"
+				minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="search-like" type="gdal:aliased-column-config"
+				minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="search-join" type="gdal:join-search-config"
+				minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="update" type="gdal:update-config"
+				minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="custom-sql" type="gdal:aliased-data"
+				minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="column" type="gdal:column-config"
+				maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attributeGroup ref="gdal:NameAliasAttributes"/>
+		<xsd:attribute name="key" type="xsd:string" use="required"/>
+		<xsd:attribute name="value" type="xsd:string" use="required"/>
+		<xsd:attribute name="keyGeneration" type="xsd:string" use="optional" default="none"/>
+		<xsd:attribute name="rowLink" type="xsd:string" use="required"/>
+		<xsd:attribute name="cacheable" type="xsd:boolean" use="optional" default="true"/>
+	</xsd:complexType>
+	
+	<xsd:complexType name="update-config">
+		<xsd:sequence>
+			<xsd:element name="column" type="gdal:col-data-config" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="alias" type="xsd:string"/>
+	</xsd:complexType>
+	
+	<xsd:complexType name="join-search-config">
+		<xsd:sequence>
+			<xsd:element name="join-table" type="gdal:join-table-config" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="alias" type="xsd:string"/>
+	</xsd:complexType>
+	
+	<xsd:complexType name="join-table-config">
+		<xsd:sequence>
+			<xsd:element name="join-column" type="gdal:join-column-config"
+				minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="join-key" type="gdal:join-key-config"
+				minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="join-data" type="gdal:join-data-config"
+				minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="col-data" type="gdal:col-data-config"
+				minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="alias" type="xsd:string" use="required"/>
+	</xsd:complexType>
+	
+	<xsd:complexType name="join-column-config">
+		<xsd:attributeGroup ref="gdal:JoinAliasAttributes"/>
+	</xsd:complexType>
+	
+	<xsd:complexType name="join-key-config">
+		<xsd:attributeGroup ref="gdal:JoinAliasAttributes"/>
+	</xsd:complexType>
+	
+	<xsd:complexType name="join-data-config">
+		<xsd:attribute name="joinAlias" type="xsd:string"/>
+	</xsd:complexType>
+	
+	<xsd:complexType name="col-data-config">
+		<xsd:attribute name="alias" type="xsd:string"/>
+	</xsd:complexType>
+	
+	<xsd:attributeGroup name="JoinAliasAttributes">
+		<xsd:attribute name="alias" type="xsd:string" use="required"/>
+		<xsd:attribute name="joinAlias" type="xsd:string" use="required"/>
+	</xsd:attributeGroup>
+
+	<xsd:complexType name="aliased-column-config">
+		<xsd:attribute name="alias" type="xsd:string"/>
+		<xsd:attribute name="columnAlias" type="xsd:string"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="related-table-config">
+		<xsd:attribute name="alias" type="xsd:string"/>
+		<xsd:attribute name="key" type="xsd:string"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="column-config">
+		<xsd:sequence>
+			<xsd:element name="display-name" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="description" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="edit-mode" type="gdal:edit-mode-config" minOccurs="0"/>
+			<xsd:element name="generation-mode" type="gdal:generation-mode-config" minOccurs="0"/>
+			<xsd:element name="data-validation-impl" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="data-filter-impl" type="xsd:string" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attributeGroup ref="gdal:NameAliasAttributes"/>
+		<xsd:attribute name="mainViewEdit" type="xsd:boolean" use="optional"
+			default="false"/>
+		<xsd:attribute name="sort" type="xsd:integer" use="optional"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="mode-config">
+		<xsd:sequence>
+			<xsd:element name="impl" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="option" type="gdal:mode-option" minOccurs="0"
+				maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string" use="optional"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="edit-mode-config">
+		<xsd:complexContent>
+			<xsd:extension base="gdal:mode-config"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="generation-mode-config">
+		<xsd:complexContent>
+			<xsd:extension base="gdal:mode-config"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="mode-option">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="key" type="xsd:string"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="aliased-data">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="alias" type="xsd:string"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+
+	<xsd:attributeGroup name="NameAliasAttributes">
+		<xsd:attribute name="name" type="xsd:string" use="required"/>
+		<xsd:attribute name="alias" type="xsd:string" use="required"/>
+	</xsd:attributeGroup>
+
+</xsd:schema>
+
