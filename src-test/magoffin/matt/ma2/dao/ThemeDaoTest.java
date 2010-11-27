@@ -26,8 +26,13 @@
 
 package magoffin.matt.ma2.dao;
 
+import static org.junit.Assert.*;
+
 import java.util.Calendar;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
 import magoffin.matt.ma2.TestConstants;
@@ -44,28 +49,14 @@ import magoffin.matt.ma2.domain.User;
  */
 public class ThemeDaoTest extends AbstractSpringEnabledTransactionalTest {
 	
-	/** The ThemeDao to test. */
-	protected ThemeDao themeDao;
+	@javax.annotation.Resource private ThemeDao themeDao;
+	@javax.annotation.Resource private DomainObjectFactory domainObjectFactory;
+	@javax.annotation.Resource private TimeZoneDao timeZoneDao;
+	@javax.annotation.Resource private UserDao userDao;
 	
-	/** The DomainObjectFactory instance. */
-	protected DomainObjectFactory domainObjectFactory;
-
-	/** The TimeZoneDao to test with. */
-	protected TimeZoneDao timeZoneDao;
-	
-	/** The UserDao to test. */
-	protected UserDao userDao;
-	
-	/**
-	 * Default constructor.
-	 */
-	public ThemeDaoTest() {
-		super();
-		setPopulateProtectedVariables(true);
-	}
-
+	@Before
 	@Override
-	protected void onSetUpInTransaction() throws Exception {
+	public void onSetUpInTransaction() {
 		super.onSetUpInTransaction();
 		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);
 	}
@@ -106,6 +97,7 @@ public class ThemeDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test persisting a new Theme instance.
 	 */
+	@Test
 	public void testCreate() {
 		Theme theme = saveNewTheme();
 		assertNotNull("Returned theme ID should not be null",theme.getThemeId());
@@ -114,6 +106,7 @@ public class ThemeDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test getting a Theme by its primary key.
 	 */
+	@Test
 	public void testGetByPrimaryKey() {
 		Theme theme = saveNewTheme();
 		Theme theme2 = themeDao.get(theme.getThemeId());
@@ -125,6 +118,7 @@ public class ThemeDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test persisting an existing User instance.
 	 */
+	@Test
 	public void testSave() {
 		Theme theme = saveNewTheme();
 		theme.setName("My Updated Theme");
@@ -139,6 +133,7 @@ public class ThemeDaoTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test finding by name.
 	 *
 	 */
+	@Test
 	public void testFindByName() {
 		Theme theme = saveNewTheme();
 		Theme foundTheme = themeDao.getThemeForName(theme.getName());

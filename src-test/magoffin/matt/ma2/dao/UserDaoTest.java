@@ -26,6 +26,8 @@
 
 package magoffin.matt.ma2.dao;
 
+import static org.junit.Assert.*;
+
 import java.util.BitSet;
 import java.util.Calendar;
 import java.util.List;
@@ -40,6 +42,8 @@ import magoffin.matt.ma2.domain.TimeZone;
 import magoffin.matt.ma2.domain.User;
 
 import org.apache.commons.lang.mutable.MutableInt;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test case for UserDao.
@@ -49,28 +53,14 @@ import org.apache.commons.lang.mutable.MutableInt;
  */
 public class UserDaoTest extends AbstractSpringEnabledTransactionalTest {
 
-	/** The UserDao to test. */
-	protected UserDao userDao;
-	
-	/** The TimeZoneDao to test with. */
-	protected TimeZoneDao timeZoneDao;
-	
-	/** The DomainObjectFactory instance. */
-	protected DomainObjectFactory domainObjectFactory;
-	
-	/** The index TimeZone. */
-	protected java.util.TimeZone indexTimeZone;
+	@javax.annotation.Resource private UserDao userDao;
+	@javax.annotation.Resource private TimeZoneDao timeZoneDao;
+	@javax.annotation.Resource private DomainObjectFactory domainObjectFactory;
+//	@javax.annotation.Resource private java.util.TimeZone indexTimeZone;
 
-	/**
-	 * Default constructor.
-	 */
-	public UserDaoTest() {
-		super();
-		setPopulateProtectedVariables(true);
-	}
-
+	@Before
 	@Override
-	protected void onSetUpInTransaction() throws Exception {
+	public void onSetUpInTransaction() {
 		super.onSetUpInTransaction();
 		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);
 	}
@@ -104,6 +94,7 @@ public class UserDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test persisting a new User instance.
 	 */
+	@Test
 	public void testCreate() {
 		Long savedUserId = saveNewUser();
 		assertNotNull("Returned user ID should not be null",savedUserId);
@@ -112,6 +103,7 @@ public class UserDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test getting a user by it's primary key.
 	 */
+	@Test
 	public void testGetByPrimaryKey() {
 		Long userId = saveNewUser();
 		
@@ -124,6 +116,7 @@ public class UserDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test persisting an existing User instance.
 	 */
+	@Test
 	public void testSave() {
 		Long savedUserId = saveNewUser();
 		User savedUser = userDao.get(savedUserId);
@@ -138,6 +131,7 @@ public class UserDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test find a user by their username.
 	 */
+	@Test
 	public void testFindByUsername() {
 		Long savedUserId = saveNewUser();
 		User savedUser = userDao.get(savedUserId);
@@ -150,6 +144,7 @@ public class UserDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test find a user by their email.
 	 */
+	@Test
 	public void testFindByEmail() {
 		Long savedUserId = saveNewUser();
 		User savedUser = userDao.get(savedUserId);
@@ -162,6 +157,7 @@ public class UserDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test find a user by their key.
 	 */
+	@Test
 	public void testFindByKey() {
 		Long savedUserId = saveNewUser();
 		User savedUser = userDao.get(savedUserId);
@@ -174,6 +170,7 @@ public class UserDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test find a user by access level.
 	 */
+	@Test
 	public void testFindByAccessLevel() {
 		Long savedUserId = saveNewUser();
 		User savedUser = userDao.get(savedUserId);
@@ -188,6 +185,7 @@ public class UserDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test can index user data.
 	 */
+	@Test
 	public void testIndexAllUserData() {
 		final User savedUser1 = saveAndGetNewUser("user1","user@1.test");
 		final User savedUser2 = saveAndGetNewUser("user2","user@2.test");

@@ -26,7 +26,12 @@
 
 package magoffin.matt.ma2.dao;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
 import magoffin.matt.ma2.TestConstants;
@@ -41,22 +46,12 @@ import magoffin.matt.ma2.domain.TimeZone;
  */
 public class TimeZoneDaoTest extends AbstractSpringEnabledTransactionalTest {
 
-	/** The album DAO to test. */
-	protected TimeZoneDao timeZoneDao;
-	
-	/** The DomainObjectFactory instance. */
-	protected DomainObjectFactory domainObjectFactory;
+	@javax.annotation.Resource private TimeZoneDao timeZoneDao;
+	@javax.annotation.Resource private DomainObjectFactory domainObjectFactory;
 
-	/**
-	 * Default constructor.
-	 */
-	public TimeZoneDaoTest() {
-		super();
-		setPopulateProtectedVariables(true);
-	}
-
+	@Before
 	@Override
-	protected void onSetUpInTransaction() throws Exception {
+	public void onSetUpInTransaction() {
 		super.onSetUpInTransaction();
 		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);
 		deleteFromTables(new String[] {TestConstants.TABLE_TIME_ZONE});
@@ -76,6 +71,7 @@ public class TimeZoneDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test persisting a new Album instance.
 	 */
+	@Test
 	public void testCreate() {
 		String savedTimeZoneCode = saveNewTimeZone();
 		assertNotNull("Returned TimeZone code should not be null",savedTimeZoneCode);
@@ -84,6 +80,7 @@ public class TimeZoneDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test getting an album by it's primary key.
 	 */
+	@Test
 	public void testGetByPrimaryKey() {
 		String savedTimeZoneCode = saveNewTimeZone();
 		
@@ -96,6 +93,7 @@ public class TimeZoneDaoTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test persisting an existing Album instance.
 	 */
+	@Test
 	public void testSave() {
 		String savedTimeZoneCode = saveNewTimeZone();
 		TimeZone savedTimeZone = timeZoneDao.get(savedTimeZoneCode);
@@ -111,6 +109,7 @@ public class TimeZoneDaoTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test finding all TimeZone instances.
 	 *
 	 */
+	@Test
 	public void testFindAll() {
 		String savedTimeZoneCode = saveNewTimeZone();
 		List<TimeZone> tzList = timeZoneDao.findAllTimeZones();

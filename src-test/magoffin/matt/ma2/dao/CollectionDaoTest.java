@@ -26,8 +26,13 @@
 
 package magoffin.matt.ma2.dao;
 
+import static org.junit.Assert.*;
+
 import java.util.Calendar;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
 import magoffin.matt.ma2.TestConstants;
@@ -45,31 +50,15 @@ import magoffin.matt.ma2.domain.User;
  */
 public class CollectionDaoTest extends AbstractSpringEnabledTransactionalTest {
 	
-	/** The Collection DAO to test. */
-	protected CollectionDao collectionDao;
-	
-	/** The MediaItemDao. */
-	protected MediaItemDao mediaItemDao;
-	
-	/** The UserDao. */
-	protected UserDao userDao;
-	
-	/** The TimeZoneDao. */
-	protected TimeZoneDao timeZoneDao;
-	
-	/** The DomainObjectFactory instance. */
-	protected DomainObjectFactory domainObjectFactory;
+	@javax.annotation.Resource private CollectionDao collectionDao;
+	@javax.annotation.Resource private MediaItemDao mediaItemDao;
+	@javax.annotation.Resource private UserDao userDao;
+	@javax.annotation.Resource private TimeZoneDao timeZoneDao;
+	@javax.annotation.Resource private DomainObjectFactory domainObjectFactory;
 	
 	private User testUser;
 	private Collection testCollection;
 	private MediaItem testItem;
-
-	/**
-	 * Default constructor.
-	 */
-	public CollectionDaoTest() {
-		setPopulateProtectedVariables(true);
-	}
 
 	private User saveNewUser() {
 		User user = domainObjectFactory.newUserInstance();
@@ -119,8 +108,9 @@ public class CollectionDaoTest extends AbstractSpringEnabledTransactionalTest {
 		return mediaItemDao.getItemForPath(col.getCollectionId(), item.getPath());
 	}
 
+	@Before
 	@Override
-	protected void onSetUpInTransaction() throws Exception {
+	public void onSetUpInTransaction() {
 		super.onSetUpInTransaction();
 		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);
 		
@@ -133,6 +123,7 @@ public class CollectionDaoTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test getting a collection by a media id.
 	 * @throws Exception
 	 */
+	@Test
 	public void testFindByMediaItemId() throws Exception {
 		Collection result = collectionDao.getCollectionForMediaItem(this.testItem.getItemId());
 		assertNotNull(result);
@@ -145,6 +136,7 @@ public class CollectionDaoTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test getting a collection by a media id.
 	 * @throws Exception
 	 */
+	@Test
 	public void testFindCollectionsForUser() throws Exception {
 		List<Collection> result = collectionDao.findCollectionsForUser(
 				this.testUser.getUserId());
