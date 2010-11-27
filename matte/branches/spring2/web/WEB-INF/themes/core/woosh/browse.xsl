@@ -555,7 +555,22 @@
 		<div xmlns="http://www.w3.org/1999/xhtml" class="browse-album-frame {$oddness}">
 			<div class="browse-{$oddness}">
 				<h2>
-					<xsl:value-of select="@name"/>
+					<a>
+						<xsl:attribute name="title">
+							<xsl:value-of select="key('i18n','browse.album.view')"/>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="@name"/>
+						</xsl:attribute>
+						<xsl:attribute name="href">
+							<xsl:call-template name="render-shared-album-url">
+								<xsl:with-param name="album" select="."/>
+								<xsl:with-param name="user" select="$author"/>
+								<xsl:with-param name="mode" select="$mode"/>
+								<xsl:with-param name="web-context" select="$web-context"/>
+							</xsl:call-template>
+						</xsl:attribute>
+						<xsl:value-of select="@name"/>
+					</a>
 				</h2>
 				<div class="browse-album-info">
 					<xsl:if test="string-length($album.date) &gt; 0">
@@ -638,8 +653,7 @@
 						<xsl:with-param name="web-context" select="$web-context"/>
 					</xsl:call-template>
 				</xsl:attribute>
-				<img class="poster {$oddness}" alt="{@name}" onload="setShadow(this)" 
-					title="{@name}">
+				<img class="poster {$oddness}" alt="{@name}" onload="setShadow(this)">
 					<xsl:attribute name="src">
 						<xsl:call-template name="server-url"/>
 						<xsl:call-template name="render-media-server-url">

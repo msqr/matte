@@ -126,6 +126,12 @@ body.browse h2 {
 	padding: 10px 0 0 0;
 }
 
+body.browse h2 a,
+body.browse h2 a:link, 
+body.browse h2 a:visited {
+	color: inherit;
+}
+
 .browse-album-info {
 	font-family: tahoma, verdana, sans-serif;
 	font-size: 8pt;
