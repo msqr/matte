@@ -40,6 +40,7 @@ import magoffin.matt.ma2.support.BasicBizContext;
 import magoffin.matt.ma2.util.BizContextUtil;
 import magoffin.matt.ma2.util.XmlHelper;
 
+import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
@@ -72,14 +73,15 @@ public class SimpleWsSecurityInterceptor extends AbstractWsSecurityInterceptor {
 	private XmlHelper xmlHelper;
 
 	@Override
-	protected void secureMessage(SoapMessage soapMessage)
+	protected void secureMessage(SoapMessage soapMessage,
+			MessageContext messageContext)
 			throws WsSecuritySecurementException {
 		// nothing to do here
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void validateMessage(SoapMessage soapMessage)
+	protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
 			throws WsSecurityValidationException {
 		// look for wsse:UsernameToken
 		SoapHeader header = soapMessage.getSoapHeader();
@@ -102,6 +104,11 @@ public class SimpleWsSecurityInterceptor extends AbstractWsSecurityInterceptor {
 		}
 	}
 	
+	@Override
+	protected void cleanUp() {
+		// anything needed here?
+	}
+
 	private static final class SecurityFaultException extends WsSecurityFaultException {
 
 		private static final long serialVersionUID = -4430317919760404562L;

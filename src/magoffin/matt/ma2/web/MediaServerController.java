@@ -28,6 +28,7 @@ package magoffin.matt.ma2.web;
 
 import java.io.OutputStream;
 import java.util.EnumSet;
+import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -49,6 +50,7 @@ import magoffin.matt.ma2.support.BasicMediaRequest;
 import magoffin.matt.ma2.web.util.WebConstants;
 import magoffin.matt.ma2.web.util.WebMediaResponse;
 
+import org.apache.commons.lang.math.LongRange;
 import org.apache.commons.lang.mutable.MutableLong;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindException;
@@ -106,6 +108,12 @@ public class MediaServerController extends AbstractCommandController implements 
 			public void setFilename(String filename) {
 				// ignore
 			}
+			public void setPartialResponse(long start, long end, long total) {
+				// ignore
+			}
+			public boolean hasOutputStream() {
+				return false;
+			}
 		}, context);
 		
 		// wait for export to complete...
@@ -129,10 +137,48 @@ public class MediaServerController extends AbstractCommandController implements 
 		mediaRequest.setQuality(quality);
 		mediaRequest.setSize(size);
 		
-		// set the user-agent parameter
-		String ua = request.getHeader(HTTP_USER_AGENT_HEADER);
-		if ( StringUtils.hasText(ua) ) {
-			mediaRequest.getParameters().put(MediaRequest.USER_AGENT_KEY, ua);
+		// extract some header info, which is case-insensitve so we have to
+		// enumerate through headers and compare in case-insensitive manner
+		
+		StringBuilder headerDebugBuf = null;
+		if ( logger.isTraceEnabled() ) {
+			headerDebugBuf = new StringBuilder("HTTP headers:\n");
+		}
+		
+		Enumeration<String> headers = request.getHeaderNames();
+		while ( headers.hasMoreElements() ) {
+			String header = headers.nextElement();
+			if ( headerDebugBuf != null ) {
+				headerDebugBuf.append(header).append(" = ")
+					.append(request.getHeader(header)).append("\n");
+			}
+			if ( HTTP_USER_AGENT_HEADER.equalsIgnoreCase(header) ) {
+				// copy the the user-agent parameter
+				String ua = request.getHeader(header);
+				if ( StringUtils.hasText(ua) ) {
+					mediaRequest.getParameters().put(MediaRequest.USER_AGENT_KEY, ua);
+				}
+			} else if ( HTTP_RANGE_HEADER.equalsIgnoreCase(header) ) {
+				// partial request support
+				String range = request.getHeader(header);
+				if ( range.toLowerCase().startsWith("bytes=") ) {
+					range = range.substring(6);
+					int idx = range.indexOf('-');
+					long start = 0;
+					if ( idx > 0 ) {
+						start = Long.valueOf(range.substring(0, idx));
+					}
+					long end = 0;
+					if ( (idx+1) < range.length() ) {
+						end = Long.valueOf(range.substring(idx+1));
+					}
+					mediaRequest.setPartialContentByteRange(new LongRange(start, end));
+				}
+			}
+		}
+		
+		if ( headerDebugBuf != null ) {
+			logger.trace(headerDebugBuf.toString());
 		}
 		
 		return mediaRequest;
@@ -151,7 +197,7 @@ public class MediaServerController extends AbstractCommandController implements 
 		
 		handleHitCount(request, cmd);
 		WebMediaResponse mediaResponse = new WebMediaResponse(
-				response, cmd.isDownload());
+				response, cmd.isDownload(), cmd.isOriginal());
 		WorkInfo info = ioBiz.exportMedia(mediaRequest, mediaResponse, context);
 
 		// wait for export to complete...

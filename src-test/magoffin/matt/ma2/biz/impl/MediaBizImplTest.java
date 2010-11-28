@@ -26,6 +26,8 @@
 
 package magoffin.matt.ma2.biz.impl;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,8 +65,12 @@ import magoffin.matt.ma2.support.SortAlbumsCommand;
 import magoffin.matt.ma2.support.UserCommentCommand;
 import magoffin.matt.util.TemporaryFile;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Test the {@link magoffin.matt.ma2.biz.impl.MediaBizImpl} class.
@@ -72,47 +78,37 @@ import org.springframework.core.io.Resource;
  * @author Matt Magoffin (spamsqr@msqr.us)
  * @version $Revision$ $Date$
  */
+@ContextConfiguration
 public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	
-	/** The MediaBiz. */
-	protected MediaBizImpl testMediaBizImpl;
-
-	/** The DomainObjectFactory instance. */
-	protected DomainObjectFactory domainObjectFactory;
-
-	/** The UserBiz. */
-	protected UserBiz testUserBiz;
-	
-	/** The IOBiz. */
-	protected IOBiz testIOBiz;
-	
-	/** Test AlbumDao. */
-	protected AlbumDao albumDao;
-	
-	/** Test CollectionDao. */
-	protected CollectionDao collectionDao;
-	
-	/** A MediaBiz configured for JPEG. */
-	protected MediaBizImpl testJpegMediaBizImpl;
+	@javax.annotation.Resource private MediaBizImpl testMediaBizImpl;
+	@javax.annotation.Resource private DomainObjectFactory domainObjectFactory;
+	@javax.annotation.Resource private UserBiz testUserBiz;
+	@javax.annotation.Resource private IOBiz testIOBiz;
+	@javax.annotation.Resource private AlbumDao albumDao;
+	@javax.annotation.Resource private CollectionDao collectionDao;
+//	@javax.annotation.Resource private MediaBizImpl testJpegMediaBizImpl;
 	
 	private Album albumWithItems = null;
 	private Collection collectionWithItems = null;
 	private int counter = 0;
 	
+	/**
+	 * Perform DB pre-test tasks.
+	 */
+	@Before
 	@Override
-	public boolean isPopulateProtectedVariables() {
-		return true;
-	}
-
-	@Override
-	protected void onSetUpInTransaction() throws Exception {
+	public void onSetUpInTransaction() {
 		super.onSetUpInTransaction();
 		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);
 	}
 
+	/**
+	 * Perform final test tasks.
+	 */
+	@After
 	@SuppressWarnings("unchecked")
-	@Override
-	protected void onTearDownAfterTransaction() throws Exception {
+	public void onTearDownAfterTransaction() {
 		if ( albumWithItems != null ) {
 			// verify can access album items
 			for ( MediaItem item : (List<MediaItem>)albumWithItems.getItem() ) {
@@ -132,10 +128,11 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * 
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testStoreNewMediaItemInfo() throws Exception {
 		User user = registerAndConfirmUser();
-		BizContext context = new TestBizContext(getContext(contextKey()), user);
+		BizContext context = new TestBizContext(applicationContext, user);
 		
 		Collection newCollection = domainObjectFactory.newCollectionInstance();
 		newCollection.setName("This is a new collection");
@@ -179,10 +176,11 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * 
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testStoreUpdatedMediaItemInfo() throws Exception {
 		User user = registerAndConfirmUser();
-		BizContext context = new TestBizContext(getContext(contextKey()), user);
+		BizContext context = new TestBizContext(applicationContext, user);
 		
 		Collection newCollection = domainObjectFactory.newCollectionInstance();
 		newCollection.setName("This is a new collection");
@@ -233,11 +231,12 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test able to apply album sort to album with nested child albums.
 	 * @throws Exception if any error occurs
 	 */
+	@Test
 	@SuppressWarnings({ "unchecked", "cast" })
 	public void testStoreChildAlbumOrdering() throws Exception {
 		User user = registerAndConfirmUser();
 		Album album = saveNewAlbum(user);
-		BizContext context = new TestBizContext(getContext(contextKey()),user);
+		BizContext context = new TestBizContext(applicationContext,user);
 		Album child1 = saveNewAlbum(user);
 		Album child2 = saveNewAlbum(user);
 		Album child3 = saveNewAlbum(user);
@@ -280,10 +279,11 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test sharing an album.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testShareAlbum() throws Exception {
 		User user = registerAndConfirmUser();
 		Album album = saveNewAlbum(user);
-		BizContext context = new TestBizContext(getContext(contextKey()),user);
+		BizContext context = new TestBizContext(applicationContext,user);
 		ShareAlbumCommand shareAlbumCmd = new ShareAlbumCommand();
 		shareAlbumCmd.setAlbumId(album.getAlbumId());
 		shareAlbumCmd.setFeed(true);
@@ -301,10 +301,11 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test unsharing an album.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testUnShareAlbum() throws Exception {
 		User user = registerAndConfirmUser();
 		Album album = saveNewAlbum(user);
-		BizContext context = new TestBizContext(getContext(contextKey()),user);
+		BizContext context = new TestBizContext(applicationContext,user);
 		ShareAlbumCommand shareAlbumCmd = new ShareAlbumCommand();
 		shareAlbumCmd.setAlbumId(album.getAlbumId());
 		shareAlbumCmd.setFeed(true);
@@ -325,6 +326,7 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test the file extension handling.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testMediaHandlerFileExtensionMapping() throws Exception {
 		File testFile = new File("/this/is/a/test/file.test");
 		File unsupportedFile = new File("/unsupported/file.type");
@@ -338,6 +340,7 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test the MIME handling.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testMediaHandlerMimeMapping() throws Exception {
 		String testMime = "test/test";
 		String unsupportedMime = "unsupported/mime";
@@ -349,6 +352,7 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test all MediaSize constants have a mapped Geometry.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testGeometryMapping() throws Exception {
 		EnumSet<MediaSize> set = EnumSet.allOf(MediaSize.class);
 		for ( MediaSize size : set ) {
@@ -372,6 +376,7 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test all MediaQuality constants have a mapped Float.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testQualityMapping() throws Exception {
 		EnumSet<MediaQuality> set = EnumSet.allOf(MediaQuality.class);
 		for ( MediaQuality q : set ) {
@@ -389,16 +394,17 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		qMap.put(MediaQuality.GOOD,testQ);
 		testMediaBizImpl.setQualityMap(qMap);
 		float qv = testMediaBizImpl.getQualityValue(MediaQuality.GOOD);
-		assertEquals(testQ,qv);
+		assertEquals(testQ,qv,0.01);
 	}
 	
 	/**
 	 * Test getting media items for a Collection.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testGetMediaItemsForCollection() throws Exception {
 		User user = registerAndConfirmUser();
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext,null);
 		List<Collection> collections = testUserBiz.getCollectionsForUser(user,context);
 		List<MediaItem> items = testMediaBizImpl.getMediaItemsForCollection(
 				collections.get(0), context);
@@ -423,9 +429,10 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test adding an item to an Album.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testAddToAlbum() throws Exception {
 		User user = registerAndConfirmUser();
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext,null);
 		List<Collection> collections = testUserBiz.getCollectionsForUser(user,context);
 		importImage("magoffin/matt/ma2/image/bee-action.jpg",collections.get(0),context);
 		List<MediaItem> items = testMediaBizImpl.getMediaItemsForCollection(
@@ -444,9 +451,10 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * @throws Exception if an error occurs
 	 * @see #onTearDownAfterTransaction()
 	 */
+	@Test
 	public void testGetAlbumWithItems() throws Exception {
 		User user = registerAndConfirmUser();
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext,null);
 		List<Collection> collections = testUserBiz.getCollectionsForUser(user,context);
 		importImage("magoffin/matt/ma2/image/bee-action.jpg",collections.get(0),context);
 		List<MediaItem> items = testMediaBizImpl.getMediaItemsForCollection(
@@ -465,9 +473,10 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * @throws Exception if an error occurs
 	 * @see #onTearDownAfterTransaction()
 	 */
+	@Test
 	public void testGetCollectionWithItems() throws Exception {
 		User user = registerAndConfirmUser();
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext,null);
 
 		Collection newCollection = domainObjectFactory.newCollectionInstance();
 		newCollection.setName("This is a new collection");
@@ -487,8 +496,9 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * 
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testDeleteCollectionWithoutItems() throws Exception {
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext,null);
 		User user = registerAndConfirmUser();
 		
 		Collection newCollection = domainObjectFactory.newCollectionInstance();
@@ -509,8 +519,9 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * 
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testDeleteCollectionWithItems() throws Exception {
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext,null);
 		User user = registerAndConfirmUser();
 		
 		Collection newCollection = domainObjectFactory.newCollectionInstance();
@@ -533,9 +544,10 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test moving items from one collection to another.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testMoveItemsToNewCollection() throws Exception {
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext,null);
 		User user = registerAndConfirmUser();
 		
 		Collection newCollection = domainObjectFactory.newCollectionInstance();
@@ -577,8 +589,9 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * 
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testDeleteCollectionWithItemsInAlbum() throws Exception {
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext,null);
 		User user = registerAndConfirmUser();
 		
 		Collection newCollection = domainObjectFactory.newCollectionInstance();
@@ -618,9 +631,10 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * 
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testDeleteItemsWithItemsInAlbum() throws Exception {
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext,null);
 		User user = registerAndConfirmUser();
 		
 		Collection newCollection = domainObjectFactory.newCollectionInstance();
@@ -676,8 +690,9 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test removing media items from an album.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testRemoveFromAlbum() throws Exception {
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext,null);
 		User user = registerAndConfirmUser();
 		
 		Collection newCollection = domainObjectFactory.newCollectionInstance();
@@ -739,8 +754,9 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Get getting a single item with full info.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testGetMediaItemWithInfo() throws Exception {
-		BizContext context = new TestBizContext(getContext(contextKey()),null);
+		BizContext context = new TestBizContext(applicationContext,null);
 		User user = registerAndConfirmUser();
 		
 		Collection newCollection = domainObjectFactory.newCollectionInstance();
@@ -766,9 +782,10 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test storing media item ratings.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testStoreMediaItemRating() throws Exception {
 		User user = registerAndConfirmUser();
-		BizContext context = new TestBizContext(getContext(contextKey()),user);
+		BizContext context = new TestBizContext(applicationContext,user);
 		
 		Collection newCollection = domainObjectFactory.newCollectionInstance();
 		newCollection.setName("This is a new collection");
@@ -825,7 +842,7 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		
 		// now store second user's rating
 		User user2 = registerAndConfirmUser("test2","nobody2@localhost");
-		BizContext context2 = new TestBizContext(getContext(contextKey()),user2);
+		BizContext context2 = new TestBizContext(applicationContext,user2);
 		testMediaBizImpl.storeMediaItemRating(itemIds, (short)4, context2);
 		item = testMediaBizImpl.getMediaItemWithInfo(itemId, context);
 		assertNotNull(item.getUserRating());
@@ -839,9 +856,10 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test able to increment hit counter.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testIncrementHitCounter() throws Exception {
 		User user = registerAndConfirmUser();
-		BizContext context = new TestBizContext(getContext(contextKey()),user);
+		BizContext context = new TestBizContext(applicationContext,user);
 		
 		Collection newCollection = domainObjectFactory.newCollectionInstance();
 		newCollection.setName("This is a new collection");
@@ -872,9 +890,10 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test able to get the list of sort modes.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testGetAlbumSortModes() throws Exception {
 		User user = registerAndConfirmUser();
-		BizContext context = new TestBizContext(getContext(contextKey()),user);
+		BizContext context = new TestBizContext(applicationContext,user);
 		List<KeyNameType> sortModes = testMediaBizImpl.getAlbumSortTypes(context);
 		assertNotNull(sortModes);
 		assertTrue(sortModes.size() > 0);
@@ -884,9 +903,10 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test able to store an anonymous user comment.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testStoreAnonymousUserComment() throws Exception {
 		User user = registerAndConfirmUser();
-		BizContext context = new TestBizContext(getContext(contextKey()),user);
+		BizContext context = new TestBizContext(applicationContext,user);
 
 		Collection newCollection = domainObjectFactory.newCollectionInstance();
 		newCollection.setName("This is a new collection");
@@ -903,7 +923,7 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		Long itemId = collectionItems.get(0).getItemId();
 		
 		// now store some comments anonymously, without any name/email
-		BizContext anonContext = new TestBizContext(getContext(contextKey()), 
+		BizContext anonContext = new TestBizContext(applicationContext, 
 				testUserBiz.getAnonymousUser());
 		UserCommentCommand cmd = new UserCommentCommand();
 		cmd.setComment("This is a test comment.");
@@ -963,7 +983,7 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 
 	private User registerAndConfirmUser(String login, String email) throws Exception {
 		User newUser = getTestUser(login, email);
-		BizContext context = new TestBizContext(getContext(contextKey()),null);		
+		BizContext context = new TestBizContext(applicationContext,null);		
 		String confKey = testUserBiz.registerUser(newUser,context);
 		User confirmedUser = testUserBiz.confirmRegisteredUser(newUser.getLogin(),
 				confKey,context);

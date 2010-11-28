@@ -100,6 +100,13 @@ public interface MediaResponse {
 	public void setFilename(String filename);
 	
 	/**
+	 * Return <em>true</em> if this response supports an OutputStream.
+	 * 
+	 * @return boolean
+	 */
+	public boolean hasOutputStream();
+	
+	/**
 	 * Get the output stream.
 	 * 
 	 * <p>This is the {@link OutputStream} that the result of processing the 
@@ -110,5 +117,18 @@ public interface MediaResponse {
 	 * @return output stream to write the result to
 	 */
 	public OutputStream getOutputStream();
+	
+	/**
+	 * Indicate that the server is returning only a partial content response.
+	 * 
+	 * <p>Note the {@link #setMediaLength(long)} should <b>not</b> be called
+	 * if this method is used, as this method should set the media length
+	 * automatically to the byte range specified (end - start + 1).</p>
+	 * 
+	 * @param start the starting byte position
+	 * @param end the ending byte position
+	 * @param total the total bytes in the media resource
+	 */
+	public void setPartialResponse(long start, long end, long total);
 
 }

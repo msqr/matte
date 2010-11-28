@@ -73,8 +73,14 @@ import magoffin.matt.xweb.util.MessagesSource;
 public abstract class AbstractCommandController 
 extends org.springframework.web.servlet.mvc.AbstractCommandController {
 
-	/** The HTTP User-Agent header. */
+	/** The HTTP User-Agent request header. */
 	public static final String HTTP_USER_AGENT_HEADER = "User-Agent";
+	
+	/** The HTTP Range request header. */
+	public static final String HTTP_RANGE_HEADER = "Range";
+	
+	/** The HTTP Content-Range response header. */
+	public static final String HTTP_CONTENT_RANGE_HEADER = "Content-Range";
 	
 	// private ServletRequestDataBinderTemplate binderTemplate = null;
 	private String successView = null;

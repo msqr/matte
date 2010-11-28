@@ -376,6 +376,13 @@ public class IOBizImpl implements IOBiz {
 						public void setFilename(String filename) {
 							// no need
 						}
+						public void setPartialResponse(long start, long end,
+								long total) {
+							// no need
+						}
+						public boolean hasOutputStream() {
+							return true;
+						}
 					};
 					request.getParameters().put(MediaRequest.OUTPUT_FILE_KEY, cacheFile);
 					try {
@@ -396,11 +403,11 @@ public class IOBizImpl implements IOBiz {
 				return;
 			}
 		}
-		if ( response.getOutputStream() != null ) {
+		//if ( response.hasOutputStream() ) {
 			// no cache file to be used, so handle without
 			response.setItem(item);
 			handler.handleMediaRequest(item,request,response);
-		}
+		//}
 		return;
 	}
 
@@ -428,7 +435,7 @@ public class IOBizImpl implements IOBiz {
 			response.setMimeType(ds.getContentType());
 
 			response.setModifiedDate(cacheFile.lastModified());
-			if ( response.getOutputStream() != null ) {
+			if ( response.hasOutputStream() ) {
 				try {
 					FileCopyUtils.copy(new BufferedInputStream(
 							new FileInputStream(cacheFile)), response.getOutputStream());

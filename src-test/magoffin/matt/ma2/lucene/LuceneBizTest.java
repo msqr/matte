@@ -26,9 +26,18 @@
 
 package magoffin.matt.ma2.lucene;
 
+import static org.junit.Assert.*;
+
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.annotation.Resource;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import magoffin.matt.lucene.IndexEvent;
 import magoffin.matt.lucene.IndexListener;
@@ -62,44 +71,33 @@ import magoffin.matt.ma2.support.MediaInfoCommand;
  * @author Matt Magoffin (spamsqr@msqr.us)
  * @version $Revision$ $Date$
  */
+@ContextConfiguration
 public class LuceneBizTest extends AbstractSpringEnabledTransactionalTest {
 	
-	/** The LuceneBiz to test. */
-	protected LuceneBiz testLuceneBiz;
+	@Resource private LuceneBiz testLuceneBiz;
+	@Resource private UserBiz testUserBiz;
+	@Resource private MediaBiz testMediaBiz;
+	@Resource private IOBizImpl testIOBizImpl;
+	@Resource private DomainObjectFactory domainObjectFactory;
+	@Resource private CollectionDao collectionDao;
 	
-	/** The UserBiz to help with testing. */
-	protected UserBiz testUserBiz;
-	
-	/** The MediaBiz to help with testing. */
-	protected MediaBiz testMediaBiz;
-	
-	/** The IOBiz. */
-	protected IOBizImpl testIOBizImpl;
-
-	/** The DomainObjectFactory to help with testing. */
-	protected DomainObjectFactory domainObjectFactory;
-	
-	/** The CollectionDao. */
-	protected CollectionDao collectionDao;
-	
-	private TestBizContext myBizContext = new TestBizContext(getContext(contextKey()),null);
+	private TestBizContext myBizContext;
 	private IndexUpdateTracker updateTracker = new IndexUpdateTracker();
 
+	@Before
 	@Override
-	public boolean isPopulateProtectedVariables() {
-		return true;
-	}
-
-	@Override
-	protected void onSetUpInTransaction() throws Exception {
+	public void onSetUpInTransaction() {
 		super.onSetUpInTransaction();
+		myBizContext = new TestBizContext(applicationContext, null);
 		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);
 		testLuceneBiz.getLucene().addIndexEventListener(updateTracker);
 	}
 
-	@Override
-	protected void onTearDownAfterTransaction() throws Exception {
-		super.onTearDownAfterTransaction();
+	/**
+	 * Clean up Lucene.
+	 */
+	@After
+	public void onTearDownAfterTransaction() {
 		updateTracker.cleanUp(testLuceneBiz.getLucene());
 	}
 
@@ -107,6 +105,7 @@ public class LuceneBizTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test can index all users.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testIndexAllUsers() throws Exception {
 		User user1 = registerAndConfirmUser("test1", "test1@localhost.localdomain");
 		User user2 = registerAndConfirmUser("test2", "test2@localhost.localdomain");
@@ -147,6 +146,7 @@ public class LuceneBizTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test finding users for the user index.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testFindUsersForIndex() throws Exception {
 		setupTestUsers();
 		
@@ -171,6 +171,7 @@ public class LuceneBizTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test finding users for the user index.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testFindUsersForIndexWithSelection() throws Exception {
 		setupTestUsers();
 		
@@ -200,6 +201,7 @@ public class LuceneBizTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test can index all users.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testIndexAllMediaItems() throws Exception {
 		Collection testCollection = setupTestCollection();
@@ -250,6 +252,7 @@ public class LuceneBizTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test able to find a MediaItem by it's ID.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testFindMediaItemById() throws Exception {
 		Collection testCollection = setupTestCollection();
 		importImage("magoffin/matt/ma2/image/bee-action.jpg", collectionDao, 
@@ -275,6 +278,7 @@ public class LuceneBizTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test able to find a MediaItem by one or more of it's tags.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testFindMediaItemByTag() throws Exception {
 		Collection testCollection = setupTestCollection();
@@ -379,6 +383,7 @@ public class LuceneBizTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test able to find a MediaItem by one or more of it's tags.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testFindMediaCount() throws Exception {
 		Collection testCollection = setupTestCollection();

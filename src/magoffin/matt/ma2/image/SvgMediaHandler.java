@@ -51,7 +51,7 @@ import org.springframework.core.io.Resource;
 public class SvgMediaHandler extends BaseImageMediaHandler {
 
 	private Class<Transcoder> transcoderClass = null;
-	private Map<String, Object> transcoderHints = Collections.emptyMap();
+	private Map<Object, Object> transcoderHints = Collections.emptyMap();
 	private String rasterFileExtension = ImageConstants.DEFAULT_PNG_FILE_EXTENSION;
 
 	/**
@@ -86,7 +86,7 @@ public class SvgMediaHandler extends BaseImageMediaHandler {
 			MediaResponse response) {
 		Resource itemResource = getMediaBiz().getMediaItemResource(item);
 		if ( request.isOriginal() ) {
-			defaultHandleRequestOriginal(item, itemResource, response);
+			defaultHandleRequestOriginal(item, itemResource, request, response);
 			return;
 		}
 		
@@ -142,14 +142,14 @@ public class SvgMediaHandler extends BaseImageMediaHandler {
 	/**
 	 * @return the transcoderHints
 	 */
-	public Map<String, Object> getTranscoderHints() {
+	public Map<Object, Object> getTranscoderHints() {
 		return transcoderHints;
 	}
 	
 	/**
 	 * @param transcoderHints the transcoderHints to set
 	 */
-	public void setTranscoderHints(Map<String, Object> transcoderHints) {
+	public void setTranscoderHints(Map<Object, Object> transcoderHints) {
 		this.transcoderHints = transcoderHints;
 	}
 

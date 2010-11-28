@@ -90,6 +90,13 @@ public class BasicMediaResponse implements MediaResponse {
 	}
 
 	/* (non-Javadoc)
+	 * @see magoffin.matt.ma2.MediaResponse#hasOutputStream()
+	 */
+	public boolean hasOutputStream() {
+		return outputStream != null;
+	}
+
+	/* (non-Javadoc)
 	 * @see magoffin.matt.ma2.MediaResponse#getOutputStream()
 	 */
 	public OutputStream getOutputStream() {
@@ -101,6 +108,13 @@ public class BasicMediaResponse implements MediaResponse {
 	 */
 	public void setFilename(String filename) {
 		this.filename = filename;
+	}
+
+	/* (non-Javadoc)
+	 * @see magoffin.matt.ma2.MediaResponse#setPartialResponse(long, long, long)
+	 */
+	public void setPartialResponse(long start, long end, long total) {
+		// not supported here
 	}
 
 	/**

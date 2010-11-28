@@ -26,7 +26,12 @@
 
 package magoffin.matt.ma2.web.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.List;
+
+import javax.annotation.Resource;
 
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
 import magoffin.matt.ma2.ProcessingException;
@@ -34,7 +39,6 @@ import magoffin.matt.ma2.TestConstants;
 import magoffin.matt.ma2.biz.DomainObjectFactory;
 import magoffin.matt.ma2.biz.UserBiz;
 import magoffin.matt.ma2.biz.impl.TestBizContext;
-import magoffin.matt.ma2.dao.CollectionDao;
 import magoffin.matt.ma2.domain.Collection;
 import magoffin.matt.ma2.domain.CollectionListItemType;
 import magoffin.matt.ma2.domain.GetCollectionListRequest;
@@ -42,28 +46,29 @@ import magoffin.matt.ma2.domain.GetCollectionListResponse;
 import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.util.BizContextUtil;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.test.context.ContextConfiguration;
+
 /**
  * Test case for the {@link GetCollectionListEndpoint} class.
  *
  * @author matt
  * @version $Revision$ $Date$
  */
+@ContextConfiguration
 public class GetCollectionListEndpointTest extends AbstractSpringEnabledTransactionalTest {
 
-	/** The UserBiz to help with test. */
-	protected UserBiz testUserBiz;
-	
-	/** The DomainObjectFactory. */
-	protected DomainObjectFactory domainObjectFactory;
-	
-	/** The CollectionDao. */
-	protected CollectionDao collectionDao;
+	@Resource private UserBiz testUserBiz;
+	@Resource private DomainObjectFactory domainObjectFactory;
+//	@Resource private CollectionDao collectionDao;
 	
 	private User testUser;
 	private Collection testCollection;
 	
+	@Before
 	@Override
-	protected void onSetUpInTransaction() throws Exception {
+	public void onSetUpInTransaction() {
 		super.onSetUpInTransaction();
 		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);
 		
@@ -73,7 +78,7 @@ public class GetCollectionListEndpointTest extends AbstractSpringEnabledTransact
 		newUser.setPassword("test");
 		newUser.setLogin("nobody");
 		
-		TestBizContext context = new TestBizContext(getContext(contextKey()),null);
+		TestBizContext context = new TestBizContext(applicationContext,null);
 		String confKey = null;
 		try {
 			confKey = testUserBiz.registerUser(newUser,context);
@@ -93,6 +98,7 @@ public class GetCollectionListEndpointTest extends AbstractSpringEnabledTransact
 	/**
 	 * Test able to get user collection list.
 	 */
+	@Test
 	public void testGetCollectionList() {
 		GetCollectionListEndpoint endpoint = new GetCollectionListEndpoint();
 		endpoint.setDomainObjectFactory(this.domainObjectFactory);
