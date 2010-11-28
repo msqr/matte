@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <!--
 	DAO implementations. Depends on beans defined in webEnvironmentContext.xml
 	(or other context for command-line tools and unit tests).
 -->
-<beans>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 	
 	<bean id="mySessionFactory" 
 		class="magoffin.matt.ma2.dao.hbm.LocalSessionFactoryBean">

@@ -290,20 +290,27 @@ function displayImage(imageNumber) {
 	workingUpdaterAjaxHandler.manualStart();
 	currentImage = imageNumber;
 	
-	var newImg = document.createElement("img");
-	var newImgUrl = webContext +"/media.do?id="+imageData[imageNumber][0]
-			+"&albumKey=" +albumKey
-			+"&size=" +imgSize 
-			+"&quality=" +imgCompress;
-	var title = imageData[imageNumber][4]
-		? imageData[imageNumber][4]
-		: imageData[imageNumber][3];
-	newImg.title = title;
-	newImg.alt = title;
-	newImg.onload = function() {
-		handleDisplayImageLoad(newImg, imageNumber);
-	}
-	newImg.src = newImgUrl;
+	var mime = imageData[imageNumber][9];
+	
+	// if this is not an image, show directly if can (video, audio)
+	if ( mime.indexOf("image") !== 0 ) {
+		handleDisplayImageLoad(undefined, imageNumber);
+	} else {
+		var newImg = document.createElement("img");
+		var newImgUrl = webContext +"/media.do?id="+imageData[imageNumber][0]
+				+"&albumKey=" +albumKey
+				+"&size=" +imgSize 
+				+"&quality=" +imgCompress;
+		var title = imageData[imageNumber][4]
+			? imageData[imageNumber][4]
+			: imageData[imageNumber][3];
+		newImg.title = title;
+		newImg.alt = title;
+		newImg.onload = function() {
+			handleDisplayImageLoad(newImg, imageNumber);
+		}
+		newImg.src = newImgUrl;
+	}	
 	
 	var pageNumber = parseInt(((imageNumber - 1) / pageSize) + 1);
 	showIndex(pageNumber);
@@ -325,28 +332,50 @@ function handleDisplayImageLoad(newImg, imageNumber) {
 	while ( imgContainer.hasChildNodes() ) {
 		imgContainer.removeChild(imgContainer.firstChild);
 	}
+
+	var originalUrl = webContext 
+		+'/media.do?id='+imageData[imageNumber][0]
+		+'&albumKey=' +albumKey
+		+'&original=true';
 	
-	if ( typeof(AC) == "object" 
-			&& imageData[imageNumber][9].indexOf("video") == 0
+	var width = imageData[imageNumber][1];
+	var height = imageData[imageNumber][2];
+	var mime = imageData[imageNumber][9];
+	
+	if ( !width || !height ) {
+		width = mediaSizes[imgSize].width;
+		height = mediaSizes[imgSize].height;
+	}
+
+	if ( mime.indexOf("video") === 0
+		&& !!document.createElement('video').canPlayType 
+		&& document.createElement('video').canPlayType(mime) !== '' ) {
+		var videoElem = document.createElement('video');
+		videoElem.id = 'image-content';
+		videoElem.width = width;
+		videoElem.height = height;
+		videoElem.controls = 'controls';
+		videoElem.src = originalUrl;
+		imgContainer.appendChild(videoElem);
+	} else if ( typeof(AC) == "object" 
+			&& mime.indexOf("video") === 0
 			&& haveQuickTime ) {
- 		var qtUrl = webContext +'/media.do?id='+imageData[imageNumber][0]
-			+'&albumKey=' +albumKey
-			+'&original=true';
 		
-		var width = imageData[imageNumber][1];
-		var height = imageData[imageNumber][2];
-		
-		if ( !width || !height ) {
-			width = mediaSizes[imgSize].width;
-			height = mediaSizes[imgSize].height;
-		}
-		
-		var qtEmbed = AC.Quicktime.packageMovie('image-content', qtUrl, {
+		var qtEmbed = AC.Quicktime.packageMovie('image-content', originalUrl, {
 				width: width,
 				height: height + 20,
 				autoplay: true});
 		$('image-frame').appendChild(qtEmbed);
-	} else {
+	} else if ( mime.indexOf("audio") === 0 
+			&& !!document.createElement('audio').canPlayType 
+			&& document.createElement('audio').canPlayType(mime) !== ''
+			) {
+		var audioElem = document.createElement('audio');
+		audioElem.id = 'image-content';
+		audioElem.controls = 'controls';
+		audioElem.src = originalUrl;
+		imgContainer.appendChild(audioElem);
+	} else if ( newImg !== undefined ) {
 		newImg.id = 'image-content';
 		imgContainer.appendChild(newImg);
 	}

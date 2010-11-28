@@ -26,6 +26,8 @@
 
 package magoffin.matt.ma2.video;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -42,8 +44,10 @@ import magoffin.matt.ma2.support.BasicMediaRequest;
 import magoffin.matt.ma2.support.BasicMediaResponse;
 import magoffin.matt.ma2.video.VideoConstants;
 
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.FileCopyUtils;
 
 /**
@@ -52,16 +56,17 @@ import org.springframework.util.FileCopyUtils;
  * @author Matt Magoffin (spamsqr@msqr.us)
  * @version $Revision$ $Date$
  */
+@ContextConfiguration
 public class GenericVideoMediaHandlerTest extends
 		AbstractSpringEnabledTransactionalTest {
 
-	/** The video media handler to test. */
-	protected MediaHandler testVideoMediaHandler;
+	@javax.annotation.Resource private MediaHandler testVideoMediaHandler;
 	
 	/**
 	 * Test the media handler can correctly read video dimensions.
 	 * @throws IOException if an error occurs
 	 */
+	@Test
 	public void testReadDimensions() throws IOException {
 		Resource testReadDimensions 
 			= new ClassPathResource("magoffin/matt/ma2/video/MVI_1586.AVI");
@@ -82,6 +87,7 @@ public class GenericVideoMediaHandlerTest extends
 	 * Test able to scale an image to a thumbnail size.
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void testAllSizesAndQualities() throws Exception {
 		// copy to tmp file so MediaBiz finds
 		File tmpFile = File.createTempFile("GenericVideoMediaHandlerTest-input-", 

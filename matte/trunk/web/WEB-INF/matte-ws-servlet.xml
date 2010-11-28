@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC 
-	"-//SPRING//DTD BEAN//EN" 
-	"http://www.springframework.org/dtd/spring-beans.dtd">
 <!--
 	Copyright (c) 2007 Matt Magoffin
 	
@@ -22,7 +19,15 @@
 	
 	$Id: web.xml,v 1.58 2007/08/27 04:04:21 matt Exp $
 -->
-<beans>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/util
+		http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 	
 	<bean id="endpointMapping"
 		class="org.springframework.ws.soap.server.endpoint.mapping.SoapActionEndpointMapping">
@@ -57,9 +62,19 @@
 		<constructor-arg ref="wsMarshaller"/>
 	</bean>
 	
-	<bean id="messageFactory" class="magoffin.matt.ma2.web.service.AxiomSoapMessageFactory"> 
-		<property name="payloadCaching" value="false"/> 
+	<bean id="messageFactory" class="magoffin.matt.ma2.web.service.AxiomSoapMessageFactory">
+		<property name="payloadCaching" value="false" />
+		<property name="attachmentCaching" value="true" />
+		<property name="attachmentCacheThreshold" value="4096"/>
+		<property name="inputFactoryProperties">
+			<map>
+				<entry key="javax.xml.stream.isCoalescing">
+					<util:constant static-field="java.lang.Boolean.FALSE"/>
+				</entry>
+			</map>
+		</property>
 	</bean>
+	
 	
 	<bean id="wsMarshaller" class="org.springframework.oxm.jaxb.Jaxb1Marshaller">
 		<property name="contextPath" value="magoffin.matt.ma2.domain"/>
@@ -82,9 +97,8 @@
 		<property name="wsdl" value="/WEB-INF/xsd/matte.wsdl"/>
 	</bean>
 	
-	<bean id="addMediaEndpoint" class="magoffin.matt.ma2.web.service.AddMediaMessageEndpoint">
+	<bean id="addMediaEndpoint" class="magoffin.matt.ma2.web.service.AddMediaStaxEndpoint">
 		<property name="ioBiz" ref="ioBiz"/>
-		<property name="xmlHelper" ref="xmlHelper"/>
 	</bean>
 	
 	<bean id="getCollectionListEndpoint" 

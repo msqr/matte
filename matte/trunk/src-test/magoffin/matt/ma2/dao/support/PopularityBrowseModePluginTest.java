@@ -26,8 +26,14 @@
 
 package magoffin.matt.ma2.dao.support;
 
+import static org.junit.Assert.*;
+
 import java.util.Calendar;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
 import magoffin.matt.ma2.TestConstants;
@@ -57,34 +63,23 @@ import magoffin.matt.ma2.support.BrowseAlbumsCommand;
  * @author matt
  * @version $Revision$ $Date$
  */
-public class PopularityBrowseModePluginTest extends
-		AbstractSpringEnabledTransactionalTest {
+@ContextConfiguration
+public class PopularityBrowseModePluginTest
+extends AbstractSpringEnabledTransactionalTest {
 	
-	/** The album DAO to test. */
-	protected AlbumDao albumDao;
-	
-	/** The DomainObjectFactory instance. */
-	protected DomainObjectFactory domainObjectFactory;
-	
-	/** The plugin to test. */
-	protected PopularityBrowseModePlugin testPlugin;
-	
-	/** The UserDao to test with. */
-	protected UserDao userDao;
-
-	/** The TimeZoneDao to test with. */
-	protected TimeZoneDao timeZoneDao;
-	
-	/** The CollectionDao to test with. */
-	protected CollectionDao collectionDao;
-	
-	/** The MediaItemDao to test with. */
-	protected MediaItemDao mediaItemDao;
+	@javax.annotation.Resource private AlbumDao albumDao;
+	@javax.annotation.Resource private DomainObjectFactory domainObjectFactory;
+	@javax.annotation.Resource private PopularityBrowseModePlugin testPlugin;
+	@javax.annotation.Resource private UserDao userDao;
+	@javax.annotation.Resource private TimeZoneDao timeZoneDao;
+	@javax.annotation.Resource private CollectionDao collectionDao;
+	@javax.annotation.Resource private MediaItemDao mediaItemDao;
 	
 	private int counter = 1;
 
+	@Before
 	@Override
-	protected void onSetUpInTransaction() throws Exception {
+	public void onSetUpInTransaction() {
 		super.onSetUpInTransaction();
 		deleteFromTables(TestConstants.ALL_TABLES_FOR_CLEAR);
 	}
@@ -92,6 +87,7 @@ public class PopularityBrowseModePluginTest extends
 	/**
 	 * Test finding for a user by popularity.
 	 */
+	@Test
 	@SuppressWarnings("unchecked")
 	public void testSearchForAlbumsForUserByPopularity() {
 		Long savedUserId = saveNewUser();

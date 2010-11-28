@@ -197,6 +197,13 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 					public void setFilename(String filename) {
 						// ignore
 					}
+					public void setPartialResponse(long start, long end,
+							long total) {
+						// ignore
+					}
+					public boolean hasOutputStream() {
+						return true;
+					}
 				}, context);
 				processedItems.add(item.getItemId());
 			}
