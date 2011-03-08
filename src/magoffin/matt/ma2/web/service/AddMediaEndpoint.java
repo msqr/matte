@@ -82,6 +82,7 @@ public class AddMediaEndpoint extends AbstractSaxPayloadEndpoint {
 	protected Source getResponse(ContentHandler contentHandler) throws Exception {
 		boolean success = true;
 		final AddMediaContentHandler addContentHander = (AddMediaContentHandler)contentHandler;
+		log.debug("Submitting AddMediaCommand work");
 		AddMediaCommand command = new AddMediaCommand();
 		command.setAutoAlbum(true);
 		command.setCollectionId(addContentHander.getCollectionId());
@@ -93,6 +94,10 @@ public class AddMediaEndpoint extends AbstractSaxPayloadEndpoint {
 				"text/xml"));
 		BizContext context = BizContextUtil.getBizContext();
 		WorkInfo workInfo = ioBiz.importMedia(command, context);
+		if ( log.isDebugEnabled() ) {
+			log.debug("AddMediaCommand work submitted: " +workInfo.getTicket() 
+					+", constructing <m:AddMediaResponse> response ");
+		}
 		StringBuilder buf = new StringBuilder();
 		buf.append("<m:AddMediaResponse xmlns:m=\"")
 			.append(SystemConstants.MATTE_XML_NAMESPACE_URI)
