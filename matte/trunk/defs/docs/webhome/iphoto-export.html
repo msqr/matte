@@ -2,37 +2,36 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>Matte: iPhoto Export Plugin</title>
+	<title>Matte: iPhoto Export Plugin 1.1</title>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" type="text/css" href="whoosh-matte.css" />
 </head>
 <body class="full">
 
-<h1>Matte: iPhoto Export Plugin</h1>
+<h1>Matte: iPhoto Export Plugin 1.1</h1>
 
 <p>If you have a Mac and use iPhoto to organize your photos into albums, you can download and
 install the Matte iPhoto Export Plugin which will allow you to export albums easily into Matte,
 preserving your albums, photo names, comments, keywords and ratings.</p>
-
-<p>This iPhoto plugin helps you export photos and movies from iPhoto into Matte. At present direct export of albums into Matte is not supported. Instead this plugin will create a zip archive that includes all your iPhoto metadata such as names, comments, keywords, and ratings. You can then import that zip archive into Matte using Matte's normal "Add" feature.</p>
 
 <h2>Requirements</h2>
 
 <p>The plugin requires the following:</p>
 
 <dl>
-	<dt>OS X 10.5</dt>
-	<dd>This plugin has been tested on OS X 10.6 on an Intel Mac. It should work on 
-	OS X 10.5 but this has not been tested. It should also work on PPC based Macs
-	but this has not been tested.</dd>
+	<dt>OS X 10.6</dt>
+	<dd>This plugin has been tested on OS X 10.6 on an Intel Mac.</dd>
 	
 	<dt>iPhoto 7 ('08)</dt>
-	<dd>The plugin requires iPhoto 7 (iPhoto ’08) or later to run. In addition exporting movies requires Matte 1.3 or later and exporting photos requires Matte 1.2 or later.</dd>
+	<dd>The plugin requires iPhoto 7 (iPhoto ’08) or later to run.</dd>
+	
+	<dt>Matte 1.4</dt>
+	<dd>The plugin requires a running instance of Matte 1.4 or later to export the photos to.</dd>
 </dl>
 
 <h2>Installing the plugin</h2>
 
-<p>Once you've <a title="Go to download page" href="http://sourceforge.net/project/showfiles.php?group_id=103583&package_id=268707">downloaded the Matte iPhoto Export Plugin</a> disk image, mount the disk image by double-clicking on it. Then copy the <code>MatteiPhotoExport.iPhotoExporter</code> folder included in this release into the <code>~/Library/Application Support/iPhoto/Plugins</code> folder (create these folders if they do not exist).</p>
+<p>Once you've <a title="Go to download page" href="https://sourceforge.net/projects/malbum/files/Matte%20iPhoto%20Export%20Plugin/">downloaded the Matte iPhoto Export Plugin</a> disk image, mount the disk image by double-clicking on it. Then copy the <code>MatteiPhotoExport.iPhotoExporter</code> folder included in this release into the <code>~/Library/Application Support/iPhoto/Plugins</code> folder (create these folders if they do not exist).</p>
 
 <h2>Performing the export from iPhoto</h2>
 
@@ -54,31 +53,13 @@ including "smart" albums. Note that nested albums will not be exported.</p>
 <p>Choose to the <b>File &gt; Export</b> menu in iPhoto, and then the <b>Matte</b> tab in the <em>Export Photos</em> dialog that appears.</p>
 
 <div class="screenshot">
-	<img src="img/iphoto-export-dialog.png" alt="The Matte iPhoto Export dialog" width="526" height="304" />
+	<img src="img/iphoto-export-dialog.png" alt="The Matte iPhoto Export dialog" width="526" height="428" />
 	<div>The Matte iPhoto Export dialog</div>
 </div>
 
 <p>Update the settings in the export window to your liking and then click the <b>Export</b> button.</p>
 
-<p>The export plugin will then prompt you for a folder to export the album to. After choosing the folder, it will export the album, all of the photos in the album, create a <em>metadata.xml</em> file, and then a zip archive comprised of the exported files and the metadata.xml file.</p>
-
-<div class="screenshot">
-	<img src="img/iphoto-export-result.png" alt="Export results" width="536" height="192" />
-	<div>The export results.</div>
-</div>
-
-<p>The zip archive will be named after the album you've exported, and this is the file you should then upload into Matte.</p>
-
-<h3>Import the zip archive into Matte</h3>
-
-<p>Now you can import the zip archive created by the previous step into Matte. Log into Matte, and from the <b>Add</b> screen, select zip file you just created, and click the "Add" button.</p>
-
-<div class="screenshot">
-	<img src="img/iphoto-add-export.png" alt="Import items into Matte" width="528" height="368" />
-	<div>Import the items into Matte.</div>
-</div>
-
-<p>After the import completes, you will have the photos and movies available in Matte, ready to be shared.</p>
+<p>The export plugin will then export the album and upload them directly into Matte. After the upload completes, you will have the photos and movies available in Matte, ready to be shared. Login to Matte to publish the items.</p>
 
 <div>
 <a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=103583&amp;type=1" 
