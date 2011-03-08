@@ -1,0 +1,76 @@
+Matte Release Notes
+
+@VERSION@ @BUILD_DATE@
+
+***********************************************************************
+Note: the database schema has changed from the previous 0.7 release.
+To update a 0.7 release database to 0.8, see the setup/sql/release
+directory included in this package. Run the appropriate setup script
+for your database type.
+***********************************************************************
+
+Major Updates
+
+- New preview pane in main GUI that displays a large thumbnail preview
+  of the currently selected item. Clicking on the preview opens a 
+  window that displays a full-size version of that item.
+  
+- Added drag-and-drop GUI for manually ordering items within an album.
+
+- Add ability to configure self-registration feature to be disabled,
+  for sites that don't want users to be able to set up their own 
+  accounts. The Setup Wizard can be used to turn this feature on/off.
+  
+- Added "forgot password" support, allowing a user to have a new 
+  password generated and emailed to the account's email address.
+  
+- Ability to auto-rotate images with EXIF orientation flags.
+
+- Ability to download the selected items in the main GUI as a zip 
+  archive. Works in background, displaying progress as items are 
+  exported to the zip archive.
+  
+- Added ability to move media items from one collection to another.
+  
+
+Other Updates
+
+- Various JavaScript performance improvements in main GUI, using JSON
+  data in place of XML.
+  
+- Update to latest XWeb, which includes ?xml=true URL support for 
+  debugging any request's XML model object.
+
+- Fix security handling of administration GUI actions.
+
+- Remove use of <a href="#"> in main/administration GUI, to fix bug
+  where clicking on one of these actions caused the page scroll to 
+  reset to the top of the screen.
+  
+- Update to HyperJAXB2 0.6.2.
+  
+- Fix bug where wasn't actually reading the environment properties
+  stored in the settings database table when the application started
+  up.
+  
+- Various JavaDoc improvements, theme HOWTO documentation.
+  
+- Export album now prefixes the item file names with a numeric 
+  sequence so they are ordered in the same order as specified by the
+  album itself.
+
+- Fixed dialog GUI bug from use of position:fixed CSS where when 
+  centering the dialog it would be offset incorrectly (sometimes not
+  even appearing on the screen) if the main window scroll position 
+  was not at the top.
+  
+- Change how cached item file names are named, now use geometry names
+  instead of pixel dimentions (e.g. "NORMAL" instead of "640x480").
+  
+- When uploading media, the result page will now select the
+  collection the upload was selected to go into.
+  
+- Fix main GUI bug where the select "all"/"none" did not show/hide
+  the info pane.
+  
+- Update to Lucene 2.2.

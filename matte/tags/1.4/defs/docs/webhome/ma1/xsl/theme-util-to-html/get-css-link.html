@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Media Album: XSL Template Reference: get-css-link</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<link rel="stylesheet" type="text/css" href="../../global.css"/>
+	<link rel="stylesheet" type="text/css" href="../../dev.css"/>
+</head>
+<body>
+	<h1>get-css-link</h1>
+
+	<div class="function-info">
+		<table>
+			<tbody>
+				<tr>
+					<th>Type</th>
+					<td>Named</td>
+				</tr>
+				<tr>
+					<th>Parameters</th>
+					<td>
+						<table>
+							<tbody>
+								<tr>
+									<th>theme</th>
+									<td>The <a class="code"
+									href="../../schema-ref/table/album-theme.html">ma:album-theme</a>
+									to render the URL for.</td>
+								</tr>
+								<tr>
+									<th>css</th>
+									<td>The CSS resource path to use.</td>
+								</tr>
+								<tr>
+									<th>ua-type</th>
+									<td>The browser type retured from <a class="code"
+									href="../util/get-browser-type.html">get-browser-type</a>.
+									</td>
+								</tr>
+								<tr>
+									<th>ua-version</th>
+									<td>The browser version retured from <a class="code"
+									href="../util/get-browser-platform.html">get-browser-version</a>.
+									</td>
+								</tr>
+								<tr>
+									<th>ua-platform</th>
+									<td>The browser platform retured from <a class="code"
+									href="../util/get-browser-platform.html">get-browser-platform</a>.
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<th>Result</th>
+					<td>HTML &lt;link&gt; element</td>
+				</tr>
+				<tr>
+					<th>Requires</th>
+					<td>
+						<ol>
+							<li><a class="code"
+							href="get-resource-url.html">get-resource-url</a></li>
+						</ol>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<div>
+	This template renders an HTML &lt;link&gt; element for a CSS resource,
+	taking into account the browser type. For supported browser types this
+	template will add a suffix to the CSS resource URL. This is to allow
+	different CSS files based on different browser platforms.
+	</div>
+
+	<div>
+	Currently the only supported options are for Internet Explorer on Windows.
+	If the <code>ua-type</code> is <var>ie</var> and the
+	<code>ua-platform</code> is <var>windows</var> then a suffix of
+	<code>-ie-win</code> will be appended before the assumed <code>.css</code>
+	file name. Thus an input of <code>browse.css</code> would return
+	<code>browse-ie-win.css</code>.
+	</div>
+
+	<h2>Example usage</h2>
+
+	<div class="function-example"><span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">call-template</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;get-css-link&quot;</span><span class="synIdentifier">&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">with-param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;theme&quot;</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;$theme&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">with-param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;css&quot;</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;$theme/ma:css&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">with-param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;ua-type&quot;</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;$ua-type&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">with-param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;ua-version&quot;</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;$ua-version&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">with-param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;ua-platform&quot;</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;$ua-platform&quot;</span><span class="synIdentifier">/&gt;</span>
+<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">call-template</span><span class="synIdentifier">&gt;</span></div>
+	
+	<h2>Example output</h2>
+
+	<div class="function-example-out">/ma/theme/1/1029809801/browse-ie-win.css</div>
+	
+	<h2>Source</h2>
+  
+  <div class="function-source"><span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">template</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;get-css-link&quot;</span><span class="synIdentifier">&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;theme&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;css&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;ua-type&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;ua-version&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;ua-platform&quot;</span><span class="synIdentifier">/&gt;</span>
+  <span class="synIdentifier">&lt;link </span><span class="synType">rel</span>=<span class="synConstant">&quot;stylesheet&quot;</span><span class="synIdentifier">&gt;</span>
+    <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">attribute</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;href&quot;</span><span class="synIdentifier">&gt;</span>
+      <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">call-template</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;get-resource-url&quot;</span><span class="synIdentifier">&gt;</span>
+        <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">with-param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;theme&quot;</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;$theme&quot;</span><span class="synIdentifier">/&gt;</span>
+        <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">with-param</span><span class="synIdentifier"> </span><span class="synType">name</span>=<span class="synConstant">&quot;resource&quot;</span><span class="synIdentifier">&gt;</span>
+          <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">choose</span><span class="synIdentifier">&gt;</span>
+            <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">when</span><span class="synIdentifier"> </span><span class="synType">test</span>=<span class="synConstant">&quot;$ua-type = 'ie' and $ua-platform = 'win'&quot;</span><span class="synIdentifier">&gt;</span>
+              <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">value-of</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;substring-before($css,'.css')&quot;</span><span class="synIdentifier">/&gt;</span>
+              <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>-ie-win.css<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">text</span><span class="synIdentifier">&gt;</span>
+            <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">when</span><span class="synIdentifier">&gt;</span>
+            <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">otherwise</span><span class="synIdentifier">&gt;</span>
+              <span class="synIdentifier">&lt;</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">value-of</span><span class="synIdentifier"> </span><span class="synType">select</span>=<span class="synConstant">&quot;$css&quot;</span><span class="synIdentifier">/&gt;</span>
+            <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">otherwise</span><span class="synIdentifier">&gt;</span>
+          <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">choose</span><span class="synIdentifier">&gt;</span>
+        <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">with-param</span><span class="synIdentifier">&gt;</span>
+      <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">call-template</span><span class="synIdentifier">&gt;</span>
+    <span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">attribute</span><span class="synIdentifier">&gt;</span>
+  <span class="synIdentifier">&lt;/link&gt;</span>
+<span class="synIdentifier">&lt;/</span><span class="synSpecial">xsl</span><span class="synComment">:</span><span class="synStatement">template</span><span class="synIdentifier">&gt;</span></div>
+  
+<hr>
+<div>
+	<div class="float-r">
+		<a href="http://sourceforge.net"><img
+			src="http://sourceforge.net/sflogo.php?group_id=103583&amp;type=2" 
+			width="125" height="37" alt="SourceForge.net Logo" /></a>
+	</div>
+	<small>$Id: get-css-link.html,v 1.1 2007/01/08 04:39:04 matt Exp $</small>
+</div>
+</body>
+</html>
+
