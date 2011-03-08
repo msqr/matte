@@ -1,0 +1,45 @@
+Matte Release Notes
+
+@VERSION@ @BUILD_DATE@
+
+***********************************************************************
+Note: the database schema has changed from the previous 0.8 release.
+To update a 0.8 release database to 0.9, see the setup/sql/release
+directory included in this package. Run the appropriate setup script
+for your database type.
+***********************************************************************
+
+Major Updates
+
+- Watermark support, using 3-D bump map effect or stamp effect.
+  
+- Pluggable "browse mode" support, for alternate view modes of shared
+  media items. Include two plugins: popularity (based on how many 
+  times an item has been viewed) and average user rating (based on 
+  average rating of all users for each item).
+  
+- Add user comments UI in Woosh view album theme.
+
+- Add "advanced" search options in main GUI, to search with date range.
+  
+Other Updates
+
+- Major JavaScript performance boost on item display, re-write 
+  number-observer to be a singleton, rather than a new observer on 
+  every item.
+
+- Fix shift-click selections in main GUI, and change ctrl-click to 
+  alt-click to be compatible with both Mac/Windows.
+  
+- After sorting album items, return to main view with album selected.
+
+- Fix bug in sorting media items by date, after having manually 
+  sorted the album.
+
+- Fix passing owner's Locale to sMeta during metadata extraction.
+
+- Added UI setting for user locale in preferences form.
+
+- Add UI setting for "allow original" in share album form.
+
+- Switch to Subversion source code repository at Sourceforge.
