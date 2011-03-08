@@ -1,0 +1,53 @@
+<p class="intro"><a name="about"></a>Matte is a <b>free</b> web-based photo, movie, and audio 
+organization and publishing application. It allows you to upload pictures, movies, and songs to 
+your web site and organize them into albums which you can then publish for other people to view.</p>
+
+<p>There are many photo/movie publishing tools available today. The primary goals for Matte are to:</p>
+
+<ul>
+	<li>Provide a <a href="img/home.jpg">simple and easy-to-use</a> web-based application for sharing media items 
+	and organizing items into albums.</li>
+	<li>Publish album slideshows that <a href="img/woosh.jpg">look beautiful</a> and focus on the media.</li>
+	<li>Publish an <a href="img/shared-feed.png">album-centric blog</a> of all <a href="img/shared-browse.png">shared albums</a>.</li>
+	<li>Allow <a href="theme-howto.html">complete customization</a> of the look and feel of published albums.</li>
+	<li>Be <a href="extending.html">easily extensible</a> to support many media types, but primarly focused on image, video, audio
+	media types.</li>
+	<li>Scale well to handle many thousands of shared items.</li>
+	<li>Support multiple users, each with their own media items and albums.</li>
+	<li>Good time zone support for adjusting photo dates from photos taken while <a href="img/tz-1.png">travelling</a> 
+	<a href="img/tz-2.png">around</a> <a href="img/tz-3.png">the</a> <a href="img/tz-4.png">world</a>.</li>
+	<li>Support customizable and extensible metadata support (e.g. EXIF, ID3, etc) by way of 
+	<a href="http://smeta.sourceforge.net/">sMeta</a>.</li>
+</ul>
+
+<p>If you'd like to share your own photos/music/movies on your own website for your 
+family and friends, Matte might be right for you. You need your own server to run 
+Matte on, and just a little bit of geekness to get it running.</p>
+
+<p class="note">Matte is the evolution of Media Album. The 
+old Media Album software is still available for download 
+and the old website is <a href="ma1/index.html">available here</a>.</p>
+
+<!--
+<h2><a name="test"></a>Test Drive</h2>
+<p>Here is a link to a running Matte application. Be warned that this is a development server 
+and could be restarted without warning. In practice this is infrequent and only to install a new 
+version of Matte.</p>
+
+<ul>
+	<li><a href="https://msqr.us/matte-stage/">Matte test server</a> (login with username: test, password: test)</li>
+</ul>
+-->
+
+<h2><a name="demo"></a>Live Demo</h2>
+<p>Visit the <a href="http://sourceforge.net/project/showfiles.php?group_id=103583&package_id=219716">Live Demo</a> download page to 
+download a complete, pre-configured Matte application which you can run without any setup or requirements other than a 
+<a href="http://java.sun.com/">Java 5 Runtime Environment</a> or later. This can give you a good idea of how Matte works and be used as a 
+starting point for configuring Matte for your own use.</p>
+
+
+<h2><a name="info"></a>Project Info / Support</h2>
+<p>The <a href="http://sourceforge.net/projects/malbum/">Matte project</a> page on SourceForge 
+contains project info. For support, visit the 
+<a href="http://sourceforge.net/tracker/?group_id=103583">Matte Tracker</a> page where you can request
+support or file a bug report.</p>
