@@ -109,8 +109,13 @@ public class AddMediaStaxEndpoint extends AbstractStaxStreamPayloadEndpoint {
 		command.setMetaXmlFile(new FileBasedTemporaryFile(addContentHander.getXmlFile(), 
 				"text/xml"));
 		*/
+		log.debug("Submitting AddMediaCommand work");
 		BizContext context = BizContextUtil.getBizContext();
 		WorkInfo workInfo = ioBiz.importMedia(command, context);
+		if ( log.isDebugEnabled() ) {
+			log.debug("AddMediaCommand work submitted: " +workInfo.getTicket() 
+					+", constructing <m:AddMediaResponse> response ");
+		}
 		streamWriter.writeStartElement("m", "AddMediaResponse", SystemConstants.MATTE_XML_NAMESPACE_URI);
 		streamWriter.writeNamespace("m", SystemConstants.MATTE_XML_NAMESPACE_URI);
 		streamWriter.writeAttribute("success", Boolean.TRUE.toString());
