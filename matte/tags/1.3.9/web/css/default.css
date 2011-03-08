@@ -1,0 +1,366 @@
+/* CSS for global elements.
+ * ===================================================================
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License as 
+ * published by the Free Software Foundation; either version 2 of 
+ * the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
+ * 02111-1307 USA
+ * ===================================================================
+ * $Id: default.css,v 1.33 2004/03/02 21:44:29 matt Exp $
+ * ===================================================================
+ */
+ 
+#choose-album, #create-album, #confirm-album, #confirm-item, #confirm-theme, #logon, #share-album, #upload-media, #upload-theme {
+	position: absolute;
+	top: 2em;
+	left: 30%;
+	width: 40%;
+	border: none;
+	}
+
+	#choose-album, #create-album, #confirm-album, #confirm-item, #confirm-theme, #logon, #share-album, #upload-media, #upload-theme DIV {
+		padding-bottom: 10px;
+	}
+	
+#error-dialog {
+	position: absolute;
+	color: red;
+	border: 2px solid red;
+	background-color: #ffff99;
+	padding: 4px;
+	top: 2em;
+	left: 30%;
+	width: 40%;
+	}
+	
+#message-dialog {
+	background-color: #ffff99;
+	position: absolute;
+	color: green;
+	border: 2px solid green;
+	padding: 4px;
+	top: 2em;
+	left: 30%;
+	width: 40%;
+	}
+	
+#user-info {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 240px;
+	height: 20px;
+	text-align: center;
+	font-weight: bold;
+	font-size: 12pt;
+	}
+
+#album-list {
+	position: absolute;
+	top: 85px;
+	left: 5px;
+	bottom: 165px;
+	width: 240px;
+	overflow: auto;
+	}
+
+#browse-themes-header, #manage-themes-header {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	height: 50px;
+	right: 5px;
+	}
+
+#browse-themes-content, #manage-themes-content {
+	position: absolute;
+	top: 60px;
+	left: 5px;
+	bottom: 5px;
+	right: 5px;
+	overflow: auto;
+	}
+
+	#browse-themes-content TABLE, #manage-themes-content TABLE {
+		padding: 4px;
+	}
+
+	#browse-themes-content TR, #manage-themes-content TR {
+		vertical-align: top;
+	}
+
+#commands {
+	position: absolute;
+	top: 30px;
+	left: 5px;
+	width: 240px;
+	height: 50px;
+	text-align: center;
+	}
+
+#single-form {
+	position: absolute;
+	left: 5px;
+	width: 240px;
+	bottom: 165px;
+	height: 200px;
+	overflow: none;
+	}
+
+#single-image-controls {
+	position: absolute;
+	bottom: 170px;
+	height: 50px;
+	left: 265px;
+	right: 20px;
+	text-align: center;
+	text-shadow: 1px 1px gray;
+	vertical-align: center;
+	}
+
+#single-image-controls TABLE {
+	width: 100%;
+	}
+
+#thumbnail-list {
+	position: absolute;
+	bottom: 5px;
+	left: 5px;
+	height: 155px;
+	right: 5px;
+	border: 1px solid green;
+	overflow: auto;
+	}
+
+
+	#thumbnail-list TABLE {
+		text-align: center;
+		border-collapse: collapse;
+	}
+	
+	#thumbnail-list TD {
+		padding: 4px;
+	}
+	
+#single-image {
+	position: absolute;
+	top: 5px;
+	left: 250px;
+	bottom: 165px;
+	right: 5px;
+	border: 1px solid blue;
+	overflow: auto;
+	}
+	
+#simage {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	}
+
+#update-album-list {
+	position: absolute;
+	top: 80px;
+	left: 5px;
+	height: 225px;
+	width: 240px;
+	border: 1px solid red;
+	overflow: auto;
+	}
+	
+#update-album-controls {
+	position: absolute;
+	left: 5px;
+	width: 240px;
+	top: 310px;
+	height: 210;
+	text-align: center;
+	}
+	
+#update-album-contents {
+	position: absolute;
+	top: 5px;
+	left: 250px;
+	height: 375px;
+	right: 5px;
+	border: 1px solid blue;
+	overflow: auto;
+	}
+	
+#update-album-thumbnails {
+	position: absolute;
+	top: 385px;
+	height: 135px;
+	left: 250px;
+	right: 5px;
+	border: 1px solid green;
+	overflow: auto;
+	}
+
+A {
+	color: #999999; 
+	text-decoration: none
+	}
+
+	A:visited {
+		color: #999999;
+		text-decoration: none
+		}
+	
+	A:link {
+		color: #999999; 
+		text-decoration: none
+		}
+	
+	A:hover {
+		background-color: yellow;
+		}
+
+BODY {
+	background-color: white;
+	}
+
+DIV {
+	font-size: 11pt;
+	}
+	
+IMG {
+	border: 0;
+	}
+
+TD {
+	font-size: 11pt;
+	}
+	
+TD.left {
+	text-align: left;
+	}
+
+FORM TABLE {
+	border: 1px solid #666666;
+	padding: 2px;
+	}
+	
+FORM TH {
+	font-size: 11pt;
+	text-align: left;
+	font-weight: bold;
+	background-color: #cccccc;
+	padding: 2px;
+	}
+	
+FORM TD {
+	font-size: 11pt;
+	text-align: left;
+	font-weight: normal;
+	padding: 2px;
+	}
+
+FORM DIV {
+	padding: 2px;
+	}
+	
+TR#update-album-row {
+	background-color: pink;
+	}
+
+.prev-img {
+	text-align: left;
+	vertical-align: center;
+	}	
+
+TD.right {
+	text-align: right;
+	}
+	
+.next-img {
+	text-align: right;
+	vertical-align: center;
+	}	
+
+TD.center {
+	text-align: center;
+	}
+
+INPUT[type='text'], INPUT[type='password'], SELECT, TEXTAREA {
+	font-family: sans-serif;
+	font-size: 10pt;
+	background: #EEEEEE;
+	border-bottom: 1px solid #666666;
+	border-right: 1px solid #666666;
+	border-left: 1px solid #666666;
+	border-top: 1px solid #666666;
+	color: #000066;
+	text-decoration: none;
+	}
+
+INPUT[type='submit'], INPUT[type='button'], BUTTON {
+  	background: #151C5A;
+ 	border-bottom: 1px solid #00B5EF;
+  	border-right: 1px solid #00B5EF;
+  	border-left: 1px solid #00B5EF;
+  	border-top: 1px solid #00B5EF;
+  	color: #FFFFFF;
+  	font-family: sans-serif;
+  	font-size: 11px;
+	margin: 2px;
+  	text-decoration: none
+  	}
+
+	INPUT[type='submit']:hover, INPUT[type='button']:hover, BUTTON:hover {
+		border-style: outset;
+		}
+
+	INPUT[type='submit']:hover, INPUT[type='button']:hover, BUTTON:focus {
+		border-style: outset;
+		}
+
+	INPUT[type='submit']:hover, INPUT[type='button']:hover, BUTTON:active {
+		border-style: inset;
+		}
+
+.normal {
+	font-weight: normal;
+	font-size: 11pt;
+	}
+	
+.strong {
+	font-weight: bold;
+	font-size: 11pt;
+	}
+	
+.small {
+	font-size: 9pt;
+	}
+	
+.form-note {
+	font-weight: normal;
+	font-size: 9pt;
+	}
+	
+.small-heading {
+	font-weight: bold;
+	font-size: 12pt;
+	}
+	
+.error {
+	color: red;
+	}
+	
+.thumb-image-unselected {
+	background: none;
+	}
+
+.thumb-image-selected {
+	background: #dddddd;
+	}
+
