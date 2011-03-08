@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  Copyright (c) 2002 Matt Magoffin
+  
+  This program is free software; you can redistribute it and/or 
+  modify it under the terms of the GNU General Public License as 
+  published by the Free Software Foundation; either version 2 of 
+  the License, or (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful, 
+  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+  General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License 
+  along with this program; if not, write to the Free Software 
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
+  02111-1307 USA
+
+  Id: MediaAlbumTables.xsd,v 1.52 2004/03/09 23:49:45 matt Exp   
+-->
+<xsd:schema targetNamespace="http://msqr.us/xsd/MediaAlbum" 
+	xmlns:ma="http://msqr.us/xsd/MediaAlbum"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified">
+	 
+	<xsd:annotation>
+		<xsd:documentation>
+			This is the XML Schema for the Media Album data objects.
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:complexType name="user">
+		<xsd:sequence>
+			<xsd:element name="username" type="xsd:string"/>
+			<xsd:element name="name" type="xsd:string"/>
+			<xsd:element name="email" type="xsd:string"/>
+			<xsd:element name="password" type="xsd:string"/>
+			<xsd:element name="permissions" type="ma:permissions" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="xsd:integer" use="optional"/>
+		<xsd:attribute name="userId" type="xsd:integer"/>
+		<xsd:attribute name="thumbSize" type="xsd:string"/>
+		<xsd:attribute name="thumbCompress" type="xsd:string"/>
+		<xsd:attribute name="singleSize" type="xsd:string"/>
+		<xsd:attribute name="singleCompress" type="xsd:string"/>
+		<xsd:attribute name="anonymousKey" type="xsd:string" use="optional"/>
+		<xsd:attribute name="tz" type="xsd:integer" use="optional"/>
+		<xsd:attribute name="tzName" type="xsd:string" use="optional"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="permissions">
+		<xsd:attribute name="permId" type="xsd:integer" use="required"/>
+		<xsd:attribute name="superUser" type="xsd:boolean" use="optional" default="false"/>
+		<xsd:attribute name="assignSuperUser" type="xsd:boolean" use="optional" default="false"/>
+		<xsd:attribute name="createUser" type="xsd:boolean" use="optional" default="false"/>
+		<xsd:attribute name="assignCreateUser" type="xsd:boolean" use="optional" default="false"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="group">
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:string"/>
+			<xsd:element name="user" type="ma:user" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="groupId" type="xsd:integer"/>
+		<xsd:attribute name="owner" type="xsd:integer"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="member">
+		<xsd:attribute name="groupId" type="xsd:integer"/>
+		<xsd:attribute name="userId" type="xsd:integer"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="friend">
+		<xsd:attribute name="userId" type="xsd:integer"/>
+		<xsd:attribute name="friendId" type="xsd:integer"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="invitation">
+		<xsd:attribute name="key" type="xsd:string" use="required"/>
+		<xsd:attribute name="userId" type="xsd:integer" use="required"/>
+		<xsd:attribute name="email" type="xsd:string" use="required"/>
+		<xsd:attribute name="inviteDate" type="xsd:dateTime" use="required"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="registration">
+		<xsd:attribute name="key" type="xsd:string" use="required"/>
+		<xsd:attribute name="username" type="xsd:string" use="required"/>
+		<xsd:attribute name="inviteKey" type="xsd:string" use="optional"/>
+		<xsd:attribute name="name" type="xsd:string" use="required"/>
+		<xsd:attribute name="password" type="xsd:string" use="required"/>
+		<xsd:attribute name="email" type="xsd:string" use="required"/>
+		<xsd:attribute name="registerDate" type="xsd:dateTime" use="required"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="media-item">
+		<xsd:sequence>
+			<xsd:element name="path" type="xsd:string"/>
+			<xsd:element name="mime" type="xsd:string"/>
+			<xsd:element name="name" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="comment" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="meta" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="metadata" type="ma:media-item-metadata" 
+				minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="user-rating" type="ma:item-rating" 
+				minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="user-comment" type="ma:item-comment" 
+				minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="xsd:integer" use="optional"/>
+		<xsd:attribute name="itemId" type="xsd:integer"/>
+		<xsd:attribute name="collection" type="xsd:integer"/>
+		<xsd:attribute name="width" type="xsd:integer"/>
+		<xsd:attribute name="height" type="xsd:integer"/>
+		<xsd:attribute name="hits" type="xsd:integer" use="optional"/>
+		<xsd:attribute name="displayOrder" type="xsd:integer" use="optional"/>
+		<xsd:attribute name="fileSize" type="xsd:integer"/>
+		<xsd:attribute name="creationDate" type="xsd:dateTime" use="optional"/>
+		<xsd:attribute name="tz" type="xsd:integer" use="optional"/>
+		<xsd:attribute name="tzName" type="xsd:string" use="optional"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="item-comment">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="commentId" type="xsd:integer" use="required"/>
+				<xsd:attribute name="itemId" type="xsd:integer" use="required"/>
+				<xsd:attribute name="userId" type="xsd:integer" use="optional"/>
+				<xsd:attribute name="creationDate" type="xsd:dateTime" use="optional"/>
+				<xsd:attribute name="userName" type="xsd:string" use="optional"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>	
+
+	<xsd:complexType name="item-rating">
+		<xsd:attribute name="ratingId" type="xsd:integer" use="required"/>
+		<xsd:attribute name="itemId" type="xsd:integer" use="required"/>
+		<xsd:attribute name="userId" type="xsd:integer" use="required"/>
+		<xsd:attribute name="rating" type="xsd:short" use="required"/>
+		<xsd:attribute name="creationDate" type="xsd:dateTime" use="optional"/>
+		<xsd:attribute name="userName" type="xsd:string" use="optional"/>
+	</xsd:complexType>	
+
+	<xsd:complexType name="collection">
+		<xsd:sequence>
+			<xsd:element name="path" type="xsd:string"/>
+			<xsd:element name="name" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="comment" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="scandate" type="xsd:dateTime" minOccurs="0"/>
+			<xsd:element name="item" type="ma:media-item" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="xsd:integer" use="optional"/>
+		<xsd:attribute name="collectionId" type="xsd:integer"/>
+		<xsd:attribute name="owner" type="xsd:integer"/>
+	</xsd:complexType>
+	
+	<xsd:complexType name="album">
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="comment" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="item" type="ma:media-item" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="permissions" type="ma:album-permissions" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="album" type="ma:album" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="xsd:integer" use="optional"/>
+		<xsd:attribute name="albumId" type="xsd:integer"/>
+		<xsd:attribute name="owner" type="xsd:integer"/>
+		<xsd:attribute name="allowAnonymous" type="xsd:boolean" use="optional" default="false"/>
+		<xsd:attribute name="anonymousKey" type="xsd:string" use="optional"/>
+		<xsd:attribute name="allowOriginal" type="xsd:boolean" use="optional" default="false"/>
+		<xsd:attribute name="parentId" type="xsd:integer" use="optional"/>
+		<xsd:attribute name="posterId" type="xsd:integer" use="optional"/>
+		<xsd:attribute name="themeId" type="xsd:integer" use="optional"/>
+		<xsd:attribute name="albumDate" type="xsd:dateTime"/>
+		<xsd:attribute name="creationDate" type="xsd:dateTime"/>
+		<xsd:attribute name="modificationDate" type="xsd:dateTime" use="optional"/>
+		<xsd:attribute name="sortMode" type="xsd:integer" use="optional" default="0"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="album-permissions">
+		<xsd:attribute name="permId" type="xsd:integer" use="required"/>
+		<xsd:attribute name="groupId" type="xsd:integer" use="optional" />
+		<xsd:attribute name="userId" type="xsd:integer" use="optional" />
+		<xsd:attribute name="view" type="xsd:boolean" use="optional" default="false"/>
+		<xsd:attribute name="update" type="xsd:boolean" use="optional" default="false"/>
+		<xsd:attribute name="comment" type="xsd:boolean" use="optional" default="false"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="album-media">
+		<xsd:attribute name="albumId" type="xsd:integer"/>
+		<xsd:attribute name="mediaId" type="xsd:integer"/>
+		<xsd:attribute name="displayOrder" type="xsd:integer"/>
+	</xsd:complexType>
+	
+	<xsd:complexType name="media-item-metadata">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="key" type="xsd:string"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="album-theme">
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:string"/>
+			<xsd:element name="comment" type="xsd:string"/>
+			<xsd:element name="base-dir" type="xsd:string"/>
+			<xsd:element name="icon" type="xsd:string"/>
+			<xsd:element name="preview" type="xsd:string"/>
+			<xsd:element name="xsl" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="css" type="xsd:string"/>
+		</xsd:sequence>
+		<xsd:attribute name="themeId" type="xsd:integer"/>
+		<xsd:attribute name="owner" type="xsd:integer" use="optional"/>
+		<xsd:attribute name="global" type="xsd:boolean" default="false"/>
+		<xsd:attribute name="author" type="xsd:string" use="optional"/>
+		<xsd:attribute name="authorEmail" type="xsd:string" use="optional"/>
+		<xsd:attribute name="creationDate" type="xsd:dateTime"/>
+		<xsd:attribute name="modificationDate" type="xsd:dateTime" use="optional"/>
+	</xsd:complexType>
+	
+</xsd:schema>
+	

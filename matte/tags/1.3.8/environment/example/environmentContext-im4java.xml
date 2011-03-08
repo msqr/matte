@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Example Matte environment configuration showing IM4Java support.
+	
+	IM4Java support depends on ImageMagick or GraphicsMagick being correctly
+	installed and available to the application server Matte is running in. If
+	they are installed in a non-default location, you also need to set the
+	environment variable IM4JAVA_TOOLPATH to the path where the ImageMagick
+	or GraphicsMagic binaries are installed. To use GraphicsMagick instead
+	of ImageMagick you need to also set the im4java.useGM system property to
+	"true", e.g. start the JVM with -Dim4java.useGM=true.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	
+	<!-- 
+		sqlFunctionsMap
+		
+		A mapping of custom Hibernate SQL functions. This might vary between 
+		different database flavors.
+	-->
+	<bean id="sqlFunctionsMap" class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="bitwise_and">
+					<bean class="magoffin.matt.ma2.dao.hbm.BitwiseAndSQLFunction"/>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<!--
+		mediaHandlerFileExtensionMap
+		
+		A mapping of file extensions to media handlers.
+	-->
+	<bean id="mediaHandlerFileExtensionMap" 
+		class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="jpg" value-ref="jpegMediaHandler"/>
+				<entry key="png" value-ref="pngMediaHandler"/>
+			</map>
+		</property>
+	</bean>
+	
+	<!--
+		mediaHandlerMimeMap
+		
+		A mapping of MIME types to media handlers.
+	-->
+	<bean id="mediaHandlerMimeMap"
+		class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="image/jpeg" value-ref="jpegMediaHandler"/>
+				<entry key="image/png" value-ref="pngMediaHandler"/>
+			</map>
+		</property>
+	</bean>
+	
+	<!--======================================================================
+		IM4Java media handler implementations
+		======================================================================-->
+	
+	<!-- IM4Java JPEG handler -->
+	<bean id="jpegMediaHandler" class="magoffin.matt.ma2.image.im4java.JpegMediaHandler">
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="mediaBiz" ref="mediaBizTarget"/>
+		<property name="userBiz" ref="userBizTarget"/>
+		<property name="im4javaMediaEffectMap" ref="im4javaEffectMap"/>
+		<property name="useJpeg2000" value="true"/>
+		<property name="jpeg2000UserAgentRegExp">
+			<list>
+				<value>WebKit</value>
+			</list>
+		</property>
+		<property name="smetaPropertyMap">
+			<map>
+				<entry key="creationDateKey" value="DATE_TAKEN"/>
+			</map>
+		</property>
+	</bean>
+
+	<!-- IM4Java PNG handler -->
+	<bean id="pngMediaHandler" class="magoffin.matt.ma2.image.im4java.PngMediaHandler"
+		parent="jpegMediaHandler"/>
+	
+	<!--
+		im4javaEffectMap
+		
+		A mapping of MediaEffect handlers.
+	-->
+	<bean id="im4javaEffectMap"
+		class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="rotate">
+					<bean class="magoffin.matt.ma2.image.im4java.RotateEffect"/>
+				</entry>
+				<entry key="scale">
+					<bean class="magoffin.matt.ma2.image.im4java.ScaleEffect">
+						<property name="mediaBiz" ref="mediaBizTarget"/>
+					</bean>
+				</entry>
+				<entry key="watermark">
+					<bean class="magoffin.matt.ma2.image.im4java.BumpMapEffect"/>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	
+</beans>
