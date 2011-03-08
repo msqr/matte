@@ -1,8 +1,8 @@
 <p class="intro">If you use iPhoto to organise your photos on a Mac, you might 
 like to try the Matte iPhoto Export Plugin, which allows you to export entire albums
-directly from iPhoto for importing into Matte.</p>
+directly from iPhoto into Matte.</p>
 
-<p>You can download the plugin from <a href="http://sourceforge.net/project/showfiles.php?group_id=103583&package_id=268707">here</a>. 
+<p>You can download the plugin from <a href="https://sourceforge.net/projects/malbum/files/Matte%20iPhoto%20Export%20Plugin/">here</a>. 
 See the <a href="iphoto-export.html">Matte iPhoto Export Plugin</a> page for more information.</p>
 
 <p>In addition, there is an AppleScript included in the binary distribution of Matte for 
