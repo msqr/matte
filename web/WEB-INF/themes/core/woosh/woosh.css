@@ -472,7 +472,7 @@ body.ii-content, div.ii-content {
 	width: 680px;
 	/*width: auto;*/
 	height: auto;
-	overflow: hidden;
+	/*overflow: hidden;*/
 	text-align: center;
 	z-index: 25;
 	/*border: 3px solid cyan;*/
