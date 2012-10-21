@@ -45,10 +45,8 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.xpath.XPathConstants;
-
 import magoffin.matt.ma2.MediaHandler;
 import magoffin.matt.ma2.MediaQuality;
 import magoffin.matt.ma2.MediaSize;
@@ -67,7 +65,7 @@ import magoffin.matt.ma2.support.AddMediaCommand;
 import magoffin.matt.ma2.support.BasicMediaRequest;
 import magoffin.matt.ma2.support.BasicMediaResponse;
 import magoffin.matt.ma2.util.BizContextUtil;
-
+import magoffin.matt.ma2.util.DateTimeUtil;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
@@ -92,14 +90,14 @@ class ImportWorkRequest implements WorkRequest {
 	private float amountCompleted = 0;
 	private int numProcessed = 0;
 	private int numExported = 0;
-	private List<String> errors = new LinkedList<String>();
+	private final List<String> errors = new LinkedList<String>();
 	private URI collectionDirURI;
 	private Collection collection;
-	private List<MediaItem> itemsAddedToCollection = new LinkedList<MediaItem>();
-	private List<Long> savedItemIdList = Collections.synchronizedList(
+	private final List<MediaItem> itemsAddedToCollection = new LinkedList<MediaItem>();
+	private final List<Long> savedItemIdList = Collections.synchronizedList(
 			new LinkedList<Long>());
 	private User collectionOwner;
-	private Map<String, Long> archiveAlbumPathMapping = new HashMap<String, Long>();
+	private final Map<String, Long> archiveAlbumPathMapping = new HashMap<String, Long>();
 	
 	ImportWorkRequest(IOBizImpl bizImpl, BizContext context, AddMediaCommand command,
 			File collectionDir, File srcFile) {
@@ -601,7 +599,7 @@ class ImportWorkRequest implements WorkRequest {
 			TimeZone mediaTz = TimeZone.getTimeZone(item.getTz().getCode());
 			TimeZone displayTz = TimeZone.getTimeZone(item.getTzDisplay().getCode());
 			if ( !mediaTz.equals(displayTz) ) {
-				adjustItemDateTimeZone(item, mediaTz, displayTz);
+				DateTimeUtil.adjustItemDateTimeZone(item, mediaTz, displayTz);
 			}
 		}
 		
@@ -631,31 +629,6 @@ class ImportWorkRequest implements WorkRequest {
 		}
 		itemsAddedToCollection.add(item);
 		return item;
-	}
-
-	private void adjustItemDateTimeZone(MediaItem item, TimeZone tz, 
-			TimeZone displayTz) throws ParseException {
-		// format as String, then re-parse in correct zone
-		SimpleDateFormat sdf = new SimpleDateFormat(IOBizImpl.REPARSE_DATE_FORMAT);
-		String dateStr = sdf.format(item.getItemDate().getTime());
-		sdf.setTimeZone(tz);
-		Calendar newDate = Calendar.getInstance(tz);
-		newDate.setTime(sdf.parse(dateStr));
-		
-		// now format date into display TZ
-		sdf.setTimeZone(displayTz);
-		dateStr = sdf.format(newDate.getTime());
-		newDate = Calendar.getInstance();
-		sdf.setTimeZone(newDate.getTimeZone());
-		newDate.setTime(sdf.parse(dateStr));
-		
-		
-		item.setItemDate(newDate);
-		if ( ioBizImpl.log.isDebugEnabled() ) {
-			ioBizImpl.log.debug("Re-parsed date to [" 
-					+sdf.format(newDate.getTime()) +"] in time zone ["
-					+displayTz.getDisplayName() +"]");
-		}
 	}
 
 	public float getAmountCompleted() {
