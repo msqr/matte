@@ -41,10 +41,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-
 import javax.activation.FileDataSource;
 import javax.activation.FileTypeMap;
-
 import magoffin.matt.ma2.MediaHandler;
 import magoffin.matt.ma2.MediaRequest;
 import magoffin.matt.ma2.MediaResponse;
@@ -69,7 +67,6 @@ import magoffin.matt.ma2.support.ExportItemsCommand;
 import magoffin.matt.ma2.util.XmlHelper;
 import magoffin.matt.util.SimpleThreadSafeDateFormat;
 import magoffin.matt.util.ThreadSafeDateFormat;
-
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
@@ -87,9 +84,6 @@ public class IOBizImpl implements IOBiz {
 	/** The default property for the {@link #getZipMimeType()} property. */
 	public static final String DEFAULT_ZIP_MIME_TYPE = "application/zip";
 	
-	/** A date format pattern for re-parsing dates across time zones. */
-	static final String REPARSE_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
-
 	private CollectionDao collectionDao;
 	private WorkBiz workBiz;
 	private MediaBiz mediaBiz;
@@ -272,11 +266,11 @@ public class IOBizImpl implements IOBiz {
 	
 	private class ExportWorkRequest implements TwoPhaseExportRequest {	
 		private boolean done = false;
-		private List<Long> idList = new ArrayList<Long>(1);
-		private MediaRequest request;
+		private final List<Long> idList = new ArrayList<Long>(1);
+		private final MediaRequest request;
 		private MediaResponse response;
-		private BizContext context;
-		private Long workTicket = null;
+		private final BizContext context;
+		private final Long workTicket = null;
 		
 		private ExportWorkRequest(MediaRequest request, MediaResponse response, 
 				BizContext context) {

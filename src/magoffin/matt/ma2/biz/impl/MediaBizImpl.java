@@ -27,6 +27,7 @@
 package magoffin.matt.ma2.biz.impl;
 
 import java.io.File;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -39,13 +40,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import java.util.TimeZone;
 import magoffin.matt.dao.BasicBatchOptions;
 import magoffin.matt.dao.BatchableDao.BatchCallback;
 import magoffin.matt.dao.BatchableDao.BatchCallbackResult;
 import magoffin.matt.dao.BatchableDao.BatchMode;
 import magoffin.matt.dao.BatchableDao.BatchResult;
 import magoffin.matt.ma2.AuthorizationException;
+import magoffin.matt.ma2.AuthorizationException.Reason;
 import magoffin.matt.ma2.ConfigurationException;
 import magoffin.matt.ma2.MediaEffect;
 import magoffin.matt.ma2.MediaHandler;
@@ -53,7 +55,6 @@ import magoffin.matt.ma2.MediaQuality;
 import magoffin.matt.ma2.MediaRequest;
 import magoffin.matt.ma2.MediaSize;
 import magoffin.matt.ma2.ValidationException;
-import magoffin.matt.ma2.AuthorizationException.Reason;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.DomainObjectFactory;
 import magoffin.matt.ma2.biz.IOBiz;
@@ -79,10 +80,10 @@ import magoffin.matt.ma2.support.ShareAlbumCommand;
 import magoffin.matt.ma2.support.SortAlbumsCommand;
 import magoffin.matt.ma2.support.SortMediaItemsCommand;
 import magoffin.matt.ma2.support.UserCommentCommand;
+import magoffin.matt.ma2.util.DateTimeUtil;
 import magoffin.matt.ma2.util.MediaItemSorter;
 import magoffin.matt.ma2.util.MediaItemSorter.SortMode;
 import magoffin.matt.util.MessageDigester;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.MessageSource;
@@ -936,9 +937,17 @@ public class MediaBizImpl implements MediaBiz {
 					}
 					
 					// tz
-					// TODO adjust item date based on changed tz info
 					mediaItem.setTz(mediaTimeZone);
 					mediaItem.setTzDisplay(displayTimeZone);
+					TimeZone mediaTz = TimeZone.getTimeZone(mediaTimeZone.getCode());
+					TimeZone displayTz = TimeZone.getTimeZone(displayTimeZone.getCode());
+					if ( !mediaTz.equals(displayTz) ) {
+						try {
+							DateTimeUtil.adjustItemDateTimeZone(mediaItem, mediaTz, displayTz);
+						} catch ( ParseException e ) {
+							log.warn("Date parse excaption on item " + mediaItem.getItemId() + ": " + e);
+						}
+					}
 					
 					// comments
 					if ( comments != null || itemIds.length == 1) {
