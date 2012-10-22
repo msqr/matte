@@ -26,17 +26,23 @@
 
 package magoffin.matt.ma2.biz.impl;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
 import magoffin.matt.ma2.MediaQuality;
 import magoffin.matt.ma2.MediaSize;
@@ -64,7 +70,6 @@ import magoffin.matt.ma2.support.ShareAlbumCommand;
 import magoffin.matt.ma2.support.SortAlbumsCommand;
 import magoffin.matt.ma2.support.UserCommentCommand;
 import magoffin.matt.util.TemporaryFile;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -171,6 +176,47 @@ public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		}
 	}
 	
+	@Test
+	public void testStoreMediaItemInfoTimeZones() throws Exception {
+		User user = registerAndConfirmUser();
+		BizContext context = new TestBizContext(applicationContext, user);
+
+		Collection newCollection = domainObjectFactory.newCollectionInstance();
+		newCollection.setName("This is a new collection");
+		newCollection.setComment("This is a new collection's comments.");
+
+		Collection c = testUserBiz.newCollectionForUser(newCollection, user, context);
+
+		// import an image; the date in the image is "2003:08:17 12:43:30" which will be in GMT
+		// from user.tz
+		importImage("magoffin/matt/ma2/image/bee-action.jpg", c, context);
+		this.collectionWithItems = collectionDao.getCollectionWithItems(c.getCollectionId());
+		assertNotNull(this.collectionWithItems);
+
+		final MediaItem mediaItem = (MediaItem) this.collectionWithItems.getItem().get(0);
+		final Long[] itemIds = { mediaItem.getItemId() };
+
+		// now switch the display time zone to GMT+12
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+		final Date originalDate = sdf.parse("2003:08:17 12:43:30");
+		assertEquals(originalDate, mediaItem.getItemDate().getTime());
+
+		MediaInfoCommand cmd = new MediaInfoCommand();
+		cmd.setItemIds(itemIds);
+		cmd.setDate(mediaItem.getItemDate());
+		cmd.setMediaTimeZone(TimeZone.getTimeZone(user.getTz().getCode())); // equals GMT
+		cmd.setDisplayTimeZone(TimeZone.getTimeZone("Etc/GMT-12")); // equals GMT+12
+		this.testMediaBizImpl.storeMediaItemInfo(cmd, context);
+
+		this.collectionWithItems = collectionDao.getCollectionWithItems(c.getCollectionId());
+		final MediaItem updatedItem = (MediaItem) this.collectionWithItems.getItem().get(0);
+		final Date nzDate = sdf.parse("2003:08:18 00:43:30");
+		
+		assertEquals(cmd.getMediaTimeZone().getID(), updatedItem.getTz().getCode());
+		assertEquals(cmd.getDisplayTimeZone().getID(), updatedItem.getTzDisplay().getCode());
+		assertEquals(nzDate, updatedItem.getItemDate().getTime());
+	}
+
 	/**
 	 * Test able to update info for media items.
 	 * 
