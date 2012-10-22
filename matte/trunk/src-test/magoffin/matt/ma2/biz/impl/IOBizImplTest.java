@@ -26,8 +26,11 @@
 
 package magoffin.matt.ma2.biz.impl;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,7 +43,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
-
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
 import magoffin.matt.ma2.MediaQuality;
 import magoffin.matt.ma2.MediaRequest;
@@ -50,10 +52,10 @@ import magoffin.matt.ma2.ProcessingException;
 import magoffin.matt.ma2.TestConstants;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.DomainObjectFactory;
+import magoffin.matt.ma2.biz.IOBiz.TwoPhaseExportRequest;
 import magoffin.matt.ma2.biz.SystemBiz;
 import magoffin.matt.ma2.biz.UserBiz;
 import magoffin.matt.ma2.biz.WorkBiz;
-import magoffin.matt.ma2.biz.IOBiz.TwoPhaseExportRequest;
 import magoffin.matt.ma2.biz.WorkBiz.WorkInfo;
 import magoffin.matt.ma2.dao.AlbumDao;
 import magoffin.matt.ma2.dao.CollectionDao;
@@ -66,7 +68,6 @@ import magoffin.matt.ma2.support.BasicMediaRequest;
 import magoffin.matt.ma2.support.BasicMediaResponse;
 import magoffin.matt.ma2.support.ExportItemsCommand;
 import magoffin.matt.util.TemporaryFile;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -813,12 +814,10 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	private void addToZip(Resource resource, ZipOutputStream out) throws Exception {
 		InputStream in = resource.getInputStream();
 		try {
-			int byteCount = 0;
 			byte[] buffer = new byte[FileCopyUtils.BUFFER_SIZE];
 			int bytesRead = -1;
 			while ((bytesRead = in.read(buffer)) != -1) {
 				out.write(buffer, 0, bytesRead);
-				byteCount += bytesRead;
 			}
 			out.flush();
 		}
