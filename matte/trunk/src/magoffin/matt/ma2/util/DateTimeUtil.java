@@ -50,7 +50,8 @@ public final class DateTimeUtil {
 			throws ParseException {
 		// format as String, then re-parse in correct zone
 		SimpleDateFormat sdf = new SimpleDateFormat(REPARSE_DATE_FORMAT);
-		String dateStr = sdf.format(item.getItemDate().getTime());
+		String dateStr = sdf.format((item.getItemDate() == null ? item.getCreationDate().getTime()
+				: item.getItemDate().getTime()));
 		sdf.setTimeZone(tz);
 		Calendar newDate = Calendar.getInstance(tz);
 		newDate.setTime(sdf.parse(dateStr));
