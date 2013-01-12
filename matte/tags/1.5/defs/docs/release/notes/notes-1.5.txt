@@ -1,0 +1,45 @@
+Matte Release Notes
+
+@VERSION@ @BUILD_DATE@
+
+This is a minor update to the 1.4 release to add some small features.
+
+=======================================================================
+Updates since 1.4 release
+
+- Support changing the time zone on media in the edit UI. Previously
+  the UI appeared to let you change the time zone, but the server was
+  not actually making any changes.
+
+=======================================================================
+Notes on XSLT 2.0 changes since the 1.2 release
+
+Since the 1.3 release, Matte now uses a Saxon XSLT 2.0 processor for
+XSLT handling, rather than what is provided by default with the JDK
+(Xalan XSLT 1.0 processor). Themes using pure 1.0 XSLT can run without
+modification, but if any EXSLT functions are used those transformations
+will break in this version of Matte. Saxon does not include support for
+EXLST. The easiest way to work around this is to update the 
+stylesheet to XSLT 2.0, which can easily accomplish most of the
+features provided by EXLST.
+
+An area where exsiting themes might break when converting to XSLT
+2.0 is with generating XHTML output. When generating XHTML using
+a root element such as <html xmlns="http://www.w3.org/1999/xhtml">
+you must take care that all templates that generate XHTML elements
+include the XHTML namespace, otherwise they will end up in an empty
+namespace which will make browsers ignore those elements.
+
+For example, if you have an XSLT 1.0 template like:
+
+<xsl:template match="m:album">
+	<li><xsl:value-of select="@name"/></li>
+</xsl:template>
+
+you will need to change it to this to work in XSLT 2.0:
+
+<xsl:template match="m:album">
+	<li xmlns="http://www.w3.org/1999/xhtml">
+		<xsl:value-of select="@name"/>
+	</li>
+</xsl:template>

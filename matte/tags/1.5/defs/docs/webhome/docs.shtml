@@ -1,0 +1,3 @@
+<!--#set var="currPage" value="docs"-->
+<!--#set var="pageTitle" value="Matte: documentation"-->
+<!--#include virtual="layout.shtml"-->

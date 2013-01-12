@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  Copyright (c) 2004 Matt Magoffin
+  
+  This program is free software; you can redistribute it and/or 
+  modify it under the terms of the GNU General Public License as 
+  published by the Free Software Foundation; either version 2 of 
+  the License, or (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful, 
+  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+  General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License 
+  along with this program; if not, write to the Free Software 
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
+  02111-1307 USA
+
+  Id: build.xml,v 1.10 2004/02/06 18:49:56 matt Exp   
+-->
+<xsd:schema targetNamespace="http://msqr.us/xsd/ObjectPoolConfig" 
+			xmlns:pool="http://msqr.us/xsd/ObjectPoolConfig"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+			elementFormDefault="qualified">
+	 
+	<xsd:annotation>
+		<xsd:documentation>
+			This is the XML Schema for an object pool configuration.
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:complexType name="object-pool-config" abstract="true">
+		<xsd:sequence>
+			<xsd:element name="object-pool-impl" type="xsd:string" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="stack-object-pool-config">
+		<xsd:complexContent>
+			<xsd:extension base="pool:object-pool-config">
+				<xsd:sequence>
+					<xsd:element name="poolable-object-factory-impl" type="xsd:string"
+						minOccurs="0"/>
+					<xsd:element name="max" type="xsd:integer"/>
+					<xsd:element name="initial" type="xsd:integer" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="object-pool-status">
+		<xsd:attribute name="name" type="xsd:string"/>
+		<xsd:attribute name="max" type="xsd:integer"/>
+		<xsd:attribute name="used" type="xsd:integer"/>
+		<xsd:attribute name="idle" type="xsd:integer"/>
+		<xsd:attribute name="type" type="xsd:string"/>
+	</xsd:complexType>
+
+</xsd:schema>
+

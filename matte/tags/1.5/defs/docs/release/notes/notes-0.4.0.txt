@@ -1,0 +1,33 @@
+Matte Release Notes
+
+@VERSION@ @BUILD_DATE@
+
+- Designed import metadata XML Schema and implemented support
+  when uploading zip archives. No documentation writen for this
+  feature yet. Used by simple iPhoto AppleScript export now 
+  included with binary release.
+
+- Fix bug where the "close X" icon could remember the last-used 
+  function attached. Problem noticed after deleting media items,
+  followed by some other dialog-based action.
+
+- Fix problem where didn't display result message after upload 
+  media.
+
+- Don't "remember" completed jobs after viewed once. This prevents 
+  them from showing up as 100% completed on subsequent page refreshes.
+
+- Add SVG support. Thumbnails are generated for SVG images as 
+  rasterized PNG images.
+
+- Implement support for displaying icons for video (and audio) media 
+  for which preview images cannot be extracted from.
+
+- Allow media handlers to specify new item names via metadata. Helpful
+  for MP3 files which then set the item name to the song title.
+
+- Refactor video handlers to use sMeta for metdata extraction.
+
+- Use mime.types from classpath so don't need to update Tomcat's copy.
+
+- Various documentation / JavaDoc fixes, updates.
