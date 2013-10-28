@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	
+	<bean id="testPngMediaHandler" class="magoffin.matt.ma2.image.jmagick.PngMediaHandler">
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="mediaBiz" ref="testMediaBiz"/>
+		<property name="jmagickMediaEffectMap">
+			<map>
+				<entry key="scale">
+					<bean class="magoffin.matt.ma2.image.jmagick.ScaleEffect">
+						<property name="mediaBiz" ref="testMediaBiz"/>
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="testMediaBiz" class="magoffin.matt.ma2.biz.impl.MockMediaBiz">
+		<property name="baseDir" value="/tmp"/>
+	</bean>
+	
+</beans>

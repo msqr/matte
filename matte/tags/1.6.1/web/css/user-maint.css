@@ -1,0 +1,566 @@
+/* CSS for user maintenance screens.
+ * ===================================================================
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License as 
+ * published by the Free Software Foundation; either version 2 of 
+ * the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
+ * 02111-1307 USA
+ * ===================================================================
+ * $Id: user-maint.css,v 1.8 2004/03/02 21:44:29 matt Exp $
+ * ===================================================================
+ */
+ 
+TABLE + DIV {
+	margin-top: 20px;
+}
+
+DT :first-child {
+	margin-top: 0px;
+}
+
+DT {
+	font-weight: bold;
+	margin-top: 10px;
+}
+
+DD {
+	margin-top: 4px;
+}
+
+/* CREATE GROUP DIALOG */
+
+#create-group-dialog {
+	position: absolute;
+	visibility: hidden;
+	top: 30;
+	left: 30;
+	background-color: #ffc;
+	border: 1px solid #666;
+	z-index: 89;
+}
+
+#create-group-dialog P {
+	padding-left: 2px;
+}
+
+#create-group-dialog DIV {
+	padding: 5px 25px 5px 25px;
+	width: 300px;
+}
+
+#create-group-dialog-tl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-tl.png");
+	z-index: 90;
+}
+
+#create-group-dialog-tr {
+	position: absolute;
+	visibility: hidden;
+	height: 18px;
+	width: 18px;
+	background-image: url("../img/corner-x-white-tr.png");
+	z-index: 90;
+}
+
+#create-group-dialog-br {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-br.png");
+	z-index: 90;
+}
+
+#create-group-dialog-bl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-bl.png");
+	z-index: 90;
+}
+
+/* DELETE GROUP DIALOG */
+
+#delete-group-dialog {
+	position: absolute;
+	visibility: hidden;
+	top: 30;
+	left: 30;
+	background-color: #ffc;
+	border: 1px solid #666;
+	z-index: 89;
+}
+
+#delete-group-dialog P {
+	padding-left: 2px;
+}
+
+#delete-group-dialog DIV {
+	padding: 5px 25px 5px 25px;
+	width: 300px;
+}
+
+#delete-group-dialog-tl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-tl.png");
+	z-index: 90;
+}
+
+#delete-group-dialog-tr {
+	position: absolute;
+	visibility: hidden;
+	height: 18px;
+	width: 18px;
+	background-image: url("../img/corner-x-white-tr.png");
+	z-index: 90;
+}
+
+#delete-group-dialog-br {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-br.png");
+	z-index: 90;
+}
+
+#delete-group-dialog-bl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-bl.png");
+	z-index: 90;
+}
+
+/* FRIEND LIST */
+
+#friend-list-title {
+	position: absolute;
+	top: 154px;
+	left: 10px;
+	width: 200px;
+	height: 20px;
+	/*background-color: #e5e5da;*/
+	background-color: #fff;
+	border-top: 1px solid #666666;
+	border-right: 1px solid #666666;
+	border-bottom: 1px solid #cccccc;
+	border-left: 1px solid #666666;
+	overflow: hidden;
+	padding: 0px;
+	z-index: 2;
+}
+
+#friend-list {
+	position: absolute;
+	top: 174px;
+	left: 10px;
+	width: 200px;
+	height: 150px;
+	background-color: white;
+	border: 1px solid #666666;
+	overflow: auto;
+	padding: 0px;
+	z-index: 1;
+}
+	
+	#friend-list DIV {
+		padding: 2px 2px 1px 8px;
+	}
+
+#friend-list-tl {
+	position: absolute;
+	top: 154px;
+	left: 10px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background-image: url("../img/corner-tl.png");
+	z-index: 3;
+}
+	
+#friend-list-tr {
+	position: absolute;
+	top: 154px;
+	left: 207px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background-image: url("../img/corner-tr.png");
+	z-index: 3;
+}
+	
+#friend-list-br {
+	visibility: hidden;
+	position: absolute;
+	top: 321px;
+	left: 207px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background-image: url("../img/corner-br.png");
+	z-index: 3;
+}
+	
+#friend-list-bl {
+	position: absolute;
+	top: 321px;
+	left: 10px;
+	height: 5px;
+	width: 5px;
+	border: none;
+	background-image: url("../img/corner-bl.png");
+	z-index: 3;
+}
+
+/* GROUP LIST */
+
+#group-list-title {
+	position: absolute;
+	top: 47px;
+	left: 10px;
+	width: 200px;
+	height: 20px;
+	/*background-color: #e5e5da;*/
+	background-color: #fff;
+	border-top: 1px solid #666666;
+	border-right: 1px solid #666666;
+	border-bottom: 1px solid #cccccc;
+	border-left: 1px solid #666666;
+	overflow: hidden;
+	padding: 0px;
+	z-index: 2;
+}
+
+#group-list {
+	position: absolute;
+	top: 67px;
+	left: 10px;
+	width: 200px;
+	height: 75px;
+	background-color: white;
+	border: 1px solid #666666;
+	overflow: auto;
+	padding: 0px;
+	z-index: 1;
+}
+	
+	#group-list DIV {
+		padding: 2px 2px 1px 8px;
+	}
+
+#group-list-tl {
+	position: absolute;
+	top: 47px;
+	left: 10px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background-image: url("../img/corner-tl.png");
+	z-index: 3;
+}
+	
+#group-list-tr {
+	position: absolute;
+	top: 47px;
+	left: 207px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background-image: url("../img/corner-tr.png");
+	z-index: 3;
+}
+	
+#group-list-br {
+	visibility: hidden;
+	position: absolute;
+	top: 139px;
+	left: 207px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background-image: url("../img/corner-br.png");
+	z-index: 3;
+}
+	
+#group-list-bl {
+	position: absolute;
+	top: 139px;
+	left: 10px;
+	height: 5px;
+	width: 5px;
+	border: none;
+	background-image: url("../img/corner-bl.png");
+	z-index: 3;
+}
+
+/* GROUP MEMBER LIST */
+
+#group-member-list-title {
+	position: absolute;
+	top: 336px;
+	left: 10px;
+	width: 200px;
+	height: 20px;
+	/*background-color: #e5e5da;*/
+	background-color: #fff;
+	border-top: 1px solid #666666;
+	border-right: 1px solid #666666;
+	border-bottom: 1px solid #cccccc;
+	border-left: 1px solid #666666;
+	overflow: hidden;
+	padding: 0px;
+	z-index: 2;
+}
+
+#group-member-list {
+	position: absolute;
+	top: 356px;
+	left: 10px;
+	width: 200px;
+	height: 75px;
+	background-color: white;
+	border: 1px solid #666666;
+	overflow: auto;
+	padding: 0px;
+	z-index: 1;
+}
+	
+	#group-member-list DIV {
+		padding: 2px 2px 1px 8px;
+	}
+
+#group-member-list-tl {
+	position: absolute;
+	top: 336px;
+	left: 10px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background-image: url("../img/corner-tl.png");
+	z-index: 3;
+}
+	
+#group-member-list-tr {
+	position: absolute;
+	top: 336px;
+	left: 207px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background-image: url("../img/corner-tr.png");
+	z-index: 3;
+}
+	
+#group-member-list-br {
+	visibility: hidden;
+	position: absolute;
+	top: 428px;
+	left: 207px;
+	width: 5px;
+	height: 5px;
+	border: none;
+	background-image: url("../img/corner-br.png");
+	z-index: 3;
+}
+	
+#group-member-list-bl {
+	position: absolute;
+	top: 428px;
+	left: 10px;
+	height: 5px;
+	width: 5px;
+	border: none;
+	background-image: url("../img/corner-bl.png");
+	z-index: 3;
+}
+
+/* INVITE FRIEND DIALOG */
+
+#invite-friend-dialog {
+	position: absolute;
+	visibility: hidden;
+	top: 30;
+	left: 30;
+	background-color: #ffc;
+	border: 1px solid #666;
+	z-index: 99;
+}
+
+#invite-friend-dialog P {
+	padding-left: 2px;
+}
+
+#invite-friend-dialog DIV {
+	padding: 5px 25px 5px 25px;
+	width: 300px;
+}
+
+#invite-friend-dialog-tl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-tl.png");
+	z-index: 100;
+}
+
+#invite-friend-dialog-tr {
+	position: absolute;
+	visibility: hidden;
+	height: 18px;
+	width: 18px;
+	background-image: url("../img/corner-x-white-tr.png");
+	z-index: 100;
+}
+
+#invite-friend-dialog-br {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-br.png");
+	z-index: 100;
+}
+
+#invite-friend-dialog-bl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-bl.png");
+	z-index: 100;
+}
+
+/* MANAGE GROUP MEMBERS DIALOG */
+
+#manage-group-dialog {
+	position: absolute;
+	visibility: hidden;
+	top: 30;
+	left: 30;
+	background-color: #ffc;
+	border: 1px solid #666;
+	z-index: 99;
+}
+
+#manage-group-dialog P {
+	padding-left: 2px;
+}
+
+#manage-group-dialog DIV {
+	padding: 5px 25px 5px 25px;
+	width: 300px;
+}
+
+#manage-group-dialog-tl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-tl.png");
+	z-index: 100;
+}
+
+#manage-group-dialog-tr {
+	position: absolute;
+	visibility: hidden;
+	height: 18px;
+	width: 18px;
+	background-image: url("../img/corner-x-white-tr.png");
+	z-index: 100;
+}
+
+#manage-group-dialog-br {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-br.png");
+	z-index: 100;
+}
+
+#manage-group-dialog-bl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-bl.png");
+	z-index: 100;
+}
+
+/* UPDATE GROUP DIALOG */
+
+#update-group-dialog {
+	position: absolute;
+	visibility: hidden;
+	top: 30;
+	left: 30;
+	background-color: #ffc;
+	border: 1px solid #666;
+	z-index: 89;
+}
+
+#update-group-dialog P {
+	padding-left: 2px;
+}
+
+#update-group-dialog DIV {
+	padding: 5px 25px 5px 25px;
+	width: 300px;
+}
+
+#update-group-dialog-tl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-tl.png");
+	z-index: 90;
+}
+
+#update-group-dialog-tr {
+	position: absolute;
+	visibility: hidden;
+	height: 18px;
+	width: 18px;
+	background-image: url("../img/corner-x-white-tr.png");
+	z-index: 90;
+}
+
+#update-group-dialog-br {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-br.png");
+	z-index: 90;
+}
+
+#update-group-dialog-bl {
+	position: absolute;
+	visibility: hidden;
+	height: 5px;
+	width: 5px;
+	background-image: url("../img/corner-white-bl.png");
+	z-index: 90;
+}
+
