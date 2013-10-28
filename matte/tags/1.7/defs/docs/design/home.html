@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="css/global-matte.css" type="text/css" media="screen" />
+	<title>Matte</title>
+	<script type="text/javascript" src="js/sniff.js"></script>
+	<script type="text/javascript" src="js/prototype.js"></script>
+	<script type="text/javascript" src="js/scriptaculous.js"></script>
+	<script type="text/javascript" src="js/matte-locale.js?lang=en"></script>
+	<script type="text/javascript" src="js/ratings.js"></script>
+	<script type="text/javascript" src="js/behaviour.js"></script>
+	<script type="text/javascript" src="js/behaviours.js"></script>
+</head>
+<body class="no-sub-nav">
+<h1>Matte</h1>
+
+<div id="main-nav">Home - <a title="Upload new items." href="#">Add</a> - <a title="Search for items" href="/ieat/search.do">Search</a> - <a title="Modify your personal settings" href="#">Settings</a> - <a title="Browse and manage themes" href="#">Themes</a> - <a title="Log out" href="#">Logout</a> (Matt)</div>
+<!--div id="sub-nav"><a title="Configure settings." href="#">Settings</a> - <a title="Refresh the screen" href="#">Refresh</a></div>
+<div id="sub-nav-data">
+	<span class="header">Collection:</span>
+	<span class="data">Miscellaneous</span>
+
+	<span class="header">Last updated:</span>
+	<span class="data">20 Apr 2005, 3:03 AM</span>
+
+	<span class="header">Items:</span>
+	<span class="data">256</span>
+</div-->
+
+<div id="left-pane" class="no-sub-nav">
+	<img id="left-pane-tab" src="img/left-pane-tab.png" alt="Tab"/>
+	<div id="progress-pane">
+		<h2>Progress</h2>
+		<ol id="collection-list" class="collapsing">
+			<li id="task-7">
+				<div class="title">
+					Add media
+				</div>
+				<div class="header">Submitted</div>
+				<div class="data">Thu, 5:35 PM</div>
+				<div class="header">Complete</div>
+				<div class="data">35%</div>
+			</li>
+			<li id="task-8">
+				<div class="title">
+					Export media
+				</div>
+				<div class="header">Submitted</div>
+				<div class="data">Thu, 5:45 PM</div>
+				<div class="header">Complete</div>
+				<div class="data">5%</div>
+			</li>
+		</ol>
+	</div>
+	<div id="info-pane">
+		<h2>Info</h2>
+		<form id="info-form" action="#" method="post" class="collapsing">
+			<div class="single">
+				<label for="item-name">name</label>
+				<input type="text" id="item-name"/>
+			</div>
+			<div class="single">
+				<label for="item-name">date</label>
+				<input type="text" id="item-date"/>
+			</div>
+			<div class="single">
+				<label for="item-comments">comments</label>
+				<textarea id="item-comments"></textarea>
+			</div>
+			<div class="single multi">
+				<label for="item-tags">tags</label>
+				<textarea id="item-tags"></textarea>
+			</div>
+			<div class="single multi">
+				<label for="item-copyright">copyright</label>
+				<input type="text" id="item-copyright"/>
+			</div>
+			<div class="single">
+				<label for="item-tags">rating</label>
+				<span class="rating-stars"/>
+			</div>
+			<div><!-- This is here to "clear" the floats. --></div>
+		</form>
+	</div>
+	<h2>Collections</h2>
+	<ol id="collection-list" class="collapsing">
+		<li><a href="#?collectionId=201" title="Default">C'est la vie!</a></li>
+		<li><a href="#?collectionId=202" title="Default">Another Album</a></li>
+		<li><a href="#?collectionId=203" title="Default">Day at the Beach</a></li>
+		<li><a href="#?collectionId=204" title="Default">Foo Bar</a></li>
+		<li><a href="#?collectionId=205" title="Default">Bar Hopping</a></li>
+		<li><a href="#?collectionId=206" title="Default">La te da</a></li>
+		<li><a href="#?collectionId=207" title="Default">Blah blah blah</a></li>
+		<li><a href="#?collectionId=208" title="Default">Movies</a></li>
+		<li><a href="#?collectionId=209" title="Default">Songs</a></li>
+		<li><a href="#?collectionId=210" title="Default">Blue Green</a></li>
+		<li><a href="#?collectionId=211" title="Default">Blarf</a></li>
+		<li><a href="#?collectionId=212" title="Default">Yeah</a></li>
+	</ol>
+	<h2>Albums</h2>
+	<ol id="album-list" class="collapsing">
+		<li><a href="#?albumId=101" title="Default">Default</a></li>
+		<li><a href="#?albumId=102" title="Default">Another Collection</a></li>
+		<li><a href="#?albumId=103" title="Default">Hikes</a></li>
+		<li><a href="#?albumId=104" title="Default">Foo Bar</a></li>
+		<li><a href="#?albumId=105" title="Default">Bar Foo</a></li>
+		<li>
+			<a href="#?albumId=106" title="Default">La te da</a>
+			<ol class="collapsing">
+				<li><a href="#?albumId=113" title="Default">More La te da</a></li>
+			</ol>
+		</li>
+		<li><a href="#?albumId=107" title="Default">Blah blah blah</a></li>
+		<li><a href="#?albumId=108" title="Default">Movies</a></li>
+		<li><a href="#?albumId=109" title="Default">Songs</a></li>
+		<li class="selected"><a href="#?albumId=110">Miscellaneous</a></li>
+		<li><a href="#?albumId=111" title="Default">Blarf</a></li>
+		<li><a href="#?albumId=112" title="Default">Yeah</a></li>
+	</ol>
+</div>
+
+<div id="main-pane" class="main-pane-normal">
+<img class="thumb" src="img/MediaServer-0.jpg" width="120" height="80" alt="img"/>
+<img class="thumb" src="img/MediaServer-1.jpg" width="120" height="80" alt="img"/>
+<img class="thumb" src="img/MediaServer-3.jpg" width="68" height="90" alt="img"/>
+<img class="thumb" src="img/MediaServer-4.jpg" width="43" height="90" alt="img"/>
+<img class="thumb" src="img/MediaServer-5.jpg" width="120" height="80" alt="img"/>
+<img class="thumb" src="img/MediaServer-6.jpg" width="120" height="90" alt="img"/>
+<img class="thumb" src="img/MediaServer-7.jpg" width="120" height="89" alt="img"/>
+<img class="thumb" src="img/MediaServer-8.jpg" width="120" height="80" alt="img"/>
+<img class="thumb" src="img/MediaServer-9.jpg" width="57" height="90" alt="img"/>
+<img class="thumb" src="img/MediaServer-10.jpg" width="120" height="86" alt="img"/>
+<img class="thumb" src="img/MediaServer-11.jpg" width="120" height="90" alt="img"/>
+<img class="thumb" src="img/MediaServer-12.jpg" width="120" height="90" alt="img"/>
+<img class="thumb" src="img/MediaServer-13.jpg" width="120" height="73" alt="img"/>
+<img class="thumb" src="img/MediaServer-14.jpg" width="120" height="90" alt="img"/>
+<img class="thumb" src="img/MediaServer-15.jpg" width="60" height="90" alt="img"/>
+<img class="thumb" src="img/MediaServer-16.jpg" width="120" height="78" alt="img"/>
+<img class="thumb" src="img/MediaServer-17.jpg" width="60" height="90" alt="img"/>
+<img class="thumb" src="img/MediaServer-18.jpg" width="68" height="90" alt="img"/>
+<img class="thumb" src="img/MediaServer-19.jpg" width="59" height="90" alt="img"/>
+<img class="thumb" src="img/MediaServer-20.jpg" width="120" height="80" alt="img"/>
+<!--img class="thumb" src="img/MediaServer-0.jpg" width="120" height="80"/>
+<img class="thumb" src="img/MediaServer-1.jpg" width="120" height="80" />
+<img class="thumb" src="img/MediaServer-3.jpg" width="68" height="90" />
+<img class="thumb" src="img/MediaServer-4.jpg" width="43" height="90" />
+<img class="thumb" src="img/MediaServer-5.jpg" width="120" height="80" />
+<img class="thumb" src="img/MediaServer-6.jpg" width="120" height="90" />
+<img class="thumb" src="img/MediaServer-7.jpg" width="120" height="89" />
+<img class="thumb" src="img/MediaServer-8.jpg" width="120" height="80" />
+<img class="thumb" src="img/MediaServer-9.jpg" width="57" height="90" />
+<img class="thumb" src="img/MediaServer-10.jpg" width="120" height="86" />
+<img class="thumb" src="img/MediaServer-11.jpg" width="120" height="90" />
+<img class="thumb" src="img/MediaServer-12.jpg" width="120" height="90" />
+<img class="thumb" src="img/MediaServer-13.jpg" width="120" height="73" />
+<img class="thumb" src="img/MediaServer-14.jpg" width="120" height="90" />
+<img class="thumb" src="img/MediaServer-15.jpg" width="60" height="90" />
+<img class="thumb" src="img/MediaServer-16.jpg" width="120" height="78" />
+<img class="thumb" src="img/MediaServer-17.jpg" width="60" height="90" />
+<img class="thumb" src="img/MediaServer-18.jpg" width="68" height="90" />
+<img class="thumb" src="img/MediaServer-19.jpg" width="59" height="90" />
+<img class="thumb" src="img/MediaServer-20.jpg" width="120" height="80" />
+<img class="thumb" src="img/MediaServer-0.jpg" width="120" height="80"/>
+<img class="thumb" src="img/MediaServer-1.jpg" width="120" height="80" />
+<img class="thumb" src="img/MediaServer-3.jpg" width="68" height="90" />
+<img class="thumb" src="img/MediaServer-4.jpg" width="43" height="90" />
+<img class="thumb" src="img/MediaServer-5.jpg" width="120" height="80" />
+<img class="thumb" src="img/MediaServer-6.jpg" width="120" height="90" />
+<img class="thumb" src="img/MediaServer-7.jpg" width="120" height="89" />
+<img class="thumb" src="img/MediaServer-8.jpg" width="120" height="80" />
+<img class="thumb" src="img/MediaServer-9.jpg" width="57" height="90" />
+<img class="thumb" src="img/MediaServer-10.jpg" width="120" height="86" />
+<img class="thumb" src="img/MediaServer-11.jpg" width="120" height="90" />
+<img class="thumb" src="img/MediaServer-12.jpg" width="120" height="90" />
+<img class="thumb" src="img/MediaServer-13.jpg" width="120" height="73" />
+<img class="thumb" src="img/MediaServer-14.jpg" width="120" height="90" />
+<img class="thumb" src="img/MediaServer-15.jpg" width="60" height="90" />
+<img class="thumb" src="img/MediaServer-16.jpg" width="120" height="78" />
+<img class="thumb" src="img/MediaServer-17.jpg" width="60" height="90" />
+<img class="thumb" src="img/MediaServer-18.jpg" width="68" height="90" />
+<img class="thumb" src="img/MediaServer-19.jpg" width="59" height="90" />
+<img class="thumb" src="img/MediaServer-20.jpg" width="120" height="80" />
+<img class="thumb" src="img/MediaServer-0.jpg" width="120" height="80"/>
+<img class="thumb" src="img/MediaServer-1.jpg" width="120" height="80" />
+<img class="thumb" src="img/MediaServer-3.jpg" width="68" height="90" />
+<img class="thumb" src="img/MediaServer-4.jpg" width="43" height="90" />
+<img class="thumb" src="img/MediaServer-5.jpg" width="120" height="80" />
+<img class="thumb" src="img/MediaServer-6.jpg" width="120" height="90" />
+<img class="thumb" src="img/MediaServer-7.jpg" width="120" height="89" />
+<img class="thumb" src="img/MediaServer-8.jpg" width="120" height="80" />
+<img class="thumb" src="img/MediaServer-9.jpg" width="57" height="90" />
+<img class="thumb" src="img/MediaServer-10.jpg" width="120" height="86" />
+<img class="thumb" src="img/MediaServer-11.jpg" width="120" height="90" />
+<img class="thumb" src="img/MediaServer-12.jpg" width="120" height="90" />
+<img class="thumb" src="img/MediaServer-13.jpg" width="120" height="73" />
+<img class="thumb" src="img/MediaServer-14.jpg" width="120" height="90" />
+<img class="thumb" src="img/MediaServer-15.jpg" width="60" height="90" />
+<img class="thumb" src="img/MediaServer-16.jpg" width="120" height="78" />
+<img class="thumb" src="img/MediaServer-17.jpg" width="60" height="90" />
+<img class="thumb" src="img/MediaServer-18.jpg" width="68" height="90" />
+<img class="thumb" src="img/MediaServer-19.jpg" width="59" height="90" />
+<img class="thumb" src="img/MediaServer-20.jpg" width="120" height="80" /-->
+</div>
+
+</body>
+</html>
