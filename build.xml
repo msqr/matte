@@ -811,6 +811,18 @@
 		</ant>
 	</target>
 	
+	<target name="svn-init">
+		<property name="app.archive.name" value="${app.name}-${svn.tag}"/>
+	</target>
+	
+	<target name="svn-clean" depends="svn-init">
+		<echo>Delete ${dir.build}/${app.archive.name}</echo>
+		<delete dir="${dir.build}/${app.archive.name}" failonerror="no"/>
+	</target>
+	
+    <target name="svn-full-release" description="Build all release archives (demo, src, bin) from SVN" 
+            depends="svn-demo-release,svn-src-release,svn-bin-release,svn-clean"/>
+	
 	<target name="svn-demo-release" description="Create the Live Demo from SVN sources"
 		depends="clean,init">
 		
