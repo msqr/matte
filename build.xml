@@ -89,8 +89,7 @@
 	<taskdef resource="svntask.properties" classpathref="path.svn"/>
 	<property name="svn.tag" value="1.0"/>
 	<property name="svn.path" value="/tags/${svn.tag}"/>
-	<property name="svn.url" 
-		value="https://malbum.svn.sourceforge.net/svnroot/malbum/matte${svn.path}"/>
+	<property name="svn.url" value="https://svn.code.sf.net/p/malbum/code/matte${svn.path}"/>
 	<property name="svn.username" value=""/>
 	<property name="svn.password" value=""/>
 	<property name="svn.revision" value="HEAD"/>
