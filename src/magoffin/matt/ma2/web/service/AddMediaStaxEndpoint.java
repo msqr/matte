@@ -32,14 +32,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.stream.events.XMLEvent;
-
 import magoffin.matt.ma2.SystemConstants;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.IOBiz;
@@ -48,7 +46,6 @@ import magoffin.matt.ma2.support.AddMediaCommand;
 import magoffin.matt.ma2.util.BizContextUtil;
 import magoffin.matt.util.Base64;
 import magoffin.matt.util.FileBasedTemporaryFile;
-
 import org.apache.log4j.Logger;
 import org.springframework.ws.server.endpoint.AbstractStaxStreamPayloadEndpoint;
 
@@ -161,12 +158,12 @@ public class AddMediaStaxEndpoint extends AbstractStaxStreamPayloadEndpoint {
 //		private final File xmlFile;
 		private final File mediaFile;
 		
-		private AddMediaCommand command = new AddMediaCommand();
+		private final AddMediaCommand command = new AddMediaCommand();
 		private XMLStreamWriter xmlWriter;
 		private OutputStream mediaFileOut;
 		private int totalMediaDataCharsIn = 0;
 		private int totalMediaDataBytesOut = 0;
-		private char[] base64Buffer = new char[BASE64_BUFFER_SIZE];
+		private final char[] base64Buffer = new char[BASE64_BUFFER_SIZE];
 		private int base64BufferPtr = 0;
 		
 		private final Logger log = Logger.getLogger(getClass());
@@ -245,6 +242,7 @@ public class AddMediaStaxEndpoint extends AbstractStaxStreamPayloadEndpoint {
 					}
 					command.setLocalTz(streamReader.getAttributeValue(null, "local-tz"));
 					command.setMediaTz(streamReader.getAttributeValue(null, "media-tz"));
+					xmlWriter.setDefaultNamespace(uri);
 				} else if ( SystemConstants.MATTE_XML_NAMESPACE_URI.equals(uri)
 						&& COLLECTION_IMPORT_ELEMENT_NAME.equals(localName)) {
 					copyElement();
@@ -352,11 +350,13 @@ public class AddMediaStaxEndpoint extends AbstractStaxStreamPayloadEndpoint {
 		
 		private void copyElement() throws XMLStreamException {
 			if  ( streamReader.isStartElement() ) {
-				xmlWriter.writeStartElement(
-						streamReader.getPrefix(), 
-						streamReader.getLocalName(), 
+				xmlWriter.writeStartElement(streamReader.getPrefix(), streamReader.getLocalName(),
 						streamReader.getNamespaceURI());
 				int i, len;
+				for ( i = 0, len = streamReader.getNamespaceCount(); i < len; i++ ) {
+					xmlWriter.writeNamespace(streamReader.getNamespacePrefix(i), 
+							streamReader.getNamespaceURI(i));
+				}
 				for ( i = 0, len = streamReader.getAttributeCount(); i < len; i++ ) {
 					xmlWriter.writeAttribute(streamReader.getAttributePrefix(i), 
 							streamReader.getAttributeNamespace(i),
