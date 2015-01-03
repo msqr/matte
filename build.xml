@@ -402,7 +402,7 @@
 		</copy>
 	</target>
 	
-	<target name="compile.path" depends="ivy-init">
+	<target name="compile.path" depends="lib-resolve">
 		<ivy:cachepath pathid="ivy.lib.path" conf="compile"/>
 		<path id="compile.path">
 			<!--pathelement location="${dir.compile.dest}"/-->
@@ -411,10 +411,11 @@
 		</path>
 	</target>
 
-	<target name="compile" depends="prepare,compile.path" description="Compile source files">
+	<target name="compile" depends="compile.path" description="Compile source files">
 		<mkdir dir="${dir.compile.dest}"/>
 		<javac srcdir="${dir.source}"
 			destdir="${dir.compile.dest}"
+			includeantruntime="false"
 			debug="${compile.debug}" 
 			deprecation="${compile.deprecation}" 
 			optimize="${compile.optimize}" 

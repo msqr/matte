@@ -6,13 +6,14 @@
 	<property name="ivy.local.default.root"              value="${ivy.default.ivy.user.dir}/local" override="false"/>
 	<property name="ivy.local.default.ivy.pattern"       value="[organisation]/[module]/[revision]/[type]s/[artifact].[ext]" override="false"/>
 	<property name="ivy.local.default.artifact.pattern"  value="[organisation]/[module]/[revision]/[type]s/[artifact].[ext]" override="false"/>
-	<property name="spring-repo.url" value="http://repository.springsource.com/ivy/bundles"/>
-	<property name="spring-repo.pattern" value="[organisation]/[module]/[revision]/[artifact]-[revision].[ext]"/>
 	<settings defaultResolver="default"/>
 	<resolvers default="default">
 		<ibiblio name="public" m2compatible="true"/>
 		<ibiblio name="jboss"
-			root="http://repository.jboss.org/nexus/content/groups/public-jboss"
+			root="http://repository.jboss.org/nexus/content/groups/public"
+			m2compatible="true"/>
+		<ibiblio name="java.net"
+			root="http://download.java.net/maven/2/"
 			m2compatible="true"/>
 		
 		<filesystem name="shared">
@@ -28,10 +29,11 @@
 			<resolver ref="shared"/>
 			<resolver ref="public"/>
 		</chain>
-		<chain name="default" returnFirst="true" checkmodified="true">
+		<chain name="default" returnFirst="true">
 			<resolver ref="local"/>
-			<resolver ref="main"/>
+			<resolver ref="java.net"/>
 			<resolver ref="jboss"/>
+			<resolver ref="main"/>
 		</chain>
 	</resolvers>
 </ivysettings>
