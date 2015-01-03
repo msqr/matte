@@ -1,0 +1,6 @@
+/META-INF/
+/*.properties
+/*.xml
+/mime.types
+/*.jar
+/hbm
