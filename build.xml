@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright (c) 2002-2006 Matt Magoffin
+  Copyright (c) 2002 Matt Magoffin
   
   This program is free software; you can redistribute it and/or 
   modify it under the terms of the GNU General Public License as 
@@ -19,7 +19,7 @@
 
   $Id: build.xml,v 1.105 2007/08/20 08:59:24 matt Exp $   
 -->
-<project name="Matte (Media Album 2)" default="help">
+<project name="Matte" default="help" xmlns:ivy="antlib:org.apache.ivy.ant">
 
 	<property file="build.properties" />
 
@@ -136,11 +136,6 @@
 		</fileset>
 	</path>
 		
-	<path id="compile.path">
-		<pathelement location="${dir.compile.dest}"/>
-		<path refid="lib.path"/>
-	</path>
-	
 	<path id="compile.applet.path">
 		<pathelement location="${dir.compile.dest.applet}"/>
 		<fileset dir="${dir.lib}">
@@ -153,16 +148,27 @@
 		<pathelement location="${dir.compile.dest.test}"/>
 		<path refid="lib.path"/>
 	</path>
-
-	<path id="schemaexport.path">
-		<path refid="compile.path"/>
-	</path>
 	
 	<path id="emma.lib.path" >
 		<pathelement location="${dir.lib}/emma/emma.jar" />
 		<pathelement location="${dir.lib}/emma/emma_ant.jar" />
 	</path>
 
+	<!-- Ivy integration -->
+
+	<target name="ivy-init">
+		<taskdef resource="org/apache/ivy/ant/antlib.xml"
+			uri="antlib:org.apache.ivy.ant"
+			classpath="${dir.lib}/ivy-2.4.0.jar"/>
+		<ivy:settings file="${dir.lib}/ivysettings.xml"/>
+	</target>
+	
+	<target name="lib-resolve" depends="ivy-init">
+		<echo message="[====&gt; Resolving dependencies (compile) &lt;====]"/>
+		<ivy:resolve file="${basedir}/ivy.xml" type="jar,bundle" conf="compile"/>
+		<!--ivy:retrieve pattern="${dir.lib}/[artifact].[ext]"/-->
+	</target>
+	
 	<target name="init">
 		<mkdir dir="${dir.build}" />
 		<mkdir dir="${dir.dist}" />
@@ -254,6 +260,10 @@
 	<target name="export.database.schema" depends="compile" 
 		description="Generate RDBMS creation scripts via Hibernate">
 
+		<path id="schemaexport.path">
+			<path refid="compile.path"/>
+		</path>
+
 		<taskdef name="schemaexport"
 			classname="org.hibernate.tool.hbm2ddl.SchemaExportTask"
 			classpathref="schemaexport.path"/>
@@ -279,7 +289,7 @@
 
 	</target>
 	
-	<target name="compile.domain" description="Compile the JAXB classes">
+	<target name="compile.domain" depends="compile.path" description="Compile the JAXB classes">
 		<delete dir="${dir.compile.dest.domain}" failonerror="no"/>
 		<mkdir dir="${dir.compile.dest.domain}"/>
 		<javac srcdir="${dir.generated}"
@@ -332,7 +342,7 @@
 
 	<!-- Prepare WAR structure -->
 	<target name="prepare" description="Prepare WAR build structure"
-		depends="prepare-env">
+		depends="prepare-env,ivy-init">
 		
 		<!-- copy non-environment and non-brand source properties -->
 		<mkdir dir="${dir.compile.dest}"/>
@@ -371,6 +381,10 @@
 				<include name="*.wsdl"/>
 			</fileset>
 		</copy>
+		
+		<!-- Copy Ivy JAR files -->
+		<ivy:retrieve pattern="${dir.app.dest}/WEB-INF/lib/[artifact]-[revision].[ext]" 
+			type="jar,bundle" conf="runtime" />
 	</target>
 	
 	<!-- Run this task to setup local development files -->
@@ -387,8 +401,17 @@
 			</fileset>
 		</copy>
 	</target>
+	
+	<target name="compile.path" depends="ivy-init">
+		<ivy:cachepath pathid="ivy.lib.path" conf="compile"/>
+		<path id="compile.path">
+			<!--pathelement location="${dir.compile.dest}"/-->
+			<path refid="ivy.lib.path"/>
+			<path refid="lib.path"/>
+		</path>
+	</target>
 
-	<target name="compile" depends="prepare" description="Compile source files">
+	<target name="compile" depends="prepare,compile.path" description="Compile source files">
 		<mkdir dir="${dir.compile.dest}"/>
 		<javac srcdir="${dir.source}"
 			destdir="${dir.compile.dest}"
@@ -1185,7 +1208,7 @@
 		</java>
 	</target>
 	
-	<target name="javadoc" depends="init"
+	<target name="javadoc" depends="init,compile.path"
 		description="Generate JavaDoc API">
 		<mkdir dir="${dir.javadoc}"/>
 		
