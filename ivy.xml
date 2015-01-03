@@ -22,13 +22,19 @@
 		<dependency org="asm" name="asm" rev="2.2.3" conf="compile,runtime"/>
 		<dependency org="cglib" name="cglib" rev="2.2.2" conf="compile,runtime"/>
 		<dependency org="org.bouncycastle" name="bcprov-jdk14" rev="1.43" conf="runtime"/>
+		<dependency org="rhino" name="js" rev="1.7R2" conf="runtime"/>
 
 		<!-- Apache Commons -->
 		<dependency org="commons-beanutils" name="commons-beanutils" rev="1.8.3" conf="compile,runtime"/>
-		<dependency org="commons-codec" name="commons-codec" rev="1.6" conf="compile,runtime"/>
+		<dependency org="commons-codec" name="commons-codec" rev="1.9" conf="compile,runtime">
+			<artifact name="commons-codec"/>
+		</dependency>
 		<dependency org="commons-collections" name="commons-collections" rev="3.2.1" conf="compile,runtime"/>
 		<dependency org="commons-el" name="commons-el" rev="1.0" conf="runtime"/>
 		<dependency org="commons-fileupload" name="commons-fileupload" rev="1.2.2" conf="runtime,test"/>
+		<dependency org="commons-httpclient" name="commons-httpclient" rev="3.1" conf="compile">
+			<artifact name="commons-httpclient"/>
+		</dependency>
 		<dependency org="commons-io" name="commons-io" rev="1.4" conf="runtime,test"/>
 		<dependency org="commons-lang" name="commons-lang" rev="2.2" conf="runtime"/>
 		<dependency org="commons-pool" name="commons-pool" rev="1.2" conf="runtime"/>
@@ -36,19 +42,29 @@
 		<!-- JAXB, XML -->
 		<dependency org="xerces" name="xercesImpl" rev="2.11.0" conf="compile,runtime"/>
 		<dependency org="dom4j" name="dom4j" rev="1.6.1" conf="runtime"/>
+		<dependency org="net.sf.saxon" name="Saxon-HE" rev="9.6.0-3" conf="compile,runtime">
+    		<artifact name="Saxon-HE" type="jar" />
+		</dependency>
+		<dependency org="org.codehaus.woodstox" name="wstx-asl" rev="3.2.9" conf="compile,runtime"/>
+		<dependency org="javax.xml.bind" name="jaxb-api" rev="1.0" conf="compile,runtime"/>
 		<dependency org="com.sun.xml.bind" name="jaxb-impl" rev="1.0.6" conf="compile,runtime"/>
 		<dependency org="org.jvnet.jaxbcommons" name="jaxbcommons-core" rev="1.0.4.7" conf="compile,runtime"/>
-		<dependency org="org.jvnet.hyperjaxb2" name="hyperjaxb2-core" rev="0.6.5" conf="compile,runtime"/>
-		<dependency org="org.codehaus.woodstox" name="wstx-asl" rev="3.2.9" conf="compile,runtime"/>
-		<dependency org="net.sf.saxon" name="Saxon-HE" rev="9.6.0-3" conf="compile,runtime"/>
+		<dependency org="org.jvnet.hyperjaxb2" name="hyperjaxb2-core" rev="0.6.5" conf="compile,runtime">
+			<exclude org="net.sf.saxon"/>
+		</dependency>
 		<dependency org="org.apache.ws.commons.schema" name="XmlSchema" rev="1.4.7" conf="runtime"/>
 		
-		<!-- Graphics -->
+		<!-- Media support -->
 		<dependency org="batik" name="batik-parser" rev="1.6-1" conf="compile,runtime"/>
 		<dependency org="batik" name="batik-rasterizer" rev="1.6-1" conf="compile,runtime"/>
 		<dependency org="batik" name="batik-svg-dom" rev="1.6-1" conf="compile,runtime"/>
 		<dependency org="batik" name="batik-xml" rev="1.6-1" conf="compile,runtime"/>
-		<dependency org="org.im4java" name="im4java" rev="1.2.0" conf="compile,runtime"/>
+		<dependency org="org.im4java" name="im4java" rev="1.2.0" conf="compile,runtime">
+			<artifact name="im4java"/>
+		</dependency>
+		<dependency org="org.opensaml" name="opensaml" rev="1.1" conf="runtime">
+			<artifact name="opensaml"/>
+		</dependency>
 		
 		<!-- Lucene -->
 		<dependency org="org.apache.lucene" name="lucene-core" rev="2.2.0" conf="compile,runtime">
@@ -66,34 +82,50 @@
 		<dependency org="postgresql" name="postgresql" rev="9.1-901-1.jdbc4" conf="test,jdbc"/>
 		
 		<!-- Services -->
-		<dependency org="opensymphony" name="quartz" rev="1.6.3" conf="runtime"/>
+		<dependency org="opensymphony" name="quartz" rev="1.6.3" conf="compile,runtime">
+			<artifact name="quartz"/>
+		</dependency>
 		
 		<!-- Spring -->
-		<dependency org="org.springframework" name="spring-aop" rev="2.5.6.SEC01" conf="compile,runtime"/>
-		<dependency org="org.springframework" name="spring-context" rev="2.5.6.SEC01" conf="compile,runtime"/>
-		<dependency org="org.springframework" name="spring-core" rev="2.5.6.SEC01" conf="compile,runtime"/>
-		<dependency org="org.springframework" name="spring-orm" rev="2.5.6.SEC01" conf="compile,runtime"/>
-		<dependency org="org.springframework" name="spring-webmvc" rev="2.5.6.SEC01" conf="compile,runtime"/>
+		<dependency org="org.springframework" name="spring-aop" rev="2.5.6.SEC03" conf="compile,runtime"/>
+		<dependency org="org.springframework" name="spring-context" rev="2.5.6.SEC03" conf="compile,runtime"/>
+		<dependency org="org.springframework" name="spring-context-support" rev="2.5.6.SEC03" conf="compile,runtime"/>
+		<dependency org="org.springframework" name="spring-core" rev="2.5.6.SEC03" conf="compile,runtime"/>
+		<dependency org="org.springframework" name="spring-orm" rev="2.5.6.SEC03" conf="compile,runtime"/>
+		<dependency org="org.springframework" name="spring-webmvc" rev="2.5.6.SEC03" conf="compile,runtime"/>
 		
 		<!-- Web runtime -->
 		<dependency org="com.sun.mail" name="javax.mail" rev="1.4.4" conf="compile"/>
 		<dependency org="javax.servlet" name="jstl" rev="1.2" conf="compile,runtime"/>
-		<dependency org="javax.servlet.jsp" name="jsp-api" rev="2.1" conf="compile"/>
-		<dependency org="javax.servlet" name="servlet-api" rev="2.5" conf="compile"/>
+		<dependency org="javax.servlet.jsp" name="jsp-api" rev="2.1" conf="compile">
+			<artifact name="jsp-api"/>
+		</dependency>
+		<dependency org="javax.servlet" name="servlet-api" rev="2.5" conf="compile">
+			<artifact name="servlet-api"/>
+		</dependency>
 
 		<!-- Web Service support -->
-		<dependency org="org.apache.ws.commons.axiom" name="axiom-impl" rev="1.2.14" conf="runtime"/>
-		<dependency org="org.springframework.ws" name="spring-ws-core" rev="1.5.9" conf="compile,runtime"/>
-		<dependency org="org.springframework.ws" name="spring-ws-security" rev="1.5.9" conf="compile,runtime"/>
+		<dependency org="org.apache.ws.commons.axiom" name="axiom-impl" rev="1.2.9" conf="compile,runtime">
+			<artifact name="axiom-impl"/>
+		</dependency>
+		<dependency org="org.springframework.ws" name="spring-ws-core" rev="1.5.10" conf="compile,runtime"/>
+		<dependency org="org.springframework.ws" name="spring-ws-core-tiger" rev="1.5.10" conf="compile,runtime">
+			<artifact name="spring-ws-core-tiger"/>
+		</dependency>
+		<dependency org="org.springframework.ws" name="spring-ws-security" rev="1.5.10" conf="compile,runtime">
+			<artifact name="spring-ws-security"/>
+		</dependency>
 		<dependency org="org.apache.santuario" name="xmlsec" rev="2.0.2" conf="runtime"/>
 		<dependency org="org.apache.ws.security" name="wss4j" rev="1.5.11" conf="runtime"/>
-		<dependency org="com.sun.xml.wss" name="xws-security_jaxrpc" rev="2.0-FCS" conf="runtime"/>
+		<dependency org="com.sun.xml.wss" name="xws-security_jaxrpc" rev="2.0-FCS" conf="runtime">
+			<exclude module="jaxb-api"/>
+		</dependency>
 		
 		<!-- Unit test support -->
-		<dependency org="org.testng" name="testng" rev="6.5.1" conf="test">
-			<artifact name="testng" type="jar" />
+		<dependency org="junit" name="junit" rev="4.4" conf="test"/>
+		<dependency org="org.springframework" name="spring-test" rev="2.5.6.SEC03" conf="test">
+			<artifact name="spring-test" />
 		</dependency>
-		<dependency org="org.springframework" name="spring-test" rev="2.5.6.SEC01" conf="test"/>
 		<dependency org="org.subethamail" name="subethasmtp" rev="3.1.6" conf="test">
     		<artifact name="subethasmtp" type="jar" />
 		</dependency>
@@ -102,7 +134,15 @@
 		</dependency>
 		
 		<!-- Global excludes -->
-		<exclude module="xmldsig"/>
+		<exclude org="org.apache.geronimo.specs"/>
+		<exclude module="avalon-framework"/>
+		<exclude module="jaxen"/>
 		<exclude module="jaxp-api"/>
+		<exclude module="jaxrpc-api"/>
+		<exclude module="jaxws-api"/>
+		<exclude module="jsr173_api"/>
+		<exclude module="woodstox-core-asl"/>
+		<exclude module="xalan"/>
+		<exclude module="xmldsig"/>
 	</dependencies>
 </ivy-module>

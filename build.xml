@@ -125,14 +125,8 @@
 	<path id="lib.path">
 		<fileset dir="${dir.web.lib}" includes="*.jar" excludes="xerces*.jar"/>
 		<fileset dir="${dir.lib}">
-			<include name="emma/*.jar"/>
-			<include name="jdbc/*.jar"/>
-			<include name="j2ee/*.jar"/>
 			<include name="jmagick/jmagick-6.2.6.jar"/>
 			<include name="jmf/*.jar"/>
-			<include name="junit/*.jar"/>
-			<include name="spring/*.jar"/>
-			<exclude name="**/*-src.jar"/>
 		</fileset>
 	</path>
 		
@@ -358,6 +352,9 @@
 				<include name="**"/>
 				<exclude name="version.jsp"/>
 				<exclude name="WEB-INF/classes/**"/>
+				
+				<!-- TODO: remove -->
+				<exclude name="WEB-INF/lib/**"/>
 			</fileset>
 		</copy>
 		
@@ -403,7 +400,7 @@
 	</target>
 	
 	<target name="compile.path" depends="lib-resolve">
-		<ivy:cachepath pathid="ivy.lib.path" conf="compile"/>
+		<ivy:cachepath pathid="ivy.lib.path" type="jar,bundle" conf="compile"/>
 		<path id="compile.path">
 			<!--pathelement location="${dir.compile.dest}"/-->
 			<path refid="ivy.lib.path"/>
