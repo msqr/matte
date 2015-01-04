@@ -96,8 +96,6 @@ extends AbstractTransactionalJUnit4SpringContextTests {
 					+TestConstants.TABLE_THEMES);
 		}
 
-		executeSqlScript("file:defs/sql/derby/create-system.sql", true);
-
 		// and force application to be "configured" with unit test settings
 		deleteFromTables(new String[] {TestConstants.TABLE_SETTINGS});
 		this.simpleJdbcTemplate.update("INSERT INTO " +TestConstants.TABLE_SETTINGS
