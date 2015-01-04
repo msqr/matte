@@ -30,13 +30,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
 import magoffin.matt.ma2.TestConstants;
 import magoffin.matt.ma2.biz.BizContext;
@@ -57,7 +56,6 @@ import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.support.AddMediaCommand;
 import magoffin.matt.ma2.support.BasicAlbumSearchCriteria;
 import magoffin.matt.util.TemporaryFile;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -270,6 +268,12 @@ public class AbstractSearchBizTest extends
 		newUser.setName("Test User");
 		newUser.setPassword("test");
 		newUser.setLogin(login);
+		magoffin.matt.ma2.domain.TimeZone tz = domainObjectFactory.newTimeZoneInstance();
+		TimeZone defaultTz = TimeZone.getDefault();
+		tz.setCode(defaultTz.getID());
+		tz.setName(defaultTz.getDisplayName());
+		tz.setOffset(defaultTz.getRawOffset());
+		newUser.setTz(tz);
 		return newUser;
 	}
 	
