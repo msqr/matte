@@ -29,12 +29,10 @@ package magoffin.matt.ma2;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.IOBiz;
 import magoffin.matt.ma2.biz.WorkBiz.WorkInfo;
@@ -46,9 +44,7 @@ import magoffin.matt.ma2.domain.Metadata;
 import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.support.AddMediaCommand;
 import magoffin.matt.util.TemporaryFile;
-
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
@@ -58,8 +54,6 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-
-import com.oracle.jrockit.jfr.ValueDefinition;
 
 /**
  * Extension of Spring's AbstractTransactionalDataSourceSpringContextTests 
