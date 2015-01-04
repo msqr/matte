@@ -1,9 +1,0 @@
-build
-dist
-build.properties
-local
-.DS_Store
-packaging-build.xml
-.packaging
-version.properties
-coverage
