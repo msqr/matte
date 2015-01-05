@@ -26,15 +26,10 @@
 
 package magoffin.matt.ma2.dao.support;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import java.util.Calendar;
 import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.test.context.ContextConfiguration;
-
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
 import magoffin.matt.ma2.TestConstants;
 import magoffin.matt.ma2.biz.DomainObjectFactory;
@@ -45,9 +40,11 @@ import magoffin.matt.ma2.domain.Album;
 import magoffin.matt.ma2.domain.AlbumSearchResult;
 import magoffin.matt.ma2.domain.SearchResults;
 import magoffin.matt.ma2.domain.Theme;
-import magoffin.matt.ma2.domain.TimeZone;
 import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.support.BrowseAlbumsCommand;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Test case for the {@link AlbumsByDateBrowseModePlugin} class.
@@ -157,8 +154,12 @@ extends AbstractSpringEnabledTransactionalTest {
 		user.setLogin("foobar");
 		user.setCreationDate(Calendar.getInstance());
 		
-		List<TimeZone> tzList = timeZoneDao.findAllTimeZones();
-		user.setTz(tzList.get(0));
+		magoffin.matt.ma2.domain.TimeZone tz = domainObjectFactory.newTimeZoneInstance();
+		java.util.TimeZone defaultTz = java.util.TimeZone.getDefault();
+		tz.setCode(defaultTz.getID());
+		tz.setName(defaultTz.getDisplayName());
+		tz.setOffset(defaultTz.getRawOffset());
+		user.setTz(tz);
 		
 		return userDao.store(user);
 	}

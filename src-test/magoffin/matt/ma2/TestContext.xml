@@ -17,12 +17,11 @@
 	</bean>
 	
 	<bean id="myDataSource" name="dataSource" 
-		class="org.springframework.jdbc.datasource.SingleConnectionDataSource">
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName"><value>${jdbc.driver}</value></property>
 		<property name="url"><value>${jdbc.url}</value></property>
 		<property name="username"><value>${jdbc.user}</value></property>
 		<property name="password"><value>${jdbc.pass}</value></property>
-		<property name="suppressClose"><value>true</value></property>
 	</bean>
 	
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">

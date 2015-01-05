@@ -26,15 +26,10 @@
 
 package magoffin.matt.ma2.dao.support;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import java.util.Calendar;
 import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.test.context.ContextConfiguration;
-
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
 import magoffin.matt.ma2.TestConstants;
 import magoffin.matt.ma2.biz.DomainObjectFactory;
@@ -57,6 +52,9 @@ import magoffin.matt.ma2.domain.Theme;
 import magoffin.matt.ma2.domain.TimeZone;
 import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.support.BrowseAlbumsCommand;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Test case for the {@link RatingAverageBrowseModePlugin} class.
@@ -147,7 +145,8 @@ extends AbstractSpringEnabledTransactionalTest {
 		albumDao.store(album2);
 		
 		// execute Hibernate search to flush to DB
-		albumDao.findAlbumsForUser(savedUserId);
+		List<Album> albums = albumDao.findAlbumsForUser(savedUserId);
+		logger.debug("Got albums: " + albums);
 		
 		// test getting all
 		BrowseAlbumsCommand command = new BrowseAlbumsCommand();
