@@ -26,14 +26,14 @@
 
 package magoffin.matt.ma2.video;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
-
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
 import magoffin.matt.ma2.MediaHandler;
 import magoffin.matt.ma2.MediaQuality;
@@ -42,11 +42,10 @@ import magoffin.matt.ma2.MediaSize;
 import magoffin.matt.ma2.domain.MediaItem;
 import magoffin.matt.ma2.support.BasicMediaRequest;
 import magoffin.matt.ma2.support.BasicMediaResponse;
-import magoffin.matt.ma2.video.VideoConstants;
-
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.FileCopyUtils;
 
@@ -57,6 +56,7 @@ import org.springframework.util.FileCopyUtils;
  * @version $Revision$ $Date$
  */
 @ContextConfiguration
+@IfProfileValue(name = "jmf", value = "true")
 public class GenericVideoMediaHandlerTest extends
 		AbstractSpringEnabledTransactionalTest {
 

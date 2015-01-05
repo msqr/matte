@@ -26,8 +26,9 @@
 
 package magoffin.matt.ma2.image.im4java;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
@@ -39,15 +40,6 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.junit.Test;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.test.annotation.IfProfileValue;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.util.FileCopyUtils;
-
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
 import magoffin.matt.ma2.MediaEffect;
 import magoffin.matt.ma2.MediaQuality;
@@ -56,11 +48,17 @@ import magoffin.matt.ma2.MediaSize;
 import magoffin.matt.ma2.domain.MediaItem;
 import magoffin.matt.ma2.domain.Metadata;
 import magoffin.matt.ma2.image.ImageConstants;
-import magoffin.matt.ma2.image.im4java.JpegMediaHandler;
 import magoffin.matt.ma2.support.BasicMediaRequest;
 import magoffin.matt.ma2.support.BasicMediaResponse;
 import magoffin.matt.ma2.support.Geometry;
 import magoffin.matt.ma2.support.MutableGeometry;
+import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.test.annotation.IfProfileValue;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.util.FileCopyUtils;
 
 /**
  * Test case for the {@link magoffin.matt.ma2.image.im4java.JpegMediaHandler}
@@ -107,7 +105,6 @@ public class JpegMediaHandlerTest extends AbstractSpringEnabledTransactionalTest
 	 * @throws IOException if an error occurs
 	 */
 	@Test
-	@SuppressWarnings("null")
 	public void testAllSizesAndQualities() throws IOException {
 		Enumeration<URL> imageDirs = getClass().getClassLoader().getResources("magoffin/matt/ma2/image/");
 		File[] images = null;
@@ -115,7 +112,7 @@ public class JpegMediaHandlerTest extends AbstractSpringEnabledTransactionalTest
 			URL imageDir = imageDirs.nextElement();
 			UrlResource r = new UrlResource(imageDir);
 			images = r.getFile().listFiles(new FilenameFilter() {
-				private Set<String> types = new HashSet<String>(Arrays.asList("jpg"));
+				private final Set<String> types = new HashSet<String>(Arrays.asList("jpg"));
 				public boolean accept(File dir, String name) {
 					int idx = name.lastIndexOf('.');
 					return idx > 0 && idx < (name.length()-1)

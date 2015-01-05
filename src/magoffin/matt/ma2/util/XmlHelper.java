@@ -33,7 +33,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.Map;
-
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -58,12 +57,10 @@ import javax.xml.validation.Validator;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-
 import magoffin.matt.ma2.domain.ObjectFactory;
 import net.sf.ehcache.CacheException;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
-
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
@@ -76,32 +73,32 @@ import org.xml.sax.SAXException;
  * Utility class for working with XML data.
  *
  * <dl class="class-properties">
- *   <dt>documentBuilderFactory</dt>
- *   <dd>The JAXP DocumentBuilderFactory to use for creating Document objects.</dd>
+ * <dt>documentBuilderFactory</dt>
+ * <dd>The JAXP DocumentBuilderFactory to use for creating Document objects.</dd>
  *
- *   <dt>jaxbContext</dt>
- *   <dd>The JAXBContext to use for MA2 JAXB domain operations.</dd>
+ * <dt>jaxbContext</dt>
+ * <dd>The JAXBContext to use for MA2 JAXB domain operations.</dd>
  *
- *   <dt>marshallerProperties</dt>
- *   <dd>A Map of properties to set on the JAXB Marshaller. This is useful
- *   for passing such properties as <code>com.sun.xml.bind.namespacePrefixMapper</code>
- *   property.</dd>
+ * <dt>marshallerProperties</dt>
+ * <dd>A Map of properties to set on the JAXB Marshaller. This is useful for
+ * passing such properties as
+ * <code>com.sun.xml.bind.namespacePrefixMapper</code> property.</dd>
  *
- *   <dt>objectFactory</dt>
- *   <dd>The JAXB ObjectFactory to use for MA2 JAXB domain objects.</dd>
+ * <dt>objectFactory</dt>
+ * <dd>The JAXB ObjectFactory to use for MA2 JAXB domain objects.</dd>
  *
- *   <dt>starObjectFactory</dt>
- *   <dd>The JAXB ObjectFactory to use for MA2 JAXB domain objects.</dd>
+ * <dt>starObjectFactory</dt>
+ * <dd>The JAXB ObjectFactory to use for MA2 JAXB domain objects.</dd>
  *
- *   <dt>transformerFactory</dt>
- *   <dd>The JAXP TransformerFactory to use for creating Transformer objects.</dd>
+ * <dt>transformerFactory</dt>
+ * <dd>The JAXP TransformerFactory to use for creating Transformer objects.</dd>
  *
- *   <dt>xpathFactory</dt>
- *   <dd>The JAXP XPathFactory to use for evaluating XPath queries.</dd>
+ * <dt>xpathFactory</dt>
+ * <dd>The JAXP XPathFactory to use for evaluating XPath queries.</dd>
  * </dl>
  *
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.1
  */
 public class XmlHelper {
 
@@ -119,6 +116,9 @@ public class XmlHelper {
 
 	/** A Map of properties to use with the JAXB Marshaller. */
 	private Map<String, Object> marshallerProperties = null;
+
+	/** A Map of properties to use with the XSLT transformer. */
+	private Map<String, String> transformerOutputProperties = null;
 
 	/** The MA2 package JAXB ObjectFactory. */
 	private ObjectFactory objectFactory = null;
@@ -319,7 +319,11 @@ public class XmlHelper {
 				}
 			}
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+			if ( transformerOutputProperties != null ) {
+				for ( Map.Entry<String, String> me : transformerOutputProperties.entrySet() ) {
+					transformer.setOutputProperty(me.getKey(), me.getValue());
+				}
+			}
 			if ( transformer.getURIResolver() == null
 					&& transformerFactory.getURIResolver() != null ) {
 				// See http://issues.apache.org/jira/browse/XALANJ-1131
@@ -472,66 +476,39 @@ public class XmlHelper {
 		}
 	}
 	
-	/**
-	 * @return the documentBuilderFactory
-	 */
 	public DocumentBuilderFactory getDocumentBuilderFactory() {
 		return documentBuilderFactory;
 	}
 
-	/**
-	 * @param documentBuilderFactory the documentBuilderFactory to set
-	 */
 	public void setDocumentBuilderFactory(
 			DocumentBuilderFactory documentBuilderFactory) {
 		this.documentBuilderFactory = documentBuilderFactory;
 	}
 
-	/**
-	 * @return the jaxbContext
-	 */
 	public JAXBContext getJaxbContext() {
 		return jaxbContext;
 	}
 
-	/**
-	 * @param jaxbContext the jaxbContext to set
-	 */
 	public void setJaxbContext(JAXBContext jaxbContext) {
 		this.jaxbContext = jaxbContext;
 	}
 
-	/**
-	 * @return the marshallerProperties
-	 */
 	public Map<String, Object> getMarshallerProperties() {
 		return marshallerProperties;
 	}
 
-	/**
-	 * @param marshallerProperties the marshallerProperties to set
-	 */
 	public void setMarshallerProperties(Map<String, Object> marshallerProperties) {
 		this.marshallerProperties = marshallerProperties;
 	}
 
-	/**
-	 * @return the objectFactory
-	 */
 	public ObjectFactory getObjectFactory() {
 		return objectFactory;
 	}
 
-	/**
-	 * @param objectFactory the objectFactory to set
-	 */
 	public void setObjectFactory(ObjectFactory objectFactory) {
 		this.objectFactory = objectFactory;
 	}
 
-	/**
-	 * @return the transformerFactory
-	 */
 	public TransformerFactory getTransformerFactory() {
 		return transformerFactory;
 	}
@@ -543,46 +520,36 @@ public class XmlHelper {
 		this.transformerFactory = transformerFactory;
 	}
 
-	/**
-	 * @return the xpathFactory
-	 */
 	public XPathFactory getXpathFactory() {
 		return xpathFactory;
 	}
 
-	/**
-	 * @param xpathFactory the xpathFactory to set
-	 */
 	public void setXpathFactory(XPathFactory xpathFactory) {
 		this.xpathFactory = xpathFactory;
 	}
 	
-	/**
-	 * @return the xpathNamespaceContext
-	 */
 	public NamespaceContext getXpathNamespaceContext() {
 		return xpathNamespaceContext;
 	}
 	
-	/**
-	 * @param xpathNamespaceContext the xpathNamespaceContext to set
-	 */
 	public void setXpathNamespaceContext(NamespaceContext xpathNamespaceContext) {
 		this.xpathNamespaceContext = xpathNamespaceContext;
 	}
 	
-	/**
-	 * @return the schemaCache
-	 */
 	public Ehcache getSchemaCache() {
 		return schemaCache;
 	}
 	
-	/**
-	 * @param schemaCache the schemaCache to set
-	 */
 	public void setSchemaCache(Ehcache schemaCache) {
 		this.schemaCache = schemaCache;
+	}
+
+	public Map<String, String> getTransformerOutputProperties() {
+		return transformerOutputProperties;
+	}
+
+	public void setTransformerOutputProperties(Map<String, String> transformerOutputProperties) {
+		this.transformerOutputProperties = transformerOutputProperties;
 	}
 
 }

@@ -927,7 +927,7 @@ public class MediaBizImpl implements MediaBiz {
 				if ( context.getActingUser().getUserId().equals(owner.getUserId()) ) {
 					
 					// name
-					if ( name != null || itemIds.length == 1 ) {
+					if ( name != null && itemIds.length == 1 ) {
 						mediaItem.setName(name);
 					}
 					
