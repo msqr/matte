@@ -13,8 +13,16 @@
 		<override module="xml-apis" rev="1.4.01"/>
 		
 		<!-- Logging -->
-		<dependency org="log4j" name="log4j" rev="1.2.16" conf="compile,runtime"/>
-		<dependency org="commons-logging" name="commons-logging" rev="1.1.1" conf="compile,runtime"/>
+		<dependency org="log4j" name="log4j" rev="1.2.17" conf="compile,runtime"/>
+		<dependency org="org.slf4j" name="slf4j-api" rev="1.7.10" conf="compile,runtime">
+    		<artifact name="slf4j-api" type="jar" />
+		</dependency>
+		<dependency org="org.slf4j" name="slf4j-log4j12" rev="1.7.10" conf="compile,runtime">
+		    <artifact name="slf4j-log4j12" type="jar" />
+		</dependency>
+		<dependency org="org.slf4j" name="jcl-over-slf4j" rev="1.7.10" conf="compile,runtime">
+    		<artifact name="jcl-over-slf4j" type="jar" />
+		</dependency>
 		
 		<!-- Utilities -->
 		<dependency org="net.sf.ehcache" name="ehcache" rev="1.6.2" conf="compile,runtime">
@@ -56,6 +64,7 @@
 		<dependency org="org.jvnet.jaxbcommons" name="jaxbcommons-core" rev="1.0.4.7" conf="compile,runtime"/>
 		<dependency org="org.jvnet.hyperjaxb2" name="hyperjaxb2-core" rev="0.6.5" conf="compile,runtime">
 			<exclude org="net.sf.saxon"/>
+			<exclude org="org.hibernate"/>
 		</dependency>
 		<dependency org="org.apache.ws.commons.schema" name="XmlSchema" rev="1.4.7" conf="compile,runtime"/>
 		
@@ -178,6 +187,7 @@
 		</dependency>
 		
 		<!-- Global excludes -->
+		<exclude org="commons-logging"/>
 		<exclude org="org.apache.geronimo.specs"/>
 		<exclude module="avalon-framework"/>
 		<exclude module="jaxen"/>
@@ -185,7 +195,6 @@
 		<exclude module="jaxrpc-api"/>
 		<exclude module="jaxws-api"/>
 		<exclude module="jsr173_api"/>
-		<exclude module="slf4j-api"/>
 		<exclude module="spring"/>
 		<exclude module="woodstox-core-asl"/>
 		<exclude module="xalan"/>
