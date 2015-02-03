@@ -24,12 +24,14 @@
 
 	<mvc:annotation-driven>
 		<mvc:message-converters register-defaults="true">
-			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-				<property name="prefixJson" value="false" />
-				<property name="supportedMediaTypes" value="application/json" />
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"
+				p:prefixJson="false" p:supportedMediaTypes="application/json">
+				<property name="objectMapper" ref="objectMapper"/>
 		    </bean>
 		</mvc:message-converters>
 	</mvc:annotation-driven>
+	
+    <bean id="objectMapper" class="magoffin.matt.ma2.web.util.ObjectMapperFactoryBean"/>
 
 	<bean id="myWebPropertyConfigurer" class="magoffin.matt.xweb.util.XwebParamPropertiesPlaceholderConfigurer">
 		<property name="order" value="1"/>

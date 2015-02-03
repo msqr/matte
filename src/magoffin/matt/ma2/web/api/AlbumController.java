@@ -56,7 +56,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @version 1.0
  */
 @Controller
-@RequestMapping("/api/v1/album")
+@RequestMapping("/v1/album")
 public class AlbumController {
 
 	@Autowired
