@@ -20,14 +20,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.dao.hbm;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
-
+import magoffin.matt.dao.BasicIndexData;
 import magoffin.matt.dao.hbm.GenericIndexableHibernateDao;
 import magoffin.matt.ma2.dao.ThemeDao;
 import magoffin.matt.ma2.domain.Theme;
@@ -36,17 +36,16 @@ import magoffin.matt.ma2.domain.Theme;
  * Hibernate impolementation of ThemeDao.
  * 
  * @author matt.magoffin
- * @version $Revision$ $Date$
+ * @version 1.1
  */
-public class HibernateThemeDao extends GenericIndexableHibernateDao<Theme, Long> 
-implements ThemeDao {
+public class HibernateThemeDao extends GenericIndexableHibernateDao<Theme, Long> implements ThemeDao {
 
 	/** Find all themes. */
 	public static final String QUERY_THEME_ALL = "ThemeAll";
-	
+
 	/** Find a theme by name. */
 	public static final String QUERY_THEME_BY_NAME = "ThemeForName";
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -56,23 +55,25 @@ implements ThemeDao {
 
 	@Override
 	protected Long getPrimaryKey(Theme domainObject) {
-		if ( domainObject == null ) return null;
+		if ( domainObject == null )
+			return null;
 		return domainObject.getThemeId();
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.dao.ThemeDao#findAllThemes()
-	 */
+	@Override
+	protected void populateIndexDataId(BasicIndexData<Long> callbackData, ResultSet rs)
+			throws SQLException {
+		callbackData.setId(new Long(rs.getLong(getIndexObjectIdColumnName())));
+	}
+
 	public List<Theme> findAllThemes() {
 		return findByNamedQuery(QUERY_THEME_ALL);
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.dao.ThemeDao#getThemeForName(java.lang.String)
-	 */
 	public Theme getThemeForName(String name) {
-		List<Theme> results = findByNamedQuery(QUERY_THEME_BY_NAME, new Object[]{name});
-		if ( results.size() < 1 ) return null;
+		List<Theme> results = findByNamedQuery(QUERY_THEME_BY_NAME, new Object[] { name });
+		if ( results.size() < 1 )
+			return null;
 		return results.get(0);
 	}
 

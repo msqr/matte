@@ -20,14 +20,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.dao.hbm;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
-
+import magoffin.matt.dao.BasicIndexData;
 import magoffin.matt.dao.hbm.GenericIndexableHibernateDao;
 import magoffin.matt.ma2.dao.TimeZoneDao;
 import magoffin.matt.ma2.domain.TimeZone;
@@ -35,17 +35,19 @@ import magoffin.matt.ma2.domain.TimeZone;
 /**
  * Hibernate implementation of {@link magoffin.matt.ma2.dao.TimeZoneDao}.
  * 
- * <p>info</p>
+ * <p>
+ * info
+ * </p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.1
  */
-public class HibernateTimeZoneDao extends GenericIndexableHibernateDao<TimeZone,String> 
-implements TimeZoneDao {
+public class HibernateTimeZoneDao extends GenericIndexableHibernateDao<TimeZone, String> implements
+		TimeZoneDao {
 
 	/** Find all time zones. */
 	public static final String QUERY_TIME_ZONE_ALL = "TimeZoneAll";
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -55,13 +57,17 @@ implements TimeZoneDao {
 
 	@Override
 	protected String getPrimaryKey(TimeZone domainObject) {
-		if ( domainObject == null ) return null;
+		if ( domainObject == null )
+			return null;
 		return domainObject.getCode();
 	}
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.dao.TimeZoneDao#findAllTimeZones()
-	 */
+
+	@Override
+	protected void populateIndexDataId(BasicIndexData<String> callbackData, ResultSet rs)
+			throws SQLException {
+		callbackData.setId(rs.getString(getIndexObjectIdColumnName()));
+	}
+
 	public List<TimeZone> findAllTimeZones() {
 		return findByNamedQuery(QUERY_TIME_ZONE_ALL);
 	}

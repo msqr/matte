@@ -20,14 +20,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.dao.hbm;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
-
+import magoffin.matt.dao.BasicIndexData;
 import magoffin.matt.dao.hbm.GenericIndexableHibernateDao;
 import magoffin.matt.ma2.dao.CollectionDao;
 import magoffin.matt.ma2.domain.Collection;
@@ -36,17 +36,17 @@ import magoffin.matt.ma2.domain.Collection;
  * Hibernate implementation of {@link magoffin.matt.ma2.dao.CollectionDao}.
  * 
  * @author matt.magoffin
- * @version $Revision$ $Date$
+ * @version 1.1
  */
-public class HibernateCollectionDao extends GenericIndexableHibernateDao<Collection, Long>
-implements CollectionDao {
+public class HibernateCollectionDao extends GenericIndexableHibernateDao<Collection, Long> implements
+		CollectionDao {
 
 	/** Find all Collections for a User ID. */
 	public static final String QUERY_COLLECTIONS_FOR_USER_ID = "CollectionsForUserId";
-	
+
 	/** Find a Collection for an Item ID. */
 	public static final String QUERY_COLLECTION_FOR_ITEM_ID = "CollectionForItemId";
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -56,30 +56,29 @@ implements CollectionDao {
 
 	@Override
 	protected Long getPrimaryKey(Collection domainObject) {
-		if ( domainObject == null ) return null;
+		if ( domainObject == null )
+			return null;
 		return domainObject.getCollectionId();
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.dao.CollectionDao#findCollectionsForUser(java.lang.Long)
-	 */
-	public List<Collection> findCollectionsForUser(Long userId) {
-		return findByNamedQuery(QUERY_COLLECTIONS_FOR_USER_ID, new Object[]{userId});
+	@Override
+	protected void populateIndexDataId(BasicIndexData<Long> callbackData, ResultSet rs)
+			throws SQLException {
+		callbackData.setId(new Long(rs.getLong(getIndexObjectIdColumnName())));
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.dao.CollectionDao#getCollectionForMediaItem(java.lang.Long)
-	 */
+	public List<Collection> findCollectionsForUser(Long userId) {
+		return findByNamedQuery(QUERY_COLLECTIONS_FOR_USER_ID, new Object[] { userId });
+	}
+
 	public Collection getCollectionForMediaItem(Long mediaItemId) {
-		List<Collection> results = findByNamedQuery(QUERY_COLLECTION_FOR_ITEM_ID, 
-				new Object[]{mediaItemId});
-		if ( results.size() < 1 ) return null;
+		List<Collection> results = findByNamedQuery(QUERY_COLLECTION_FOR_ITEM_ID,
+				new Object[] { mediaItemId });
+		if ( results.size() < 1 )
+			return null;
 		return results.get(0);
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.dao.CollectionDao#getCollectionWithItems(java.lang.Long)
-	 */
 	public Collection getCollectionWithItems(Long collectionId) {
 		Collection c = get(collectionId);
 		if ( c != null ) {

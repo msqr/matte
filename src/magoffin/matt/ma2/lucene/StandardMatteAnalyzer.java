@@ -118,6 +118,7 @@ public class StandardMatteAnalyzer extends Analyzer {
 
 			Queue<Token> queue = new LinkedList<Token>();
 
+			@SuppressWarnings("deprecation")
 			@Override
 			public Token next() throws IOException {
 				if ( queue.size() > 0 ) {

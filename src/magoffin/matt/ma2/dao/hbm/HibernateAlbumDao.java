@@ -24,11 +24,13 @@
 
 package magoffin.matt.ma2.dao.hbm;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import magoffin.matt.dao.BasicIndexData;
 import magoffin.matt.dao.hbm.GenericIndexableHibernateDao;
 import magoffin.matt.ma2.dao.AlbumDao;
 import magoffin.matt.ma2.domain.Album;
@@ -132,6 +134,12 @@ public class HibernateAlbumDao extends GenericIndexableHibernateDao<Album, Long>
 		if ( domainObject == null )
 			return null;
 		return domainObject.getAlbumId();
+	}
+
+	@Override
+	protected void populateIndexDataId(BasicIndexData<Long> callbackData, ResultSet rs)
+			throws SQLException {
+		callbackData.setId(new Long(rs.getLong(getIndexObjectIdColumnName())));
 	}
 
 	public List<Album> findAlbumsForUser(Long userId) {

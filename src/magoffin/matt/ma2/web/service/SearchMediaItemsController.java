@@ -20,18 +20,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.web.service;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.SearchBiz;
 import magoffin.matt.ma2.domain.Model;
@@ -41,7 +37,6 @@ import magoffin.matt.ma2.web.AbstractCommandController;
 import magoffin.matt.ma2.web.util.WebConstants;
 import magoffin.matt.util.SimpleThreadSafeDateFormat;
 import magoffin.matt.util.ThreadSafeDateFormat;
-
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.servlet.ModelAndView;
@@ -50,7 +45,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Controller for searching for media items.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.1
  */
 public class SearchMediaItemsController extends AbstractCommandController {
 
@@ -58,8 +53,8 @@ public class SearchMediaItemsController extends AbstractCommandController {
 	public static final String DEFAULT_SEARCH_DATE_FORMAT = "yyyy-MM-dd";
 
 	private SearchBiz searchBiz;
-	private ThreadSafeDateFormat  searchDateFormat 
-		= new SimpleThreadSafeDateFormat(DEFAULT_SEARCH_DATE_FORMAT);
+	private ThreadSafeDateFormat searchDateFormat = new SimpleThreadSafeDateFormat(
+			DEFAULT_SEARCH_DATE_FORMAT);
 
 	@Override
 	protected Object getCommand(HttpServletRequest request) throws Exception {
@@ -69,53 +64,55 @@ public class SearchMediaItemsController extends AbstractCommandController {
 	}
 
 	@Override
-	protected ModelAndView handle(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
-			throws Exception {
-		MediaSearchCommand cmd = (MediaSearchCommand)command;
+	protected ModelAndView handle(HttpServletRequest request, HttpServletResponse response,
+			Object command, BindException errors) throws Exception {
+		MediaSearchCommand cmd = (MediaSearchCommand) command;
 		BizContext context = getWebHelper().getBizContext(request, false);
 		SearchResults results = searchBiz.findMediaItems(cmd, null, context);
-		
+
 		Model model = getDomainObjectFactory().newModelInstance();
 		model.setSearchResults(results);
-		
+
 		Map<String, Object> viewModel = new LinkedHashMap<String, Object>();
 		viewModel.put(WebConstants.DEFALUT_MODEL_OBJECT, model);
 		return new ModelAndView(getSuccessView(), viewModel);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	protected void initBinder(HttpServletRequest request,
-			ServletRequestDataBinder binder) throws Exception {
+	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder)
+			throws Exception {
 		super.initBinder(request, binder);
-		
+
 		BizContext context = getWebHelper().getBizContext(request, false);
 		registerCalendarEditor(binder, context, this.searchDateFormat, null);
 	}
-	
+
 	/**
 	 * @return the searchBiz
 	 */
 	public SearchBiz getSearchBiz() {
 		return searchBiz;
 	}
-	
+
 	/**
-	 * @param searchBiz the searchBiz to set
+	 * @param searchBiz
+	 *        the searchBiz to set
 	 */
 	public void setSearchBiz(SearchBiz searchBiz) {
 		this.searchBiz = searchBiz;
 	}
-	
+
 	/**
 	 * @return the searchDateFormat
 	 */
 	public ThreadSafeDateFormat getSearchDateFormat() {
 		return searchDateFormat;
 	}
-	
+
 	/**
-	 * @param searchDateFormat the searchDateFormat to set
+	 * @param searchDateFormat
+	 *        the searchDateFormat to set
 	 */
 	public void setSearchDateFormat(ThreadSafeDateFormat searchDateFormat) {
 		this.searchDateFormat = searchDateFormat;
