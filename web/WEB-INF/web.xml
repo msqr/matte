@@ -16,31 +16,19 @@
   along with this program; if not, write to the Free Software 
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
   02111-1307 USA
-
-  $Id: web.xml,v 1.58 2007/08/27 04:04:21 matt Exp $
 -->
-<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
-    version="2.4">
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   version="2.5"
+   xsi:schemaLocation="
+   	http://java.sun.com/xml/ns/javaee
+   	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"> 
 
 	<display-name>Matte</display-name>
     <description>
 		Dynamic photo/movie/audio album web application.
     </description>
 
-	<!--context-param>
-		<param-name>webAppRootKey</param-name>
-		<param-value>ieat.root.dir</param-value>
-	</context-param-->
-	
-	<!--
-	<context-param>
-		<param-name>log4jConfigLocation</param-name>
-		<param-value>log4j.properties</param-value>
-	</context-param>
-	-->
-	
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
