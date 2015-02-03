@@ -68,6 +68,11 @@
 		</dependency>
 		<dependency org="org.apache.ws.commons.schema" name="XmlSchema" rev="1.4.7" conf="compile,runtime"/>
 		
+		<!-- JSON -->
+		<dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.4.3"/>
+		<dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.4.3"/>
+		<dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.4.3"/>
+		
 		<!-- Media support -->
 		<dependency org="batik" name="batik-parser" rev="1.6-1" conf="compile,runtime"/>
 		<dependency org="batik" name="batik-rasterizer" rev="1.6-1" conf="compile,runtime"/>
