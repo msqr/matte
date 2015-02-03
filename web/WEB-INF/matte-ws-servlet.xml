@@ -1,33 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-	Copyright (c) 2007 Matt Magoffin
-	
-	This program is free software; you can redistribute it and/or 
-	modify it under the terms of the GNU General Public License as 
-	published by the Free Software Foundation; either version 2 of 
-	the License, or (at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful, 
-	but WITHOUT ANY WARRANTY; without even the implied warranty of 
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-	General Public License for more details.
-	
-	You should have received a copy of the GNU General Public License 
-	along with this program; if not, write to the Free Software 
-	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
-	02111-1307 USA
-	
-	$Id: web.xml,v 1.58 2007/08/27 04:04:21 matt Exp $
--->
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans
-		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 		http://www.springframework.org/schema/util
-		http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+		http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 	
 	<bean id="endpointMapping"
 		class="org.springframework.ws.soap.server.endpoint.mapping.SoapActionEndpointMapping">
