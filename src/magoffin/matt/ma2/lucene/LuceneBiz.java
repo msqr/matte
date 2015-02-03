@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.lucene;
@@ -32,13 +30,12 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
 import magoffin.matt.lucene.IndexEvent;
+import magoffin.matt.lucene.IndexEvent.EventType;
 import magoffin.matt.lucene.IndexListener;
 import magoffin.matt.lucene.IndexStatusCallback;
+import magoffin.matt.lucene.LuceneSearchService;
 import magoffin.matt.lucene.LuceneService;
-import magoffin.matt.lucene.SearchMatch;
-import magoffin.matt.lucene.IndexEvent.EventType;
 import magoffin.matt.lucene.LuceneService.IndexSearcherOp;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.IndexBiz;
@@ -54,62 +51,67 @@ import magoffin.matt.ma2.domain.SearchResults;
 import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.domain.UserSearchResult;
 import magoffin.matt.ma2.support.BasicMediaItemSearchCriteria;
-
 import org.apache.lucene.index.Term;
-import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocCollector;
 import org.springframework.context.MessageSource;
 
 /**
  * Lucene implementation of SearchBiz and IndexBiz.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.1
  */
 public class LuceneBiz extends AbstractSearchBiz implements SearchBiz, IndexBiz {
-	
+
 	/** Default value for the {@code reindexWaitForFinishThreadSleep} property. */
 	public static final long DEFAULT_THREAD_SLEEP = 5000;
-	
+
 	private LuceneService lucene;
 	private String userIndexType = IndexType.USER.toString();
 	private String mediaItemIndexType = IndexType.MEDIA_ITEM.toString();
 	private MessageSource messages;
 	private WorkBiz workBiz;
 	private long reindexWaitForFinishThreadSleep = DEFAULT_THREAD_SLEEP;
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.biz.SearchBiz#findUsersForIndex(magoffin.matt.ma2.domain.PaginationCriteria, magoffin.matt.ma2.biz.BizContext)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * magoffin.matt.ma2.biz.SearchBiz#findUsersForIndex(magoffin.matt.ma2.domain
+	 * .PaginationCriteria, magoffin.matt.ma2.biz.BizContext)
 	 */
 	public SearchResults findUsersForIndex(final PaginationCriteria pagination, BizContext context) {
-		
-		final Set<String> indexKeys = lucene.getFieldTerms(
-				userIndexType, IndexField.ITEM_INDEX_KEY.getFieldName());
+
+		final Set<String> indexKeys = lucene.getFieldTerms(userIndexType,
+				IndexField.ITEM_INDEX_KEY.getFieldName());
 		final SearchResults results = getDomainObjectFactory().newSearchResultsInstance();
 		final PaginationIndex index = getDomainObjectFactory().newPaginationIndexInstance();
 		results.setIndex(index);
-		
+
 		lucene.doIndexSearcherOp(userIndexType, new IndexSearcherOp() {
+
 			@SuppressWarnings("unchecked")
 			public void doSearcherOp(String type, IndexSearcher searcher) throws IOException {
 				for ( String indexKey : indexKeys ) {
-					Query indexQuery = new TermQuery(
-							new Term(IndexField.ITEM_INDEX_KEY.getFieldName(),indexKey));
-					Hits hits = searcher.search(indexQuery);
-					PaginationIndexSection indexSection =
-						getDomainObjectFactory().newPaginationIndexSectionInstance();
-					indexSection.setCount(hits.length());
+					Query indexQuery = new TermQuery(new Term(IndexField.ITEM_INDEX_KEY.getFieldName(),
+							indexKey));
+					TopDocCollector hits = new TopDocCollector(
+							LuceneSearchService.DEFAULT_MAX_SEARCH_RESULTS);
+					searcher.search(indexQuery, hits);
+					PaginationIndexSection indexSection = getDomainObjectFactory()
+							.newPaginationIndexSectionInstance();
+					indexSection.setCount(hits.getTotalHits());
 					indexSection.setIndexKey(indexKey);
 					indexSection.setSelected(indexKey.equals(pagination.getIndexKey()));
 					index.getIndexSection().add(indexSection);
-					
+
 					if ( indexSection.isSelected() ) {
 						// fill in users for this section
-						List<SearchMatch> matches = lucene.build(
-								userIndexType,hits,0,hits.length());
-						for ( SearchMatch match : matches ) {
+						List<?> matches = lucene.build(userIndexType, hits, 0, hits.getTotalHits());
+						for ( Object match : matches ) {
 							if ( UserSearchResult.class.isAssignableFrom(match.getClass()) ) {
 								results.getUser().add(match);
 							}
@@ -118,17 +120,24 @@ public class LuceneBiz extends AbstractSearchBiz implements SearchBiz, IndexBiz 
 				}
 			}
 		});
-		
+
 		return results;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.biz.SearchBiz#findMediaItems(magoffin.matt.ma2.biz.SearchBiz.MediaItemSearchCriteria, magoffin.matt.ma2.domain.PaginationCriteria, magoffin.matt.ma2.biz.BizContext)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * magoffin.matt.ma2.biz.SearchBiz#findMediaItems(magoffin.matt.ma2.biz.
+	 * SearchBiz.MediaItemSearchCriteria,
+	 * magoffin.matt.ma2.domain.PaginationCriteria,
+	 * magoffin.matt.ma2.biz.BizContext)
 	 */
 	@SuppressWarnings("unchecked")
-	public SearchResults findMediaItems(MediaItemSearchCriteria criteria, PaginationCriteria pagination, BizContext context) {
+	public SearchResults findMediaItems(MediaItemSearchCriteria criteria, PaginationCriteria pagination,
+			BizContext context) {
 		final SearchResults results = getDomainObjectFactory().newSearchResultsInstance();
-		
+
 		// create media item criteria with user id set
 		BasicMediaItemSearchCriteria sc = new BasicMediaItemSearchCriteria();
 		sc.setCountOnly(criteria.isCountOnly());
@@ -136,12 +145,12 @@ public class LuceneBiz extends AbstractSearchBiz implements SearchBiz, IndexBiz 
 		sc.setMediaItemTemplate(criteria.getMediaItemTemplate());
 		sc.setQuickSearch(criteria.getQuickSearch());
 		sc.setStartDate(criteria.getStartDate());
-		
+
 		User actingUser = context.getActingUser();
 		if ( actingUser == null ) {
 			actingUser = getUserBiz().getAnonymousUser();
 		}
-		
+
 		Long userId = criteria.getUserId();
 		if ( criteria.getUserAnonymousKey() != null ) {
 			User u = getUserBiz().getUserByAnonymousKey(criteria.getUserAnonymousKey());
@@ -149,23 +158,23 @@ public class LuceneBiz extends AbstractSearchBiz implements SearchBiz, IndexBiz 
 				userId = u.getUserId();
 			}
 		}
-		if ( userId != null && (criteria.getUserAnonymousKey() != null || !actingUser.getUserId().equals(userId))) {
+		if ( userId != null
+				&& (criteria.getUserAnonymousKey() != null || !actingUser.getUserId().equals(userId)) ) {
 			// limit to just public items
 			sc.setSharedOnly(true);
 		} else {
 			sc.setSharedOnly(false);
 		}
-		if ( userId == null && actingUser != null) {
+		if ( userId == null && actingUser != null ) {
 			sc.setUserId(actingUser.getUserId());
 		} else {
 			sc.setUserId(userId);
 		}
 
-		MediaItemLuceneSearchCriteria luceneCriteria 
-			= new MediaItemLuceneSearchCriteria(sc, pagination);
+		MediaItemLuceneSearchCriteria luceneCriteria = new MediaItemLuceneSearchCriteria(sc, pagination);
 		long start = System.currentTimeMillis();
-		magoffin.matt.lucene.SearchResults luceneResults = lucene.find(
-				mediaItemIndexType, luceneCriteria);
+		magoffin.matt.lucene.SearchResults luceneResults = lucene.find(mediaItemIndexType,
+				luceneCriteria);
 		results.setSearchTime(new Long(System.currentTimeMillis() - start));
 		results.setPagination(pagination);
 		results.setTotalResults(new Long(luceneResults.getTotalMatches()));
@@ -185,7 +194,7 @@ public class LuceneBiz extends AbstractSearchBiz implements SearchBiz, IndexBiz 
 	public void removeUserFromIndex(Long userId) {
 		lucene.deleteObjectById(userIndexType, userId);
 	}
-	
+
 	public void indexMediaItem(Long itemId) {
 		lucene.indexObjectById(mediaItemIndexType, itemId);
 	}
@@ -199,42 +208,39 @@ public class LuceneBiz extends AbstractSearchBiz implements SearchBiz, IndexBiz 
 	}
 
 	private class ReindexWorkRequest implements WorkRequest {
-		
+
 		private final BizContext context;
 		private final String indexType;
 		private IndexStatusCallback indexingCallback;
-		private List<Long> updatedObjectIds = new LinkedList<Long>();
-		
+		private final List<Long> updatedObjectIds = new LinkedList<Long>();
+
 		private ReindexWorkRequest(BizContext context, String indexType) {
 			this.context = context;
 			this.indexType = indexType;
 		}
-		
+
 		public String getDisplayName() {
-			return messages.getMessage(
-					"reindex.work.displayName", null,
-					"Reindexing [" +this.indexType +"]", context.getLocale());
+			return messages.getMessage("reindex.work.displayName", null, "Reindexing [" + this.indexType
+					+ "]", context.getLocale());
 		}
-	
+
 		public String getMessage() {
-			Object[] args = new Object[] {0};
-			if ( this.indexingCallback != null
-					&& this.indexingCallback.getIndexResults() != null ) {
+			Object[] args = new Object[] { 0 };
+			if ( this.indexingCallback != null && this.indexingCallback.getIndexResults() != null ) {
 				args[0] = this.indexingCallback.getIndexResults().getNumProcessed();
 			}
-			return messages.getMessage(
-					"reindex.work.message", args,
-					"Reindexing [" +this.indexType +"]", context.getLocale());
+			return messages.getMessage("reindex.work.message", args, "Reindexing [" + this.indexType
+					+ "]", context.getLocale());
 		}
 
 		public Integer getPriority() {
 			return WorkBiz.DEFAULT_PRIORITY;
 		}
-	
+
 		public List<Long> getObjectIdList() {
 			return Collections.unmodifiableList(this.updatedObjectIds);
 		}
-	
+
 		public boolean canStart() {
 			return true;
 		}
@@ -247,11 +253,12 @@ public class LuceneBiz extends AbstractSearchBiz implements SearchBiz, IndexBiz 
 		public void startWork() throws Exception {
 			final Set<Long> updatedIds = new LinkedHashSet<Long>();
 			IndexListener listener = new IndexListener() {
+
 				public void onIndexEvent(IndexEvent event) {
 					if ( event.getType() == EventType.UPDATE && indexType.equals(event.getIndexType()) ) {
 						Object source = event.getSource();
 						if ( source instanceof Long ) {
-							updatedIds.add((Long)source);
+							updatedIds.add((Long) source);
 						}
 					}
 				}
@@ -260,7 +267,7 @@ public class LuceneBiz extends AbstractSearchBiz implements SearchBiz, IndexBiz 
 			try {
 				this.indexingCallback = lucene.reindex(indexType);
 				while ( true ) {
-					if ( indexingCallback.getIndexResults() != null 
+					if ( indexingCallback.getIndexResults() != null
 							&& indexingCallback.getIndexResults().isFinished() ) {
 						break;
 					}
@@ -274,66 +281,69 @@ public class LuceneBiz extends AbstractSearchBiz implements SearchBiz, IndexBiz 
 				this.updatedObjectIds.addAll(updatedIds);
 			}
 		}
-	
+
 		public float getAmountCompleted() {
-			return this.indexingCallback != null 
-				&& this.indexingCallback.getIndexResults() != null
-				&& this.indexingCallback.getIndexResults().isFinished() ? 1 : 0;
+			return this.indexingCallback != null && this.indexingCallback.getIndexResults() != null
+					&& this.indexingCallback.getIndexResults().isFinished() ? 1 : 0;
 		}
-		
+
 	}
-	
+
 	/**
 	 * @return the lucene
 	 */
 	public LuceneService getLucene() {
 		return lucene;
 	}
-	
+
 	/**
-	 * @param lucene the lucene to set
+	 * @param lucene
+	 *        the lucene to set
 	 */
 	public void setLucene(LuceneService lucene) {
 		this.lucene = lucene;
 	}
-	
+
 	/**
 	 * @return the messages
 	 */
 	public MessageSource getMessages() {
 		return messages;
 	}
-	
+
 	/**
-	 * @param messages the messages to set
+	 * @param messages
+	 *        the messages to set
 	 */
 	public void setMessages(MessageSource messages) {
 		this.messages = messages;
 	}
-	
+
 	/**
 	 * @return the userIndexType
 	 */
 	public String getUserIndexType() {
 		return userIndexType;
 	}
-	
+
 	/**
-	 * @param userIndexType the userIndexType to set
+	 * @param userIndexType
+	 *        the userIndexType to set
 	 */
 	public void setUserIndexType(String userIndexType) {
 		this.userIndexType = userIndexType;
 	}
-	
+
 	/**
 	 * @return the mediaItemIndexType
 	 */
 	public String getMediaItemIndexType() {
 		return mediaItemIndexType;
 	}
-	
+
 	/**
-	 * @param mediaItemIndexType the mediaItemIndexType to set
+	 * @param mediaItemIndexType
+	 *        the mediaItemIndexType to set
 	 */
 	public void setMediaItemIndexType(String mediaItemIndexType) {
 		this.mediaItemIndexType = mediaItemIndexType;
@@ -345,9 +355,10 @@ public class LuceneBiz extends AbstractSearchBiz implements SearchBiz, IndexBiz 
 	public WorkBiz getWorkBiz() {
 		return workBiz;
 	}
-	
+
 	/**
-	 * @param workBiz the workBiz to set
+	 * @param workBiz
+	 *        the workBiz to set
 	 */
 	public void setWorkBiz(WorkBiz workBiz) {
 		this.workBiz = workBiz;
@@ -361,10 +372,10 @@ public class LuceneBiz extends AbstractSearchBiz implements SearchBiz, IndexBiz 
 	}
 
 	/**
-	 * @param reindexWaitForFinishThreadSleep the reindexWaitForFinishThreadSleep to set
+	 * @param reindexWaitForFinishThreadSleep
+	 *        the reindexWaitForFinishThreadSleep to set
 	 */
-	public void setReindexWaitForFinishThreadSleep(
-			long reindexWaitForFinishThreadSleep) {
+	public void setReindexWaitForFinishThreadSleep(long reindexWaitForFinishThreadSleep) {
 		this.reindexWaitForFinishThreadSleep = reindexWaitForFinishThreadSleep;
 	}
 
