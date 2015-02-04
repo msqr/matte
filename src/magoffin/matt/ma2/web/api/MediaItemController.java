@@ -25,12 +25,20 @@
 package magoffin.matt.ma2.web.api;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import javax.servlet.http.HttpServletRequest;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.MediaBiz;
+import magoffin.matt.ma2.biz.SearchBiz;
+import magoffin.matt.ma2.biz.UserBiz;
 import magoffin.matt.ma2.domain.MediaItem;
+import magoffin.matt.ma2.domain.SearchResults;
+import magoffin.matt.ma2.domain.User;
+import magoffin.matt.ma2.support.BasicMediaItemSearchCriteria;
 import magoffin.matt.web.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,10 +55,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("/v1/media")
-public class MediaInfoController extends ControllerSupport {
+public class MediaItemController extends ControllerSupport {
+
+	/** The default value for the <code>searchDateFormat</code> property. */
+	public static final String DEFAULT_SEARCH_DATE_FORMAT = "yyyy-MM-dd";
 
 	@Autowired
-	private MediaBiz mediaBiz = null;
+	private MediaBiz mediaBiz;
+
+	@Autowired
+	private SearchBiz searchBiz;
+
+	@Autowired
+	private UserBiz userBiz;
 
 	/**
 	 * Get detailed information on one or more items.
@@ -97,12 +114,71 @@ public class MediaInfoController extends ControllerSupport {
 		return Response.response(results);
 	}
 
+	/**
+	 * Perform a search for media items.
+	 * 
+	 * @param request
+	 *        The current request.
+	 * @param cmd
+	 *        The search criteria. The {@code userKey} property must be
+	 *        provided.
+	 * @return The search results.
+	 */
+	@RequestMapping(value = "/search", method = RequestMethod.GET, params = "userKey")
+	@ResponseBody
+	public Response<SearchResults> findItems(HttpServletRequest request, MediaSearchCommand cmd) {
+		if ( cmd == null ) {
+			throw new IllegalArgumentException("Search criteria must be provided.");
+		}
+		if ( cmd.getUserKey() == null ) {
+			throw new IllegalArgumentException("The userKey parameter is required.");
+		}
+
+		BizContext context = getWebHelper().getBizContext(request, false);
+		BasicMediaItemSearchCriteria criteria = new BasicMediaItemSearchCriteria();
+		criteria.setUserAnonymousKey(cmd.getUserKey());
+		criteria.setQuickSearch(cmd.getQuery());
+
+		if ( cmd.getStartDate() != null || cmd.getEndDate() != null ) {
+			TimeZone zone = null;
+			User user = userBiz.getUserByAnonymousKey(cmd.getUserKey());
+			if ( user != null && user.getTz() != null ) {
+				zone = TimeZone.getTimeZone(user.getTz().getCode());
+			} else {
+				zone = TimeZone.getTimeZone("UTC");
+			}
+
+			if ( cmd.getStartDate() != null ) {
+				Calendar cal = Calendar.getInstance(zone);
+				Date date = cmd.getStartDate().toDate(zone);
+				cal.setTime(date);
+				criteria.setStartDate(cal);
+			}
+			if ( cmd.getEndDate() != null ) {
+				Calendar cal = Calendar.getInstance(zone);
+				Date date = cmd.getEndDate().toDate(zone);
+				cal.setTime(date);
+				criteria.setEndDate(cal);
+			}
+		}
+		SearchResults results = searchBiz.findMediaItems(criteria, null, context);
+		return Response.response(results);
+	}
+
 	public void setMediaBiz(MediaBiz mediaBiz) {
 		this.mediaBiz = mediaBiz;
 	}
 
 	public MediaBiz getMediaBiz() {
 		return mediaBiz;
+	}
+
+	public void setSearchBiz(SearchBiz searchBiz) {
+		this.searchBiz = searchBiz;
+	}
+
+	public void setUserBiz(UserBiz userBiz) {
+		this.userBiz = userBiz;
 	}
 
 }

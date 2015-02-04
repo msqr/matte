@@ -25,14 +25,15 @@
 		</dependency>
 		
 		<!-- Utilities -->
-		<dependency org="net.sf.ehcache" name="ehcache" rev="1.6.2" conf="compile,runtime">
+		<dependency org="net.sf.ehcache" name="ehcache" rev="1.6.2">
 			<artifact name="ehcache"/>
 		</dependency>
-		<dependency org="gnu-regexp" name="gnu-regexp" rev="1.1.4" conf="compile,runtime"/>
-		<dependency org="javax.activation" name="activation" rev="1.1.1"  conf="compile,runtime"/>
-		<dependency org="cglib" name="cglib" rev="2.2.2" conf="compile,runtime"/>
-		<dependency org="org.bouncycastle" name="bcprov-jdk14" rev="1.43" conf="compile,runtime"/>
-		<dependency org="rhino" name="js" rev="1.7R2" conf="compile,runtime"/>
+		<dependency org="gnu-regexp" name="gnu-regexp" rev="1.1.4"/>
+		<dependency org="javax.activation" name="activation" rev="1.1.1"/>
+		<dependency org="cglib" name="cglib" rev="2.2.2"/>
+		<dependency org="org.bouncycastle" name="bcprov-jdk14" rev="1.43"/>
+		<dependency org="rhino" name="js" rev="1.7R2"/>
+		<dependency org="joda-time" name="joda-time" rev="2.4"/>
 
 		<!-- Apache Commons -->
 		<dependency org="commons-beanutils" name="commons-beanutils" rev="1.8.3" conf="compile,runtime"/>
