@@ -26,19 +26,27 @@ package magoffin.matt.ma2.web.api;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import magoffin.matt.ma2.ObjectNotFoundException;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.MediaBiz;
 import magoffin.matt.ma2.biz.SearchBiz;
+import magoffin.matt.ma2.biz.SystemBiz;
 import magoffin.matt.ma2.biz.UserBiz;
 import magoffin.matt.ma2.domain.Album;
 import magoffin.matt.ma2.domain.AlbumSearchResult;
+import magoffin.matt.ma2.domain.Metadata;
+import magoffin.matt.ma2.domain.Model;
 import magoffin.matt.ma2.domain.PaginationCriteria;
 import magoffin.matt.ma2.domain.SearchResults;
+import magoffin.matt.ma2.domain.Theme;
 import magoffin.matt.ma2.domain.User;
+import magoffin.matt.ma2.plugin.BrowseModePlugin;
 import magoffin.matt.ma2.support.BrowseAlbumsCommand;
 import magoffin.matt.web.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,6 +67,9 @@ public class AlbumController extends ControllerSupport {
 
 	@Autowired
 	private SearchBiz searchBiz;
+
+	@Autowired
+	private SystemBiz systemBiz;
 
 	@Autowired
 	private UserBiz userBiz;
@@ -123,6 +134,61 @@ public class AlbumController extends ControllerSupport {
 		return Response.response(album);
 	}
 
+	@RequestMapping(value = "/browse/{userKey}", method = RequestMethod.GET)
+	@ResponseBody
+	public Response<Model> browse(HttpServletRequest request, @PathVariable("userKey") String userKey) {
+		BrowseAlbumsCommand cmd = new BrowseAlbumsCommand();
+		cmd.setUserKey(userKey);
+		return browse(request, cmd);
+	}
+
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/browse", method = RequestMethod.GET)
+	@ResponseBody
+	public Response<Model> browse(HttpServletRequest request, BrowseAlbumsCommand cmd) {
+		BizContext context = getWebHelper().getBizContextWithViewSettings(request);
+
+		User browseUser = getUserBiz().getUserByAnonymousKey(cmd.getUserKey());
+		if ( browseUser == null ) {
+			throw new ObjectNotFoundException("User [" + cmd.getUserKey() + "] not available");
+		}
+		Model model = getDomainObjectFactory().newModelInstance();
+		model.getUser().add(browseUser);
+
+		Theme theme = browseUser.getBrowseTheme();
+		if ( theme == null ) {
+			theme = getSystemBiz().getDefaultTheme();
+		}
+		model.getTheme().add(theme);
+
+		getWebHelper().populateMediaSizeAndQuality(model.getMediaSize());
+
+		// save the request theme
+		getWebHelper().saveRequestTheme(theme);
+
+		// set command Locale
+		cmd.setLocale(request.getLocale());
+		PaginationCriteria pagination = null;
+		if ( StringUtils.hasText(cmd.getSection()) ) {
+			pagination = getDomainObjectFactory().newPaginationCriteriaInstance();
+			pagination.setIndexKey(cmd.getSection());
+		}
+		SearchResults results = getSearchBiz().findAlbumsForBrowsing(cmd, pagination, context);
+		model.setSearchResults(results);
+
+		// populate available browse modes
+		List<BrowseModePlugin> browseModes = getSystemBiz().getPluginsOfType(BrowseModePlugin.class);
+		for ( BrowseModePlugin plugin : browseModes ) {
+			for ( String mode : plugin.getSupportedModes() ) {
+				Metadata meta = getDomainObjectFactory().newMetadataInstance();
+				meta.setKey("browse-mode");
+				meta.setValue(mode);
+				model.getUiMetadata().add(meta);
+			}
+		}
+		return Response.response(model);
+	}
+
 	public void setMediaBiz(MediaBiz mediaBiz) {
 		this.mediaBiz = mediaBiz;
 	}
@@ -145,6 +211,14 @@ public class AlbumController extends ControllerSupport {
 
 	public UserBiz getUserBiz() {
 		return userBiz;
+	}
+
+	public SystemBiz getSystemBiz() {
+		return systemBiz;
+	}
+
+	public void setSystemBiz(SystemBiz systemBiz) {
+		this.systemBiz = systemBiz;
 	}
 
 }
