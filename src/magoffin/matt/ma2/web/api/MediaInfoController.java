@@ -29,10 +29,8 @@ import java.util.Collections;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import magoffin.matt.ma2.biz.BizContext;
-import magoffin.matt.ma2.biz.DomainObjectFactory;
 import magoffin.matt.ma2.biz.MediaBiz;
 import magoffin.matt.ma2.domain.MediaItem;
-import magoffin.matt.ma2.web.util.WebHelper;
 import magoffin.matt.web.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -49,16 +47,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("/v1/media")
-public class MediaInfoController {
+public class MediaInfoController extends ControllerSupport {
 
 	@Autowired
 	private MediaBiz mediaBiz = null;
-
-	@Autowired
-	private WebHelper webHelper;
-
-	@Autowired
-	private DomainObjectFactory domainObjectFactory;
 
 	/**
 	 * Get detailed information on one or more items.
@@ -107,22 +99,6 @@ public class MediaInfoController {
 
 	public void setMediaBiz(MediaBiz mediaBiz) {
 		this.mediaBiz = mediaBiz;
-	}
-
-	public WebHelper getWebHelper() {
-		return webHelper;
-	}
-
-	public void setWebHelper(WebHelper webHelper) {
-		this.webHelper = webHelper;
-	}
-
-	public DomainObjectFactory getDomainObjectFactory() {
-		return domainObjectFactory;
-	}
-
-	public void setDomainObjectFactory(DomainObjectFactory domainObjectFactory) {
-		this.domainObjectFactory = domainObjectFactory;
 	}
 
 	public MediaBiz getMediaBiz() {

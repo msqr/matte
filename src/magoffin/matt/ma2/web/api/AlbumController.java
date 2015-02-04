@@ -27,10 +27,8 @@ package magoffin.matt.ma2.web.api;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import magoffin.matt.ma2.biz.BizContext;
-import magoffin.matt.ma2.biz.DomainObjectFactory;
 import magoffin.matt.ma2.biz.MediaBiz;
 import magoffin.matt.ma2.biz.SearchBiz;
-import magoffin.matt.ma2.biz.SystemBiz;
 import magoffin.matt.ma2.biz.UserBiz;
 import magoffin.matt.ma2.domain.Album;
 import magoffin.matt.ma2.domain.AlbumSearchResult;
@@ -38,7 +36,6 @@ import magoffin.matt.ma2.domain.PaginationCriteria;
 import magoffin.matt.ma2.domain.SearchResults;
 import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.support.BrowseAlbumsCommand;
-import magoffin.matt.ma2.web.util.WebHelper;
 import magoffin.matt.web.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -55,7 +52,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("/v1/album")
-public class AlbumController {
+public class AlbumController extends ControllerSupport {
 
 	@Autowired
 	private MediaBiz mediaBiz;
@@ -65,15 +62,6 @@ public class AlbumController {
 
 	@Autowired
 	private UserBiz userBiz;
-
-	@Autowired
-	private WebHelper webHelper;
-
-	@Autowired
-	private DomainObjectFactory domainObjectFactory;
-
-	@Autowired
-	private SystemBiz systemBiz;
 
 	/**
 	 * Get full details on a single album.
@@ -147,14 +135,6 @@ public class AlbumController {
 		this.userBiz = userBiz;
 	}
 
-	public WebHelper getWebHelper() {
-		return webHelper;
-	}
-
-	public void setWebHelper(WebHelper webHelper) {
-		this.webHelper = webHelper;
-	}
-
 	public MediaBiz getMediaBiz() {
 		return mediaBiz;
 	}
@@ -165,22 +145,6 @@ public class AlbumController {
 
 	public UserBiz getUserBiz() {
 		return userBiz;
-	}
-
-	public DomainObjectFactory getDomainObjectFactory() {
-		return domainObjectFactory;
-	}
-
-	public void setDomainObjectFactory(DomainObjectFactory domainObjectFactory) {
-		this.domainObjectFactory = domainObjectFactory;
-	}
-
-	public SystemBiz getSystemBiz() {
-		return systemBiz;
-	}
-
-	public void setSystemBiz(SystemBiz systemBiz) {
-		this.systemBiz = systemBiz;
 	}
 
 }
