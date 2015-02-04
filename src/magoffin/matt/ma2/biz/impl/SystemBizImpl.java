@@ -67,7 +67,8 @@ import magoffin.matt.util.StringMerger;
 import magoffin.matt.xweb.XwebParameter;
 import magoffin.matt.xweb.util.MessagesSource;
 import magoffin.matt.xweb.util.XwebParamDao;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
@@ -147,8 +148,7 @@ public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
 	private File collectionRootDirectory = null;
 	private File cacheDirectory = null;
 	private File resourceDirectory = null;
-	private String defaultThemeName = "Woosh";
-	private Map<String, Object> defaultThemeTemplate = null;
+	private Map<String, Map<String, Object>> coreThemeTemplates = null;
 	private String sharedAlbumUrlTemplate = null;
 	private String externalThemeDirectory = null;
 	private MessagesSource messages = null;
@@ -162,7 +162,7 @@ public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
 	private final Map<Class<? extends Plugin>, List<Plugin>> plugins = new LinkedHashMap<Class<? extends Plugin>, List<Plugin>>();
 	private ApplicationContext applicationContext = null;
 
-	private final Logger log = Logger.getLogger(SystemBizImpl.class);
+	private final Logger log = LoggerFactory.getLogger(SystemBizImpl.class);
 
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
@@ -182,7 +182,7 @@ public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
 	/**
 	 * Call to initialize the class after configuring properties.
 	 */
-	public synchronized void init() {
+	public void init() {
 		if ( domainObjectFactory == null ) {
 			throw new ConfigurationException(null, "domainObjectFactory");
 		}
@@ -200,9 +200,6 @@ public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
 		}
 		if ( resourceDirectory == null ) {
 			throw new ConfigurationException(null, "resourceDirectory");
-		}
-		if ( defaultThemeName == null ) {
-			throw new ConfigurationException(null, "defaultThemeName");
 		}
 		if ( sharedAlbumUrlTemplate == null ) {
 			throw new ConfigurationException(null, "sharedAlbumUrlTemplate");
@@ -286,24 +283,32 @@ public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
 		}
 		myLocales = localeList;
 
-		// setup default theme
-		Theme defaultTheme = themeDao.getThemeForName(this.defaultThemeName);
-		if ( defaultTheme != null ) {
-			this.myDefaultTheme = defaultTheme;
-		} else {
-			// create default theme now
-			if ( this.defaultThemeTemplate == null ) {
-				throw new ConfigurationException(null, "defaultThemeTemplate");
-			}
-			defaultTheme = domainObjectFactory.newThemeInstance();
-			BeanWrapper wrapper = new BeanWrapperImpl(defaultTheme);
-			wrapper.setPropertyValues(this.defaultThemeTemplate);
-			prepareThemeForStore(defaultTheme, null);
-			Long defaultThemeId = themeDao.store(defaultTheme);
-			this.myDefaultTheme = themeDao.get(defaultThemeId);
-
-			if ( log.isInfoEnabled() ) {
-				log.info("Default Theme [" + this.myDefaultTheme.getName() + "] stored.");
+		// setup core themes
+		if ( this.coreThemeTemplates != null ) {
+			for ( Map.Entry<String, Map<String, Object>> themeEntries : this.coreThemeTemplates
+					.entrySet() ) {
+				String themeName = themeEntries.getKey();
+				Theme coreTheme = themeDao.getThemeForName(themeName);
+				if ( coreTheme == null ) {
+					// create theme now
+					Map<String, Object> themeProps = themeEntries.getValue();
+					if ( themeProps == null ) {
+						continue;
+					}
+					coreTheme = domainObjectFactory.newThemeInstance();
+					BeanWrapper wrapper = new BeanWrapperImpl(coreTheme);
+					wrapper.setPropertyValues(themeProps);
+					prepareThemeForStore(coreTheme, null);
+					Long themeId = themeDao.store(coreTheme);
+					coreTheme = themeDao.get(themeId);
+					if ( log.isInfoEnabled() ) {
+						log.info("Core Theme [{}] stored as ID {}", themeName, themeId);
+					}
+				}
+				if ( myDefaultTheme == null ) {
+					// safe the first core theme as the default
+					myDefaultTheme = coreTheme;
+				}
 			}
 		}
 
@@ -488,11 +493,6 @@ public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
 		return new FileSystemResource(resourcePath);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.SystemBiz#getCacheDirectory()
-	 */
 	public File getCacheDirectory() {
 		return cacheDirectory;
 	}
@@ -800,200 +800,100 @@ public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
 		return byteCount;
 	}
 
-	/**
-	 * @return Returns the domainObjectFactory.
-	 */
 	public DomainObjectFactory getDomainObjectFactory() {
 		return domainObjectFactory;
 	}
 
-	/**
-	 * @param domainObjectFactory
-	 *        The domainObjectFactory to set.
-	 */
 	public void setDomainObjectFactory(DomainObjectFactory domainObjectFactory) {
 		this.domainObjectFactory = domainObjectFactory;
 	}
 
-	/**
-	 * @return Returns the timeZoneDao.
-	 */
 	public TimeZoneDao getTimeZoneDao() {
 		return timeZoneDao;
 	}
 
-	/**
-	 * @param timeZoneDao
-	 *        The timeZoneDao to set.
-	 */
 	public void setTimeZoneDao(TimeZoneDao timeZoneDao) {
 		this.timeZoneDao = timeZoneDao;
 	}
 
-	/**
-	 * @return Returns the defaultTimeZoneCode.
-	 */
 	public String getDefaultTimeZoneCode() {
 		return defaultTimeZoneCode;
 	}
 
-	/**
-	 * @param defaultTimeZoneCode
-	 *        The defaultTimeZoneCode to set.
-	 */
 	public void setDefaultTimeZoneCode(String defaultTimeZoneCode) {
 		this.defaultTimeZoneCode = defaultTimeZoneCode;
 	}
 
-	/**
-	 * @param collectionRootDirectory
-	 *        The collectionRootDirectory to set.
-	 */
 	public void setCollectionRootDirectory(File collectionRootDirectory) {
 		this.collectionRootDirectory = collectionRootDirectory;
 	}
 
-	/**
-	 * @param cacheDirectory
-	 *        The cacheDirectory to set.
-	 */
 	public void setCacheDirectory(File cacheDirectory) {
 		this.cacheDirectory = cacheDirectory;
 	}
 
-	/**
-	 * @return Returns the themeDao.
-	 */
 	public ThemeDao getThemeDao() {
 		return themeDao;
 	}
 
-	/**
-	 * @param themeDao
-	 *        The themeDao to set.
-	 */
 	public void setThemeDao(ThemeDao themeDao) {
 		this.themeDao = themeDao;
 	}
 
-	/**
-	 * @return Returns the defaultThemeName.
-	 */
-	public String getDefaultThemeName() {
-		return defaultThemeName;
-	}
-
-	/**
-	 * @param defaultThemeName
-	 *        The defaultThemeName to set.
-	 */
-	public void setDefaultThemeName(String defaultThemeName) {
-		this.defaultThemeName = defaultThemeName;
-	}
-
-	/**
-	 * @return Returns the defaultThemeTemplate.
-	 */
-	public Map<String, Object> getDefaultThemeTemplate() {
-		return defaultThemeTemplate;
-	}
-
-	/**
-	 * @param defaultThemeTemplate
-	 *        The defaultThemeTemplate to set.
-	 */
-	public void setDefaultThemeTemplate(Map<String, Object> defaultThemeTemplate) {
-		this.defaultThemeTemplate = defaultThemeTemplate;
-	}
-
-	/**
-	 * @return Returns the sharedAlbumUrlTemplate.
-	 */
 	public String getSharedAlbumUrlTemplate() {
 		return sharedAlbumUrlTemplate;
 	}
 
-	/**
-	 * @param sharedAlbumUrlTemplate
-	 *        The sharedAlbumUrlTemplate to set.
-	 */
 	public void setSharedAlbumUrlTemplate(String sharedAlbumUrlTemplate) {
 		this.sharedAlbumUrlTemplate = sharedAlbumUrlTemplate.replaceAll("\\$\\[([^\\]]+)\\]", "\\${$1}");
 	}
 
-	/**
-	 * @return the externalThemeDirectory
-	 */
 	public String getExternalThemeDirectory() {
 		return externalThemeDirectory;
 	}
 
-	/**
-	 * @param externalThemeDirectory
-	 *        the externalThemeDirectory to set
-	 */
 	public void setExternalThemeDirectory(String externalThemeDirectory) {
 		this.externalThemeDirectory = externalThemeDirectory;
 	}
 
-	/**
-	 * @return the albumDao
-	 */
 	public AlbumDao getAlbumDao() {
 		return albumDao;
 	}
 
-	/**
-	 * @param albumDao
-	 *        the albumDao to set
-	 */
 	public void setAlbumDao(AlbumDao albumDao) {
 		this.albumDao = albumDao;
 	}
 
-	/**
-	 * @return the settingsDao
-	 */
 	public XwebParamDao getSettingsDao() {
 		return settingsDao;
 	}
 
-	/**
-	 * @param settingsDao
-	 *        the settingsDao to set
-	 */
 	public void setSettingsDao(XwebParamDao settingsDao) {
 		this.settingsDao = settingsDao;
 	}
 
-	/**
-	 * @return the resourceDirectory
-	 */
 	public File getResourceDirectory() {
 		return resourceDirectory;
 	}
 
-	/**
-	 * @param resourceDirectory
-	 *        the resourceDirectory to set
-	 */
 	public void setResourceDirectory(File resourceDirectory) {
 		this.resourceDirectory = resourceDirectory;
 	}
 
-	/**
-	 * @return the messages
-	 */
 	public MessagesSource getMessages() {
 		return messages;
 	}
 
-	/**
-	 * @param messages
-	 *        the messages to set
-	 */
 	public void setMessages(MessagesSource messages) {
 		this.messages = messages;
+	}
+
+	public Map<String, Map<String, Object>> getCoreThemeTemplates() {
+		return coreThemeTemplates;
+	}
+
+	public void setCoreThemeTemplates(Map<String, Map<String, Object>> coreThemeTemplates) {
+		this.coreThemeTemplates = coreThemeTemplates;
 	}
 
 }

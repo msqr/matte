@@ -7,7 +7,7 @@
 		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 	
 	<bean id="testUserBiz" class="magoffin.matt.ma2.biz.impl.UserBizImpl" 
-		init-method="init" destroy-method="destroy">
+		init-method="init" destroy-method="finish">
 		<property name="domainObjectFactory" ref="domainObjectFactory"/>
 		<property name="messages" ref="messageSource"/>
 		<property name="albumDao" ref="albumDao"/>
@@ -40,7 +40,7 @@
 	</bean>
 	
 	<bean id="testSystemBiz" class="magoffin.matt.ma2.biz.impl.SystemBizImpl" 
-		init-method="init" destroy-method="destroy">
+		init-method="init" destroy-method="finish">
 		<property name="collectionRootDirectory" value="/var/tmp"/>
 		<property name="cacheDirectory" value="/var/tmp"/>
 		<property name="resourceDirectory" value="/var/tmp"/>
@@ -50,14 +50,17 @@
 		<property name="settingsDao" ref="settingsDao"/>
 		<property name="themeDao" ref="themeDao"/>
 		<property name="sharedAlbumUrlTemplate" value="http://my.url/here?$[album.anonymousKey]"/>
-		<property name="defaultThemeName" value="Woosh"/>
-		<property name="defaultThemeTemplate">
+		<property name="coreThemeTemplates">
 			<map>
-				<entry key="author"><value>Matte Development Team</value></entry>
-				<entry key="authorEmail"><value>matte@noplace</value></entry>
-				<entry key="basePath"><value>/core/woosh</value></entry>
-				<entry key="description"><value>Default theme.</value></entry>
-				<entry key="name"><value>Woosh</value></entry>
+				<entry key="Woosh">
+					<map>
+						<entry key="author"><value>Matte Development Team</value></entry>
+						<entry key="authorEmail"><value>matte@noplace</value></entry>
+						<entry key="basePath"><value>/core/woosh</value></entry>
+						<entry key="description"><value>Default theme.</value></entry>
+						<entry key="name"><value>Woosh</value></entry>
+					</map>
+				</entry>
 			</map>
 		</property>
 		<property name="externalThemeDirectory" value="/var/tmp"/>
