@@ -47,6 +47,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -77,8 +78,25 @@ public class AlbumController {
 	@Autowired
 	private SystemBiz systemBiz;
 
+	/**
+	 * Get full details on a single album.
+	 * 
+	 * @param request
+	 *        The current request.
+	 * @param key
+	 *        The anonymous album key to get.
+	 * @return The album.
+	 */
+	@RequestMapping(value = { "", "/" }, method = RequestMethod.GET, params = "!mode")
+	@ResponseBody
+	public Response<Album> viewAlbum(HttpServletRequest request, @RequestParam("key") String key) {
+		BizContext context = getWebHelper().getBizContextWithViewSettings(request);
+		Album album = mediaBiz.getSharedAlbum(key, context);
+		return Response.response(album);
+	}
+
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "", "/" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "", "/" }, method = RequestMethod.GET, params = "mode")
 	@ResponseBody
 	public Response<AlbumModel> viewAlbum(HttpServletRequest request, AlbumCommand cmd) {
 		BizContext context = getWebHelper().getBizContextWithViewSettings(request);

@@ -36,6 +36,7 @@ import magoffin.matt.ma2.web.util.WebHelper;
 import magoffin.matt.web.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -72,13 +73,31 @@ public class MediaInfoController {
 	@RequestMapping(value = { "", "/" }, method = RequestMethod.GET)
 	@ResponseBody
 	public Response<List<MediaItem>> getItemInfo(HttpServletRequest request, MediaCommand cmd) {
+		return getItemInfos(request, cmd.getItemIds());
+	}
+
+	/**
+	 * Get detailed information on one or more items.
+	 * 
+	 * @param request
+	 *        The current request.
+	 * @param itemIds
+	 *        The IDs of the items to get.
+	 * @return The resulting MediaItem list, with full details included.
+	 */
+	@RequestMapping(value = "/{itemIds}", method = RequestMethod.GET)
+	@ResponseBody
+	public Response<List<MediaItem>> getItemInfos(HttpServletRequest request,
+			@PathVariable("itemIds") Long[] itemIds) {
 		BizContext context = getWebHelper().getBizContext(request, false);
 		List<MediaItem> results;
-		if ( cmd.getItemIds() != null && cmd.getItemIds().length > 0 ) {
-			results = new ArrayList<MediaItem>(cmd.getItemIds().length);
-			for ( Long itemId : cmd.getItemIds() ) {
+		if ( itemIds != null && itemIds.length > 0 ) {
+			results = new ArrayList<MediaItem>(itemIds.length);
+			for ( Long itemId : itemIds ) {
 				MediaItem item = mediaBiz.getMediaItemWithInfo(itemId, context);
-				results.add(item);
+				if ( item != null ) {
+					results.add(item);
+				}
 			}
 		} else {
 			results = Collections.emptyList();
