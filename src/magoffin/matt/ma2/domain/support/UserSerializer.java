@@ -53,7 +53,6 @@ public class UserSerializer extends StdScalarSerializer<User> {
 			throws IOException, JsonGenerationException {
 		generator.writeStartObject();
 		generator.writeStringField("name", user.getName());
-		generator.writeNumberField("userId", user.getUserId());
 		generator.writeObjectField("country", user.getCountry());
 		generator.writeObjectField("anonymousKey", user.getAnonymousKey());
 		generator.writeObjectField("tz", user.getTz());
