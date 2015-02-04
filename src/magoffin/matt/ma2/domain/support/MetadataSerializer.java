@@ -1,7 +1,7 @@
 /* ===================================================================
- * UserSerializer.java
+ * MetadataSerializer.java
  * 
- * Created Feb 4, 2015 4:27:12 PM
+ * Created Feb 4, 2015 5:28:17 PM
  * 
  * Copyright (c) 2015 Matt Magoffin.
  * 
@@ -22,53 +22,36 @@
  * ===================================================================
  */
 
-package magoffin.matt.ma2.util;
+package magoffin.matt.ma2.domain.support;
 
 import java.io.IOException;
-import magoffin.matt.ma2.biz.BizContext;
-import magoffin.matt.ma2.domain.User;
+import magoffin.matt.ma2.domain.Metadata;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer;
 
 /**
- * JSON serializer for User objects.
+ * JSON serializer for {@link Metadata} objects.
  *
  * @author matt
  * @version 1.0
  */
-public class UserSerializer extends StdScalarSerializer<User> {
+public class MetadataSerializer extends StdScalarSerializer<Metadata> {
 
 	/**
 	 * Default constructor.
 	 */
-	public UserSerializer() {
-		super(User.class);
+	public MetadataSerializer() {
+		super(Metadata.class);
 	}
 
 	@Override
-	public void serialize(User user, JsonGenerator generator, SerializerProvider provider)
+	public void serialize(Metadata meta, JsonGenerator generator, SerializerProvider provider)
 			throws IOException, JsonGenerationException {
 		generator.writeStartObject();
-		generator.writeStringField("name", user.getName());
-		generator.writeNumberField("userId", user.getUserId());
-		generator.writeObjectField("country", user.getCountry());
-		generator.writeObjectField("anonymousKey", user.getAnonymousKey());
-		generator.writeObjectField("tz", user.getTz());
-
-		BizContext context = BizContextUtil.getBizContext();
-		if ( context != null ) {
-			User actor = context.getActingUser();
-			if ( actor != null && actor.getUserId() != null
-					&& actor.getUserId().equals(user.getUserId()) ) {
-				// allow viewing own details
-				generator.writeStringField("email", user.getEmail());
-				generator.writeStringField("login", user.getLogin());
-				generator.writeObjectField("thumbnailSetting", user.getThumbnailSetting());
-				generator.writeObjectField("viewSetting", user.getViewSetting());
-			}
-		}
+		generator.writeStringField("key", meta.getKey());
+		generator.writeStringField("value", meta.getValue());
 		generator.writeEndObject();
 	}
 

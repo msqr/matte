@@ -34,7 +34,9 @@
     <bean id="objectMapper" class="magoffin.matt.ma2.web.util.ObjectMapperFactoryBean">
 		<property name="serializers">
 			<list>
-				<bean class="magoffin.matt.ma2.util.UserSerializer"/>
+				<bean class="magoffin.matt.ma2.domain.support.MetadataSerializer"/>
+				<bean class="magoffin.matt.ma2.domain.support.TimeZoneSerializer"/>
+				<bean class="magoffin.matt.ma2.domain.support.UserSerializer"/>
 			</list>
 		</property>
 	</bean>
