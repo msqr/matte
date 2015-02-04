@@ -34,17 +34,14 @@ import magoffin.matt.ma2.biz.SystemBiz;
 import magoffin.matt.ma2.biz.UserBiz;
 import magoffin.matt.ma2.domain.Album;
 import magoffin.matt.ma2.domain.AlbumSearchResult;
-import magoffin.matt.ma2.domain.Model;
 import magoffin.matt.ma2.domain.PaginationCriteria;
 import magoffin.matt.ma2.domain.SearchResults;
-import magoffin.matt.ma2.domain.Theme;
 import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.support.BrowseAlbumsCommand;
 import magoffin.matt.ma2.web.util.WebHelper;
 import magoffin.matt.web.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -85,9 +82,9 @@ public class AlbumController {
 	 *        The current request.
 	 * @param key
 	 *        The anonymous album key to get.
-	 * @return The album.
+	 * @return The album result.
 	 */
-	@RequestMapping(value = { "", "/" }, method = RequestMethod.GET, params = "!mode")
+	@RequestMapping(value = { "", "/" }, method = RequestMethod.GET, params = { "!mode", "!userKey" })
 	@ResponseBody
 	public Response<Album> viewAlbum(HttpServletRequest request, @RequestParam("key") String key) {
 		BizContext context = getWebHelper().getBizContextWithViewSettings(request);
@@ -95,101 +92,47 @@ public class AlbumController {
 		return Response.response(album);
 	}
 
+	/**
+	 * Get full details on a single virtual album.
+	 * 
+	 * @param request
+	 *        The current request.
+	 * @param key
+	 *        The anonymous virtual album key to get.
+	 * @param userKey
+	 *        The anonymous user key that owns the album.
+	 * @param mode
+	 *        The virtual album mode.
+	 * @return The album result.
+	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "", "/" }, method = RequestMethod.GET, params = "mode")
+	@RequestMapping(value = { "", "/" }, method = RequestMethod.GET, params = "mode!="
+			+ BrowseAlbumsCommand.MODE_ALBUMS)
 	@ResponseBody
-	public Response<AlbumModel> viewAlbum(HttpServletRequest request, AlbumCommand cmd) {
+	public Response<Album> viewVirtualAlbum(HttpServletRequest request, @RequestParam("key") String key,
+			@RequestParam("userKey") String userKey, @RequestParam("mode") String mode) {
 		BizContext context = getWebHelper().getBizContextWithViewSettings(request);
-		Model model = getDomainObjectFactory().newModelInstance();
 
 		// get the album
 		Album album = null;
-		if ( StringUtils.hasText(cmd.getUserKey()) && StringUtils.hasText(cmd.getMode())
-				&& !BrowseAlbumsCommand.MODE_ALBUMS.equals(cmd.getMode()) ) {
-			BrowseAlbumsCommand baCmd = new BrowseAlbumsCommand();
-			baCmd.setMode(cmd.getMode());
-			baCmd.setLocale(request.getLocale());
-			baCmd.setUserKey(cmd.getUserKey());
-			PaginationCriteria pc = getDomainObjectFactory().newPaginationCriteriaInstance();
-			pc.setIndexKey(cmd.getKey());
-			SearchResults sr = searchBiz.findAlbumsForBrowsing(baCmd, pc, context);
-			List<AlbumSearchResult> searchAlbums = sr.getAlbum();
-			if ( searchAlbums.size() > 0 ) {
-				album = searchAlbums.get(0);
-				if ( album.getTheme() == null ) {
-					User u = userBiz.getUserByAnonymousKey(cmd.getUserKey());
-					if ( u != null ) {
-						album.setTheme(u.getBrowseTheme());
-					}
-				}
-			}
-		} else {
-			album = mediaBiz.getSharedAlbum(cmd.getKey(), context);
-		}
-		model.getAlbum().add(album);
-
-		Album displayAlbum = album;
-		if ( cmd.getChildKey() != null ) {
-			// see if child album available
-			Album selectedAlbum = getAlbum(album, cmd.getChildKey(), context);
-			if ( selectedAlbum != null ) {
-				displayAlbum = selectedAlbum;
-			}
-		}
-
-		Theme theme = album != null ? album.getTheme() : null;
-		if ( cmd.getThemeId() != null ) {
-			Theme customTheme = getSystemBiz().getThemeById(cmd.getThemeId());
-			if ( customTheme != null ) {
-				model.getTheme().add(customTheme);
-				theme = customTheme;
-			}
-		}
-
-		// if album does not have theme and none requested, provide default in model
-		if ( theme == null ) {
-			theme = getSystemBiz().getDefaultTheme();
-			model.getTheme().add(theme);
-		}
-
-		// save the request theme
-		getWebHelper().saveRequestTheme(theme);
-
-		// add the media sizes
-		getWebHelper().populateMediaSizeAndQuality(model.getMediaSize());
-
-		AlbumModel viewModel = new AlbumModel();
-		viewModel.setModel(model);
-		if ( displayAlbum != null ) {
-			viewModel.setDisplayAlbumKey(displayAlbum.getAnonymousKey());
-		}
-		viewModel.setDisplayItemId(cmd.getItemId());
-		return Response.response(viewModel);
-	}
-
-	@SuppressWarnings("unchecked")
-	private Album getAlbum(Album album, String childKey, BizContext context) {
-		if ( album == null ) {
-			return null;
-		}
-		if ( childKey.equals(album.getAnonymousKey()) ) {
-			return album;
-		}
-		if ( album.getAlbum() != null ) {
-			for ( int i = 0; i < album.getAlbum().size(); i++ ) {
-				Album a = (Album) album.getAlbum().get(i);
-				Album foundAlbum = getAlbum(a, childKey, context);
-				if ( foundAlbum != null && a.getAlbumId().equals(foundAlbum.getAlbumId()) ) {
-					// get full album details and replace child
-					foundAlbum = getMediaBiz().getSharedAlbum(foundAlbum.getAnonymousKey(), context);
-					album.getAlbum().set(i, foundAlbum);
-				}
-				if ( foundAlbum != null ) {
-					return foundAlbum;
+		BrowseAlbumsCommand baCmd = new BrowseAlbumsCommand();
+		baCmd.setMode(mode);
+		baCmd.setLocale(request.getLocale());
+		baCmd.setUserKey(userKey);
+		PaginationCriteria pc = getDomainObjectFactory().newPaginationCriteriaInstance();
+		pc.setIndexKey(key);
+		SearchResults sr = searchBiz.findAlbumsForBrowsing(baCmd, pc, context);
+		List<AlbumSearchResult> searchAlbums = sr.getAlbum();
+		if ( searchAlbums.size() > 0 ) {
+			album = searchAlbums.get(0);
+			if ( album.getTheme() == null ) {
+				User u = userBiz.getUserByAnonymousKey(userKey);
+				if ( u != null ) {
+					album.setTheme(u.getBrowseTheme());
 				}
 			}
 		}
-		return null;
+		return Response.response(album);
 	}
 
 	public void setMediaBiz(MediaBiz mediaBiz) {
