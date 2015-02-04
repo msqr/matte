@@ -24,9 +24,9 @@
 
 package magoffin.matt.ma2.web.api;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import magoffin.matt.ma2.ObjectNotFoundException;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.MediaBiz;
 import magoffin.matt.ma2.biz.SearchBiz;
@@ -34,11 +34,8 @@ import magoffin.matt.ma2.biz.SystemBiz;
 import magoffin.matt.ma2.biz.UserBiz;
 import magoffin.matt.ma2.domain.Album;
 import magoffin.matt.ma2.domain.AlbumSearchResult;
-import magoffin.matt.ma2.domain.Metadata;
-import magoffin.matt.ma2.domain.Model;
 import magoffin.matt.ma2.domain.PaginationCriteria;
 import magoffin.matt.ma2.domain.SearchResults;
-import magoffin.matt.ma2.domain.Theme;
 import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.plugin.BrowseModePlugin;
 import magoffin.matt.ma2.support.BrowseAlbumsCommand;
@@ -91,6 +88,20 @@ public class AlbumController extends ControllerSupport {
 		return Response.response(album);
 	}
 
+	@RequestMapping(value = "/{key}", method = RequestMethod.GET, params = { "!mode", "!userKey" })
+	@ResponseBody
+	public Response<Album> viewAlbumViaPath(HttpServletRequest request, @PathVariable("key") String key) {
+		return viewAlbum(request, key);
+	}
+
+	@RequestMapping(value = "/{userKey}/{key}/{mode}", method = RequestMethod.GET)
+	@ResponseBody
+	public Response<Album> viewVirtualAlbumViaPath(HttpServletRequest request,
+			@PathVariable("userKey") String userKey, @PathVariable("key") String key,
+			@PathVariable("mode") String mode) {
+		return viewVirtualAlbum(request, key, userKey, mode);
+	}
+
 	/**
 	 * Get full details on a single virtual album.
 	 * 
@@ -134,37 +145,37 @@ public class AlbumController extends ControllerSupport {
 		return Response.response(album);
 	}
 
+	/**
+	 * Browse all non-virtual albums for user.
+	 * 
+	 * @param request
+	 *        The current request.
+	 * @param userKey
+	 *        The anonymous user key to browse albums for.
+	 * @return The result albums.
+	 */
 	@RequestMapping(value = "/browse/{userKey}", method = RequestMethod.GET)
 	@ResponseBody
-	public Response<Model> browse(HttpServletRequest request, @PathVariable("userKey") String userKey) {
+	public Response<SearchResults> browse(HttpServletRequest request,
+			@PathVariable("userKey") String userKey) {
 		BrowseAlbumsCommand cmd = new BrowseAlbumsCommand();
 		cmd.setUserKey(userKey);
 		return browse(request, cmd);
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * Browse albums for a user.
+	 * 
+	 * @param request
+	 *        The current request.
+	 * @param cmd
+	 *        The browse command. The {@code userKey} property is required.
+	 * @return The result albums.
+	 */
 	@RequestMapping(value = "/browse", method = RequestMethod.GET)
 	@ResponseBody
-	public Response<Model> browse(HttpServletRequest request, BrowseAlbumsCommand cmd) {
+	public Response<SearchResults> browse(HttpServletRequest request, BrowseAlbumsCommand cmd) {
 		BizContext context = getWebHelper().getBizContextWithViewSettings(request);
-
-		User browseUser = getUserBiz().getUserByAnonymousKey(cmd.getUserKey());
-		if ( browseUser == null ) {
-			throw new ObjectNotFoundException("User [" + cmd.getUserKey() + "] not available");
-		}
-		Model model = getDomainObjectFactory().newModelInstance();
-		model.getUser().add(browseUser);
-
-		Theme theme = browseUser.getBrowseTheme();
-		if ( theme == null ) {
-			theme = getSystemBiz().getDefaultTheme();
-		}
-		model.getTheme().add(theme);
-
-		getWebHelper().populateMediaSizeAndQuality(model.getMediaSize());
-
-		// save the request theme
-		getWebHelper().saveRequestTheme(theme);
 
 		// set command Locale
 		cmd.setLocale(request.getLocale());
@@ -174,19 +185,25 @@ public class AlbumController extends ControllerSupport {
 			pagination.setIndexKey(cmd.getSection());
 		}
 		SearchResults results = getSearchBiz().findAlbumsForBrowsing(cmd, pagination, context);
-		model.setSearchResults(results);
+		return Response.response(results);
+	}
 
-		// populate available browse modes
+	/**
+	 * Get an array of available browse mode keys.
+	 * 
+	 * @return An array response of all available browse mode keys.
+	 */
+	@RequestMapping(value = "/browse/modes", method = RequestMethod.GET)
+	@ResponseBody
+	public Response<List<String>> availableBrowseModes() {
 		List<BrowseModePlugin> browseModes = getSystemBiz().getPluginsOfType(BrowseModePlugin.class);
+		List<String> results = new ArrayList<String>(browseModes.size() * 2);
 		for ( BrowseModePlugin plugin : browseModes ) {
 			for ( String mode : plugin.getSupportedModes() ) {
-				Metadata meta = getDomainObjectFactory().newMetadataInstance();
-				meta.setKey("browse-mode");
-				meta.setValue(mode);
-				model.getUiMetadata().add(meta);
+				results.add(mode);
 			}
 		}
-		return Response.response(model);
+		return Response.response(results);
 	}
 
 	public void setMediaBiz(MediaBiz mediaBiz) {
