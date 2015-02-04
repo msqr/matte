@@ -177,6 +177,10 @@
 		<filter-name>Compression Filter</filter-name>
 		<url-pattern>/themeResource.do</url-pattern>
 	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Compression Filter</filter-name>
+		<url-pattern>/api/*</url-pattern>
+	</filter-mapping>
 	
 	<!-- Define filter mappings for the defined filters -->
 	<filter-mapping>
@@ -188,6 +192,15 @@
 	<filter-mapping>
 		<filter-name>Logon Header</filter-name>
 		<url-pattern>/logon.do</url-pattern>
+	</filter-mapping>
+	
+	<filter>
+		<filter-name>BizContext</filter-name>
+		<filter-class>magoffin.matt.ma2.web.util.WebBizContextFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>BizContext</filter-name>
+		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
 	
 	<!--
