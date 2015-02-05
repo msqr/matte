@@ -266,7 +266,8 @@
 		<property name="parent" ref="messagesSource"/>
 	</bean>
 	
-	<bean id="themeXsltViewTemplate" parent="defaultXsltViewTemplate" scope="prototype">
+	<bean id="themeXsltViewTemplate" parent="defaultXsltViewTemplate" scope="prototype"
+		class="magoffin.matt.ma2.web.util.MatteXwebJaxbView">
 		<property name="contentTypeResolver" ref="xhtmlContentTypeResolver"/>
 		<property name="messagesSource" ref="themeMessageSource"/>
 	</bean>
