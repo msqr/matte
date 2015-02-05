@@ -7,11 +7,7 @@
 	
 	<xsl:import href="../../theme-util.xsl"/>
 	
-	<xsl:output method="xml" indent="no" 
-		omit-xml-declaration="no"
-		doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
-		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
-		media-type="text/xml"/>
+	<xsl:output method="xml" indent="yes" omit-xml-declaration="yes"/>
 	
 	<!-- helper vars -->
 	<xsl:variable name="author" select="x:x-data/x:x-model[1]/m:model[1]/m:user[1]"/>
@@ -118,20 +114,14 @@
 			<xsl:text> </xsl:text>
 			<xsl:value-of select="key('i18n','browse.album.title')"/>
 		</xsl:variable>
-		<html xmlns="http://www.w3.org/1999/xhtml">
+		<xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;
+		</xsl:text>
+		<html>
 			<head>
 				<title>
 					<xsl:value-of select="$page.title"/>
 				</title>
-				<xsl:comment>
-					thumb.size = <xsl:value-of select="$thumb-size"/>
-					thumb.quality = <xsl:value-of select="$thumb-quality"/>
-					xmlMode = <xsl:value-of select="contains(
-						/x:x-data/x:x-request-headers/x:param[@key='accept'],
-						'application/xhtml+xml')"/>
-				</xsl:comment>
-				<meta http-equiv="Content-Type" 
-					content="text/html; charset=utf-8" />
+				<meta charset="utf-8" />
 				<link rel="alternate" type="application/atom+xml" lang="en-US">
 					<xsl:attribute name="title">
 						<xsl:value-of select="$author/@name"/>
@@ -152,98 +142,19 @@
 					<xsl:with-param name="web-context" select="$web-context"/>
 				</xsl:call-template>
 				<script type="text/javascript">
-					var themeId = '<xsl:value-of select="$theme/@theme-id"/>';
-					var webContext = '<xsl:value-of select="$web-context"/>';
-					var serverName = '<xsl:value-of select="$server-name"/>';
-					var serverPort = '<xsl:value-of select="$server-port"/>';
-					var myLang = '<xsl:value-of select="$user-locale"/>';
-					var userKey = '<xsl:value-of select="$author/@anonymous-key"/>';
-					var thumbSpec = {
-						size: '<xsl:value-of select="$thumb-size"/>',
-						quality: '<xsl:value-of select="$thumb-quality"/>'
-					}
-					var xmlMode = <xsl:value-of select="contains(
-						/x:x-data/x:x-request-headers/x:param[@key='accept'],
-						'application/xhtml+xml')"/>;
-					var mediaSizes = new Object();
-					<xsl:for-each select="m:media-size">
-						mediaSizes.<xsl:value-of select="@size"/> = {
-						width: <xsl:value-of select="@width"/>,
-						height: <xsl:value-of select="@height"/>
+					var app = {};
+					app.config = {
+						themeId : '<xsl:value-of select="$theme/@theme-id"/>',
+						webContext : '<xsl:value-of select="$web-context"/>',
+						serverName : '<xsl:value-of select="$server-name"/>',
+						serverPort : '<xsl:value-of select="$server-port"/>',
+						myLang : '<xsl:value-of select="$user-locale"/>',
+						userKey : '<xsl:value-of select="$author/@anonymous-key"/>',
+						thumbSpec : {
+							size: '<xsl:value-of select="$thumb-size"/>',
+							quality: '<xsl:value-of select="$thumb-quality"/>'
 						}
-						<xsl:if test="position() != last()">
-							<xsl:text>, </xsl:text>
-						</xsl:if>
-					</xsl:for-each>
-				</script>
-				<script type="text/javascript">
-					<xsl:attribute name="src">
-						<xsl:call-template name="get-resource-url">
-							<xsl:with-param name="resource" select="'prototype.js'"/>
-							<xsl:with-param name="theme" select="$theme"/>
-							<xsl:with-param name="web-context" select="$web-context"/>
-						</xsl:call-template>
-					</xsl:attribute>
-					<xsl:text> </xsl:text>
-				</script>
-				<script type="text/javascript">
-					<xsl:attribute name="src">
-						<xsl:call-template name="get-resource-url">
-							<xsl:with-param name="resource" select="'scriptaculous.js'"/>
-							<xsl:with-param name="theme" select="$theme"/>
-							<xsl:with-param name="web-context" select="$web-context"/>
-						</xsl:call-template>
-					</xsl:attribute>
-					<xsl:text> </xsl:text>
-				</script>
-				<script type="text/javascript">
-					<xsl:attribute name="src">
-						<xsl:call-template name="get-resource-url">
-							<xsl:with-param name="resource" select="'effects.js'"/>
-							<xsl:with-param name="theme" select="$theme"/>
-							<xsl:with-param name="web-context" select="$web-context"/>
-						</xsl:call-template>
-					</xsl:attribute>
-					<xsl:text> </xsl:text>
-				</script>
-				<script type="text/javascript">
-					<xsl:attribute name="src">
-						<xsl:call-template name="get-resource-url">
-							<xsl:with-param name="resource" select="'controls.js'"/>
-							<xsl:with-param name="theme" select="$theme"/>
-							<xsl:with-param name="web-context" select="$web-context"/>
-						</xsl:call-template>
-					</xsl:attribute>
-					<xsl:text> </xsl:text>
-				</script>
-				<script type="text/javascript">
-					<xsl:attribute name="src">
-						<xsl:call-template name="get-resource-url">
-							<xsl:with-param name="resource" select="'builder.js'"/>
-							<xsl:with-param name="theme" select="$theme"/>
-							<xsl:with-param name="web-context" select="$web-context"/>
-						</xsl:call-template>
-					</xsl:attribute>
-					<xsl:text> </xsl:text>
-				</script>
-				<script type="text/javascript">
-					<xsl:attribute name="src">
-						<xsl:call-template name="get-resource-url">
-							<xsl:with-param name="resource" select="'behaviour.js'"/>
-							<xsl:with-param name="theme" select="$theme"/>
-							<xsl:with-param name="web-context" select="$web-context"/>
-						</xsl:call-template>
-					</xsl:attribute>
-					<xsl:text> </xsl:text>
-				</script>
-				<script type="text/javascript">
-					<xsl:attribute name="src">
-						<xsl:call-template name="get-dynamic-js-url">
-							<xsl:with-param name="theme" select="$theme"/>
-							<xsl:with-param name="web-context" select="$web-context"/>
-						</xsl:call-template>
-					</xsl:attribute>	
-					<xsl:text> </xsl:text>					
+					};
 				</script>
 				<script type="text/javascript">
 					<xsl:attribute name="src">
@@ -265,26 +176,6 @@
 					</xsl:attribute>
 					<xsl:text> </xsl:text>
 				</link>
-				<script type="text/javascript">
-					<xsl:attribute name="src">
-						<xsl:call-template name="get-resource-url">
-							<xsl:with-param name="resource" select="'yui/yahoo-dom-event.js'"/>
-							<xsl:with-param name="theme" select="$theme"/>
-							<xsl:with-param name="web-context" select="$web-context"/>
-						</xsl:call-template>
-					</xsl:attribute>
-					<xsl:text> </xsl:text>
-				</script>
-				<script type="text/javascript">
-					<xsl:attribute name="src">
-						<xsl:call-template name="get-resource-url">
-							<xsl:with-param name="resource" select="'yui/calendar-min.js'"/>
-							<xsl:with-param name="theme" select="$theme"/>
-							<xsl:with-param name="web-context" select="$web-context"/>
-						</xsl:call-template>
-					</xsl:attribute>
-					<xsl:text> </xsl:text>
-				</script>
 				<link rel="stylesheet" type="text/css">
 					<xsl:attribute name="href">
 						<xsl:call-template name="get-dynamic-css-url">
@@ -383,7 +274,7 @@
 	</xsl:template>
 	
 	<xsl:template match="m:index">
-		<div xmlns="http://www.w3.org/1999/xhtml" class="browse-index">
+		<div class="browse-index">
 			<xsl:variable name="name-key">
 				<xsl:text>browse.mode.</xsl:text>
 				<xsl:value-of select="$mode"/>
@@ -397,7 +288,7 @@
 	</xsl:template>
 	
 	<xsl:template name="render-browse-modes-link">
-		<span xmlns="http://www.w3.org/1999/xhtml" id="browse-mode-link" style="display: none;">
+		<span id="browse-mode-link" style="display: none;">
 			<xsl:text> | </xsl:text>
 			<span class="clickable" title="{key('i18n','browse.modes.link.title')}">
 				<xsl:value-of select="key('i18n','browse.modes.link')"/>
@@ -414,7 +305,7 @@
 			<xsl:value-of select="."/>
 			<xsl:text>.displayName</xsl:text>
 		</xsl:variable>
-		<span xmlns="http://www.w3.org/1999/xhtml" id="browsemodelink-{.}">
+		<span id="browsemodelink-{.}">
 			<xsl:attribute name="class">
 				<xsl:choose>
 					<xsl:when test="$mode = string(.)">
@@ -435,12 +326,12 @@
 		</xsl:if>
 		<xsl:choose>
 			<xsl:when test="@selected = 'true'">
-				<span xmlns="http://www.w3.org/1999/xhtml" class="selected">
+				<span class="selected">
 					<xsl:value-of select="@index-key"/>
 				</span>
 			</xsl:when>
 			<xsl:otherwise>
-				<a xmlns="http://www.w3.org/1999/xhtml">
+				<a>
 					<xsl:attribute name="href">
 						<xsl:value-of select="$web-context"/>
 						<xsl:value-of select="$web-path"/>
@@ -461,7 +352,7 @@
 		<!--div class="close-x">
 			<span class="alt-hide"><xsl:value-of select="key('i18n','close')"/></span>
 		</div-->
-		<form xmlns="http://www.w3.org/1999/xhtml" id="search-form" action="{$web-context}/find.do" method="post" class="simple-form">
+		<form id="search-form" action="{$web-context}/find.do" method="post" class="simple-form">
 			<div>
 				<label for="quick-search">
 					<xsl:value-of select="key('i18n','search.items.quick.displayName')"/>
@@ -509,7 +400,7 @@
 			<div><xsl:comment>This is here to "clear" the floats.</xsl:comment></div>
 		</form>
 		
-		<div xmlns="http://www.w3.org/1999/xhtml" id="search-results"/>
+		<div id="search-results"/>
 	</xsl:template>
 	
 	<xsl:template match="m:album">
@@ -552,7 +443,7 @@
 			</xsl:for-each>
 		</xsl:variable>
 		<xsl:variable name="total-album-count" select="count(m:search-album) + 1"/>
-		<div xmlns="http://www.w3.org/1999/xhtml" class="browse-album-frame {$oddness}">
+		<div class="browse-album-frame {$oddness}">
 			<div class="browse-{$oddness}">
 				<h2>
 					<a>
@@ -624,7 +515,7 @@
 			<xsl:apply-templates select="m:search-poster"/>
 		</div>
 		<xsl:if test="position() != last()">
-			<div xmlns="http://www.w3.org/1999/xhtml" class="album-sep"><xsl:text> </xsl:text></div>
+			<div class="album-sep"><xsl:text> </xsl:text></div>
 		</xsl:if>
 		
 	</xsl:template>
@@ -638,7 +529,7 @@
 				<xsl:otherwise>even</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<div xmlns="http://www.w3.org/1999/xhtml" class="poster-{$oddness}">
+		<div class="poster-{$oddness}">
 			<a>
 				<xsl:attribute name="title">
 					<xsl:value-of select="key('i18n','browse.album.view')"/>
@@ -724,12 +615,12 @@
 		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="$sel.year = $year">
-				<span xmlns="http://www.w3.org/1999/xhtml" class="selected">
+				<span class="selected">
 					<xsl:value-of select="$sel.year"/>
 				</span>
 			</xsl:when>
 			<xsl:otherwise>
-				<a xmlns="http://www.w3.org/1999/xhtml">
+				<a>
 					<xsl:attribute name="href">
 						<xsl:value-of select="$web-context"/>
 						<xsl:value-of select="$web-path"/>
