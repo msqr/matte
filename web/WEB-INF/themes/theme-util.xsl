@@ -25,6 +25,7 @@
 
 	<xsl:import href="standard-variables.xsl"/>
 	<xsl:import href="string-utils.xsl"/>
+	<xsl:import href="url-utils.xsl"/>
 	
 	<!--
 		Named Template: get-css-link
@@ -209,23 +210,7 @@
 			</div>
 		</xsl:if>
 	</xsl:template>
-	
-	<!--
-		Generate a server URL, eg. http://myhost
-	-->
-	<xsl:template name="server-url">
-		<xsl:text>http</xsl:text>
-		<xsl:if test="$server-port = '443'">
-			<xsl:text>s</xsl:text>
-		</xsl:if>
-		<xsl:text>://</xsl:text>
-		<xsl:value-of select="$server-name"/>
-		<xsl:if test="$server-port != '80' and $server-port != '443'">
-			<xsl:text>:</xsl:text>
-			<xsl:value-of select="$server-port"/>
-		</xsl:if>
-	</xsl:template>
-	
+		
 	<!--
 		Generate the public absolute URL for viewing an album.
 	-->
@@ -247,20 +232,7 @@
 	<!--
 		Named Template: render-media-server-url
 		
-		Generate the URL for an image for the MediaServer server. For example:
-		
-		render-media-server-url(item = $MediaItem{id = 1565}, quality = 'GOOD', size = 'THUMB_NORMAL')
-		
-		=> media.do?id=1565&size=THUMB_NORMAL&quality=GOOD
-		
-		Parameters:
-		item - a MediaItem node
-		quality (opt) - value to use for the MediaServer quality parameter
-		size (opt) - value to use for the MediaServer size parameter
-		download (opt) - if set, add download=true flag
-		album-key (opt) - if set and original = true, then add for original downloading
-		original (opt) - if set, then generate URL for downloading original media
-		web-context - the web context
+		Deprecated: see url-utils.xsl/media-server-url
 	-->
 	<xsl:template name="render-media-server-url">
 		<xsl:param name="item"/>
@@ -270,30 +242,15 @@
 		<xsl:param name="album-key"/>
 		<xsl:param name="original"/>
 		<xsl:param name="web-context"/>
-		
-		<xsl:value-of select="$web-context"/>
-		<xsl:text>/media.do?id=</xsl:text>
-		<xsl:value-of select="$item/@item-id"/>
-		<xsl:if test="$album-key">
-			<xsl:text>&amp;albumKey=</xsl:text>
-			<xsl:value-of select="$album-key"/>
-		</xsl:if>
-		<xsl:choose>
-			<xsl:when test="$original">
-				<xsl:text>&amp;original=true</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text>&amp;size=</xsl:text>
-				<xsl:value-of select="$size"/>
-				<xsl:if test="$quality">
-					<xsl:text>&amp;quality=</xsl:text>
-					<xsl:value-of select="$quality"/>
-				</xsl:if>
-			</xsl:otherwise>
-		</xsl:choose>
-		<xsl:if test="$download">
-			<xsl:text>&amp;download=true</xsl:text>
-		</xsl:if>
+		<xsl:call-template name="media-server-url">
+			<xsl:with-param name="item" select="$item"/>
+			<xsl:with-param name="quality" select="$quality"/>
+			<xsl:with-param name="size" select="$size"/>
+			<xsl:with-param name="download" select="$download"/>
+			<xsl:with-param name="album-key" select="$album-key"/>
+			<xsl:with-param name="original" select="$original"/>
+			<xsl:with-param name="web-context" select="$web-context"/>
+		</xsl:call-template>
 	</xsl:template>
 	
 	
@@ -323,21 +280,13 @@
 		<xsl:param name="web-context"/>
 		<xsl:param name="item-id"/>
 		<xsl:param name="mode"/>
-		<xsl:value-of select="$web-context"/>
-		<xsl:text>/album.do?key=</xsl:text>
-		<xsl:value-of select="$album/@anonymous-key"/>
-		<xsl:if test="string-length($album/@album-id) &lt; 1">
-			<xsl:text>&amp;userKey=</xsl:text>
-			<xsl:value-of select="$user/@anonymous-key"/>
-			<xsl:if test="$mode">
-				<xsl:text>&amp;mode=</xsl:text>
-				<xsl:value-of select="$mode"/>
-			</xsl:if>
-		</xsl:if>
-		<xsl:if test="$item-id">
-			<xsl:text>&amp;itemId=</xsl:text>
-			<xsl:value-of select="$item-id"/>
-		</xsl:if>
+		<xsl:call-template name="shared-album-url">
+			<xsl:with-param name="album" select="$album"/>
+			<xsl:with-param name="user" select="$user"/>
+			<xsl:with-param name="web-context" select="$web-context"/>
+			<xsl:with-param name="item-id" select="$item-id"/>
+			<xsl:with-param name="mode" select="$mode"/>
+		</xsl:call-template>
 	</xsl:template>
 	
 	<!--

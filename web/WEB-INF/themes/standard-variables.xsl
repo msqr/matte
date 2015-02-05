@@ -33,5 +33,29 @@
 	
 	<!-- request params defined as key for quick lookup -->
 	<xsl:key name="req-param" match="x:x-data/x:x-request/x:param" use="@key"/>
+	
+	<xsl:variable name="server-url" select="concat(
+		'http', 
+		if ($server-port eq '443') then 's' else (), 
+		'://',
+		$server-name,
+		if ($server-port ne '80' and $server-port ne '443') then concat(':', $server-port) else ()
+		)"/>
 
+	<!--
+		Generate a server URL, eg. http://myhost
+	-->
+	<xsl:template name="server-url">
+		<xsl:text>http</xsl:text>
+		<xsl:if test="$server-port = '443'">
+			<xsl:text>s</xsl:text>
+		</xsl:if>
+		<xsl:text>://</xsl:text>
+		<xsl:value-of select="$server-name"/>
+		<xsl:if test="$server-port != '80' and $server-port != '443'">
+			<xsl:text>:</xsl:text>
+			<xsl:value-of select="$server-port"/>
+		</xsl:if>
+	</xsl:template>
+	
 </xsl:stylesheet>
