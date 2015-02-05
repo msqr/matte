@@ -5,7 +5,9 @@
 	xmlns:x="http://msqr.us/xsd/jaxb-web"
 	exclude-result-prefixes="m x xs">
 	
-	<xsl:import href="../../theme-util.xsl"/>
+	<xsl:import href="../../standard-variables.xsl"/>
+	<xsl:import href="../../string-utils.xsl"/>
+	<xsl:import href="../../url-utils.xsl"/>
 	
 	<xsl:output method="xml" indent="yes" omit-xml-declaration="yes"/>
 	
@@ -130,17 +132,12 @@
 						<xsl:value-of select="key('i18n','feed.album.title')"/>
 					</xsl:attribute>
 					<xsl:attribute name="href">
-						<xsl:call-template name="server-url"/>
+						<xsl:value-of select="$server-url"/>
 						<xsl:value-of select="$web-context"/>
 						<xsl:text>/feed/atom-1.0.do?userKey=</xsl:text>
 						<xsl:value-of select="$author/@anonymous-key"/>
 					</xsl:attribute>
 				</link>
-				<xsl:call-template name="get-css-link">
-					<xsl:with-param name="theme" select="$theme"/>
-					<xsl:with-param name="css" select="'woosh-browse.css'"/>
-					<xsl:with-param name="web-context" select="$web-context"/>
-				</xsl:call-template>
 				<script type="text/javascript">
 					var app = {};
 					app.config = {
@@ -158,7 +155,7 @@
 				</script>
 				<script type="text/javascript">
 					<xsl:attribute name="src">
-						<xsl:call-template name="get-resource-url">
+						<xsl:call-template name="theme-resource-url">
 							<xsl:with-param name="resource" select="'browse.js'"/>
 							<xsl:with-param name="theme" select="$theme"/>
 							<xsl:with-param name="web-context" select="$web-context"/>
@@ -168,21 +165,13 @@
 				</script>
 				<link rel="stylesheet" type="text/css">
 					<xsl:attribute name="href">
-						<xsl:call-template name="get-resource-url">
+						<xsl:call-template name="theme-resource-url">
 							<xsl:with-param name="resource" select="'yui/calendar.css'"/>
 							<xsl:with-param name="theme" select="$theme"/>
 							<xsl:with-param name="web-context" select="$web-context"/>
 						</xsl:call-template>
 					</xsl:attribute>
 					<xsl:text> </xsl:text>
-				</link>
-				<link rel="stylesheet" type="text/css">
-					<xsl:attribute name="href">
-						<xsl:call-template name="get-dynamic-css-url">
-							<xsl:with-param name="theme" select="$theme"/>
-							<xsl:with-param name="web-context" select="$web-context"/>
-						</xsl:call-template>
-					</xsl:attribute>	
 				</link>
 			</head>
 			<body class="browse">
@@ -341,7 +330,7 @@
 							<xsl:value-of select="@name"/>
 						</xsl:attribute>
 						<xsl:attribute name="href">
-							<xsl:call-template name="render-shared-album-url">
+							<xsl:call-template name="shared-album-url">
 								<xsl:with-param name="album" select="."/>
 								<xsl:with-param name="user" select="$author"/>
 								<xsl:with-param name="mode" select="$mode"/>
@@ -425,7 +414,7 @@
 					<xsl:value-of select="../@name"/>
 				</xsl:attribute>
 				<xsl:attribute name="href">
-					<xsl:call-template name="render-shared-album-url">
+					<xsl:call-template name="shared-album-url">
 						<xsl:with-param name="album" select=".."/>
 						<xsl:with-param name="user" select="$author"/>
 						<xsl:with-param name="mode" select="$mode"/>
@@ -435,7 +424,7 @@
 				<img class="poster {$oddness}" alt="{@name}" onload="setShadow(this)">
 					<xsl:attribute name="src">
 						<xsl:call-template name="server-url"/>
-						<xsl:call-template name="render-media-server-url">
+						<xsl:call-template name="media-server-url">
 							<xsl:with-param name="item" select="."/>
 							<xsl:with-param name="size" select="'THUMB_BIGGER'"/>
 							<xsl:with-param name="quality" select="$thumb-quality"/>
