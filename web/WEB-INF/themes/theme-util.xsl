@@ -219,7 +219,7 @@
 			<xsl:text>s</xsl:text>
 		</xsl:if>
 		<xsl:text>://</xsl:text>
-		<xsl:value-of select="$ctx/x:server-name"/>
+		<xsl:value-of select="$server-name"/>
 		<xsl:if test="$server-port != '80' and $server-port != '443'">
 			<xsl:text>:</xsl:text>
 			<xsl:value-of select="$server-port"/>
