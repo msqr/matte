@@ -186,89 +186,32 @@
 				</link>
 			</head>
 			<body class="browse">
-				<div id="browse-frame">
-					<div class="frame-t">
-						<img class="frame-tl" alt="frame">
-							<xsl:attribute name="src">
-								<xsl:call-template name="get-resource-url">
-									<xsl:with-param name="resource" select="'img/tb_03.gif'"/>
-									<xsl:with-param name="theme" select="$theme"/>
-									<xsl:with-param name="web-context" select="$web-context"/>
-								</xsl:call-template>
-							</xsl:attribute>
-						</img>
-						<img class="frame-tr" alt="frame">
-							<xsl:attribute name="src">
-								<xsl:call-template name="get-resource-url">
-									<xsl:with-param name="resource" select="'img/tb_06.gif'"/>
-									<xsl:with-param name="theme" select="$theme"/>
-									<xsl:with-param name="web-context" select="$web-context"/>
-								</xsl:call-template>
-							</xsl:attribute>							
-						</img>
-					</div>	
-					<div>
-						<h1>
-							<xsl:value-of select="$page.title"/>
-						</h1>
-						<xsl:choose>
-							<xsl:when test="$mode='albums'">
-								<div class="browse-index">
-									<xsl:call-template name="browse-years-links">
-										<xsl:with-param name="years" select="$years"/>
-										<xsl:with-param name="year" select="$year"/>
-									</xsl:call-template>
-									<xsl:call-template name="render-browse-modes-link"/>
-									<span id="search-link" style="display: none;">
-										<xsl:text> | </xsl:text>
-										<span class="clickable">
-											<xsl:value-of select="key('i18n','link.search')"/>
-										</span>
-									</span>
-								</div>
-								<div id="browse-modes" style="display: none;">
-									<xsl:apply-templates select="m:ui-metadata[@key='browse-mode']"/>
-								</div>
-								<xsl:apply-templates select="m:search-results/m:album
-									[substring-before(concat(@album-date,@creation-date),'-') = $year]"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:apply-templates select="m:search-results/m:index"/>
-								<div id="browse-modes" style="display: none;">
-									<xsl:apply-templates select="m:ui-metadata[@key='browse-mode']"/>
-								</div>
-								<xsl:apply-templates select="m:search-results/m:album"/>
-							</xsl:otherwise>
-						</xsl:choose>
-						
-						<div class="browse-clear"><xsl:text> </xsl:text></div>
-					</div>
-					<div class="frame-ml"><xsl:text> </xsl:text></div>
-					<div class="frame-mr"><xsl:text> </xsl:text></div>
-					<div class="frame-b">
-						<img class="frame-bl" alt="frame">
-							<xsl:attribute name="src">
-								<xsl:call-template name="get-resource-url">
-									<xsl:with-param name="resource" select="'img/tb_24.gif'"/>
-									<xsl:with-param name="theme" select="$theme"/>
-									<xsl:with-param name="web-context" select="$web-context"/>
-								</xsl:call-template>
-							</xsl:attribute>
-						</img>
-						<img class="frame-br" alt="frame">
-							<xsl:attribute name="src">
-								<xsl:call-template name="get-resource-url">
-									<xsl:with-param name="resource" select="'img/tb_26.gif'"/>
-									<xsl:with-param name="theme" select="$theme"/>
-									<xsl:with-param name="web-context" select="$web-context"/>
-								</xsl:call-template>
-							</xsl:attribute>
-						</img>
-					</div>
-				</div>
-				<div id="search-frame" style="display: none;">
-					<xsl:apply-templates select="." mode="search.frame"/>
-				</div>
+				<h1>
+					<xsl:value-of select="$page.title"/>
+				</h1>
+				<xsl:choose>
+					<xsl:when test="$mode='albums'">
+						<div class="browse-index">
+							<xsl:call-template name="browse-years-links">
+								<xsl:with-param name="years" select="$years"/>
+								<xsl:with-param name="year" select="$year"/>
+							</xsl:call-template>
+							<xsl:call-template name="render-browse-modes-link"/>
+						</div>
+						<div id="browse-modes" style="display: none;">
+							<xsl:apply-templates select="m:ui-metadata[@key='browse-mode']"/>
+						</div>
+						<xsl:apply-templates select="m:search-results/m:album
+							[substring-before(concat(@album-date,@creation-date),'-') = $year]"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select="m:search-results/m:index"/>
+						<div id="browse-modes" style="display: none;">
+							<xsl:apply-templates select="m:ui-metadata[@key='browse-mode']"/>
+						</div>
+						<xsl:apply-templates select="m:search-results/m:album"/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</body>
 		</html>
 	</xsl:template>
@@ -347,62 +290,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
-	<xsl:template match="m:model" mode="search.frame">
-		<!--div class="close-x">
-			<span class="alt-hide"><xsl:value-of select="key('i18n','close')"/></span>
-		</div-->
-		<form id="search-form" action="{$web-context}/find.do" method="post" class="simple-form">
-			<div>
-				<label for="quick-search">
-					<xsl:value-of select="key('i18n','search.items.quick.displayName')"/>
-				</label>
-				<div>
-					<input type="text" name="quickSearch" id="quick-search"/>
-				</div>
-			</div>
-			<div>
-				<label for="search-start-date">
-					<xsl:value-of select="key('i18n', 'search.items.dateRange.displayName')"/>
-				</label>
-				<div>
-					<input type="text" id="search-start-date" name="startDate" value=""/>
-					<xsl:text> </xsl:text>
-					<xsl:value-of select="key('i18n', 'to')"/>
-					<xsl:text> </xsl:text>
-					<input type="text" name="endDate" id="search-end-date" value=""/>
-					<img alt="{key('i18n','search.items.dateRange.calendar.title')}"
-						id="date-range-calendar-toggle">
-						<xsl:attribute name="src">
-							<xsl:call-template name="get-resource-url">
-								<xsl:with-param name="resource" select="'img/date.png'"/>
-								<xsl:with-param name="theme" select="$theme"/>
-								<xsl:with-param name="web-context" select="$web-context"/>
-							</xsl:call-template>
-						</xsl:attribute>
-					</img>
-					<div id="date-range-caption" class="caption">
-						<xsl:value-of select="key('i18n','search.items.dateRange.caption')"
-							disable-output-escaping="yes"/>
-					</div>
-					<div id="date-range-calendar-container" style="display: none;">
-						<div id="start-date-calendar"><xsl:text> </xsl:text></div>
-						<div id="end-date-calendar"><xsl:text> </xsl:text></div>
-					</div>
-				</div>
-			</div>
-			<div>
-				<div class="submit">
-					<input type="hidden" name="userAnonymousKey" value="{$author/@anonymous-key}"/>				
-					<input value="{key('i18n','find.displayName')}" type="submit" />
-				</div>
-			</div>
-			<div><xsl:comment>This is here to "clear" the floats.</xsl:comment></div>
-		</form>
 		
-		<div id="search-results"/>
-	</xsl:template>
-	
 	<xsl:template match="m:album">
 		<xsl:variable name="is.odd" select="boolean(position() mod 2 = 1)"/>
 		<xsl:variable name="oddness">
