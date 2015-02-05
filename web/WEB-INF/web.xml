@@ -249,6 +249,10 @@
 		<servlet-name>matte</servlet-name>
 		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>matte</servlet-name>
+		<url-pattern>/theme/*</url-pattern>
+	</servlet-mapping>
 	
 	<mime-mapping>
 		<extension>xsd</extension>

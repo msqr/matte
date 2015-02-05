@@ -62,6 +62,15 @@
 		</property>
 	</bean>
 	
+	<bean id="fullPathUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping"
+		p:alwaysUseFullPath="true">
+		<property name="mappings">
+			<props>
+				<prop key="/theme/**">themeResourceRequestHandler</prop>
+			</props>
+		</property>
+	</bean>
+	
 	<bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">
 			<props>
@@ -307,6 +316,16 @@
 		<property name="xsltPathPrefix" value="file://${theme.path}/"/>
 		<property name="xsltPathSuffix" value="-dynamic.xsl"/>
 		<property name="useAbsolutePaths" value="true"/>
+	</bean>
+	
+	<!-- Resolve theme resources at paths like /theme/1/foo.js -->
+	<bean id="themeResourceRequestHandler" class="magoffin.matt.ma2.web.util.ThemeResourceHttpRequestHandler">
+		<property name="locations">
+			<list>
+				<value>/WEB-INF/themes/</value>
+				<value>file://${theme.path}</value>
+			</list>
+		</property>
 	</bean>
 	
 	<!-- As a backup to the default view handler, use the XmlViewResolver to handle 
