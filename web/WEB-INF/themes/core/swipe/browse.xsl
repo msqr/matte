@@ -181,8 +181,10 @@
 						<div id="browse-modes" style="display: none;">
 							<xsl:apply-templates select="m:ui-metadata[@key='browse-mode']"/>
 						</div>
-						<xsl:apply-templates select="m:search-results/m:album
-							[substring-before(concat(@album-date,@creation-date),'-') = $year]"/>
+						<div class="container">
+							<xsl:apply-templates select="m:search-results/m:album
+								[substring-before(concat(@album-date,@creation-date),'-') = $year]"/>
+						</div>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:apply-templates select="m:search-results/m:index"/>
@@ -321,7 +323,7 @@
 			</xsl:for-each>
 		</xsl:variable>
 		<xsl:variable name="total-album-count" select="count(m:search-album) + 1"/>
-		<div class="browse-album-frame {$oddness}">
+		<div class="row {$oddness}">
 			<div class="browse-{$oddness}">
 				<h2>
 					<a>
