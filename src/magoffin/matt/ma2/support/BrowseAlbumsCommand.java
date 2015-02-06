@@ -36,7 +36,13 @@ import java.util.Locale;
  * @version $Revision$ $Date$
  */
 public class BrowseAlbumsCommand {
-	
+
+	/**
+	 * A special section key for the "latest" value, whatever that might be in
+	 * the database.
+	 */
+	public static final String SECTION_LATEST = "latest";
+
 	/** The default value for the {@code mode} property. */
 	public static final String MODE_ALBUMS = "albums";
 
@@ -56,37 +62,40 @@ public class BrowseAlbumsCommand {
 	public Date getEntriesSince() {
 		return entriesSince;
 	}
-	
+
 	/**
-	 * @param entriesSince the entriesSince to set
+	 * @param entriesSince
+	 *        the entriesSince to set
 	 */
 	public void setEntriesSince(Date entriesSince) {
 		this.entriesSince = entriesSince;
 	}
-	
+
 	/**
 	 * @return the maxEntries
 	 */
 	public int getMaxEntries() {
 		return maxEntries;
 	}
-	
+
 	/**
-	 * @param maxEntries the maxEntries to set
+	 * @param maxEntries
+	 *        the maxEntries to set
 	 */
 	public void setMaxEntries(int maxEntries) {
 		this.maxEntries = maxEntries;
 	}
-	
+
 	/**
 	 * @return the userKey
 	 */
 	public String getUserKey() {
 		return userKey;
 	}
-	
+
 	/**
-	 * @param userKey the userKey to set
+	 * @param userKey
+	 *        the userKey to set
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
@@ -100,7 +109,8 @@ public class BrowseAlbumsCommand {
 	}
 
 	/**
-	 * @param mode the mode to set
+	 * @param mode
+	 *        the mode to set
 	 */
 	public void setMode(String mode) {
 		this.mode = mode;
@@ -114,7 +124,8 @@ public class BrowseAlbumsCommand {
 	}
 
 	/**
-	 * @param locale the locale to set
+	 * @param locale
+	 *        the locale to set
 	 */
 	public void setLocale(Locale locale) {
 		this.locale = locale;
@@ -128,10 +139,11 @@ public class BrowseAlbumsCommand {
 	}
 
 	/**
-	 * @param section the section to set
+	 * @param section
+	 *        the section to set
 	 */
 	public void setSection(String section) {
 		this.section = section;
 	}
-	
+
 }
