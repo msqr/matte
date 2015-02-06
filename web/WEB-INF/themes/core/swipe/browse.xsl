@@ -124,6 +124,7 @@
 					<xsl:value-of select="$page.title"/>
 				</title>
 				<meta charset="utf-8" />
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<link rel="alternate" type="application/atom+xml" lang="en-US">
 					<xsl:attribute name="title">
 						<xsl:value-of select="$author/@name"/>
@@ -137,6 +138,16 @@
 						<xsl:text>/feed/atom-1.0.do?userKey=</xsl:text>
 						<xsl:value-of select="$author/@anonymous-key"/>
 					</xsl:attribute>
+				</link>
+				<link rel="stylesheet">
+					<xsl:attribute name="href">
+						<xsl:call-template name="theme-resource-url">
+							<xsl:with-param name="resource" select="'css/bootstrap.min.css'"/>
+							<xsl:with-param name="theme" select="$theme"/>
+							<xsl:with-param name="web-context" select="$web-context"/>
+						</xsl:call-template>
+					</xsl:attribute>
+					<xsl:text> </xsl:text>
 				</link>
 				<script type="text/javascript">
 					var app = {};
@@ -153,28 +164,8 @@
 						}
 					};
 				</script>
-				<script type="text/javascript">
-					<xsl:attribute name="src">
-						<xsl:call-template name="theme-resource-url">
-							<xsl:with-param name="resource" select="'browse.js'"/>
-							<xsl:with-param name="theme" select="$theme"/>
-							<xsl:with-param name="web-context" select="$web-context"/>
-						</xsl:call-template>
-					</xsl:attribute>
-					<xsl:text> </xsl:text>
-				</script>
-				<link rel="stylesheet" type="text/css">
-					<xsl:attribute name="href">
-						<xsl:call-template name="theme-resource-url">
-							<xsl:with-param name="resource" select="'yui/calendar.css'"/>
-							<xsl:with-param name="theme" select="$theme"/>
-							<xsl:with-param name="web-context" select="$web-context"/>
-						</xsl:call-template>
-					</xsl:attribute>
-					<xsl:text> </xsl:text>
-				</link>
 			</head>
-			<body class="browse">
+			<body>
 				<h1>
 					<xsl:value-of select="$page.title"/>
 				</h1>
@@ -201,6 +192,16 @@
 						<xsl:apply-templates select="m:search-results/m:album"/>
 					</xsl:otherwise>
 				</xsl:choose>
+				<script type="text/javascript">
+					<xsl:attribute name="src">
+						<xsl:call-template name="theme-resource-url">
+							<xsl:with-param name="resource" select="'js/jquery.min.js'"/>
+							<xsl:with-param name="theme" select="$theme"/>
+							<xsl:with-param name="web-context" select="$web-context"/>
+						</xsl:call-template>
+					</xsl:attribute>
+					<xsl:text> </xsl:text>
+				</script>
 			</body>
 		</html>
 	</xsl:template>
