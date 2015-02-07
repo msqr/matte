@@ -40,6 +40,7 @@ import java.util.Map;
 import magoffin.matt.ma2.domain.AlbumSearchResult;
 import magoffin.matt.ma2.domain.PaginationCriteria;
 import magoffin.matt.ma2.domain.PaginationIndex;
+import magoffin.matt.ma2.domain.PaginationIndexSection;
 import magoffin.matt.ma2.domain.PosterSearchResult;
 import magoffin.matt.ma2.domain.SearchResults;
 import magoffin.matt.ma2.domain.User;
@@ -69,18 +70,13 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 	private String sqlBrowse;
 	private String sqlBrowseTopLevelOrderByClause;
 	private String sqlBrowseChildOrderByClause;
-	//private String sqlBrowseDateRangeWhereClause;
+	private String sqlBrowseDateRangeWhereClause;
 	private String sqlBrowseAllowFeedWhereClause;
 	private String sqlBrowseAllowBrowseWhereClause;
+	private String sqlBrowseFindYears;
 
 	private MessageFormat sqlBrowseTemplate;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.plugin.BrowseModePlugin#supportsMode(java.lang.String)
-	 */
 	public boolean supportsMode(String mode) {
 		return BrowseAlbumsCommand.MODE_ALBUMS.equals(mode)
 				|| BrowseAlbumsCommand.MODE_ALBUM_FEED.equals(mode);
@@ -92,20 +88,10 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 		init();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.plugin.Plugin#getMessageResourceNames()
-	 */
 	public String[] getMessageResourceNames() {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.plugin.BrowseModePlugin#getSupportedModes()
-	 */
 	public String[] getSupportedModes() {
 		return SUPPORTED_MODES;
 	}
@@ -121,15 +107,8 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 		this.sqlBrowseTemplate = new MessageFormat(this.sqlBrowse);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.plugin.BrowseModePlugin#find(magoffin.matt.ma2.support
-	 * .BrowseAlbumsCommand, magoffin.matt.ma2.domain.PaginationCriteria)
-	 */
 	@SuppressWarnings("unchecked")
-	public SearchResults find(BrowseAlbumsCommand command, PaginationCriteria pagination) {
+	public SearchResults find(final BrowseAlbumsCommand command, PaginationCriteria pagination) {
 		final SearchResults results = getDomainObjectFactory().newSearchResultsInstance();
 		final PaginationIndex index = getDomainObjectFactory().newPaginationIndexInstance();
 		results.setIndex(index);
@@ -137,11 +116,42 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 		final List<AlbumSearchResult> albums = new LinkedList<AlbumSearchResult>();
 		final Map<Long, AlbumSearchResult> albumMap = new HashMap<Long, AlbumSearchResult>();
 		if ( BrowseAlbumsCommand.MODE_ALBUMS.equals(command.getMode()) ) {
-			handleSearchForAlbumsForUserByDate(user.getUserId(), command.getMaxEntries(), true, true,
-					false, albums, albumMap, null);
+			if ( command.getSection() != null ) {
+				String latestYear = getJdbcTemplate().query(new PreparedStatementCreator() {
+
+					public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+						return con.prepareStatement(sqlBrowseFindYears);
+					}
+				}, new ResultSetExtractor<String>() {
+
+					public String extractData(ResultSet rs) throws SQLException, DataAccessException {
+						String result = null;
+						while ( rs.next() ) {
+							PaginationIndexSection section = getDomainObjectFactory()
+									.newPaginationIndexSectionInstance();
+							String year = rs.getString(1);
+							section.setIndexKey(year);
+							if ( result == null ) {
+								result = year;
+								if ( BrowseAlbumsCommand.SECTION_LATEST.equalsIgnoreCase(command
+										.getSection()) ) {
+									section.setSelected(true);
+								}
+							}
+							index.getIndexSection().add(section);
+						}
+						return result;
+					}
+				});
+				if ( BrowseAlbumsCommand.SECTION_LATEST.equalsIgnoreCase(command.getSection()) ) {
+					command.setSection(latestYear);
+				}
+			}
+			handleSearchForAlbumsForUserByDate(user.getUserId(), command, true, true, false, albums,
+					albumMap, null);
 		} else {
-			handleSearchForAlbumsForUserByDate(user.getUserId(), command.getMaxEntries(), true, false,
-					true, albums, albumMap, null);
+			handleSearchForAlbumsForUserByDate(user.getUserId(), command, true, false, true, albums,
+					albumMap, null);
 		}
 		results.getAlbum().addAll(albums);
 		results.setTotalResults(Long.valueOf(albums.size()));
@@ -164,10 +174,12 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 	 * 
 	 * @param userId
 	 *        the user ID to find
-	 * @param max
-	 *        a maximum number of results
+	 * @param cmd
+	 *        the search criteria
 	 * @param anonymousOnly
 	 *        true for anonymous only
+	 * @param browseOnly
+	 *        true for browse only
 	 * @param feedOnly
 	 *        true for feed only
 	 * @param results
@@ -178,7 +190,7 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 	 * @param parentAlbumIds
 	 *        a list of parent album IDs to find the children albums for
 	 */
-	private void handleSearchForAlbumsForUserByDate(final Long userId, final int max,
+	private void handleSearchForAlbumsForUserByDate(final Long userId, final BrowseAlbumsCommand cmd,
 			final boolean anonymousOnly, final boolean browseOnly, final boolean feedOnly,
 			final List<AlbumSearchResult> results, final Map<Long, AlbumSearchResult> albumMap,
 			final List<Long> parentAlbumIds) {
@@ -211,6 +223,9 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 				if ( feedOnly ) {
 					where.append(" ").append(sqlBrowseAllowFeedWhereClause);
 				}
+				if ( cmd.getSection() != null && parentAlbumIds == null ) {
+					where.append(" ").append(sqlBrowseDateRangeWhereClause);
+				}
 				sqlBrowseParameters[1] = where.toString();
 
 				String sql = sqlBrowseTemplate.format(sqlBrowseParameters);
@@ -227,9 +242,24 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 				if ( feedOnly ) {
 					psmt.setBoolean(pos++, feedOnly);
 				}
-
-				if ( max > 0 ) {
-					psmt.setMaxRows(max);
+				if ( cmd.getSection() != null && parentAlbumIds == null ) {
+					Integer year = null;
+					try {
+						year = Integer.valueOf(cmd.getSection());
+					} catch ( NumberFormatException e ) {
+						// ignore this
+					}
+					if ( year != null ) {
+						Calendar c = Calendar.getInstance();
+						c.set(year, Calendar.JANUARY, 1, 0, 0, 0);
+						c.set(Calendar.MILLISECOND, 0);
+						psmt.setTimestamp(pos++, new Timestamp(c.getTimeInMillis()), c);
+						c.add(Calendar.YEAR, 1);
+						psmt.setTimestamp(pos++, new Timestamp(c.getTimeInMillis()), c);
+					}
+				}
+				if ( parentAlbumIds == null && cmd.getMaxEntries() > 0 ) {
+					psmt.setMaxRows(cmd.getMaxEntries());
 				}
 				return psmt;
 			}
@@ -302,84 +332,65 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 		if ( currentAlbumIds.size() > 0 ) {
 			// for children albums we don't use browse/feed settings, just
 			// pull in all anonymous child albums
-			handleSearchForAlbumsForUserByDate(userId, -1, true, false, false, results, albumMap,
+			handleSearchForAlbumsForUserByDate(userId, cmd, true, false, false, results, albumMap,
 					currentAlbumIds);
 		}
 	}
 
-	/**
-	 * @return the sqlBrowse
-	 */
 	public String getSqlBrowse() {
 		return sqlBrowse;
 	}
 
-	/**
-	 * @param sqlBrowse
-	 *        the sqlBrowse to set
-	 */
 	public void setSqlBrowse(String sqlBrowse) {
 		this.sqlBrowse = sqlBrowse;
 	}
 
-	/**
-	 * @return the sqlBrowseTopLevelOrderByClause
-	 */
 	public String getSqlBrowseTopLevelOrderByClause() {
 		return sqlBrowseTopLevelOrderByClause;
 	}
 
-	/**
-	 * @param sqlBrowseTopLevelOrderByClause
-	 *        the sqlBrowseTopLevelOrderByClause to set
-	 */
 	public void setSqlBrowseTopLevelOrderByClause(String sqlBrowseTopLevelOrderByClause) {
 		this.sqlBrowseTopLevelOrderByClause = sqlBrowseTopLevelOrderByClause;
 	}
 
-	/**
-	 * @return the sqlBrowseChildOrderByClause
-	 */
 	public String getSqlBrowseChildOrderByClause() {
 		return sqlBrowseChildOrderByClause;
 	}
 
-	/**
-	 * @param sqlBrowseChildOrderByClause
-	 *        the sqlBrowseChildOrderByClause to set
-	 */
 	public void setSqlBrowseChildOrderByClause(String sqlBrowseChildOrderByClause) {
 		this.sqlBrowseChildOrderByClause = sqlBrowseChildOrderByClause;
 	}
 
-	/**
-	 * @return the sqlBrowseAllowFeedWhereClause
-	 */
 	public String getSqlBrowseAllowFeedWhereClause() {
 		return sqlBrowseAllowFeedWhereClause;
 	}
 
-	/**
-	 * @param sqlBrowseAllowFeedWhereClause
-	 *        the sqlBrowseAllowFeedWhereClause to set
-	 */
 	public void setSqlBrowseAllowFeedWhereClause(String sqlBrowseAllowFeedWhereClause) {
 		this.sqlBrowseAllowFeedWhereClause = sqlBrowseAllowFeedWhereClause;
 	}
 
-	/**
-	 * @return the sqlBrowseAllowBrowseWhereClause
-	 */
 	public String getSqlBrowseAllowBrowseWhereClause() {
 		return sqlBrowseAllowBrowseWhereClause;
 	}
 
-	/**
-	 * @param sqlBrowseAllowBrowseWhereClause
-	 *        the sqlBrowseAllowBrowseWhereClause to set
-	 */
 	public void setSqlBrowseAllowBrowseWhereClause(String sqlBrowseAllowBrowseWhereClause) {
 		this.sqlBrowseAllowBrowseWhereClause = sqlBrowseAllowBrowseWhereClause;
+	}
+
+	public String getSqlBrowseDateRangeWhereClause() {
+		return sqlBrowseDateRangeWhereClause;
+	}
+
+	public void setSqlBrowseDateRangeWhereClause(String sqlBrowseDateRangeWhereClause) {
+		this.sqlBrowseDateRangeWhereClause = sqlBrowseDateRangeWhereClause;
+	}
+
+	public String getSqlBrowseFindYears() {
+		return sqlBrowseFindYears;
+	}
+
+	public void setSqlBrowseFindYears(String sqlBrowseFindYears) {
+		this.sqlBrowseFindYears = sqlBrowseFindYears;
 	}
 
 }

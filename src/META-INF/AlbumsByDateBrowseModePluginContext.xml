@@ -23,16 +23,12 @@
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 		<property name="domainObjectFactory" ref="domainObjectFactory"/>
 		<property name="sqlBrowse" value="${sql.browse}"/>
-		<!--property name="sqlBrowseDateRangeWhereClause" 
-			value="${sql.browse.where.daterange}"/-->
-		<property name="sqlBrowseAllowBrowseWhereClause" 
-			value="${sql.browse.where.browse}"/>
-		<property name="sqlBrowseAllowFeedWhereClause" 
-			value="${sql.browse.where.feed}"/>
-		<property name="sqlBrowseTopLevelOrderByClause"
-			value="${sql.browse.order.toplevel}"/>
-		<property name="sqlBrowseChildOrderByClause"
-			value="${sql.browse.order.child}"/>
+		<property name="sqlBrowseDateRangeWhereClause" value="${sql.browse.where.daterange}"/>
+		<property name="sqlBrowseAllowBrowseWhereClause" value="${sql.browse.where.browse}"/>
+		<property name="sqlBrowseAllowFeedWhereClause" value="${sql.browse.where.feed}"/>
+		<property name="sqlBrowseTopLevelOrderByClause" value="${sql.browse.order.toplevel}"/>
+		<property name="sqlBrowseChildOrderByClause" value="${sql.browse.order.child}"/>
+		<property name="sqlBrowseFindYears" value="${sql.browse.findYears}"/>
 	</bean>
 	
 </beans>
