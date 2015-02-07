@@ -161,7 +161,9 @@
 						thumbSpec : {
 							size: '<xsl:value-of select="$thumb-size"/>',
 							quality: '<xsl:value-of select="$thumb-quality"/>'
-						}
+						},
+						sections : [<xsl:value-of select='string-join(for $key in m:search-results/m:index/m:index-section/@index-key
+							return concat("""", $key, """"), ",")'/>]
 					};
 				</script>
 			</head>
