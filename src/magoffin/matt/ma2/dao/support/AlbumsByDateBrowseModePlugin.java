@@ -138,6 +138,9 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 									section.setSelected(true);
 								}
 							}
+							if ( year.equals(command.getSection()) ) {
+								section.setSelected(true);
+							}
 							index.getIndexSection().add(section);
 						}
 						return result;
