@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ivy-module version="2.0">
+<ivy-module version="2.0" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
 	<info organisation="Matte" module="Web"/>
 	<configurations defaultconf="compile,runtime">
 		<conf name="compile" visibility="public" description="Build dependencies"/>
@@ -9,8 +11,6 @@
 		<conf name="jdbc" visibility="private" description="JDBC drivers for bin release"/>
 	</configurations>
 	<dependencies defaultconfmapping="runtime->default(runtime);compile->default(compile);test->runtime(default);jdbc->runtime(default);demo-tomcat->runtime(default)">
-		
-		<override module="xml-apis" rev="1.4.01"/>
 		
 		<!-- Logging -->
 		<dependency org="log4j" name="log4j" rev="1.2.17" conf="compile,runtime"/>
@@ -191,7 +191,7 @@
     		<exclude module="servlet-api"/>
     		<exclude module="junit"/>
 		</dependency>
-		
+
 		<!-- Global excludes -->
 		<exclude org="commons-logging"/>
 		<exclude org="org.apache.geronimo.specs"/>
@@ -206,5 +206,8 @@
 		<exclude module="xalan"/>
 		<exclude module="xmldsig"/>
 		<exclude module="xmlParserAPIs"/>
+		
+		<override module="xml-apis" rev="1.4.01"/>
+
 	</dependencies>
 </ivy-module>
