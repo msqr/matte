@@ -145,24 +145,30 @@
 				</script>
 			</head>
 			<body>
-				<h1 class="text-center">
-					<xsl:value-of select="$page.title"/>
-				</h1>
-				<div class="container swipe-index text-center">
-					<xsl:apply-templates select="m:search-results/m:index/m:index-section" mode="section-index-link"/>
-					<div class="dropdown">
-						<button class="btn btn-default dropdown-toggle" type="button" id="browse-mode-dropdown" data-toggle="dropdown" aria-expanded="true">
-							<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu" aria-labelledby="browse-mode-dropdown">
-    						<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-							<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-							<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-							<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
-						</ul>
+				<div class="container heading">
+					<div class="row">
+						<div class="col-md-11">
+							<h1><xsl:value-of select="$page.title"/></h1>
+							<div class="swipe-index">
+								<xsl:apply-templates select="m:search-results/m:index/m:index-section" mode="section-index-link"/>
+							</div>
+						</div>
+						<div class="col-md-1">
+							<div class="dropdown">
+								<button class="btn btn-default dropdown-toggle" type="button" id="browse-mode-dropdown" data-toggle="dropdown" aria-expanded="true">
+									<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu" role="menu" aria-labelledby="browse-mode-dropdown">
+									<li role="presentation" class="dropdown-header">
+										<xsl:value-of select="key('i18n','browse.modes.link')"/>
+									</li>
+									<xsl:apply-templates select="m:ui-metadata[@key='browse-mode']"/>
+								</ul>
+							</div>
+						</div>
 					</div>
-				</div>
+				</div>				
 				<!--
 					<xsl:otherwise>
 						<xsl:apply-templates select="m:search-results/m:index"/>
@@ -196,51 +202,18 @@
 		</html>
 	</xsl:template>
 	
-	<xsl:template match="m:index">
-		<div class="browse-index">
-			<xsl:variable name="name-key">
-				<xsl:text>browse.mode.</xsl:text>
-				<xsl:value-of select="$mode"/>
-				<xsl:text>.displayName</xsl:text>
-			</xsl:variable>
-			<xsl:value-of select="key('i18n',$name-key)"/>
-			<xsl:text>: </xsl:text>
-			<xsl:apply-templates select="m:index-section"/>
-			<xsl:call-template name="render-browse-modes-link"/>
-		</div>
-	</xsl:template>
-	
-	<xsl:template name="render-browse-modes-link">
-		<span id="browse-mode-link" style="display: none;">
-			<xsl:text> | </xsl:text>
-			<span class="clickable" title="{key('i18n','browse.modes.link.title')}">
-				<xsl:value-of select="key('i18n','browse.modes.link')"/>
-			</span>
-		</span>
-	</xsl:template>
-	
 	<xsl:template match="m:ui-metadata[@key='browse-mode']">
-		<xsl:if test="position() &gt; 1">
-			<xsl:text> | </xsl:text>
-		</xsl:if>
-		<xsl:variable name="msg-key">
-			<xsl:text>browse.mode.</xsl:text>
-			<xsl:value-of select="."/>
-			<xsl:text>.displayName</xsl:text>
-		</xsl:variable>
-		<span id="browsemodelink-{.}">
-			<xsl:attribute name="class">
-				<xsl:choose>
-					<xsl:when test="$mode = string(.)">
-						<xsl:text>selected</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text>clickable browse-mode-link</xsl:text>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute>
-			<xsl:value-of select="key('i18n',$msg-key)"/>
-		</span>
+		<li role="presentation">
+			<a role="menuitem" tabindex="-1">
+				<xsl:attribute name="href" select="concat($web-context, $web-path, 
+						'?userKey=', key('req-param','userKey'),
+						'&amp;mode=', string(.))"/>
+				<xsl:if test="$mode = string(.)">
+					<xsl:attribute name="class" select="'selected'"/>
+				</xsl:if>
+				<xsl:value-of select="key('i18n',concat('browse.mode.', string(.), '.displayName'))"/>
+			</a>
+		</li>
 	</xsl:template>
 	
 	<xsl:template match="m:index-section" mode="section-index-link">
@@ -417,89 +390,6 @@
 				</img>
 			</a>
 		</div>
-	</xsl:template>
-
-	<xsl:template name="browse-years">
-		<xsl:param name="albums"/>
-		<xsl:param name="years"/>
-		<xsl:variable name="album.year">
-			<xsl:choose>
-				<xsl:when test="$albums[1]/@album-date">
-					<xsl:value-of select="substring-before($albums[1]/@album-date,'-')"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="substring-before($albums[1]/@creation-date,'-')"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="album.years">
-			<xsl:choose>
-				<xsl:when test="contains($years,$album.year)">
-					<xsl:value-of select="$years"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="$years"/>
-					<xsl:text> </xsl:text>
-					<xsl:value-of select="$album.year"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:choose>
-			<xsl:when test="count($albums) &gt; 1">
-				<xsl:call-template name="browse-years">
-					<xsl:with-param name="albums" select="$albums[position() != 1]"/>
-					<xsl:with-param name="years" select="$album.years"/>
-				</xsl:call-template>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="normalize-space($album.years)"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-	
-	<!--
-		browse-years-links: generate list of years as links to browse
-	-->
-	<xsl:template name="browse-years-links">
-		<xsl:param name="years"/>
-		<xsl:param name="year"/>
-		<xsl:variable name="sel.year">
-			<xsl:choose>
-				<xsl:when test="contains($years,' ')">
-					<xsl:value-of select="substring-before($years,' ')"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="$years"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:choose>
-			<xsl:when test="$sel.year = $year">
-				<span class="selected">
-					<xsl:value-of select="$sel.year"/>
-				</span>
-			</xsl:when>
-			<xsl:otherwise>
-				<a>
-					<xsl:attribute name="href">
-						<xsl:value-of select="$web-context"/>
-						<xsl:value-of select="$web-path"/>
-						<xsl:text>?userKey=</xsl:text>
-						<xsl:value-of select="key('req-param','userKey')"/>
-						<xsl:text>&amp;year=</xsl:text>
-						<xsl:value-of select="$sel.year"/>
-					</xsl:attribute>
-					<xsl:value-of select="$sel.year"/>
-				</a>
-			</xsl:otherwise>
-		</xsl:choose>
-		<xsl:if test="contains($years,' ')">
-			<xsl:text> | </xsl:text>
-			<xsl:call-template name="browse-years-links">
-				<xsl:with-param name="years" select="substring-after($years,' ')"/>
-				<xsl:with-param name="year" select="$year"/>
-			</xsl:call-template>
-		</xsl:if>
 	</xsl:template>
 	
 </xsl:stylesheet>

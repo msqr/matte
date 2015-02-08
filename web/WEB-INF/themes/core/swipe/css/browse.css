@@ -1,6 +1,15 @@
-.swipe-index > .swipe-dot {
+.swipe-index {
+	font-size: 18px;
+}
+
+.swipe-index .swipe-dot {
 	font-size: 32px;
 	line-height: 14px;
 	position: relative;
 	top: 5px;
+}
+
+.heading .dropdown {
+	margin-top: 20px;
+	margin-bottom: 14px;
 }
