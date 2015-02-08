@@ -7,7 +7,7 @@
 		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 	
 	<bean id="testMediaBizImpl" class="magoffin.matt.ma2.biz.impl.MediaBizImpl" 
-		init-method="init" destroy-method="destroy">
+		init-method="init" destroy-method="finish">
 		<property name="userBiz" ref="testUserBiz"/>
 		<property name="systemBiz" ref="mockSystemBiz"/>
 		<property name="albumDao" ref="albumDao"/>
@@ -82,7 +82,7 @@
 		class="magoffin.matt.ma2.image.ImageMediaHelper"/>
 	
 	<bean id="testUserBiz" class="magoffin.matt.ma2.biz.impl.UserBizImpl" 
-		init-method="init" destroy-method="destroy">
+		init-method="init" destroy-method="finish">
 		<property name="domainObjectFactory" ref="domainObjectFactory"/>
 		<property name="messages" ref="messageSource"/>
 		<property name="albumDao" ref="albumDao"/>
@@ -117,34 +117,8 @@
 
 	<bean id="mockSystemBiz" name="testSystemBiz" class="magoffin.matt.ma2.biz.impl.MockSystemBiz"/>
 
-	
-	<!--bean id="testSystemBiz" class="magoffin.matt.ma2.biz.impl.SystemBizImpl" 
-		init-method="init" destroy-method="destroy">
-		<property name="collectionRootDirectory" value="/var/tmp"/>
-		<property name="cacheDirectory" value="/var/tmp"/>
-		<property name="resourceDirectory" value="/var/tmp"/>
-		<property name="domainObjectFactory" ref="domainObjectFactory"/>
-		<property name="timeZoneDao" ref="timeZoneDao"/>
-		<property name="albumDao" ref="albumDao"/>
-		<property name="settingsDao" ref="settingsDao"/>
-		<property name="themeDao" ref="themeDao"/>
-		<property name="sharedAlbumUrlTemplate" value="http://my.url/here?$[album.anonymousKey]"/>
-		<property name="defaultThemeName" value="Woosh"/>
-		<property name="defaultThemeTemplate">
-			<map>
-				<entry key="author"><value>Matte Development Team</value></entry>
-				<entry key="authorEmail"><value>matte@noplace</value></entry>
-				<entry key="basePath"><value>/core/woosh</value></entry>
-				<entry key="description"><value>Default theme.</value></entry>
-				<entry key="name"><value>Woosh</value></entry>
-			</map>
-		</property>
-		<property name="externalThemeDirectory" value="/var/tmp"/>
-		<property name="messages" ref="messageSource"/>		
-	</bean-->
-	
 	<bean id="testIOBiz" class="magoffin.matt.ma2.biz.impl.IOBizImpl" 
-		init-method="init" destroy-method="destroy">
+		init-method="init" destroy-method="finish">
 		<property name="albumDao" ref="albumDao"/>
 		<property name="domainObjectFactory" ref="domainObjectFactory"/>
 		<property name="collectionDao" ref="collectionDao"/>

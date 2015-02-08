@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:ctx="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans
-		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/jee
+		http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+
+	<ctx:annotation-config/>
+	<ctx:component-scan base-package="magoffin.matt.ma2"  use-default-filters="true">
+		<ctx:exclude-filter type="regex" expression=".*\.web\..*"/>
+	</ctx:component-scan>
 
 	<bean id="messageSource" name="messagesSource" 
 		class="magoffin.matt.xweb.util.ResourceBundleMessagesSource">
@@ -325,6 +339,10 @@
 		<constructor-arg ref="indexTimeZone"/>
 	</bean>
 	
+	<bean id="UTC" class="java.util.TimeZone" factory-method="getTimeZone">
+        <constructor-arg value="UTC" />
+    </bean>
+	
 	<!-- SystemBiz: system-wide functions. -->
 	<bean id="systemBiz" class="org.springframework.aop.framework.ProxyFactoryBean">
 		<property name="target" ref="systemBizTarget"/>
@@ -338,7 +356,8 @@
 				<value>myTransactionInterceptor</value>
 			</list>
 		</property>
-	</bean>	<bean id="systemBizTarget" 
+	</bean>
+	<bean id="systemBizTarget" 
 		class="magoffin.matt.ma2.biz.impl.SystemBizImpl"
 		init-method="init" destroy-method="finish">
 		<property name="domainObjectFactory" ref="domainObjectFactory"/>
@@ -350,14 +369,38 @@
 		<property name="settingsDao" ref="settingsDao"/>
 		<property name="themeDao" ref="themeDao"/>
 		<property name="sharedAlbumUrlTemplate" value="${url.shared.album}"/>		
-		<property name="defaultThemeName" value="Woosh"/>
-		<property name="defaultThemeTemplate">
+		<property name="coreThemeTemplates">
 			<map>
-				<entry key="author" value="Matte Development Team"/>
-				<entry key="authorEmail" value="matte@noplace"/>
-				<entry key="basePath" value="/core/woosh"/>
-				<entry key="description" value="Default theme."/>
-				<entry key="name" value="Woosh"/>
+				<entry key="Woosh">
+					<map>
+						<entry key="author" value="Matte Development Team"/>
+						<entry key="authorEmail" value="matte@noplace"/>
+						<entry key="basePath" value="/core/woosh"/>
+						<entry key="description" value="Default theme."/>
+						<entry key="name" value="Woosh"/>
+						<entry key="creationDate">
+							<bean id="calendar" class="java.util.Calendar" factory-method="getInstance">
+       							 <constructor-arg ref="UTC" />
+        						<property name="timeInMillis" value="1191407400054" />
+    						</bean>
+						</entry>
+					</map>
+				</entry>
+				<entry key="Swipe">
+					<map>
+						<entry key="author" value="Matte Development Team"/>
+						<entry key="authorEmail" value="matte@noplace"/>
+						<entry key="basePath" value="/core/swipe"/>
+						<entry key="description" value="Touch friendly theme."/>
+						<entry key="name" value="Swipe"/>
+						<entry key="creationDate">
+							<bean id="calendar" class="java.util.Calendar" factory-method="getInstance">
+       							 <constructor-arg ref="UTC" />
+        						<property name="timeInMillis" value="1422933720286" />
+    						</bean>
+						</entry>
+					</map>
+				</entry>
 			</map>
 		</property>
 		<property name="externalThemeDirectory" value="${theme.path}/themes"/>

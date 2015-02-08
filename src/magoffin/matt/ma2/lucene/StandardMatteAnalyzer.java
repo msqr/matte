@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.lucene;
@@ -32,9 +30,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 import java.util.regex.Pattern;
-
 import magoffin.matt.lucene.KeyTokenizer;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordTokenizer;
 import org.apache.lucene.analysis.LowerCaseFilter;
@@ -51,13 +47,13 @@ import org.apache.lucene.analysis.standard.StandardTokenizer;
  * Standard implementation of Analyzer for Matte.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.1
  */
 public class StandardMatteAnalyzer extends Analyzer {
-	
-	private static final Pattern WORD_WITH_PERIOD = 
-		Pattern.compile("\\w+\\.\\w+", Pattern.CASE_INSENSITIVE);
-	
+
+	private static final Pattern WORD_WITH_PERIOD = Pattern.compile("\\w+\\.\\w+",
+			Pattern.CASE_INSENSITIVE);
+
 	private String snowballStemmerName = "English";
 	private Set<String> stopWords = null;
 	private int indexKeyLength = 1;
@@ -65,7 +61,7 @@ public class StandardMatteAnalyzer extends Analyzer {
 	@Override
 	public TokenStream tokenStream(String field, Reader reader) {
 		TokenStream result = null;
-		
+
 		IndexField idxField = null;
 		if ( field.startsWith(IndexField.TAG.getFieldName()) ) {
 			idxField = IndexField.TAG;
@@ -76,21 +72,21 @@ public class StandardMatteAnalyzer extends Analyzer {
 				// ignore and fallback to default
 			}
 		}
-		
+
 		if ( idxField == null ) {
 			return standardFilters(reader);
 		}
-		
-		switch ( idxField ) {
+
+		switch (idxField) {
 			case ITEM_ID:
 				result = new KeywordTokenizer(reader);
 				break;
-				
+
 			case ITEM_INDEX_KEY:
 				result = new KeyTokenizer(reader, this.indexKeyLength);
 				result = new LowerCaseFilter(result);
 				break;
-				
+
 			case DESCRIPTION:
 			case ITEM_NAME:
 				result = standardFilters(reader);
@@ -99,29 +95,30 @@ public class StandardMatteAnalyzer extends Analyzer {
 				} else {
 					result = new StopFilter(result, this.stopWords);
 				}
-				result = new SnowballFilter(result, snowballStemmerName);				
+				result = new SnowballFilter(result, snowballStemmerName);
 				break;
-				
+
 			case TAG:
 				result = new UserTagTokenizer(reader);
 				break;
-				
+
 			default:
 				result = standardFilters(reader);
 		}
-		
+
 		return result;
 	}
 
 	private TokenStream standardFilters(Reader reader) {
 		TokenStream result = new StandardTokenizer(reader);
 		result = new StandardFilter(result);
-		
+
 		// split words with periods, which StandardTokenizer does not do
 		result = new TokenFilter(result) {
-			
+
 			Queue<Token> queue = new LinkedList<Token>();
-			
+
+			@SuppressWarnings("deprecation")
 			@Override
 			public Token next() throws IOException {
 				if ( queue.size() > 0 ) {
@@ -131,16 +128,15 @@ public class StandardMatteAnalyzer extends Analyzer {
 				if ( t == null ) {
 					return null;
 				}
-				if ( !WORD_WITH_PERIOD.matcher(t.termText()).find() ) {
+				if ( !WORD_WITH_PERIOD.matcher(t.term()).find() ) {
 					return t;
 				}
-				String[] split = t.termText().split("\\.");
+				String[] split = t.term().split("\\.");
 				int startPos = t.startOffset();
 				for ( int i = 0; i < split.length; i++ ) {
-					Token next = new Token(split[i], startPos, 
-							startPos+split[i].length());
+					Token next = new Token(split[i], startPos, startPos + split[i].length());
 					queue.offer(next);
-					startPos = startPos+split[i].length()+1;
+					startPos = startPos + split[i].length() + 1;
 				}
 				return queue.poll();
 			}
@@ -148,35 +144,37 @@ public class StandardMatteAnalyzer extends Analyzer {
 		result = new LowerCaseFilter(result);
 		return result;
 	}
-	
+
 	/**
 	 * @return the snowballStemmerName
 	 */
 	public String getSnowballStemmerName() {
 		return snowballStemmerName;
 	}
-	
+
 	/**
-	 * @param snowballStemmerName the snowballStemmerName to set
+	 * @param snowballStemmerName
+	 *        the snowballStemmerName to set
 	 */
 	public void setSnowballStemmerName(String snowballStemmerName) {
 		this.snowballStemmerName = snowballStemmerName;
 	}
-	
+
 	/**
 	 * @return the stopWords
 	 */
 	public Set<String> getStopWords() {
 		return stopWords;
 	}
-	
+
 	/**
-	 * @param stopWords the stopWords to set
+	 * @param stopWords
+	 *        the stopWords to set
 	 */
 	public void setStopWords(Set<String> stopWords) {
 		this.stopWords = stopWords;
 	}
-	
+
 	/**
 	 * @return the indexKeyLength
 	 */
@@ -185,7 +183,8 @@ public class StandardMatteAnalyzer extends Analyzer {
 	}
 
 	/**
-	 * @param indexKeyLength the indexKeyLength to set
+	 * @param indexKeyLength
+	 *        the indexKeyLength to set
 	 */
 	public void setIndexKeyLength(int indexKeyLength) {
 		this.indexKeyLength = indexKeyLength;

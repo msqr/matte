@@ -16,8 +16,6 @@
   along with this program; if not, write to the Free Software 
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
   02111-1307 USA
-
-  $Id: theme-util.xsl,v 1.15 2007/09/30 08:11:10 matt Exp $   
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -25,155 +23,9 @@
 	xmlns:x="http://msqr.us/xsd/jaxb-web"
 	exclude-result-prefixes="m x">
 
-	<!-- standard data vars -->
-	<xsl:variable name="aux" select="x:x-data/x:x-auxillary"/>
-	<xsl:variable name="ctx" select="x:x-data/x:x-context"/>
-	<xsl:variable name="mod" select="x:x-data/x:x-model"/>
-	<xsl:variable name="err" select="x:x-data/x:x-errors/x:error[@field]"/>
-	<xsl:variable name="req" select="x:x-data/x:x-request/x:param"/>
-	<xsl:variable name="ses" select="x:x-data/x:x-session"/>
-	
-	<!-- helper vars -->
-	<xsl:variable name="acting-user" select="x:x-data/x:x-session[1]/m:session[1]/m:acting-user[1]"/>
-	<xsl:variable name="server-name" select="string($ctx/x:server-name)"/>
-	<xsl:variable name="server-port" select="string($ctx/x:server-port)"/>
-	<xsl:variable name="user-locale" select="string($ctx/x:user-locale)"/>
-	<xsl:variable name="web-context" select="string($ctx/x:web-context)"/>
-	<xsl:variable name="web-path" select="string($ctx/x:path)"/>
-	<xsl:variable name="theme" select="x:x-data/x:x-model[1]/m:model[1]/m:theme[1]"/>
-	
-	<!-- application context defined as key for quick lookup -->
-	<xsl:key name="appenv" match="x:x-data/x:x-auxillary/x:x-app-context/x:param" use="@key"/>
-	
-	<!-- auxillaray params defined as key for quick lookup -->
-	<xsl:key name="aux-param" match="x:x-data/x:x-auxillary/x:x-param" use="@key"/>
-	
-	<!-- message resource bundle defined as key for quick lookup -->
-	<xsl:key name="i18n" match="x:x-data/x:x-msg/x:msg" use="@key"/>
-	
-	<!-- request params defined as key for quick lookup -->
-	<xsl:key name="req-param" match="x:x-data/x:x-request/x:param" use="@key"/>
-	
-	<!--
-		Named Template: javascript-string
-		
-		Replace occurances of " in a string with \".
-		
-		Parameters:
-		output-string	- the text to seach/replace in
-	-->
-	<xsl:template name="javascript-string">
-		<xsl:param name="output-string"/>
-		<xsl:call-template name="global-replace">
-			<xsl:with-param name="output-string" select="$output-string"/>
-			<xsl:with-param name="target"><xsl:text>"</xsl:text></xsl:with-param>
-			<xsl:with-param name="replacement"><xsl:text>\"</xsl:text></xsl:with-param>
-		</xsl:call-template>
-	</xsl:template>
-	
-	<!--
-		Named Template: single-quote-string
-		
-		Replace occurances of ' in a string with \'.
-		
-		Parameters:
-		output-string	- the text to seach/replace in
-	-->
-	<xsl:template name="single-quote-string">
-		<xsl:param name="output-string"/>
-		<xsl:call-template name="global-replace">
-			<xsl:with-param name="output-string" select="$output-string"/>
-			<xsl:with-param name="target"><xsl:text>'</xsl:text></xsl:with-param>
-			<xsl:with-param name="replacement"><xsl:text>\'</xsl:text></xsl:with-param>
-		</xsl:call-template>
-	</xsl:template>
-	
-	<!--
-		Named Template: escape-string
-		
-		Replace occurances of a string with that string preceeded by a '\' 
-		character.
-		
-		Parameters:
-		output-string	- the text to seach/replace in
-		target			- the text to search for
-	-->
-	<xsl:template name="escape-string">
-		<xsl:param name="output-string"/>
-		<xsl:param name="target"/>
-		<xsl:call-template name="global-replace">
-			<xsl:with-param name="output-string" select="$output-string"/>
-			<xsl:with-param name="target" select="$target"/>
-			<xsl:with-param name="replacement">
-				<xsl:text>\</xsl:text>
-				<xsl:value-of select="$target"/>
-			</xsl:with-param>
-		</xsl:call-template>
-	</xsl:template>
-	
-	<!--
-		Named Template: global-replace
-		
-		Replace occurances of one string with another.
-		
-		Parameters:
-		output-string	- the text to seach/replace in
-		target			- the text to search for
-		replacement		- the text to replace occurances of 'target' with
-	-->
-	<xsl:template name="global-replace">
-		<xsl:param name="output-string"/>
-		<xsl:param name="target"/>
-		<xsl:param name="replacement"/>
-		<xsl:choose>
-			<xsl:when test="contains($output-string,$target)">
-				
-				<xsl:value-of select=
-					"concat(substring-before($output-string,$target), $replacement)"/>
-				<xsl:call-template name="global-replace">
-					<xsl:with-param name="output-string" 
-						select="substring-after($output-string,$target)"/>
-					<xsl:with-param name="target" select="$target"/>
-					<xsl:with-param name="replacement" 
-						select="$replacement"/>
-				</xsl:call-template>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="$output-string"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-	
-	<!--
-		Named Template: truncate-at-word
-		
-		Truncate a string at a word break (space). If the input text
-		is shorter than max-length the text is returned unchanged.
-		Otherwise the text is truncated at the max-length plus any 
-		characters up to the next space, and a ellipsis character is
-		appended.
-		
-		Parameters:
-		text       - the text to truncate
-		max-length - the maximum number of characters to allow
-	-->
-	<xsl:template name="truncate-at-word">
-		<xsl:param name="text"/>
-		<xsl:param name="max-length">350</xsl:param>
-		<xsl:choose>
-			<xsl:when test="string-length($text) &lt; $max-length">
-				<xsl:value-of select="$text" disable-output-escaping="yes"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:variable name="start" select="substring($text,1,$max-length)"/>
-				<xsl:variable name="after" select="substring($text,($max-length+1))"/>
-				<xsl:variable name="word" select="substring-before($after,' ')"/>
-				<xsl:value-of select="$start" disable-output-escaping="yes"/>
-				<xsl:value-of select="$word" disable-output-escaping="yes"/>
-				<xsl:text>&#x2026;</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
+	<xsl:import href="standard-variables.xsl"/>
+	<xsl:import href="string-utils.xsl"/>
+	<xsl:import href="url-utils.xsl"/>
 	
 	<!--
 		Named Template: get-css-link
@@ -358,24 +210,7 @@
 			</div>
 		</xsl:if>
 	</xsl:template>
-	
-	<!--
-		Generate a server URL, eg. http://myhost
-	-->
-	<xsl:template name="server-url">
-		<xsl:variable name="port" select="$ctx/x:server-port"/>
-		<xsl:text>http</xsl:text>
-		<xsl:if test="$port = '443'">
-			<xsl:text>s</xsl:text>
-		</xsl:if>
-		<xsl:text>://</xsl:text>
-		<xsl:value-of select="$ctx/x:server-name"/>
-		<xsl:if test="$port != '80' and $port != '443'">
-			<xsl:text>:</xsl:text>
-			<xsl:value-of select="$port"/>
-		</xsl:if>
-	</xsl:template>
-	
+		
 	<!--
 		Generate the public absolute URL for viewing an album.
 	-->
@@ -397,20 +232,7 @@
 	<!--
 		Named Template: render-media-server-url
 		
-		Generate the URL for an image for the MediaServer server. For example:
-		
-		render-media-server-url(item = $MediaItem{id = 1565}, quality = 'GOOD', size = 'THUMB_NORMAL')
-		
-		=> media.do?id=1565&size=THUMB_NORMAL&quality=GOOD
-		
-		Parameters:
-		item - a MediaItem node
-		quality (opt) - value to use for the MediaServer quality parameter
-		size (opt) - value to use for the MediaServer size parameter
-		download (opt) - if set, add download=true flag
-		album-key (opt) - if set and original = true, then add for original downloading
-		original (opt) - if set, then generate URL for downloading original media
-		web-context - the web context
+		Deprecated: see url-utils.xsl/media-server-url
 	-->
 	<xsl:template name="render-media-server-url">
 		<xsl:param name="item"/>
@@ -420,30 +242,15 @@
 		<xsl:param name="album-key"/>
 		<xsl:param name="original"/>
 		<xsl:param name="web-context"/>
-		
-		<xsl:value-of select="$web-context"/>
-		<xsl:text>/media.do?id=</xsl:text>
-		<xsl:value-of select="$item/@item-id"/>
-		<xsl:if test="$album-key">
-			<xsl:text>&amp;albumKey=</xsl:text>
-			<xsl:value-of select="$album-key"/>
-		</xsl:if>
-		<xsl:choose>
-			<xsl:when test="$original">
-				<xsl:text>&amp;original=true</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text>&amp;size=</xsl:text>
-				<xsl:value-of select="$size"/>
-				<xsl:if test="$quality">
-					<xsl:text>&amp;quality=</xsl:text>
-					<xsl:value-of select="$quality"/>
-				</xsl:if>
-			</xsl:otherwise>
-		</xsl:choose>
-		<xsl:if test="$download">
-			<xsl:text>&amp;download=true</xsl:text>
-		</xsl:if>
+		<xsl:call-template name="media-server-url">
+			<xsl:with-param name="item" select="$item"/>
+			<xsl:with-param name="quality" select="$quality"/>
+			<xsl:with-param name="size" select="$size"/>
+			<xsl:with-param name="download" select="$download"/>
+			<xsl:with-param name="album-key" select="$album-key"/>
+			<xsl:with-param name="original" select="$original"/>
+			<xsl:with-param name="web-context" select="$web-context"/>
+		</xsl:call-template>
 	</xsl:template>
 	
 	
@@ -473,49 +280,13 @@
 		<xsl:param name="web-context"/>
 		<xsl:param name="item-id"/>
 		<xsl:param name="mode"/>
-		<xsl:value-of select="$web-context"/>
-		<xsl:text>/album.do?key=</xsl:text>
-		<xsl:value-of select="$album/@anonymous-key"/>
-		<xsl:if test="string-length($album/@album-id) &lt; 1">
-			<xsl:text>&amp;userKey=</xsl:text>
-			<xsl:value-of select="$user/@anonymous-key"/>
-			<xsl:if test="$mode">
-				<xsl:text>&amp;mode=</xsl:text>
-				<xsl:value-of select="$mode"/>
-			</xsl:if>
-		</xsl:if>
-		<xsl:if test="$item-id">
-			<xsl:text>&amp;itemId=</xsl:text>
-			<xsl:value-of select="$item-id"/>
-		</xsl:if>
-	</xsl:template>
-	
-	<!--
-		Named Template: render-file-size
-		
-		Generate text representation of the size of a file. For example:
-		
-		render-file-size(size = 14875) => 14.53 KB
-		
-		Parameters:
-		size - an integer, assumed to be the number of bytes of the file
-	-->
-	<xsl:template name="render-file-size">
-		<xsl:param name="size"/>
-		<xsl:choose>
-			<xsl:when test="$size &gt; 1048576">
-				<xsl:value-of select="format-number($size div 1048576,'#,##0.##')"/>
-				<xsl:text> MB</xsl:text>
-			</xsl:when>
-			<xsl:when test="$size &gt; 1024">
-				<xsl:value-of select="format-number($size div 1024,'#,##0.##')"/>
-				<xsl:text> KB</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="format-number($size div 1024,'#,##0')"/>
-				<xsl:text> bytes</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>
+		<xsl:call-template name="shared-album-url">
+			<xsl:with-param name="album" select="$album"/>
+			<xsl:with-param name="user" select="$user"/>
+			<xsl:with-param name="web-context" select="$web-context"/>
+			<xsl:with-param name="item-id" select="$item-id"/>
+			<xsl:with-param name="mode" select="$mode"/>
+		</xsl:call-template>
 	</xsl:template>
 	
 	<!--
