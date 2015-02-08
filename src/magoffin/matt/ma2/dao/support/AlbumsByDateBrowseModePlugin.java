@@ -120,7 +120,11 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 				String latestYear = getJdbcTemplate().query(new PreparedStatementCreator() {
 
 					public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-						return con.prepareStatement(sqlBrowseFindYears);
+						PreparedStatement stmt = con.prepareStatement(sqlBrowseFindYears);
+						stmt.setLong(1, user.getUserId().longValue());
+						stmt.setBoolean(2, true); // anonymous
+						stmt.setBoolean(3, true); // browsable
+						return stmt;
 					}
 				}, new ResultSetExtractor<String>() {
 
@@ -150,11 +154,11 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 					command.setSection(latestYear);
 				}
 			}
-			handleSearchForAlbumsForUserByDate(user.getUserId(), command, true, true, false, albums,
-					albumMap, null);
+			handleSearchForAlbumsForUserByDate(user.getUserId(), command, true, false, albums, albumMap,
+					null);
 		} else {
-			handleSearchForAlbumsForUserByDate(user.getUserId(), command, true, false, true, albums,
-					albumMap, null);
+			handleSearchForAlbumsForUserByDate(user.getUserId(), command, false, true, albums, albumMap,
+					null);
 		}
 		results.getAlbum().addAll(albums);
 		results.setTotalResults(Long.valueOf(albums.size()));
@@ -179,8 +183,6 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 	 *        the user ID to find
 	 * @param cmd
 	 *        the search criteria
-	 * @param anonymousOnly
-	 *        true for anonymous only
 	 * @param browseOnly
 	 *        true for browse only
 	 * @param feedOnly
@@ -194,9 +196,8 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 	 *        a list of parent album IDs to find the children albums for
 	 */
 	private void handleSearchForAlbumsForUserByDate(final Long userId, final BrowseAlbumsCommand cmd,
-			final boolean anonymousOnly, final boolean browseOnly, final boolean feedOnly,
-			final List<AlbumSearchResult> results, final Map<Long, AlbumSearchResult> albumMap,
-			final List<Long> parentAlbumIds) {
+			final boolean browseOnly, final boolean feedOnly, final List<AlbumSearchResult> results,
+			final Map<Long, AlbumSearchResult> albumMap, final List<Long> parentAlbumIds) {
 		final List<Long> currentAlbumIds = new LinkedList<Long>();
 		getJdbcTemplate().query(new PreparedStatementCreator() {
 
@@ -238,7 +239,7 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 				PreparedStatement psmt = con.prepareStatement(sql);
 				int pos = 1;
 				psmt.setLong(pos++, userId.longValue());
-				psmt.setBoolean(pos++, anonymousOnly);
+				psmt.setBoolean(pos++, true);
 				if ( browseOnly ) {
 					psmt.setBoolean(pos++, browseOnly);
 				}
@@ -335,7 +336,7 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 		if ( currentAlbumIds.size() > 0 ) {
 			// for children albums we don't use browse/feed settings, just
 			// pull in all anonymous child albums
-			handleSearchForAlbumsForUserByDate(userId, cmd, true, false, false, results, albumMap,
+			handleSearchForAlbumsForUserByDate(userId, cmd, false, false, results, albumMap,
 					currentAlbumIds);
 		}
 	}
