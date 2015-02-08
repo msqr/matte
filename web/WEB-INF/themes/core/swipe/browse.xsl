@@ -15,40 +15,7 @@
 	<xsl:variable name="author" select="x:x-data/x:x-model[1]/m:model[1]/m:user[1]"/>
 	<xsl:variable name="theme" select="x:x-data/x:x-model[1]/m:model[1]/m:theme[1]"/>
 	<xsl:variable name="date.format" select="'[D] [MNn,*-3] [Y0001]'"/>
-	<xsl:variable name="mode">
-		<xsl:choose>
-			<xsl:when test="$req[@key='mode']">
-				<xsl:value-of select="$req[@key='mode']"/>
-			</xsl:when>
-			<xsl:otherwise>albums</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
-	<xsl:variable name="years">
-		<xsl:if test="$mode = 'albums'">
-			<xsl:call-template name="browse-years">
-				<xsl:with-param name="albums" select="$mod/m:model[1]/m:search-results/m:album"/>
-			</xsl:call-template>
-		</xsl:if>
-	</xsl:variable>
-	<xsl:variable name="year">
-		<xsl:if test="$mode = 'albums'">
-			<xsl:choose>
-				<xsl:when test="key('req-param','year') and contains($years, key('req-param','year'))">
-					<xsl:value-of select="key('req-param','year')"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:choose>
-						<xsl:when test="contains($years,' ')">
-							<xsl:value-of select="substring-before($years,' ')"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="$years"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:if>
-	</xsl:variable>
+	<xsl:variable name="mode" select="if ($req[@key='mode']) then $req[@key='mode'] else 'albums'"/>
 	
 	<xsl:variable name="single-quality">
 		<xsl:choose>
@@ -149,6 +116,16 @@
 					</xsl:attribute>
 					<xsl:text> </xsl:text>
 				</link>
+				<link rel="stylesheet">
+					<xsl:attribute name="href">
+						<xsl:call-template name="theme-resource-url">
+							<xsl:with-param name="resource" select="'css/browse.css'"/>
+							<xsl:with-param name="theme" select="$theme"/>
+							<xsl:with-param name="web-context" select="$web-context"/>
+						</xsl:call-template>
+					</xsl:attribute>
+					<xsl:text> </xsl:text>
+				</link>
 				<script type="text/javascript">
 					var app = {};
 					app.config = {
@@ -168,26 +145,25 @@
 				</script>
 			</head>
 			<body>
-				<h1>
+				<h1 class="text-center">
 					<xsl:value-of select="$page.title"/>
 				</h1>
-				<xsl:choose>
-					<xsl:when test="$mode='albums'">
-						<div class="browse-index">
-							<xsl:call-template name="browse-years-links">
-								<xsl:with-param name="years" select="$years"/>
-								<xsl:with-param name="year" select="$year"/>
-							</xsl:call-template>
-							<xsl:call-template name="render-browse-modes-link"/>
-						</div>
-						<div id="browse-modes" style="display: none;">
-							<xsl:apply-templates select="m:ui-metadata[@key='browse-mode']"/>
-						</div>
-						<div class="container">
-							<xsl:apply-templates select="m:search-results/m:album
-								[substring-before(concat(@album-date,@creation-date),'-') = $year]"/>
-						</div>
-					</xsl:when>
+				<div class="container swipe-index text-center">
+					<xsl:apply-templates select="m:search-results/m:index/m:index-section" mode="section-index-link"/>
+					<div class="dropdown">
+						<button class="btn btn-default dropdown-toggle" type="button" id="browse-mode-dropdown" data-toggle="dropdown" aria-expanded="true">
+							<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" role="menu" aria-labelledby="browse-mode-dropdown">
+    						<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+							<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+							<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+							<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+						</ul>
+					</div>
+				</div>
+				<!--
 					<xsl:otherwise>
 						<xsl:apply-templates select="m:search-results/m:index"/>
 						<div id="browse-modes" style="display: none;">
@@ -195,11 +171,21 @@
 						</div>
 						<xsl:apply-templates select="m:search-results/m:album"/>
 					</xsl:otherwise>
-				</xsl:choose>
+				</xsl:choose-->
 				<script type="text/javascript">
 					<xsl:attribute name="src">
 						<xsl:call-template name="theme-resource-url">
 							<xsl:with-param name="resource" select="'js/jquery.min.js'"/>
+							<xsl:with-param name="theme" select="$theme"/>
+							<xsl:with-param name="web-context" select="$web-context"/>
+						</xsl:call-template>
+					</xsl:attribute>
+					<xsl:text> </xsl:text>
+				</script>
+				<script type="text/javascript">
+					<xsl:attribute name="src">
+						<xsl:call-template name="theme-resource-url">
+							<xsl:with-param name="resource" select="'js/bootstrap.min.js'"/>
 							<xsl:with-param name="theme" select="$theme"/>
 							<xsl:with-param name="web-context" select="$web-context"/>
 						</xsl:call-template>
@@ -257,34 +243,26 @@
 		</span>
 	</xsl:template>
 	
-	<xsl:template match="m:index-section">
-		<xsl:if test="position() &gt; 1">
-			<xsl:text> | </xsl:text>
+	<xsl:template match="m:index-section" mode="section-index-link">
+		<xsl:if test="position() > 1">
+			<span class="swipe-dot">·</span>
 		</xsl:if>
 		<xsl:choose>
 			<xsl:when test="@selected = 'true'">
-				<span class="selected">
-					<xsl:value-of select="@index-key"/>
-				</span>
+				<span class="selected"><xsl:value-of select="@index-key"/></span>
 			</xsl:when>
 			<xsl:otherwise>
 				<a>
-					<xsl:attribute name="href">
-						<xsl:value-of select="$web-context"/>
-						<xsl:value-of select="$web-path"/>
-						<xsl:text>?userKey=</xsl:text>
-						<xsl:value-of select="key('req-param','userKey')"/>
-						<xsl:text>&amp;mode=</xsl:text>
-						<xsl:value-of select="$mode"/>
-						<xsl:text>&amp;section=</xsl:text>
-						<xsl:value-of select="@index-key"/>
-					</xsl:attribute>
+					<xsl:attribute name="href" select="concat($web-context, $web-path, 
+							'?userKey=', key('req-param','userKey'),
+							'&amp;mode=', $mode,
+							'&amp;section=', @index-key)"/>
 					<xsl:value-of select="@index-key"/>
 				</a>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-		
+	
 	<xsl:template match="m:album">
 		<xsl:variable name="is.odd" select="boolean(position() mod 2 = 1)"/>
 		<xsl:variable name="oddness">
@@ -405,7 +383,7 @@
 	<xsl:template match="m:search-poster">
 		<xsl:variable name="oddness">
 			<xsl:choose>
-				<xsl:when test="count(../preceding-sibling::m:album[substring-before(concat(@album-date,@creation-date),'-') = $year]) mod 2 = 0">
+				<xsl:when test="count(../preceding-sibling::m:album) mod 2 = 0">
 					<xsl:text>odd</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>even</xsl:otherwise>
