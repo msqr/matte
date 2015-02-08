@@ -94,7 +94,7 @@ public class AlbumController extends ControllerSupport {
 		return viewAlbum(request, key);
 	}
 
-	@RequestMapping(value = "/{userKey}/{key}/{mode}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{key}/{userKey}/{mode}", method = RequestMethod.GET)
 	@ResponseBody
 	public Response<Album> viewVirtualAlbumViaPath(HttpServletRequest request,
 			@PathVariable("userKey") String userKey, @PathVariable("key") String key,
