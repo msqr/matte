@@ -106,6 +106,7 @@
 						<xsl:value-of select="$author/@anonymous-key"/>
 					</xsl:attribute>
 				</link>
+				<link href='http://fonts.googleapis.com/css?family=Alice|Alegreya:700,400|Alegreya+Sans:400,300' rel='stylesheet' type='text/css' />
 				<link rel="stylesheet">
 					<xsl:attribute name="href">
 						<xsl:call-template name="theme-resource-url">
@@ -149,7 +150,7 @@
 					<div class="row">
 						<div class="col-md-11">
 							<h1><xsl:value-of select="$page.title"/></h1>
-							<div class="swipe-index">
+							<div class="browse-index">
 								<xsl:apply-templates select="m:search-results/m:index/m:index-section" mode="section-index-link"/>
 							</div>
 						</div>
@@ -168,16 +169,13 @@
 							</div>
 						</div>
 					</div>
-				</div>				
-				<!--
-					<xsl:otherwise>
-						<xsl:apply-templates select="m:search-results/m:index"/>
-						<div id="browse-modes" style="display: none;">
-							<xsl:apply-templates select="m:ui-metadata[@key='browse-mode']"/>
-						</div>
-						<xsl:apply-templates select="m:search-results/m:album"/>
-					</xsl:otherwise>
-				</xsl:choose-->
+				</div>
+				
+				<!-- Render albums -->
+				<div class="container">
+					<xsl:apply-templates select="m:search-results/m:album"/>
+				</div>
+				
 				<script type="text/javascript">
 					<xsl:attribute name="src">
 						<xsl:call-template name="theme-resource-url">
@@ -192,6 +190,16 @@
 					<xsl:attribute name="src">
 						<xsl:call-template name="theme-resource-url">
 							<xsl:with-param name="resource" select="'js/bootstrap.min.js'"/>
+							<xsl:with-param name="theme" select="$theme"/>
+							<xsl:with-param name="web-context" select="$web-context"/>
+						</xsl:call-template>
+					</xsl:attribute>
+					<xsl:text> </xsl:text>
+				</script>
+				<script type="text/javascript">
+					<xsl:attribute name="src">
+						<xsl:call-template name="theme-resource-url">
+							<xsl:with-param name="resource" select="'js/browse.js'"/>
 							<xsl:with-param name="theme" select="$theme"/>
 							<xsl:with-param name="web-context" select="$web-context"/>
 						</xsl:call-template>
@@ -218,7 +226,7 @@
 	
 	<xsl:template match="m:index-section" mode="section-index-link">
 		<xsl:if test="position() > 1">
-			<span class="swipe-dot">·</span>
+			<span class="sep">·</span>
 		</xsl:if>
 		<xsl:choose>
 			<xsl:when test="@selected = 'true'">
@@ -237,17 +245,6 @@
 	</xsl:template>
 	
 	<xsl:template match="m:album">
-		<xsl:variable name="is.odd" select="boolean(position() mod 2 = 1)"/>
-		<xsl:variable name="oddness">
-			<xsl:choose>
-				<xsl:when test="$is.odd">
-					<xsl:text>odd</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:text>even</xsl:text>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
 		<xsl:variable name="album.date">
 			<xsl:choose>
 				<xsl:when test="@album-date">
@@ -276,15 +273,13 @@
 			</xsl:for-each>
 		</xsl:variable>
 		<xsl:variable name="total-album-count" select="count(m:search-album) + 1"/>
-		<div class="row {$oddness}">
-			<div class="browse-{$oddness}">
+		<div class="row browse-album">
+			<div class="col-md-4 text-center">
+				<xsl:apply-templates select="m:search-poster"/>
+			</div>		
+			<div class="col-md-8">
 				<h2>
-					<a>
-						<xsl:attribute name="title">
-							<xsl:value-of select="key('i18n','browse.album.view')"/>
-							<xsl:text> </xsl:text>
-							<xsl:value-of select="@name"/>
-						</xsl:attribute>
+					<a title="{concat(key('i18n','browse.album.view'), ' ', string(@name))}">
 						<xsl:attribute name="href">
 							<xsl:call-template name="shared-album-url">
 								<xsl:with-param name="album" select="."/>
@@ -296,7 +291,7 @@
 						<xsl:value-of select="@name"/>
 					</a>
 				</h2>
-				<div class="browse-album-info">
+				<div class="album-info">
 					<xsl:if test="string-length($album.date) &gt; 0">
 						<xsl:value-of select="format-date(xs:date(substring-before($album.date,'T')),$date.format)"/>
 						<xsl:text> - </xsl:text>
@@ -340,56 +335,41 @@
 					</xsl:if>
 				</div>
 				<xsl:if test="string-length(m:comment) &gt; 0">
-					<div class="browse-album-text">
+					<p>
 						<xsl:value-of select="m:comment"/>
-					</div>
+					</p>
 				</xsl:if>
 			</div>
-			<xsl:apply-templates select="m:search-poster"/>
 		</div>
 		<xsl:if test="position() != last()">
-			<div class="album-sep"><xsl:text> </xsl:text></div>
+			<div class="row">
+				<div class="col-md-6 col-md-offset-3 browse-album-sep"><xsl:text> </xsl:text></div>
+			</div>
 		</xsl:if>
-		
 	</xsl:template>
 	
 	<xsl:template match="m:search-poster">
-		<xsl:variable name="oddness">
-			<xsl:choose>
-				<xsl:when test="count(../preceding-sibling::m:album) mod 2 = 0">
-					<xsl:text>odd</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>even</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<div class="poster-{$oddness}">
-			<a>
-				<xsl:attribute name="title">
-					<xsl:value-of select="key('i18n','browse.album.view')"/>
-					<xsl:text> </xsl:text>
-					<xsl:value-of select="../@name"/>
-				</xsl:attribute>
-				<xsl:attribute name="href">
-					<xsl:call-template name="shared-album-url">
-						<xsl:with-param name="album" select=".."/>
-						<xsl:with-param name="user" select="$author"/>
-						<xsl:with-param name="mode" select="$mode"/>
+		<a title="{concat(key('i18n','browse.album.view'), ' ', ../@name)}">
+			<xsl:attribute name="href">
+				<xsl:call-template name="shared-album-url">
+					<xsl:with-param name="album" select=".."/>
+					<xsl:with-param name="user" select="$author"/>
+					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="web-context" select="$web-context"/>
+				</xsl:call-template>
+			</xsl:attribute>
+			<img class="poster" alt="{@name}">
+				<xsl:attribute name="src">
+					<xsl:call-template name="server-url"/>
+					<xsl:call-template name="media-server-url">
+						<xsl:with-param name="item" select="."/>
+						<xsl:with-param name="size" select="'THUMB_BIGGER'"/>
+						<xsl:with-param name="quality" select="$thumb-quality"/>
 						<xsl:with-param name="web-context" select="$web-context"/>
 					</xsl:call-template>
 				</xsl:attribute>
-				<img class="poster {$oddness}" alt="{@name}" onload="setShadow(this)">
-					<xsl:attribute name="src">
-						<xsl:call-template name="server-url"/>
-						<xsl:call-template name="media-server-url">
-							<xsl:with-param name="item" select="."/>
-							<xsl:with-param name="size" select="'THUMB_BIGGER'"/>
-							<xsl:with-param name="quality" select="$thumb-quality"/>
-							<xsl:with-param name="web-context" select="$web-context"/>
-						</xsl:call-template>
-					</xsl:attribute>
-				</img>
-			</a>
-		</div>
+			</img>
+		</a>
 	</xsl:template>
 	
 </xsl:stylesheet>

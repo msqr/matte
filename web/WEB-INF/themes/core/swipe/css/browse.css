@@ -1,8 +1,42 @@
-.swipe-index {
-	font-size: 18px;
+body {
+	font-family: 'Alegreya', serif;
+	font-weight: 400;
 }
 
-.swipe-index .swipe-dot {
+h1, h2, h3, h4 {
+	font-family: 'Alegreya', serif;
+	font-weight: 400;
+	text-rendering: optimizelegibility;
+}
+
+h1 {
+	font-size: 36px;
+	margin-bottom: 2px;
+}
+
+h2 {
+	font-size: 30px;
+	margin-top: 14px;
+	margin-bottom: 2px;
+}
+
+p {
+	font-size: 14px;
+}
+
+.browse-index {
+	font-family: 'Alegreya Sans', sans-serif;
+	font-weight: 400;
+	font-size: 18px;
+	margin-top: 0;
+	margin-bottom: -4px;
+}
+
+.browse-index .selected {
+	font-weight: bold;
+}
+
+.browse-index .sep {
 	font-size: 32px;
 	line-height: 14px;
 	position: relative;
@@ -12,4 +46,33 @@
 .heading .dropdown {
 	margin-top: 20px;
 	margin-bottom: 14px;
+}
+
+.browse-album {
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+.browse-album img.poster {
+	padding: 10px;
+	border: 1px solid #ccc;
+	background-color: white;
+	margin: 10px;
+	-webkit-box-shadow: 2px 2px 6px 0px rgba(50, 50, 50, 0.3);
+	-moz-box-shadow:    2px 2px 6px 0px rgba(50, 50, 50, 0.3);
+	box-shadow:         2px 2px 6px 0px rgba(50, 50, 50, 0.3);
+}
+
+.browse-album .album-info {
+	font-family: 'Alegreya Sans', sans-serif;
+	font-weight: 300;
+	color: #666;
+}
+
+.browse-album p {
+	font-size: 18px;
+}
+
+.browse-album-sep {
+	border-top: 1px dotted #ccc;
 }
