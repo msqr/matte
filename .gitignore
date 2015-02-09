@@ -1,7 +1,2 @@
-/build.properties
-/version.properties
-/build/
-/dist/
-/work/
-/web/WEB-INF/classes/
-/derby.log
+.DS_Store
+
