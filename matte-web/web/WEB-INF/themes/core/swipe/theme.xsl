@@ -252,14 +252,23 @@
 	
 	<xsl:template match="m:model" mode="js-data">
 		<script type="text/javascript">
-			var app = {};
+			'use strict';
+			
+			if ( 'app' in window === false ) {
+				window.app = {};
+			}
+			
 			app.config = {
 				themeId : '<xsl:value-of select="$theme/@theme-id"/>',
 				webContext : '<xsl:value-of select="$web-context"/>',
 				serverName : '<xsl:value-of select="$server-name"/>',
 				serverPort : '<xsl:value-of select="$server-port"/>',
 				myLang : '<xsl:value-of select="$user-locale"/>',
-				userKey : '<xsl:value-of select="$author/@anonymous-key"/>',
+				
+				albumKey : '<xsl:value-of select="$root-album/@anonymous-key"/>',
+				browseMode : '<xsl:value-of select="$browse-mode"/>',
+				userKey : '<xsl:value-of select="$user-key"/>',
+
 				thumbSpec : {
 					size: '<xsl:value-of select="$thumb-size"/>',
 					quality: '<xsl:value-of select="$thumb-quality"/>'
@@ -269,6 +278,7 @@
 					quality: '<xsl:value-of select="$single-quality"/>'
 				}
 			};
+			
 			app.imageData = [
 			<xsl:apply-templates select="$display-album/m:item" mode="js-data"/>
 			];
