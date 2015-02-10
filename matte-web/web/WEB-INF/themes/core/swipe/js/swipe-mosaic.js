@@ -317,6 +317,30 @@ matte.imageMosaic = function(container, imageSizes) {
 	}
 	
 	/**
+	 * Get the visible tile for an image URL index.
+	 * 
+	 * @param {Number} index The zero-based index of the image to look for.
+	 * @return If a tile can be found that is showing the given image URL, the first such <code>img</code> element
+	 *         will be returned. Otherwise returns <code>undefined</code>.
+	 * @memberOf matte.imageMosaic
+	 */
+	self.imageElementForIndex = function(index) {
+		var url = imageURLs[index],
+			result;
+		root.find('.tile').each(function(i, el) {
+			var tile = $(el),
+				flipped = tile.hasClass('flipped'),
+				img = tile.find('.clip').eq(flipped ? 1 : 0).children('img'),
+				imgURL = imageURLs[img.data('index')];
+			if ( url === imgURL ) {
+				result = img;
+			}
+			return (result === undefined);
+		});
+		return result;
+	};
+	
+	/**
 	 * Render the mosaic based on the current size of the container.
 	 * 
 	 * @return this object
