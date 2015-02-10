@@ -9,7 +9,7 @@
 	<xsl:import href="../../string-utils.xsl"/>
 	<xsl:import href="../../url-utils.xsl"/>
 	
-	<xsl:output method="xml" indent="yes" omit-xml-declaration="yes"/>
+	<xsl:output method="html" version="5.0" indent="yes" omit-xml-declaration="yes"/>
 	
 	<!-- helper vars -->
 	<xsl:variable name="author" select="x:x-data/x:x-model[1]/m:model[1]/m:user[1]"/>
@@ -83,8 +83,6 @@
 			<xsl:text> </xsl:text>
 			<xsl:value-of select="key('i18n','browse.album.title')"/>
 		</xsl:variable>
-		<xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;
-		</xsl:text>
 		<html>
 			<head>
 				<title>
@@ -125,7 +123,6 @@
 							<xsl:with-param name="web-context" select="$web-context"/>
 						</xsl:call-template>
 					</xsl:attribute>
-					<xsl:text> </xsl:text>
 				</link>
 				<script type="text/javascript">
 					var app = {};
@@ -184,7 +181,6 @@
 							<xsl:with-param name="web-context" select="$web-context"/>
 						</xsl:call-template>
 					</xsl:attribute>
-					<xsl:text> </xsl:text>
 				</script>
 				<script type="text/javascript">
 					<xsl:attribute name="src">
@@ -204,7 +200,6 @@
 							<xsl:with-param name="web-context" select="$web-context"/>
 						</xsl:call-template>
 					</xsl:attribute>
-					<xsl:text> </xsl:text>
 				</script>
 			</body>
 		</html>
@@ -343,7 +338,7 @@
 		</div>
 		<xsl:if test="position() != last()">
 			<div class="row">
-				<div class="col-md-6 col-md-offset-3 browse-album-sep"><xsl:text> </xsl:text></div>
+				<div class="col-md-6 col-md-offset-3 browse-album-sep"></div>
 			</div>
 		</xsl:if>
 	</xsl:template>
