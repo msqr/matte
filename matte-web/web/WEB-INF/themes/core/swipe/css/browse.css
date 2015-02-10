@@ -24,6 +24,10 @@ p {
 	font-size: 14px;
 }
 
+.clickable {
+	cursor: pointer;
+}
+
 .browse-index {
 	font-family: 'Alegreya Sans', sans-serif;
 	font-weight: 400;

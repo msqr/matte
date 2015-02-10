@@ -205,6 +205,9 @@ matte.imageMosaic = function(container, imageSizes) {
 				'width' : String(w) + 'px',
 				'height' : String(h) + 'px'
 			});
+			if ( tileClickHandlerFn ) {
+				div.addClass('clickable');
+			}
 			if ( callback ) {
 				stop = callback.call(div, i, box, w, h);
 			}
