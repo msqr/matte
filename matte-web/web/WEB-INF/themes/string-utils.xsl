@@ -5,47 +5,46 @@
 	xmlns:x="http://msqr.us/xsd/jaxb-web"
 	exclude-result-prefixes="m x">
 	
+	<!-- Function: js-string
+		
+		Replace occurances of " in a string with \", and embed the result in ".
+		
+		Parameters:
+		str - The string to search/replace on.
+	-->
 	<xsl:function name="m:js-string" as="xs:string">
-		<xsl:param name="output-string" as="xs:string"/>
-		<xsl:value-of select="concat('&quot;', replace($output-string, '&quot;', '\\&quot;'), '&quot;')"/>
+		<xsl:param name="str" as="xs:string"/>
+		<xsl:value-of select="concat('&quot;', replace($str, '&quot;', '\\&quot;'), '&quot;')"/>
 	</xsl:function>
 	
 	<!--
-		Named Template: javascript-string
+		Function: javascript-string
 		
 		Replace occurances of " in a string with \".
 		
 		Parameters:
-		output-string	- the text to seach/replace in
+		str	- the text to seach/replace in
 	-->
-	<xsl:template name="javascript-string">
-		<xsl:param name="output-string"/>
-		<xsl:call-template name="global-replace">
-			<xsl:with-param name="output-string" select="$output-string"/>
-			<xsl:with-param name="target"><xsl:text>"</xsl:text></xsl:with-param>
-			<xsl:with-param name="replacement"><xsl:text>\"</xsl:text></xsl:with-param>
-		</xsl:call-template>
-	</xsl:template>
+	<xsl:function name="m:javascript-string" as="xs:string">
+		<xsl:param name="str" as="xs:string"/>
+		<xsl:value-of select="replace($str, '&quot;', '\\&quot;')"/>
+	</xsl:function>
 	
 	<!--
-		Named Template: single-quote-string
+		Function: single-quote-string
 		
 		Replace occurances of ' in a string with \'.
 		
 		Parameters:
-		output-string	- the text to seach/replace in
+		str	- the text to seach/replace in
 	-->
-	<xsl:template name="single-quote-string">
-		<xsl:param name="output-string"/>
-		<xsl:call-template name="global-replace">
-			<xsl:with-param name="output-string" select="$output-string"/>
-			<xsl:with-param name="target"><xsl:text>'</xsl:text></xsl:with-param>
-			<xsl:with-param name="replacement"><xsl:text>\'</xsl:text></xsl:with-param>
-		</xsl:call-template>
-	</xsl:template>
+	<xsl:function name="m:single-quote-string" as="xs:string">
+		<xsl:param name="str" as="xs:string"/>
+		<xsl:value-of select="replace($str, '''', '\\''')"/>
+	</xsl:function>
 	
 	<!--
-		Named Template: escape-string
+		Function: escape-string
 		
 		Replace occurances of a string with that string preceeded by a '\' 
 		character.
@@ -54,51 +53,11 @@
 		output-string	- the text to seach/replace in
 		target			- the text to search for
 	-->
-	<xsl:template name="escape-string">
-		<xsl:param name="output-string"/>
-		<xsl:param name="target"/>
-		<xsl:call-template name="global-replace">
-			<xsl:with-param name="output-string" select="$output-string"/>
-			<xsl:with-param name="target" select="$target"/>
-			<xsl:with-param name="replacement">
-				<xsl:text>\</xsl:text>
-				<xsl:value-of select="$target"/>
-			</xsl:with-param>
-		</xsl:call-template>
-	</xsl:template>
-	
-	<!--
-		Named Template: global-replace
-		
-		Replace occurances of one string with another.
-		
-		Parameters:
-		output-string	- the text to seach/replace in
-		target			- the text to search for
-		replacement		- the text to replace occurances of 'target' with
-	-->
-	<xsl:template name="global-replace">
-		<xsl:param name="output-string"/>
-		<xsl:param name="target"/>
-		<xsl:param name="replacement"/>
-		<xsl:choose>
-			<xsl:when test="contains($output-string,$target)">
-				
-				<xsl:value-of select=
-					"concat(substring-before($output-string,$target), $replacement)"/>
-				<xsl:call-template name="global-replace">
-					<xsl:with-param name="output-string" 
-						select="substring-after($output-string,$target)"/>
-					<xsl:with-param name="target" select="$target"/>
-					<xsl:with-param name="replacement" 
-						select="$replacement"/>
-				</xsl:call-template>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="$output-string"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
+	<xsl:function name="m:escape-string" as="xs:string">
+		<xsl:param name="str" as="xs:string"/>
+		<xsl:param name="target" as="xs:string"/>
+		<xsl:value-of select="replace($str, $target, concat('\\', $target))"/>
+	</xsl:function>
 	
 	<!--
 		Named Template: truncate-at-word
@@ -113,9 +72,9 @@
 		text       - the text to truncate
 		max-length - the maximum number of characters to allow
 	-->
-	<xsl:template name="truncate-at-word">
-		<xsl:param name="text"/>
-		<xsl:param name="max-length">350</xsl:param>
+	<xsl:template name="truncate-at-word" as="xs:string">
+		<xsl:param name="text" as="xs:string"/>
+		<xsl:param name="max-length" as="xs:int">350</xsl:param>
 		<xsl:choose>
 			<xsl:when test="string-length($text) &lt; $max-length">
 				<xsl:value-of select="$text" disable-output-escaping="yes"/>
@@ -141,8 +100,8 @@
 		Parameters:
 		size - an integer, assumed to be the number of bytes of the file
 	-->
-	<xsl:template name="render-file-size">
-		<xsl:param name="size"/>
+	<xsl:template name="render-file-size" as="xs:string">
+		<xsl:param name="size" as="xs:integer"/>
 		<xsl:choose>
 			<xsl:when test="$size &gt; 1048576">
 				<xsl:value-of select="format-number($size div 1048576,'#,##0.##')"/>
