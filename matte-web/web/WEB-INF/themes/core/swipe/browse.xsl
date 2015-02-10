@@ -17,28 +17,6 @@
 	<xsl:variable name="date.format" select="'[D] [MNn,*-3] [Y0001]'"/>
 	<xsl:variable name="mode" select="if ($req[@key='mode']) then $req[@key='mode'] else 'albums'"/>
 	
-	<xsl:variable name="single-quality">
-		<xsl:choose>
-			<xsl:when test="$ses/m:session[1]/m:view-setting/@quality">
-				<xsl:value-of select="$ses/m:session[1]/m:view-setting/@quality"/>
-			</xsl:when>
-			<xsl:when test="$acting-user/m:view-setting/@quality">
-				<xsl:value-of select="$acting-user/m:view-setting/@quality"/>
-			</xsl:when>
-			<xsl:otherwise>GOOD</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
-	<xsl:variable name="single-size">
-		<xsl:choose>
-			<xsl:when test="$ses/m:session[1]/m:view-setting/@size">
-				<xsl:value-of select="$ses/m:session[1]/m:view-setting/@size"/>
-			</xsl:when>
-			<xsl:when test="$acting-user/m:view-setting/@size">
-				<xsl:value-of select="$acting-user/m:view-setting/@size"/>
-			</xsl:when>
-			<xsl:otherwise>NORMAL</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
 	<xsl:variable name="thumb-quality">
 		<xsl:choose>
 			<xsl:when test="$ses/m:session[1]/m:thumbnail-setting/@quality">
@@ -104,7 +82,7 @@
 						<xsl:value-of select="$author/@anonymous-key"/>
 					</xsl:attribute>
 				</link>
-				<link href='http://fonts.googleapis.com/css?family=Alice|Alegreya:700,400|Alegreya+Sans:400,300' rel='stylesheet' type='text/css' />
+				<link href="http://fonts.googleapis.com/css?family={encode-for-uri('Alice|Alegreya:700,400|Alegreya Sans:400,300')}" rel="stylesheet" type="text/css"/>
 				<link rel="stylesheet">
 					<xsl:attribute name="href">
 						<xsl:call-template name="theme-resource-url">
@@ -113,7 +91,6 @@
 							<xsl:with-param name="web-context" select="$web-context"/>
 						</xsl:call-template>
 					</xsl:attribute>
-					<xsl:text> </xsl:text>
 				</link>
 				<link rel="stylesheet">
 					<xsl:attribute name="href">
@@ -190,7 +167,6 @@
 							<xsl:with-param name="web-context" select="$web-context"/>
 						</xsl:call-template>
 					</xsl:attribute>
-					<xsl:text> </xsl:text>
 				</script>
 				<script type="text/javascript">
 					<xsl:attribute name="src">
