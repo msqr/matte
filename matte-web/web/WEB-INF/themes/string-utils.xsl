@@ -4,7 +4,12 @@
 	xmlns:m="http://msqr.us/xsd/matte"
 	xmlns:x="http://msqr.us/xsd/jaxb-web"
 	exclude-result-prefixes="m x">
-
+	
+	<xsl:function name="m:js-string" as="xs:string">
+		<xsl:param name="output-string" as="xs:string"/>
+		<xsl:value-of select="concat('&quot;', replace($output-string, '&quot;', '\\&quot;'), '&quot;')"/>
+	</xsl:function>
+	
 	<!--
 		Named Template: javascript-string
 		
