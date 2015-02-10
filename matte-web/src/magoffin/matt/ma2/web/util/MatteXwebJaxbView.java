@@ -28,27 +28,31 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.servlet.http.HttpServletRequest;
-
+import javax.xml.transform.TransformerException;
 import magoffin.matt.xweb.util.ContentTypeResolver;
 import magoffin.matt.xweb.util.XwebJaxbView;
-
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
+import org.springframework.util.xml.SimpleTransformErrorListener;
 
 /**
- * FIXME
+ * Extension of {@link XwebJaxbView} to support custom XSLT content types.
  * 
  * <p>
- * TODO
+ * This class implements {@link ContentTypeResolver} itself, and will look in an
+ * optional properties file named the same as the configured XSLT resource for a
+ * property named {@code http.contentType} that will be used as the resolved
+ * HTTP {@code Content-Type}. If such a property is not available, then the
+ * configured {@link ContentTypeResolver} set via
+ * {@link #setContentTypeResolver(ContentTypeResolver)} will be used to resolve
+ * the content type.
  * </p>
  *
  * @author matt
  * @version 1.0
  */
-public class MatteXwebJaxbView extends XwebJaxbView implements
-		ContentTypeResolver {
+public class MatteXwebJaxbView extends XwebJaxbView implements ContentTypeResolver {
 
 	/** The property name for a HTTP Content-Type value to use for the response. */
 	public static final String PROP_HTTP_CONTENT_TYPE = "http.contentType";
@@ -61,54 +65,61 @@ public class MatteXwebJaxbView extends XwebJaxbView implements
 	/**
 	 * Default constructor.
 	 */
+	@SuppressWarnings("deprecation")
 	public MatteXwebJaxbView() {
 		super();
 		super.setContentTypeResolver(this);
+		setErrorListener(new SimpleTransformErrorListener(logger) {
+
+			@Override
+			public void fatalError(TransformerException ex) throws TransformerException {
+				// also log fatal exceptions, which the superclass does not do
+				logger.error("Transformer fatal error in [" + getStylesheetLocation() + "]", ex);
+				super.fatalError(ex);
+			}
+
+		});
 	}
 
-	public String resolveContentType(HttpServletRequest request,
-			Map<String, ?> model) {
-		if (propsLoaded == false) {
+	public String resolveContentType(HttpServletRequest request, Map<String, ?> model) {
+		if ( propsLoaded == false ) {
 			Properties p = new Properties();
 			@SuppressWarnings("deprecation")
 			Resource xslt = getStylesheetLocation();
 			try {
 				String fileName = xslt.getFilename();
-				String xsltExtension = StringUtils
-						.getFilenameExtension(fileName);
-				if (xsltExtension != null) {
-					fileName = fileName.substring(0, fileName.length()
-							- xsltExtension.length());
+				String xsltExtension = StringUtils.getFilenameExtension(fileName);
+				if ( xsltExtension != null ) {
+					fileName = fileName.substring(0, fileName.length() - xsltExtension.length());
 				}
 				fileName += "properties";
 				Resource props = xslt.createRelative(fileName);
-				if (props.exists()) {
+				if ( props.exists() ) {
 					InputStream in = null;
 					try {
 						in = props.getInputStream();
 						p.load(in);
 					} finally {
-						if (in != null) {
+						if ( in != null ) {
 							in.close();
 						}
 					}
 				}
-			} catch (IOException e) {
-				logger.debug("IOException reading properties for XSLT resource "
-						+ xslt + ": " + e.getMessage());
+			} catch ( IOException e ) {
+				logger.debug("IOException reading properties for XSLT resource " + xslt + ": "
+						+ e.getMessage());
 				// ignore
 			}
 			customContentType = p.getProperty(PROP_HTTP_CONTENT_TYPE);
-			if (cacheProperties) {
+			if ( cacheProperties ) {
 				propsLoaded = true;
 			}
 		}
-		if (customContentType != null) {
+		if ( customContentType != null ) {
 			return customContentType;
 		}
-		if (delegateContentTypeResolver != null) {
-			return delegateContentTypeResolver.resolveContentType(request,
-					model);
+		if ( delegateContentTypeResolver != null ) {
+			return delegateContentTypeResolver.resolveContentType(request, model);
 		}
 		return null;
 	}
