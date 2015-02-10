@@ -119,7 +119,7 @@
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-md-3">
-							<h1><xsl:apply-templates select="$display-album" mode="title"/></h1>
+							<xsl:apply-templates select="$display-album" mode="headline"/>
 							<button type="button" id="filpper">Flip Out</button>
 						</div>
 						<div class="col-md-9">
@@ -189,14 +189,27 @@
 		</html>
 	</xsl:template>
 	
-	<!--
-		Render the album name and date as the page title and banner
-	-->
 	<xsl:template match="m:album" mode="title">
 		<xsl:value-of select="@name"/>
 		<xsl:if test="string-length(@name) &gt; 0">
 			<xsl:text> - </xsl:text>
 		</xsl:if>
+		<xsl:apply-templates select="." mode="date"/>
+	</xsl:template>
+	
+	<xsl:template match="m:album" mode="headline">
+		<h1>
+			<xsl:value-of select="@name"/>
+			<xsl:if test="string-length(@name) &gt; 0">
+				<xsl:text> </xsl:text>
+				<small>
+					<xsl:apply-templates select="." mode="date"/>
+				</small>
+			</xsl:if>
+		</h1>
+	</xsl:template>
+	
+	<xsl:template match="m:album" mode="date">
 		<xsl:variable name="date">
 			<xsl:choose>
 				<xsl:when test="@album-date">
@@ -264,20 +277,38 @@
 	
 	<xsl:template match="m:item" mode="js-data">
 		<xsl:if test="position() &gt; 1">
-			<xsl:text>, </xsl:text>
+			<xsl:text>,&#10;</xsl:text>
 		</xsl:if>
 		<xsl:text>{ </xsl:text>
 		<xsl:text>id : </xsl:text><xsl:value-of select="@item-id"/>
 		<xsl:text>, w : </xsl:text><xsl:value-of select="@width"/>
 		<xsl:text>, h : </xsl:text><xsl:value-of select="@height"/>
 		<xsl:text>, name : </xsl:text><xsl:value-of select="m:js-string(@name)"/>
-		<xsl:text>, comment : </xsl:text><xsl:value-of select="m:js-string(normalize-space(m:comment))"/>
-		<xsl:text>, date : </xsl:text><xsl:value-of select="m:js-string(format-date(xs:date(substring-before(@creation-date,'T')),'[D01] [MNn,*-3] [Y0001]'))"/>
-		<xsl:text>, iw : </xsl:text><xsl:value-of select="@icon-width"/>
-		<xsl:text>, ih : </xsl:text><xsl:value-of select="@icon-height"/>
+		<xsl:if test="m:comment">
+			<xsl:text>, comment : </xsl:text><xsl:value-of select="m:js-string(normalize-space(m:comment))"/>
+		</xsl:if>
+		<xsl:text>, date : </xsl:text><xsl:value-of select="m:js-string(m:item-date(.))"/>
+		<xsl:if test="@icon-width">
+			<xsl:text>, iw : </xsl:text><xsl:value-of select="@icon-width"/>
+		</xsl:if>
+		<xsl:if test="@icon-height">
+			<xsl:text>, ih : </xsl:text><xsl:value-of select="@icon-height"/>
+		</xsl:if>
 		<xsl:text>, mime : </xsl:text><xsl:value-of select="m:js-string(@mime)"/>
 		<xsl:text> }</xsl:text>
 	</xsl:template>
+	
+	<xsl:function name="m:item-date" as="xs:string">
+		<xsl:param name="item" as="element()"/>
+		<xsl:choose>
+			<xsl:when test="string-length($item/@item-date) &gt; 0">
+				<xsl:value-of select="format-date(xs:date(substring-before($item/@item-date,'T')),'[D01] [MNn,*-3] [Y0001]')"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="format-date(xs:date(substring-before($item/@creation-date,'T')),'[D01] [MNn,*-3] [Y0001]')"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
 	
 	<xsl:template match="m:model" mode="photoswipe">
 		<div id="pswp" class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
