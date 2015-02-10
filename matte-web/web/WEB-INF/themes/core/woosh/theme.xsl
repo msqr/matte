@@ -101,7 +101,7 @@
 		</xsl:choose>
 	</xsl:variable>
 	<xsl:variable name="display-item" select="$display-album/m:item[@item-id = $display-item-id]"/>
-	<xsl:variable name="theme" select="(x:x-data/x:x-model/m:model/m:theme | $display-album/m:theme)[1]"/>
+	<xsl:variable name="theme" select="(x:x-data/x:x-model[1]/m:model[1]/m:theme[1], $display-album/m:theme)[1]"/>
 	<xsl:variable name="page-size" select="5"/>
 	<xsl:variable name="max-page" select="ceiling(count($display-album/m:item) div $page-size)"/>
 	
