@@ -17,29 +17,6 @@
 	<xsl:variable name="date.format" select="'[D] [MNn,*-3] [Y0001]'"/>
 	<xsl:variable name="mode" select="if ($req[@key='mode']) then $req[@key='mode'] else 'albums'"/>
 	
-	<xsl:variable name="thumb-quality">
-		<xsl:choose>
-			<xsl:when test="$ses/m:session[1]/m:thumbnail-setting/@quality">
-				<xsl:value-of select="$ses/m:session[1]/m:thumbnail-setting/@quality"/>
-			</xsl:when>
-			<xsl:when test="$acting-user/m:thumbnail-setting/@quality">
-				<xsl:value-of select="$acting-user/m:thumbnail-setting/@quality"/>
-			</xsl:when>
-			<xsl:otherwise>AVERAGE</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
-	<xsl:variable name="thumb-size">
-		<xsl:choose>
-			<xsl:when test="$ses/m:session[1]/m:thumbnail-setting/@size">
-				<xsl:value-of select="$ses/m:session[1]/m:thumbnail-setting/@size"/>
-			</xsl:when>
-			<xsl:when test="$acting-user/m:thumbnail-setting/@size">
-				<xsl:value-of select="$acting-user/m:thumbnail-setting/@size"/>
-			</xsl:when>
-			<xsl:otherwise>THUMB_NORMAL</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
-	
 	<!--
 		Browse entry point
 		

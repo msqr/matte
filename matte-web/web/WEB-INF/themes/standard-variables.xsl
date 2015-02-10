@@ -42,6 +42,59 @@
 		if ($server-port ne '80' and $server-port ne '443') then concat(':', $server-port) else ()
 		)"/>
 
+	<!-- Media quality names, uses the session defined quality if available, then
+		the acting user's quality if available, otherwise a standard default. -->
+	
+	<xsl:variable name="single-quality">
+		<xsl:choose>
+			<xsl:when test="$ses/m:session[1]/m:view-setting/@quality">
+				<xsl:value-of select="$ses/m:session[1]/m:view-setting/@quality"/>
+			</xsl:when>
+			<xsl:when test="$acting-user/m:view-setting/@quality">
+				<xsl:value-of select="$acting-user/m:view-setting/@quality"/>
+			</xsl:when>
+			<xsl:otherwise>GOOD</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	
+	<xsl:variable name="thumb-quality">
+		<xsl:choose>
+			<xsl:when test="$ses/m:session[1]/m:thumbnail-setting/@quality">
+				<xsl:value-of select="$ses/m:session[1]/m:thumbnail-setting/@quality"/>
+			</xsl:when>
+			<xsl:when test="$acting-user/m:thumbnail-setting/@quality">
+				<xsl:value-of select="$acting-user/m:thumbnail-setting/@quality"/>
+			</xsl:when>
+			<xsl:otherwise>AVERAGE</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	
+	<!-- Media size names, uses the session defined quality if available, then
+		the acting user's quality if available, otherwise a standard default. -->
+	
+	<xsl:variable name="single-size">
+		<xsl:choose>
+			<xsl:when test="$ses/m:session[1]/m:view-setting/@size">
+				<xsl:value-of select="$ses/m:session[1]/m:view-setting/@size"/>
+			</xsl:when>
+			<xsl:when test="$acting-user/m:view-setting/@size">
+				<xsl:value-of select="$acting-user/m:view-setting/@size"/>
+			</xsl:when>
+			<xsl:otherwise>NORMAL</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+
+	<xsl:variable name="thumb-size">
+		<xsl:choose>
+			<xsl:when test="$ses/m:session[1]/m:thumbnail-setting/@size">
+				<xsl:value-of select="$ses/m:session[1]/m:thumbnail-setting/@size"/>
+			</xsl:when>
+			<xsl:when test="$acting-user/m:thumbnail-setting/@size">
+				<xsl:value-of select="$acting-user/m:thumbnail-setting/@size"/>
+			</xsl:when>
+			<xsl:otherwise>THUMB_NORMAL</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 	<!--
 		Generate a server URL, eg. http://myhost
 	-->
