@@ -31,6 +31,19 @@
 	</xsl:function>
 	
 	<!--
+		Named template: javascript-string
+		
+		Replace occurances of " in a string with \".
+		
+		Parameters:
+		str	- the text to seach/replace in
+	-->
+	<xsl:template name="javascript-string" as="xs:string">
+		<xsl:param name="output-string" as="xs:string"/>
+		<xsl:value-of select="replace($output-string, '&quot;', '\\&quot;')"/>
+	</xsl:template>
+	
+	<!--
 		Function: single-quote-string
 		
 		Replace occurances of ' in a string with \'.
@@ -74,7 +87,7 @@
 	-->
 	<xsl:template name="truncate-at-word" as="xs:string">
 		<xsl:param name="text" as="xs:string"/>
-		<xsl:param name="max-length" as="xs:int">350</xsl:param>
+		<xsl:param name="max-length" as="xs:integer">350</xsl:param>
 		<xsl:choose>
 			<xsl:when test="string-length($text) &lt; $max-length">
 				<xsl:value-of select="$text" disable-output-escaping="yes"/>
@@ -83,9 +96,11 @@
 				<xsl:variable name="start" select="substring($text,1,$max-length)"/>
 				<xsl:variable name="after" select="substring($text,($max-length+1))"/>
 				<xsl:variable name="word" select="substring-before($after,' ')"/>
-				<xsl:value-of select="$start" disable-output-escaping="yes"/>
-				<xsl:value-of select="$word" disable-output-escaping="yes"/>
-				<xsl:text>&#x2026;</xsl:text>
+				<xsl:variable name="truncated">
+					<xsl:value-of select="$start" disable-output-escaping="yes"/>
+					<xsl:value-of select="$word" disable-output-escaping="yes"/>
+				</xsl:variable>
+				<xsl:value-of select="concat($truncated, '&#x2026;')"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -104,16 +119,13 @@
 		<xsl:param name="size" as="xs:integer"/>
 		<xsl:choose>
 			<xsl:when test="$size &gt; 1048576">
-				<xsl:value-of select="format-number($size div 1048576,'#,##0.##')"/>
-				<xsl:text> MB</xsl:text>
+				<xsl:value-of select="concat(format-number($size div 1048576,'#,##0.##'), ' MB')"/>
 			</xsl:when>
 			<xsl:when test="$size &gt; 1024">
-				<xsl:value-of select="format-number($size div 1024,'#,##0.##')"/>
-				<xsl:text> KB</xsl:text>
+				<xsl:value-of select="concat(format-number($size div 1024,'#,##0.##'), ' KB')"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="format-number($size div 1024,'#,##0')"/>
-				<xsl:text> bytes</xsl:text>
+				<xsl:value-of select="concat(format-number($size div 1024,'#,##0'), ' bytes')"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

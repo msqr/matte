@@ -157,21 +157,13 @@
 		<xsl:value-of select="@width"/>
 		<xsl:text>,</xsl:text>
 		<xsl:value-of select="@height"/>
-		<xsl:text>,"</xsl:text>
-		<xsl:call-template name="javascript-string">
-			<xsl:with-param name="output-string" select="@path"/>
-		</xsl:call-template>
-		<xsl:text>","</xsl:text>
-		<xsl:call-template name="javascript-string">
-			<xsl:with-param name="output-string" select="@name"/>
-		</xsl:call-template>
-		<xsl:text>","</xsl:text>
+		<xsl:text>,</xsl:text><xsl:value-of select="m:js-string(@path)"/>
+		<xsl:text>,</xsl:text><xsl:value-of select="m:js-string(@name)"/>
+		<xsl:text>,</xsl:text>
 		<xsl:if test="m:comment">
-			<xsl:call-template name="javascript-string">
-				<xsl:with-param name="output-string" select="normalize-space(m:comment)"/>
-			</xsl:call-template>
+			<xsl:value-of select="m:js-string(normalize-space(m:comment))"/>
 		</xsl:if>
-		<xsl:text>","</xsl:text>
+		<xsl:text>,"</xsl:text>
 		<xsl:value-of select="format-date(xs:date(substring-before(@creation-date,'T')),'[D01] [MNn,*-3] [Y0001]')"/>
 		<xsl:text>",</xsl:text>
 		<xsl:value-of select="@icon-width"/>
