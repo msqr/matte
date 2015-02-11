@@ -14,7 +14,7 @@
 	<xsl:key name="item-meta" 
 		match="x:x-data/x:x-model[1]/m:model[1]/m:item[1]/m:metadata" use="@key"/>
 	
-	<xsl:variable name="display-album" select="x:x-data/x:x-model/m:model/descendant::m:album
+	<xsl:variable name="display-album" select="x:x-data/x:x-model/m:model/m:album/descendant-or-self::m:album
 		[@anonymous-key=key('aux-param','display.album.key')][1]"/>
 	<xsl:variable name="root-album" select="x:x-data/x:x-model/m:model/descendant::m:album[1]"/>
 	<xsl:variable name="display-item-id">
