@@ -130,4 +130,57 @@
 		</xsl:choose>
 	</xsl:template>
 	
+	<!-- 
+		Function: m:album-date
+		
+		Format an album's date into a string.
+		
+		Parameters:
+		album - The album to format the date for.
+		date-format - The date format, suitable for passing to the format-date() function.
+	 -->
+	<xsl:function name="m:album-date" as="xs:string">
+		<xsl:param name="album" as="element()"/>
+		<xsl:param name="date-format" as="xs:string"/>
+		<xsl:variable name="date" as="xs:string">
+			<xsl:choose>
+				<xsl:when test="$album/@album-date">
+					<xsl:value-of select="$album/@album-date"/>
+				</xsl:when>
+				<xsl:when test="$album/@modify-date">
+					<xsl:value-of select="$album/@modify-date"/>
+				</xsl:when>
+				<xsl:when test="$album/@creation-date">
+					<xsl:value-of select="$album/@creation-date"/>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:value-of select="if (string-length($date) &gt; 1) then format-date(xs:date(substring-before($date, 'T')), $date-format) else ()"/>
+	</xsl:function>
+	
+	<!-- 
+		Function: m:item-date
+		
+		Format an item's date into a string.
+		
+		Parameters:
+		album - The item to format the date for.
+		date-format - The date format, suitable for passing to the format-date() function.
+	 -->
+	<xsl:function name="m:item-date" as="xs:string">
+		<xsl:param name="item" as="element()"/>
+		<xsl:param name="date-format" as="xs:string"/>
+		<xsl:variable name="date" as="xs:string">
+			<xsl:choose>
+				<xsl:when test="$item/@item-date">
+					<xsl:value-of select="$item/@item-date"/>
+				</xsl:when>
+				<xsl:when test="$item/@creation-date">
+					<xsl:value-of select="$item/@creation-date"/>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:value-of select="if (string-length($date) &gt; 1) then format-date(xs:date(substring-before($date, 'T')), $date-format) else ()"/>
+	</xsl:function>
+	
 </xsl:stylesheet>

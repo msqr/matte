@@ -356,41 +356,6 @@
 		<xsl:text> }</xsl:text>
 	</xsl:template>
 	
-	<xsl:function name="m:album-date" as="xs:string">
-		<xsl:param name="album" as="element()"/>
-		<xsl:param name="date-format" as="xs:string"/>
-		<xsl:variable name="date" as="xs:string">
-			<xsl:choose>
-				<xsl:when test="$album/@album-date">
-					<xsl:value-of select="$album/@album-date"/>
-				</xsl:when>
-				<xsl:when test="$album/@modify-date">
-					<xsl:value-of select="$album/@modify-date"/>
-				</xsl:when>
-				<xsl:when test="$album/@creation-date">
-					<xsl:value-of select="$album/@creation-date"/>
-				</xsl:when>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:value-of select="if (string-length($date) &gt; 1) then format-date(xs:date(substring-before($date, 'T')), $date-format) else ()"/>
-	</xsl:function>
-	
-	<xsl:function name="m:item-date" as="xs:string">
-		<xsl:param name="item" as="element()"/>
-		<xsl:param name="date-format" as="xs:string"/>
-		<xsl:variable name="date" as="xs:string">
-			<xsl:choose>
-				<xsl:when test="$item/@item-date">
-					<xsl:value-of select="$item/@item-date"/>
-				</xsl:when>
-				<xsl:when test="$item/@creation-date">
-					<xsl:value-of select="$item/@creation-date"/>
-				</xsl:when>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:value-of select="if (string-length($date) &gt; 1) then format-date(xs:date(substring-before($date, 'T')), $date-format) else ()"/>
-	</xsl:function>
-	
 	<xsl:template match="m:model" mode="photoswipe">
 		<div id="pswp" class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
 		    <div class="pswp__bg"></div>
