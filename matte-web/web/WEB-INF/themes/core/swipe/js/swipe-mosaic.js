@@ -263,7 +263,7 @@ matte.imageMosaic = function(container, imageSizes) {
 	}
 	
 	function eyeCatcher() {
-		if ( Array.isArray(boxes) === false || boxes.length < 1 ) {
+		if ( Array.isArray(boxes) === false || boxes.length < 2 ) {
 			return;
 		}
 		var tiles = root.children('.tile'),
@@ -274,13 +274,20 @@ matte.imageMosaic = function(container, imageSizes) {
 			flipped,
 			oldClip,
 			newImage,
-			newClip;
-		if ( tiles.length < 1 || imageURLs.length < 1 ) {
+			newClip
+			numTries = 50;
+		if ( tiles.length < 2 || imageURLs.length < 2 ) {
 			return;
 		}
 		while ( boxIndex === imageIndex ) {
+			if ( numTries < 1 ) {
+				// cowardly give up trying any more times to prevent endless loop
+				console.log('Giving up picking random tile for eye catcher!');
+				return;
+			}
 			boxIndex = Math.floor(Math.random() * tiles.length);
 			imageIndex = Math.floor(Math.random() * imageURLs.length);
+			numTries -= 1;
 		}
 		box = boxes[boxIndex];
 		tile = tiles.eq(boxIndex);
