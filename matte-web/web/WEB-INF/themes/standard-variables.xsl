@@ -6,6 +6,7 @@
 	exclude-result-prefixes="m x">
 
 	<!-- standard data vars -->
+	<xsl:variable name="top" select="."/>
 	<xsl:variable name="aux" select="x:x-data/x:x-auxillary"/>
 	<xsl:variable name="ctx" select="x:x-data/x:x-context"/>
 	<xsl:variable name="mod" select="x:x-data/x:x-model"/>
