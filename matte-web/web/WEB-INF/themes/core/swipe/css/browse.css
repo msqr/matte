@@ -28,6 +28,10 @@ p {
 	cursor: pointer;
 }
 
+.nowrap {
+	white-space: nowrap;
+}
+
 .browse-index {
 	font-family: 'Alegreya Sans', sans-serif;
 	font-weight: 400;
@@ -44,7 +48,7 @@ p {
 	font-size: 32px;
 	line-height: 14px;
 	position: relative;
-	top: 5px;
+	top: 3px;
 }
 
 .heading .dropdown {
@@ -67,7 +71,7 @@ p {
 	box-shadow:         2px 2px 6px 0px rgba(50, 50, 50, 0.3);
 }
 
-.browse-album .album-info {
+.album-info {
 	font-family: 'Alegreya Sans', sans-serif;
 	font-weight: 300;
 	color: #666;

@@ -174,7 +174,7 @@
 	
 	<xsl:template match="m:index-section" mode="section-index-link">
 		<xsl:if test="position() > 1">
-			<span class="sep">·</span>
+			<span class="sep"> · </span>
 		</xsl:if>
 		<xsl:choose>
 			<xsl:when test="@selected = 'true'">
@@ -260,26 +260,23 @@
 						<xsl:text> </xsl:text>
 						<xsl:value-of select="$total-album-count"/>
 						<xsl:text> </xsl:text>
-						<span class="tolower">
-							<xsl:value-of select="key('i18n','albums.displayName')"/>
-						</span>
+						<xsl:value-of select="lower-case(key('i18n','albums.displayName'))"/>
+					</xsl:if>
+					<xsl:if test="@item-count &gt; 0 and $min-date != $max-date">
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="key('i18n', 'browse.items.ranging')"/>
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="format-date(xs:date(substring-before($min-date,'T')), $date.format)"/>
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="key('i18n', 'to')"/>
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="format-date(xs:date(substring-before($max-date,'T')), $date.format)"/>
 					</xsl:if>
 					<xsl:if test="@modify-date">
 						<xsl:text> - </xsl:text>
 						<xsl:value-of select="key('i18n','browse.album.lastupdated')"/>
 						<xsl:text> </xsl:text>
 						<xsl:value-of select="format-date(xs:date(substring-before(@modify-date,'T')),$date.format)"/>
-					</xsl:if>
-					<xsl:if test="@item-count &gt; 0 and $min-date != $max-date">
-						<div class="browse-album-info">
-							<xsl:value-of select="key('i18n', 'browse.items.itemrange')"/>
-							<xsl:text> </xsl:text>
-							<xsl:value-of select="format-date(xs:date(substring-before($min-date,'T')), $date.format)"/>
-							<xsl:text> </xsl:text>
-							<xsl:value-of select="key('i18n', 'to')"/>
-							<xsl:text> </xsl:text>
-							<xsl:value-of select="format-date(xs:date(substring-before($max-date,'T')), $date.format)"/>
-						</div>
 					</xsl:if>
 				</div>
 				<xsl:if test="string-length(m:comment) &gt; 0">

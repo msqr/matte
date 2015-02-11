@@ -30,7 +30,7 @@
 	<xsl:variable name="display-item" select="$display-album/m:item[@item-id = $display-item-id]"/>
 	<xsl:variable name="author" select="x:x-data/x:x-model[1]/m:model[1]/m:user[1]"/>
 	<xsl:variable name="theme" select="(x:x-data/x:x-model/m:model/m:theme | $display-album/m:theme)[1]"/>
-	
+	<xsl:variable name="date.format" select="'[D] [MNn,*-3] [Y0001]'"/>
 	
 	<xsl:variable name="browse-mode" select="string($req[@key='mode'])"/>
 	<xsl:variable name="user-key"  select="string($req[@key='userKey'])"/>
@@ -118,8 +118,8 @@
 			<body>
 				<div class="container-fluid">
 					<div class="row">
-						<div class="col-md-3">
-							<xsl:apply-templates select="$display-album" mode="headline"/>
+						<div class="col-md-3 album-details">
+							<xsl:apply-templates select="$display-album"/>
 						</div>
 						<div class="col-md-9">
 							<div class="mosaic"></div>
@@ -188,41 +188,80 @@
 		</html>
 	</xsl:template>
 	
+	<xsl:template match="m:album">
+		<xsl:variable name="album-date" select="m:album-date(., $date.format)"/>
+		<h1>
+			<xsl:value-of select="@name"/>
+			<xsl:if test="string-length(@name) &gt; 0">
+				<xsl:text> </xsl:text>
+				<small class="nowrap"><xsl:value-of select="$album-date"/></small>
+			</xsl:if>
+		</h1>
+		<xsl:if test="m:comment">
+			<p><xsl:value-of select="m:comment"/></p>
+		</xsl:if>
+		<xsl:variable name="total-item-count" select="count(m:item)"/>
+		<xsl:variable name="item-dates" as="xs:string*">
+			<xsl:for-each select="for $item in m:item return 
+					(if ($item/@item-date) then string($item/@item-date) else string($item/@creation-date))">
+				<xsl:sort select="." order="ascending"/>
+				<xsl:sequence select="."/>
+			</xsl:for-each>
+		</xsl:variable>
+		<xsl:variable name="min-date" select="$item-dates[1]"/>
+		<xsl:variable name="max-date" select="$item-dates[position() eq last()]"/>
+		<xsl:variable name="total-album-count" select="count(m:album) + 1"/>
+		<p class="album-info">
+			<xsl:value-of select="$total-item-count"/>
+			<xsl:text> </xsl:text>
+			<xsl:choose>
+				<xsl:when test="$total-item-count = 1">
+					<xsl:value-of select="key('i18n','browse.items.count.single')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="key('i18n','browse.items.count')"/>
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:if test="$total-album-count &gt; 1">
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="key('i18n','in')"/>
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="$total-album-count"/>
+				<xsl:text> </xsl:text>
+				<span class="tolower">
+					<xsl:value-of select="key('i18n','albums.displayName')"/>
+				</span>
+			</xsl:if>
+			<xsl:if test="$total-item-count &gt; 0 and $min-date != $max-date">
+				<xsl:text>, </xsl:text>
+				<xsl:value-of select="key('i18n', 'browse.items.ranging')"/>
+				<xsl:text> </xsl:text>
+				<span class="nowrap">
+					<xsl:value-of select="format-date(xs:date(substring-before($min-date,'T')), $date.format)"/>
+				</span>
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="key('i18n', 'to')"/>
+				<xsl:text> </xsl:text>
+				<span class="nowrap">
+					<xsl:value-of select="format-date(xs:date(substring-before($max-date,'T')), $date.format)"/>
+				</span>			
+			</xsl:if>
+		</p>
+		<xsl:if test="@modify-date">
+			<p>
+				<xsl:value-of select="key('i18n','browse.album.lastupdated')"/>
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="format-date(xs:date(substring-before(@modify-date,'T')),$date.format)"/>
+			</p>
+		</xsl:if>
+	</xsl:template>
+	
 	<xsl:template match="m:album" mode="title">
 		<xsl:value-of select="@name"/>
 		<xsl:if test="string-length(@name) &gt; 0">
 			<xsl:text> - </xsl:text>
 		</xsl:if>
-		<xsl:apply-templates select="." mode="date"/>
-	</xsl:template>
-	
-	<xsl:template match="m:album" mode="headline">
-		<h1>
-			<xsl:value-of select="@name"/>
-			<xsl:if test="string-length(@name) &gt; 0">
-				<xsl:text> </xsl:text>
-				<small>
-					<xsl:apply-templates select="." mode="date"/>
-				</small>
-			</xsl:if>
-		</h1>
-	</xsl:template>
-	
-	<xsl:template match="m:album" mode="date">
-		<xsl:variable name="date">
-			<xsl:choose>
-				<xsl:when test="@album-date">
-					<xsl:value-of select="@album-date"/>
-				</xsl:when>
-				<xsl:when test="@modify-date">
-					<xsl:value-of select="@modify-date"/>
-				</xsl:when>
-				<xsl:when test="@creation-date">
-					<xsl:value-of select="@creation-date"/>
-				</xsl:when>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:value-of select="format-date(xs:date(substring-before($date, 'T')), '[Y0001].[M01].[D01]')"/>
+		<xsl:value-of select="m:album-date(., $date.format)"/>
 	</xsl:template>
 	
 	<xsl:template match="m:album" mode="child-albums">
@@ -318,6 +357,25 @@
 		<xsl:text>, mime : </xsl:text><xsl:value-of select="m:js-string(@mime)"/>
 		<xsl:text> }</xsl:text>
 	</xsl:template>
+	
+	<xsl:function name="m:album-date" as="xs:string">
+		<xsl:param name="album" as="element()"/>
+		<xsl:param name="date-format" as="xs:string"/>
+		<xsl:variable name="date">
+			<xsl:choose>
+				<xsl:when test="$album/@album-date">
+					<xsl:value-of select="$album/@album-date"/>
+				</xsl:when>
+				<xsl:when test="$album/@modify-date">
+					<xsl:value-of select="$album/@modify-date"/>
+				</xsl:when>
+				<xsl:when test="$album/@creation-date">
+					<xsl:value-of select="$album/@creation-date"/>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:value-of select="format-date(xs:date(substring-before($date, 'T')), $date-format)"/>
+	</xsl:function>
 	
 	<xsl:function name="m:item-date" as="xs:string">
 		<xsl:param name="item" as="element()"/>
