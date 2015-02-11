@@ -70,38 +70,39 @@ function setupMosaic(imageData) {
 			h : dim.h
 		};
 	});
-	if ( mosaic === undefined ) {
-		mosaic = matte.imageMosaic('.mosaic:first')
-			.tileClickHandler(function(event, data) {
-				console.log('Clicked on image %d: %s', data.index, data.image.attr('src'));
-			
-				// stop flipping
-				mosaic.stopEyeCatcher();
-			
-				var pswpContainer = $('#pswp').get(0);
-				var options = {};
-				if ( data.index < imageData.length ) {
-					options.index = data.index;
-					options.getThumbBoundsFn = function(index) {
-						var pageYScroll = window.pageYOffset || document.documentElement.scrollTop;
-						var img = mosaic.imageElementForIndex(index),
-							rect;
-						if ( img === undefined ) {
-							return undefined;
-						}
-						rect = img.get(0).getBoundingClientRect();
-						return {x:rect.left, y:rect.top + pageYScroll, w:rect.width};
-					};
+	function tileClickHandler(event, data) {
+		console.log('Clicked on image %d: %s', data.index, data.image.attr('src'));
+	
+		// stop flipping
+		mosaic.stopEyeCatcher();
+	
+		var pswpContainer = $('#pswp').get(0);
+		var options = {};
+		if ( data.index < imageData.length ) {
+			options.index = data.index;
+			options.getThumbBoundsFn = function(index) {
+				var pageYScroll = window.pageYOffset || document.documentElement.scrollTop;
+				var img = mosaic.imageElementForIndex(index),
+					rect;
+				if ( img === undefined ) {
+					return undefined;
 				}
-				pswp = new PhotoSwipe(pswpContainer, PhotoSwipeUI_Default, pswpData, options);
-				pswp.init();
-				pswp.listen('destroy', function() {
-					// start flipping again
-					mosaic.startEyeCatcher();
-				});
-			});
+				rect = img.get(0).getBoundingClientRect();
+				return {x:rect.left, y:rect.top + pageYScroll, w:rect.width};
+			};
+		}
+		pswp = new PhotoSwipe(pswpContainer, PhotoSwipeUI_Default, pswpData, options);
+		pswp.init();
+		pswp.listen('destroy', function() {
+			// start flipping again
+			mosaic.startEyeCatcher();
+		});
+	}
+	if ( mosaic === undefined ) {
+		mosaic = matte.imageMosaic('.mosaic:first');
 	}
 	mosaic.gridColumnCount(gridSize)
+		.tileClickHandler(tileClickHandler)
 		.images(imageData.map(function(d) {
 			return imageURL(d.id, albumKey, 'THUMB_BIGGER', 'GOOD');
 		}))
