@@ -274,7 +274,7 @@ matte.imageMosaic = function(container, imageSizes) {
 			flipped,
 			oldClip,
 			newImage,
-			newClip
+			newClip,
 			numTries = 50;
 		if ( tiles.length < 2 || imageURLs.length < 2 ) {
 			return;
