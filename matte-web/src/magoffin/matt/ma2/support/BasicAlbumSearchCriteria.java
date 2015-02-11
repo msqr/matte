@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.support;
@@ -32,39 +30,54 @@ import magoffin.matt.ma2.biz.SearchBiz.AlbumSearchCriteria;
  * Basic implementation of {@link AlbumSearchCriteria}.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.1
  */
 public class BasicAlbumSearchCriteria implements AlbumSearchCriteria {
-	
+
 	private Long albumId;
-	
+	private String anonymousKey;
+
 	/**
 	 * Default constructor.
 	 */
 	public BasicAlbumSearchCriteria() {
-		this(null);
+		super();
 	}
-	
+
 	/**
 	 * Construct with an album ID.
-	 * @param albumId the ID to search for
+	 * 
+	 * @param albumId
+	 *        the ID to search for
 	 */
 	public BasicAlbumSearchCriteria(Long albumId) {
 		this.albumId = albumId;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.biz.SearchBiz.AlbumSearchCriteria#getAlbumId()
+	/**
+	 * Construct with an anonymous key.
+	 * 
+	 * @param anonymousKey
+	 *        the anonymous key to search for
 	 */
+	public BasicAlbumSearchCriteria(String anonymousKey) {
+		this.anonymousKey = anonymousKey;
+	}
+
 	public Long getAlbumId() {
 		return this.albumId;
 	}
-	
-	/**
-	 * @param albumId the albumId to set
-	 */
+
 	public void setAlbumId(Long albumId) {
 		this.albumId = albumId;
 	}
-	
+
+	public String getAnonymousKey() {
+		return anonymousKey;
+	}
+
+	public void setAnonymousKey(String anonymousKey) {
+		this.anonymousKey = anonymousKey;
+	}
+
 }

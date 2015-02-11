@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.biz.impl;
@@ -29,7 +27,6 @@ package magoffin.matt.ma2.biz.impl;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
-
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.DomainObjectFactory;
 import magoffin.matt.ma2.biz.SearchBiz;
@@ -45,14 +42,13 @@ import magoffin.matt.ma2.domain.PosterSearchResult;
 import magoffin.matt.ma2.domain.SearchResults;
 import magoffin.matt.ma2.plugin.BrowseModePlugin;
 import magoffin.matt.ma2.support.BrowseAlbumsCommand;
-
 import org.springframework.beans.BeanUtils;
 
 /**
  * Base implementation of {@link SearchBiz} that builds on DAO searching.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.1
  */
 public abstract class AbstractSearchBiz implements SearchBiz {
 
@@ -61,36 +57,35 @@ public abstract class AbstractSearchBiz implements SearchBiz {
 	private AlbumDao albumDao;
 	private SystemBiz systemBiz;
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.biz.SearchBiz#findAlbumsForBrowsing(magoffin.matt.ma2.support.BrowseAlbumsCommand, magoffin.matt.ma2.domain.PaginationCriteria, magoffin.matt.ma2.biz.BizContext)
-	 */
-	public SearchResults findAlbumsForBrowsing(final BrowseAlbumsCommand command, PaginationCriteria pagination, BizContext context) {
+	public SearchResults findAlbumsForBrowsing(final BrowseAlbumsCommand command,
+			PaginationCriteria pagination, BizContext context) {
 		// look for BrowseModePlugin to support this mode
-		List<BrowseModePlugin> browsePlugins = systemBiz.getPluginsOfType(
-				BrowseModePlugin.class);
+		List<BrowseModePlugin> browsePlugins = systemBiz.getPluginsOfType(BrowseModePlugin.class);
 		for ( BrowseModePlugin plugin : browsePlugins ) {
 			if ( plugin.supportsMode(command.getMode()) ) {
 				return plugin.find(command, pagination);
 			}
 		}
-		throw new UnsupportedOperationException("Browse mode [" 
-				+command.getMode() +"] not supported");
+		throw new UnsupportedOperationException("Browse mode [" + command.getMode() + "] not supported");
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.biz.SearchBiz#findAlbums(magoffin.matt.ma2.biz.SearchBiz.AlbumSearchCriteria, magoffin.matt.ma2.domain.PaginationCriteria, magoffin.matt.ma2.biz.BizContext)
-	 */
 	@SuppressWarnings("unchecked")
-	public SearchResults findAlbums(AlbumSearchCriteria criteria, PaginationCriteria pagination, BizContext context) {
+	public SearchResults findAlbums(AlbumSearchCriteria criteria, PaginationCriteria pagination,
+			BizContext context) {
 		final SearchResults results = domainObjectFactory.newSearchResultsInstance();
 		final PaginationIndex index = domainObjectFactory.newPaginationIndexInstance();
 		results.setIndex(index);
 		final long start = System.currentTimeMillis();
 		List<AlbumSearchResult> albums = null;
-		if ( criteria.getAlbumId() != null ) {
+		Album album = null;
+		if ( criteria.getAnonymousKey() != null ) {
+			album = albumDao.getAlbumForKey(criteria.getAnonymousKey());
+		} else if ( criteria.getAlbumId() != null ) {
 			// get specific album, and children
-			Album album = albumDao.get(criteria.getAlbumId());
-			AlbumSearchResult sr = createAlbumSearchResults(album);
+			album = albumDao.get(criteria.getAlbumId());
+		}
+		if ( album != null ) {
+			AlbumSearchResult sr = createAlbumSearchResults(criteria, album);
 			if ( sr != null ) {
 				albums = new LinkedList<AlbumSearchResult>();
 				albums.add(sr);
@@ -106,44 +101,41 @@ public abstract class AbstractSearchBiz implements SearchBiz {
 	}
 
 	@SuppressWarnings("unchecked")
-	private AlbumSearchResult createAlbumSearchResults(Album album) {
+	private AlbumSearchResult createAlbumSearchResults(AlbumSearchCriteria criteria, Album album) {
 		AlbumSearchResult sr = domainObjectFactory.newAlbumSearchResultInstance();
-		BeanUtils.copyProperties(album, sr, new String[] {
-				"album", "item", "poster"
-		});
+		BeanUtils.copyProperties(album, sr, new String[] { "album", "item", "poster" });
 		if ( album.getPoster() != null ) {
 			PosterSearchResult psr = createPosterSearchResult(album.getPoster());
 			sr.setSearchPoster(psr);
 		} else if ( album.getItem().size() > 0 ) {
-			PosterSearchResult psr = createPosterSearchResult(
-				(MediaItem)album.getItem().get(0));
+			PosterSearchResult psr = createPosterSearchResult((MediaItem) album.getItem().get(0));
 			sr.setSearchPoster(psr);
 		}
 		sr.setItemCount(Long.valueOf(album.getItem().size()));
 		if ( album.getItem().size() > 0 ) {
-			for ( MediaItem item : (List<MediaItem>)album.getItem() ) {
-				Calendar itemDate = item.getItemDate() != null
-					? item.getItemDate() : item.getCreationDate();
-				if ( sr.getItemMinDate() == null 
-						|| itemDate.before(sr.getItemMinDate()) ) {
+			for ( MediaItem item : (List<MediaItem>) album.getItem() ) {
+				Calendar itemDate = item.getItemDate() != null ? item.getItemDate() : item
+						.getCreationDate();
+				if ( sr.getItemMinDate() == null || itemDate.before(sr.getItemMinDate()) ) {
 					sr.setItemMinDate(itemDate);
 				}
-				if ( sr.getItemMaxDate() == null
-						|| itemDate.after(sr.getItemMaxDate()) ) {
+				if ( sr.getItemMaxDate() == null || itemDate.after(sr.getItemMaxDate()) ) {
 					sr.setItemMaxDate(itemDate);
 				}
 			}
 		}
-		for ( Album child : (List<Album>)album.getAlbum() ) {
-			AlbumSearchResult srChild = createAlbumSearchResults(child);
+		for ( Album child : (List<Album>) album.getAlbum() ) {
+			if ( criteria.getAnonymousKey() != null && child.isAllowAnonymous() == false ) {
+				continue; // skip non-anonymous album
+			}
+			AlbumSearchResult srChild = createAlbumSearchResults(criteria, child);
 			sr.getSearchAlbum().add(srChild);
 		}
 		return sr;
 	}
 
 	private PosterSearchResult createPosterSearchResult(MediaItem poster) {
-		PosterSearchResult sr = domainObjectFactory
-			.newPosterSearchResultInstance();
+		PosterSearchResult sr = domainObjectFactory.newPosterSearchResultInstance();
 		sr.setItemId(poster.getItemId());
 		sr.setName(poster.getName());
 		return sr;
@@ -157,7 +149,8 @@ public abstract class AbstractSearchBiz implements SearchBiz {
 	}
 
 	/**
-	 * @param domainObjectFactory the domainObjectFactory to set
+	 * @param domainObjectFactory
+	 *        the domainObjectFactory to set
 	 */
 	public void setDomainObjectFactory(DomainObjectFactory domainObjectFactory) {
 		this.domainObjectFactory = domainObjectFactory;
@@ -171,21 +164,23 @@ public abstract class AbstractSearchBiz implements SearchBiz {
 	}
 
 	/**
-	 * @param userBiz the userBiz to set
+	 * @param userBiz
+	 *        the userBiz to set
 	 */
 	public void setUserBiz(UserBiz userBiz) {
 		this.userBiz = userBiz;
 	}
-	
+
 	/**
 	 * @return the albumDao
 	 */
 	public AlbumDao getAlbumDao() {
 		return albumDao;
 	}
-	
+
 	/**
-	 * @param albumDao the albumDao to set
+	 * @param albumDao
+	 *        the albumDao to set
 	 */
 	public void setAlbumDao(AlbumDao albumDao) {
 		this.albumDao = albumDao;
@@ -199,7 +194,8 @@ public abstract class AbstractSearchBiz implements SearchBiz {
 	}
 
 	/**
-	 * @param systemBiz the systemBiz to set
+	 * @param systemBiz
+	 *        the systemBiz to set
 	 */
 	public void setSystemBiz(SystemBiz systemBiz) {
 		this.systemBiz = systemBiz;

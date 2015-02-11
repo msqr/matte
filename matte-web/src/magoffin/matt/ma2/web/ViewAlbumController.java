@@ -28,10 +28,8 @@ package magoffin.matt.ma2.web;
 
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.MediaBiz;
 import magoffin.matt.ma2.biz.SearchBiz;
@@ -43,62 +41,67 @@ import magoffin.matt.ma2.domain.PaginationCriteria;
 import magoffin.matt.ma2.domain.SearchResults;
 import magoffin.matt.ma2.domain.Theme;
 import magoffin.matt.ma2.domain.User;
+import magoffin.matt.ma2.support.BasicAlbumSearchCriteria;
 import magoffin.matt.ma2.support.BrowseAlbumsCommand;
 import magoffin.matt.ma2.web.util.WebConstants;
-
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * Controller for viewing a shared album or a virtual album by way of a 
+ * Controller for viewing a shared album or a virtual album by way of a
  * {@link magoffin.matt.ma2.plugin.BrowseModePlugin}.
  * 
- * <p>To view a normal shared album, pass the {@code key} property on the request
- * of the anonymous key of the album to view. To view a child album of that shared
- * album, also pass the {@code childKey} of that child album.</p>
+ * <p>
+ * To view a normal shared album, pass the {@code key} property on the request
+ * of the anonymous key of the album to view. To view a child album of that
+ * shared album, also pass the {@code childKey} of that child album.
+ * </p>
  * 
- * <p>The default theme will be added to the view model, unless a {@code themeId}
- * parameter for some other theme is provided.</p>
+ * <p>
+ * The default theme will be added to the view model, unless a {@code themeId}
+ * parameter for some other theme is provided.
+ * </p>
  * 
- * <p>To view a <em>virtual album</em> from a browse mode (see the 
- * {@link magoffin.matt.ma2.plugin.BrowseModePlugin} API) you must pass the 
+ * <p>
+ * To view a <em>virtual album</em> from a browse mode (see the
+ * {@link magoffin.matt.ma2.plugin.BrowseModePlugin} API) you must pass the
  * {@code userKey} of the owner of the shared albums and a {@code mode} for the
  * browse mode being viewed. The {@code key} parameter in this case will be set
- * as the {@link PaginationCriteria#setIndexKey(String)} passed to 
+ * as the {@link PaginationCriteria#setIndexKey(String)} passed to
  * {@link SearchBiz#findAlbumsForBrowsing(BrowseAlbumsCommand, PaginationCriteria, BizContext)}
- * and the first {@link AlbumSearchResult} returned in the results will be passed 
- * to the view as the album to view.</p>
+ * and the first {@link AlbumSearchResult} returned in the results will be
+ * passed to the view as the album to view.
+ * </p>
  * 
  * @author matt.magoffin
  * @version $Revision$ $Date$
  */
 public class ViewAlbumController extends AbstractCommandController {
-	
+
 	/** The model key for the selected Album's anonymous key. */
 	public static final String DISPLAY_ALBUM_KEY = "display.album.key";
-	
+
 	/** The model key for the selected MediaItem's ID. */
 	public static final String DISPLAY_ITEM_ID_KEY = "display.item.id";
-	
+
 	private MediaBiz mediaBiz = null;
 	private SearchBiz searchBiz = null;
 	private UserBiz userBiz = null;
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	protected ModelAndView handle(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
-			throws Exception {
+	protected ModelAndView handle(HttpServletRequest request, HttpServletResponse response,
+			Object command, BindException errors) throws Exception {
 		BizContext context = getWebHelper().getBizContextWithViewSettings(request);
-		Command cmd = (Command)command;
+		Command cmd = (Command) command;
 
 		Model model = getDomainObjectFactory().newModelInstance();
-		
+
 		// get the album
 		Album album = null;
 		if ( StringUtils.hasText(cmd.userKey) && StringUtils.hasText(cmd.getMode())
-				&& !BrowseAlbumsCommand.MODE_ALBUMS.equals(cmd.getMode())) {
+				&& !BrowseAlbumsCommand.MODE_ALBUMS.equals(cmd.getMode()) ) {
 			BrowseAlbumsCommand baCmd = new BrowseAlbumsCommand();
 			baCmd.setMode(cmd.getMode());
 			baCmd.setLocale(request.getLocale());
@@ -118,9 +121,15 @@ public class ViewAlbumController extends AbstractCommandController {
 			}
 		} else {
 			album = mediaBiz.getSharedAlbum(cmd.getKey(), context);
+			if ( album.getAlbum() != null && album.getAlbum().size() > 0 ) {
+				// also perform a search, to get all nested item counts
+				SearchResults sr = searchBiz.findAlbums(new BasicAlbumSearchCriteria(cmd.getKey()),
+						null, context);
+				model.setSearchResults(sr);
+			}
 		}
 		model.getAlbum().add(album);
-		
+
 		Album displayAlbum = album;
 		if ( cmd.getChildKey() != null ) {
 			// see if child album available
@@ -129,7 +138,7 @@ public class ViewAlbumController extends AbstractCommandController {
 				displayAlbum = selectedAlbum;
 			}
 		}
-		
+
 		Theme theme = album != null ? album.getTheme() : null;
 		if ( cmd.getThemeId() != null ) {
 			Theme customTheme = getSystemBiz().getThemeById(cmd.getThemeId());
@@ -138,26 +147,24 @@ public class ViewAlbumController extends AbstractCommandController {
 				theme = customTheme;
 			}
 		}
-		
+
 		// if album does not have theme and none requested, provide default in model
 		if ( theme == null ) {
 			theme = getSystemBiz().getDefaultTheme();
 			model.getTheme().add(theme);
 		}
-		
+
 		// save the request theme
 		getWebHelper().saveRequestTheme(theme);
-		
+
 		// add the media sizes
 		getWebHelper().populateMediaSizeAndQuality(model.getMediaSize());
-		
-		Map<String,Object> viewModel = errors.getModel();
+
+		Map<String, Object> viewModel = errors.getModel();
 		viewModel.put(WebConstants.DEFALUT_MODEL_OBJECT, model);
 		viewModel.put(DISPLAY_ALBUM_KEY, displayAlbum.getAnonymousKey());
 		viewModel.put(DISPLAY_ITEM_ID_KEY, cmd.getItemId());
-		return new ModelAndView(
-				getSuccessView()+theme.getBasePath()+"/theme",
-				viewModel);
+		return new ModelAndView(getSuccessView() + theme.getBasePath() + "/theme", viewModel);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -170,12 +177,11 @@ public class ViewAlbumController extends AbstractCommandController {
 		}
 		if ( album.getAlbum() != null ) {
 			for ( int i = 0; i < album.getAlbum().size(); i++ ) {
-				Album a = (Album)album.getAlbum().get(i);
+				Album a = (Album) album.getAlbum().get(i);
 				Album foundAlbum = getAlbum(a, childKey, context);
 				if ( foundAlbum != null && a.getAlbumId().equals(foundAlbum.getAlbumId()) ) {
 					// get full album details and replace child
-					foundAlbum = getMediaBiz().getSharedAlbum(foundAlbum.getAnonymousKey(), 
-							context);
+					foundAlbum = getMediaBiz().getSharedAlbum(foundAlbum.getAnonymousKey(), context);
 					album.getAlbum().set(i, foundAlbum);
 				}
 				if ( foundAlbum != null ) {
@@ -190,13 +196,14 @@ public class ViewAlbumController extends AbstractCommandController {
 	 * Command class.
 	 */
 	public static class Command {
+
 		private String key = null;
 		private Long themeId = null;
 		private Long itemId = null;
 		private String childKey = null; // for nested album selection
 		private String userKey = null; // for virtual album selection
 		private String mode = null; // for virtual album selection
-		
+
 		/**
 		 * @return Returns the themeId.
 		 */
@@ -205,7 +212,8 @@ public class ViewAlbumController extends AbstractCommandController {
 		}
 
 		/**
-		 * @param themeId The themeId to set.
+		 * @param themeId
+		 *        The themeId to set.
 		 */
 		public void setThemeId(Long themeId) {
 			this.themeId = themeId;
@@ -219,7 +227,8 @@ public class ViewAlbumController extends AbstractCommandController {
 		}
 
 		/**
-		 * @param key The key to set.
+		 * @param key
+		 *        The key to set.
 		 */
 		public void setKey(String key) {
 			this.key = key;
@@ -233,21 +242,23 @@ public class ViewAlbumController extends AbstractCommandController {
 		}
 
 		/**
-		 * @param itemId The itemId to set.
+		 * @param itemId
+		 *        The itemId to set.
 		 */
 		public void setItemId(Long itemId) {
 			this.itemId = itemId;
 		}
-		
+
 		/**
 		 * @return the childKey
 		 */
 		public String getChildKey() {
 			return childKey;
 		}
-		
+
 		/**
-		 * @param childKey the childKey to set
+		 * @param childKey
+		 *        the childKey to set
 		 */
 		public void setChildKey(String childKey) {
 			this.childKey = childKey;
@@ -261,7 +272,8 @@ public class ViewAlbumController extends AbstractCommandController {
 		}
 
 		/**
-		 * @param userKey the userKey to set
+		 * @param userKey
+		 *        the userKey to set
 		 */
 		public void setUserKey(String userKey) {
 			this.userKey = userKey;
@@ -275,12 +287,13 @@ public class ViewAlbumController extends AbstractCommandController {
 		}
 
 		/**
-		 * @param mode the mode to set
+		 * @param mode
+		 *        the mode to set
 		 */
 		public void setMode(String mode) {
 			this.mode = mode;
 		}
-		
+
 	}
 
 	/**
@@ -291,7 +304,8 @@ public class ViewAlbumController extends AbstractCommandController {
 	}
 
 	/**
-	 * @param mediaBiz The mediaBiz to set.
+	 * @param mediaBiz
+	 *        The mediaBiz to set.
 	 */
 	public void setMediaBiz(MediaBiz mediaBiz) {
 		this.mediaBiz = mediaBiz;
@@ -305,7 +319,8 @@ public class ViewAlbumController extends AbstractCommandController {
 	}
 
 	/**
-	 * @param searchBiz the searchBiz to set
+	 * @param searchBiz
+	 *        the searchBiz to set
 	 */
 	public void setSearchBiz(SearchBiz searchBiz) {
 		this.searchBiz = searchBiz;
@@ -319,7 +334,8 @@ public class ViewAlbumController extends AbstractCommandController {
 	}
 
 	/**
-	 * @param userBiz the userBiz to set
+	 * @param userBiz
+	 *        the userBiz to set
 	 */
 	public void setUserBiz(UserBiz userBiz) {
 		this.userBiz = userBiz;
