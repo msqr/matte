@@ -16,7 +16,8 @@
 	
 	<xsl:variable name="display-album" select="x:x-data/x:x-model/m:model/m:album/descendant-or-self::m:album
 		[@anonymous-key=key('aux-param','display.album.key')][1]"/>
-	<xsl:variable name="root-album" select="x:x-data/x:x-model/m:model/descendant::m:album[1]"/>
+	<xsl:variable name="root-album" select="x:x-data/x:x-model/m:model/m:album[1]"/>
+	<xsl:variable name="album-hierarchy" select="x:x-data/x:x-model/m:model/m:search-results/m:album[1]"/>
 	<xsl:variable name="display-item-id">
 		<xsl:choose>
 			<xsl:when test="$display-album/m:item[@item-id=key('aux-param','display.item.id')]">
@@ -59,7 +60,7 @@
 				</title>
 				<meta charset="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
-				<link href="http://fonts.googleapis.com/css?family={encode-for-uri('Alice|Alegreya:700,400|Alegreya Sans:400,300')}" rel="stylesheet" type="text/css"/>
+				<link href="http://fonts.googleapis.com/css?family={encode-for-uri('Alegreya:700,400|Alegreya Sans:400,300')}" rel="stylesheet" type="text/css"/>
 				<link rel="stylesheet">
 					<xsl:attribute name="href">
 						<xsl:call-template name="theme-resource-url">
@@ -120,6 +121,11 @@
 					<div class="row">
 						<div class="col-md-3 album-details">
 							<xsl:apply-templates select="$display-album"/>
+							<xsl:if test="$album-hierarchy">
+								<ul>
+									<xsl:apply-templates select="$album-hierarchy/m:search-album"/>
+								</ul>
+							</xsl:if>
 						</div>
 						<div class="col-md-9">
 							<div class="mosaic"></div>
@@ -212,16 +218,7 @@
 		<xsl:variable name="max-date" select="$item-dates[position() eq last()]"/>
 		<xsl:variable name="total-album-count" select="count(m:album) + 1"/>
 		<p class="album-info">
-			<xsl:value-of select="$total-item-count"/>
-			<xsl:text> </xsl:text>
-			<xsl:choose>
-				<xsl:when test="$total-item-count = 1">
-					<xsl:value-of select="key('i18n','browse.items.count.single')"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="key('i18n','browse.items.count')"/>
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:value-of select="m:item-count($total-item-count)"/>
 			<xsl:if test="$total-album-count &gt; 1">
 				<xsl:text> </xsl:text>
 				<xsl:value-of select="key('i18n','in')"/>
@@ -254,12 +251,39 @@
 		</xsl:if>
 	</xsl:template>
 	
+	<!-- Format an album's count of items into a string -->
+	<xsl:function name="m:item-count" as="xs:string">
+		<xsl:param name="count" as="xs:integer"/>
+		<xsl:value-of select="concat($count, ' ', if ($count = 1) 
+			then key('i18n','browse.items.count.single', $top) 
+			else key('i18n','browse.items.count', $top))"/>
+	</xsl:function>
+	
 	<xsl:template match="m:album" mode="title">
 		<xsl:value-of select="@name"/>
 		<xsl:if test="string-length(@name) &gt; 0">
 			<xsl:text> - </xsl:text>
 		</xsl:if>
 		<xsl:value-of select="m:album-date(., $date.format)"/>
+	</xsl:template>
+	
+	<!-- Render child albums -->
+	<xsl:template match="m:search-album">
+		<li>
+			<h2>
+				<a title="{concat(key('i18n','browse.album.view'), ' ', string(@name))}" 
+					href="#{@anonymous-key}" class="child-album">
+					<xsl:value-of select="@name"/>
+				</a>
+				<xsl:text> </xsl:text>
+				<small class="nowrap"><xsl:value-of select="m:item-count(@item-count)"/></small>
+			</h2>
+			<xsl:if test="m:search-album">
+				<ul>
+					<xsl:apply-templates select="m:search-album"/>
+				</ul>
+			</xsl:if>
+		</li>
 	</xsl:template>
 	
 	<xsl:template match="m:album" mode="child-albums">

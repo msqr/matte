@@ -20,6 +20,8 @@ if ( 'app' in window === false ) {
 function init() {
 	webContext = configValue('webContext', '');
 	albumKey = configValue('albumKey');
+	
+	$('a.child-album').on('click', handleChildAlbumClick);
 }
 
 function configValue(key, defaultValue) {
@@ -112,6 +114,30 @@ function handleResize() {
 	if ( Array.isArray(app.imageData) ) {
 		setupMosaic(app.imageData);
 	}
+}
+
+function handleChildAlbumClick(event) {
+	var key = this.hash.substring(1),
+		container;
+
+	container = $(this).closest('li').addClass('selected')
+		.siblings('.selected').removeClass('selected').end();
+	
+	function populateAlbumDetails(album) {
+		if ( album === undefined || container.hasClass('filled') 
+			|| album.comment === undefined || album.comment.length < 1 ) {
+			return;
+		}
+		container.append($('<p>').text(album.comment)).addClass('filled');
+	}
+	
+	$.getJSON(webContext +'/api/v1/album/' +key).done(function(json) {
+		if ( json.success !== true || json.data === undefined ) {
+			console.log('Error getting child album %s', key);
+			return;
+		}
+		populateAlbumDetails(json.data);
+	});
 }
 
 $(function() {

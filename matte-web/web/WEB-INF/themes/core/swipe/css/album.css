@@ -2,8 +2,55 @@ h1 {
 	margin-bottom: 12px !important;
 }
 
+h2 {
+	font-size: 20px;
+	margin-top: 0;
+}
+
+.album-details ul {
+    list-style-type: none;
+	padding-left: 0;
+	margin-left: -20px; 
+	margin-right: -20px
+}
+
+.album-details li {
+	padding: 4px 24px;
+}
+
+.album-details li.selected {
+	background-color: #EEECE8;
+}
+
+.album-details ul p {
+	font-size: 16px;
+	margin-bottom: 0;
+}
+
+/*
+.album-details li {
+	padding-left: 20px;
+    position: relative;
+}
+
+.album-details li:before {
+    content:'\203b';
+    color: #999;
+    font-family: 'Alegreya', serif;
+	font-weight: 400;
+    font-size: 14px;
+    position: absolute;
+    top: 2px;
+    left: 0;
+}
+*/
+
 .album-details p {
 	font-size: 18px;
+}
+
+.album-details .album-info + .album-info {
+	margin-top: -10px;
 }
 
 .album-details .album-info {

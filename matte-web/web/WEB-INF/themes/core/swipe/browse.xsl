@@ -59,7 +59,7 @@
 						<xsl:value-of select="$author/@anonymous-key"/>
 					</xsl:attribute>
 				</link>
-				<link href="http://fonts.googleapis.com/css?family={encode-for-uri('Alice|Alegreya:700,400|Alegreya Sans:400,300')}" rel="stylesheet" type="text/css"/>
+				<link href="http://fonts.googleapis.com/css?family={encode-for-uri('Alegreya:700,400|Alegreya Sans:400,300')}" rel="stylesheet" type="text/css"/>
 				<link rel="stylesheet">
 					<xsl:attribute name="href">
 						<xsl:call-template name="theme-resource-url">

@@ -1,12 +1,18 @@
 body {
 	font-family: 'Alegreya', serif;
 	font-weight: 400;
+	background-color: #fffdf9;
+	color: #1B1B1B;
 }
 
 h1, h2, h3, h4 {
 	font-family: 'Alegreya', serif;
 	font-weight: 400;
 	text-rendering: optimizelegibility;
+}
+
+h1 small, h2 small {
+	color: #5D564A;
 }
 
 h1 {
@@ -74,7 +80,7 @@ p {
 .album-info {
 	font-family: 'Alegreya Sans', sans-serif;
 	font-weight: 300;
-	color: #666;
+	color: #5D564A;
 }
 
 .browse-album p {
