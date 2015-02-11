@@ -31,6 +31,25 @@ function imageURL(itemId, itemAlbumKey, size, quality) {
 			+(quality ? "&quality=" + encodeURIComponent(quality) : ''));
 }
 
+function aspectScaleToMediaSpec(width, height, specName) {
+	var specs = configValue('specs'),
+		result = { w : width, h : height },
+		spec, r1, r2;
+	if ( specs && specs[specName] ) {
+		spec = specs[specName];
+		result.w = spec.width;
+		result.h = spec.height;
+		r1 = width / height;
+		r2 = spec.width / spec.height;
+		if ( r1 > r2 ) {
+			result.h = Math.min(spec.height, Math.round(spec.width / r1));
+		} else {
+			result.w = Math.min(spec.width, Math.round(spec.height * r1));
+		}
+	}
+	return result; 
+}
+
 function setupMosaic(imageData) {
 	if ( Array.isArray(imageData) === false || imageData.length < 1 ) {
 		return;
@@ -39,11 +58,12 @@ function setupMosaic(imageData) {
 	var thumbSpec = configValue('thumbSpec', { size: 'THUMB_NORMAL', quality : 'GOOD' });
 	var gridSize = Math.min(12, Math.floor(Math.sqrt(imageData.length)));
 	var pswpData = imageData.map(function(d) {
+		var dim = aspectScaleToMediaSpec(d.w, d.h, singleSpec.size);
 		return {
 			src : imageURL(d.id, albumKey, singleSpec.size, singleSpec.quality),
-			msrc : imageURL(d.id, albumKey, thumbSpec.size, thumbSpec.quality),
-			w : d.w,
-			h : d.h
+			//msrc : imageURL(d.id, albumKey, thumbSpec.size, thumbSpec.quality),
+			w : dim.w,
+			h : dim.h
 		};
 	});
 	mosaic = matte.imageMosaic('.mosaic:first')
@@ -53,6 +73,10 @@ function setupMosaic(imageData) {
 		}))
 		.tileClickHandler(function(event, data) {
 			console.log('Clicked on image %d: %s', data.index, data.image.attr('src'));
+			
+			// stop flipping
+			mosaic.stopEyeCatcher();
+			
 			var pswpContainer = $('#pswp').get(0);
 			var options = {};
 			if ( data.index < imageData.length ) {
@@ -70,8 +94,13 @@ function setupMosaic(imageData) {
 			}
 			pswp = new PhotoSwipe(pswpContainer, PhotoSwipeUI_Default, pswpData, options);
 			pswp.init();
+			pswp.listen('destroy', function() {
+				// start flipping again
+				mosaic.startEyeCatcher();
+			});
 		})
-		.render();
+		.render()
+		.startEyeCatcher();
 }
 
 $(function() {

@@ -120,7 +120,6 @@
 					<div class="row">
 						<div class="col-md-3">
 							<xsl:apply-templates select="$display-album" mode="headline"/>
-							<button type="button" id="filpper">Flip Out</button>
 						</div>
 						<div class="col-md-9">
 							<div class="mosaic"></div>
@@ -276,6 +275,18 @@
 				singleSpec : {
 					size: '<xsl:value-of select="$single-size"/>',
 					quality: '<xsl:value-of select="$single-quality"/>'
+				},
+				
+				specs : {
+					<xsl:for-each select="m:media-size">
+						<xsl:if test="position() &gt; 1">
+							<xsl:text>,&#10;</xsl:text>
+						</xsl:if>
+						<xsl:value-of select="@size"/>
+						<xsl:text> : { width : </xsl:text><xsl:value-of select="@width"/>
+						<xsl:text>, height: </xsl:text><xsl:value-of select="@height"/>
+						<xsl:text> }</xsl:text>
+					</xsl:for-each>
 				}
 			};
 			
