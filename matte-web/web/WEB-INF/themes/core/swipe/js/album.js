@@ -9,7 +9,9 @@
 var pswp,
 	mosaic,
 	webContext,
-	albumKey;
+	albumKey,
+	resizeDelay = 300,
+	resizeTimer;
 
 if ( 'app' in window === false ) {
 	window.app = {};
@@ -66,41 +68,50 @@ function setupMosaic(imageData) {
 			h : dim.h
 		};
 	});
-	mosaic = matte.imageMosaic('.mosaic:first')
-		.gridColumnCount(gridSize)
+	if ( mosaic === undefined ) {
+		mosaic = matte.imageMosaic('.mosaic:first')
+			.tileClickHandler(function(event, data) {
+				console.log('Clicked on image %d: %s', data.index, data.image.attr('src'));
+			
+				// stop flipping
+				mosaic.stopEyeCatcher();
+			
+				var pswpContainer = $('#pswp').get(0);
+				var options = {};
+				if ( data.index < imageData.length ) {
+					options.index = data.index;
+					options.getThumbBoundsFn = function(index) {
+						var pageYScroll = window.pageYOffset || document.documentElement.scrollTop;
+						var img = mosaic.imageElementForIndex(index),
+							rect;
+						if ( img === undefined ) {
+							return undefined;
+						}
+						rect = img.get(0).getBoundingClientRect();
+						return {x:rect.left, y:rect.top + pageYScroll, w:rect.width};
+					};
+				}
+				pswp = new PhotoSwipe(pswpContainer, PhotoSwipeUI_Default, pswpData, options);
+				pswp.init();
+				pswp.listen('destroy', function() {
+					// start flipping again
+					mosaic.startEyeCatcher();
+				});
+			});
+	}
+	mosaic.gridColumnCount(gridSize)
 		.images(imageData.map(function(d) {
 			return imageURL(d.id, albumKey, 'THUMB_BIGGER', 'GOOD');
 		}))
-		.tileClickHandler(function(event, data) {
-			console.log('Clicked on image %d: %s', data.index, data.image.attr('src'));
-			
-			// stop flipping
-			mosaic.stopEyeCatcher();
-			
-			var pswpContainer = $('#pswp').get(0);
-			var options = {};
-			if ( data.index < imageData.length ) {
-				options.index = data.index;
-				options.getThumbBoundsFn = function(index) {
-					var pageYScroll = window.pageYOffset || document.documentElement.scrollTop;
-					var img = mosaic.imageElementForIndex(index),
-						rect;
-					if ( img === undefined ) {
-						return undefined;
-					}
-					rect = img.get(0).getBoundingClientRect();
-					return {x:rect.left, y:rect.top + pageYScroll, w:rect.width};
-				};
-			}
-			pswp = new PhotoSwipe(pswpContainer, PhotoSwipeUI_Default, pswpData, options);
-			pswp.init();
-			pswp.listen('destroy', function() {
-				// start flipping again
-				mosaic.startEyeCatcher();
-			});
-		})
 		.render()
 		.startEyeCatcher();
+}
+
+function handleResize() {
+	resizeTimer = undefined;
+	if ( Array.isArray(app.imageData) ) {
+		setupMosaic(app.imageData);
+	}
 }
 
 $(function() {
@@ -108,6 +119,16 @@ $(function() {
 	if ( Array.isArray(app.imageData) ) {
 		setupMosaic(app.imageData);
 	}
+	$(window).on('resize', function() {
+		// re-calculate mosaic, but only if resize events have died down
+		if ( resizeTimer ) {
+			clearTimeout(resizeTimer);
+		}
+		if ( mosaic ) {
+			mosaic.stopEyeCatcher();
+		}
+		resizeTimer = setTimeout(handleResize, resizeDelay);
+	});
 });
 
 }());
