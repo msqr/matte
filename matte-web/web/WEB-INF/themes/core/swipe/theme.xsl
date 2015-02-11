@@ -228,9 +228,7 @@
 				<xsl:text> </xsl:text>
 				<xsl:value-of select="$total-album-count"/>
 				<xsl:text> </xsl:text>
-				<span class="tolower">
-					<xsl:value-of select="key('i18n','albums.displayName')"/>
-				</span>
+				<xsl:value-of select="lower-case(key('i18n','albums.displayName'))"/>
 			</xsl:if>
 			<xsl:if test="$total-item-count &gt; 0 and $min-date != $max-date">
 				<xsl:text>, </xsl:text>
