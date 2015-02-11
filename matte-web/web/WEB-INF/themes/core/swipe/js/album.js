@@ -124,11 +124,27 @@ function handleChildAlbumClick(event) {
 		.siblings('.selected').removeClass('selected').end();
 	
 	function populateAlbumDetails(album) {
-		if ( album === undefined || container.hasClass('filled') 
-			|| album.comment === undefined || album.comment.length < 1 ) {
+		if ( album === undefined ) {
 			return;
 		}
-		container.append($('<p>').text(album.comment)).addClass('filled');
+		if ( container.hasClass('filled') === false && album.comment !== undefined && album.comment.length > 0 ) {
+			container.append($('<p>').text(album.comment)).addClass('filled');
+		}
+		if ( mosaic === undefined ) {
+			return;
+		}
+		if ( Array.isArray(album.item) ) {
+			setupMosaic(album.item.map(function(item) {
+				return {
+					id : item.itemId,
+					w : item.width,
+					h : item.height,
+					name : item.name,
+					date : new Date(item.itemDate ? item.itemDate : item.creationDate), // TODO: format
+					mime : item.mime
+				};
+			}));
+		}
 	}
 	
 	$.getJSON(webContext +'/api/v1/album/' +key).done(function(json) {
