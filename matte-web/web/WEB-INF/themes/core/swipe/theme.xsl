@@ -347,7 +347,7 @@
 		<xsl:if test="m:comment">
 			<xsl:text>, comment : </xsl:text><xsl:value-of select="m:js-string(normalize-space(m:comment))"/>
 		</xsl:if>
-		<xsl:text>, date : </xsl:text><xsl:value-of select="m:js-string(m:item-date(.))"/>
+		<xsl:text>, date : </xsl:text><xsl:value-of select="m:js-string(m:item-date(., $date.format))"/>
 		<xsl:if test="@icon-width">
 			<xsl:text>, iw : </xsl:text><xsl:value-of select="@icon-width"/>
 		</xsl:if>
@@ -361,7 +361,7 @@
 	<xsl:function name="m:album-date" as="xs:string">
 		<xsl:param name="album" as="element()"/>
 		<xsl:param name="date-format" as="xs:string"/>
-		<xsl:variable name="date">
+		<xsl:variable name="date" as="xs:string">
 			<xsl:choose>
 				<xsl:when test="$album/@album-date">
 					<xsl:value-of select="$album/@album-date"/>
@@ -374,19 +374,23 @@
 				</xsl:when>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:value-of select="format-date(xs:date(substring-before($date, 'T')), $date-format)"/>
+		<xsl:value-of select="if (string-length($date) &gt; 1) then format-date(xs:date(substring-before($date, 'T')), $date-format) else ()"/>
 	</xsl:function>
 	
 	<xsl:function name="m:item-date" as="xs:string">
 		<xsl:param name="item" as="element()"/>
-		<xsl:choose>
-			<xsl:when test="string-length($item/@item-date) &gt; 0">
-				<xsl:value-of select="format-date(xs:date(substring-before($item/@item-date,'T')),'[D01] [MNn,*-3] [Y0001]')"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="format-date(xs:date(substring-before($item/@creation-date,'T')),'[D01] [MNn,*-3] [Y0001]')"/>
-			</xsl:otherwise>
-		</xsl:choose>
+		<xsl:param name="date-format" as="xs:string"/>
+		<xsl:variable name="date" as="xs:string">
+			<xsl:choose>
+				<xsl:when test="$item/@item-date">
+					<xsl:value-of select="$item/@item-date"/>
+				</xsl:when>
+				<xsl:when test="$item/@creation-date">
+					<xsl:value-of select="$item/@creation-date"/>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:value-of select="if (string-length($date) &gt; 1) then format-date(xs:date(substring-before($date, 'T')), $date-format) else ()"/>
 	</xsl:function>
 	
 	<xsl:template match="m:model" mode="photoswipe">
