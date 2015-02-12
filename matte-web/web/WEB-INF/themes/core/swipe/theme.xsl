@@ -345,17 +345,17 @@
 			<xsl:text>,&#10;</xsl:text>
 		</xsl:if>
 		<xsl:text>{ </xsl:text>
-		<xsl:text>id : </xsl:text><xsl:value-of select="@item-id"/>
-		<xsl:text>, w : </xsl:text><xsl:value-of select="@width"/>
-		<xsl:text>, h : </xsl:text><xsl:value-of select="@height"/>
+		<xsl:text>itemId : </xsl:text><xsl:value-of select="@item-id"/>
+		<xsl:text>, width : </xsl:text><xsl:value-of select="@width"/>
+		<xsl:text>, height : </xsl:text><xsl:value-of select="@height"/>
 		<xsl:text>, name : </xsl:text><xsl:value-of select="m:js-string(@name)"/>
-		<xsl:text>, file : </xsl:text><xsl:value-of select="m:js-string(@path)"/>
+		<xsl:text>, path : </xsl:text><xsl:value-of select="m:js-string(@path)"/>
 		<xsl:if test="m:description">
-			<xsl:text>, comment : </xsl:text><xsl:value-of select="m:js-string(normalize-space(m:description))"/>
+			<xsl:text>, description : </xsl:text><xsl:value-of select="m:js-string(normalize-space(m:description))"/>
 		</xsl:if>
 		<xsl:text>, date : </xsl:text><xsl:value-of select="m:js-string(m:item-date(., $date.format))"/>
 		<xsl:if test="boolean(@use-icon) = true()">
-			<xsl:text>, icon : true</xsl:text>
+			<xsl:text>, useIcon : true</xsl:text>
 		</xsl:if>
 		<xsl:text>, mime : </xsl:text><xsl:value-of select="m:js-string(@mime)"/>
 		<xsl:text> }</xsl:text>

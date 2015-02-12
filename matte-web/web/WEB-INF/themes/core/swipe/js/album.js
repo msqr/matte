@@ -59,6 +59,34 @@ function aspectScaleToMediaSpec(width, height, specName) {
 	return result; 
 }
 
+/**
+ * Convert a MediaItem object into one suitable for passing to PhotoSwipe.
+ *
+ * @param {Object} item - The MediaItem to convert.
+ * @param {String} albumKey - The anonymous album key the image is in.
+ * @param {Object} mediaSpec - The media size and quality specification to use.
+ */
+function getPhotoSwipeItemForMediaItem(item, albumKey, mediaSpec) {
+	var dim = aspectScaleToMediaSpec(item.width, item.height, mediaSpec.size);
+	var result = {
+		src : imageURL(item.itemId, albumKey, mediaSpec.size, mediaSpec.quality),
+		//msrc : imageURL(item.itemId, albumKey, thumbSpec.size, thumbSpec.quality),
+		w : dim.w,
+		h : dim.h
+	};
+	if ( item.name && item.path.search(new RegExp(item.name + '$')) === -1 ) {
+		result.title = item.name;
+	}
+	if ( item.description && item.description.length > 0 ) {
+		if ( result.title ) {
+			result.comment = item.description;
+		} else {
+			result.title = item.description;
+		}
+	}
+	return result;
+}
+
 function setupMosaic(imageData) {
 	if ( Array.isArray(imageData) === false || imageData.length < 1 ) {
 		return;
@@ -67,13 +95,7 @@ function setupMosaic(imageData) {
 	var thumbSpec = configValue('thumbSpec', { size: 'THUMB_NORMAL', quality : 'GOOD' });
 	var gridSize = Math.min(12, Math.floor(Math.sqrt(imageData.length)));
 	var pswpData = imageData.map(function(d) {
-		var dim = aspectScaleToMediaSpec(d.w, d.h, singleSpec.size);
-		return {
-			src : imageURL(d.id, albumKey, singleSpec.size, singleSpec.quality),
-			//msrc : imageURL(d.id, albumKey, thumbSpec.size, thumbSpec.quality),
-			w : dim.w,
-			h : dim.h
-		};
+		return getPhotoSwipeItemForMediaItem(d, albumKey, singleSpec);
 	});
 	function tileClickHandler(event, data) {
 		console.log('Clicked on image %d: %s', data.index, data.image.attr('src'));
@@ -102,6 +124,9 @@ function setupMosaic(imageData) {
 			// start flipping again
 			mosaic.startEyeCatcher();
 		});
+		pswp.listen('gettingData', function(index, item) {
+			preparePhotoSlide(index, item, imageData);
+		});
 	}
 	if ( mosaic === undefined ) {
 		mosaic = matte.imageMosaic('.mosaic:first');
@@ -109,10 +134,14 @@ function setupMosaic(imageData) {
 	mosaic.gridColumnCount(gridSize)
 		.tileClickHandler(tileClickHandler)
 		.images(imageData.map(function(d) {
-			return imageURL(d.id, albumKey, 'THUMB_BIGGER', 'GOOD');
+			return imageURL(d.itemId, albumKey, 'THUMB_BIGGER', 'GOOD');
 		}))
 		.render()
 		.startEyeCatcher();
+}
+
+function preparePhotoSlide(index, item, imageData) {
+	console.log('Preparing slide %d with %s', index, item);
 }
 
 function handleResize() {
@@ -140,16 +169,7 @@ function selectChildAlbumLink(key, a) {
 			container.append($('<p>').text(album.comment)).addClass('filled');
 		}
 		if ( Array.isArray(album.item) ) {
-			setupMosaic(album.item.map(function(item) {
-				return {
-					id : item.itemId,
-					w : item.width,
-					h : item.height,
-					name : item.name,
-					date : new Date(item.itemDate ? item.itemDate : item.creationDate), // TODO: format
-					mime : item.mime
-				};
-			}));
+			setupMosaic(album.item);
 		}
 	}
 	
