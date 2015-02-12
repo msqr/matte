@@ -349,15 +349,13 @@
 		<xsl:text>, w : </xsl:text><xsl:value-of select="@width"/>
 		<xsl:text>, h : </xsl:text><xsl:value-of select="@height"/>
 		<xsl:text>, name : </xsl:text><xsl:value-of select="m:js-string(@name)"/>
-		<xsl:if test="m:comment">
-			<xsl:text>, comment : </xsl:text><xsl:value-of select="m:js-string(normalize-space(m:comment))"/>
+		<xsl:text>, file : </xsl:text><xsl:value-of select="m:js-string(@path)"/>
+		<xsl:if test="m:description">
+			<xsl:text>, comment : </xsl:text><xsl:value-of select="m:js-string(normalize-space(m:description))"/>
 		</xsl:if>
 		<xsl:text>, date : </xsl:text><xsl:value-of select="m:js-string(m:item-date(., $date.format))"/>
-		<xsl:if test="@icon-width">
-			<xsl:text>, iw : </xsl:text><xsl:value-of select="@icon-width"/>
-		</xsl:if>
-		<xsl:if test="@icon-height">
-			<xsl:text>, ih : </xsl:text><xsl:value-of select="@icon-height"/>
+		<xsl:if test="boolean(@use-icon) = true()">
+			<xsl:text>, icon : true</xsl:text>
 		</xsl:if>
 		<xsl:text>, mime : </xsl:text><xsl:value-of select="m:js-string(@mime)"/>
 		<xsl:text> }</xsl:text>
