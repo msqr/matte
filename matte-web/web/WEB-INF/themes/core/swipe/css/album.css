@@ -7,6 +7,16 @@ h2 {
 	margin-top: 0;
 }
 
+#album-dropdown {
+	margin-bottom: 10px;
+}
+
+@media (min-width:992px) {
+	#album-dropdown {
+		display: none;
+	}
+}
+
 .album-details ul {
     list-style-type: none;
 	padding-left: 0;

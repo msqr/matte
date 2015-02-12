@@ -122,9 +122,16 @@
 						<div class="col-md-3 album-details">
 							<xsl:apply-templates select="$display-album"/>
 							<xsl:if test="$album-hierarchy">
-								<ul id="album-hierarchy">
-									<xsl:apply-templates select="$album-hierarchy"/>
-								</ul>
+								<div class="dropdown">
+               						<button data-toggle="dropdown" type="button" class="btn btn-default dropdown-toggle" id="album-dropdown">
+               							<xsl:value-of select="key('i18n', 'albums.displayName')"/>
+               							<xsl:text> </xsl:text>
+               							<span class="caret"></span>
+               						</button>
+									<ul id="album-hierarchy" aria-labelledby="album-dropdown" role="menu">
+										<xsl:apply-templates select="$album-hierarchy"/>
+									</ul>
+								</div>
 							</xsl:if>
 						</div>
 						<div class="col-md-9">

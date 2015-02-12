@@ -116,8 +116,10 @@ function setupMosaic(imageData) {
 }
 
 function handleResize() {
+	var currWindowWidth = $(window).width();
 	resizeTimer = undefined;
-	if ( $(window).width() !== windowWidth ) {
+	if ( currWindowWidth !== windowWidth ) {
+		windowWidth = currWindowWidth;
 		displayAppropriateMosaic();
 	}
 }
@@ -188,12 +190,14 @@ function getChildAlbumLinkElement(key) {
 
 function displayAppropriateMosaic() {
 	var childAlbumKey = getChildAlbumKey(window.location),
-		childAlbumLink = getChildAlbumLinkElement(childAlbumKey);
+		childAlbumLink = getChildAlbumLinkElement(childAlbumKey),
+		showAlbumDropDown = (windowWidth < 992);
 	if ( childAlbumLink ) {
 		selectChildAlbumLink(childAlbumKey, childAlbumLink);
 	} else if ( Array.isArray(app.imageData) ) {
 		setupMosaic(app.imageData);
 	}
+	$('#album-hierarchy').toggleClass('dropdown-menu', showAlbumDropDown);
 }
 
 $(function() {
