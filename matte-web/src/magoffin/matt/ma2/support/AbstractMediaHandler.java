@@ -54,7 +54,8 @@ import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.image.EmbeddedImageMetadata;
 import magoffin.matt.ma2.util.BizContextUtil;
 import org.apache.commons.lang.math.Range;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.core.io.Resource;
@@ -132,7 +133,7 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 	public static final String METADATA_PARAMETER_KEY = "abstractmediahandler.metadata";
 
 	/** A class Logger. */
-	protected final Logger log = Logger.getLogger(getClass());
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 
 	private DomainObjectFactory domainObjectFactory;
 	private MediaBiz mediaBiz;
@@ -584,9 +585,6 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 	 */
 	protected void defaultHandleRequestOriginal(MediaItem item, Resource itemResource,
 			MediaRequest request, MediaResponse response) {
-		if ( log.isDebugEnabled() ) {
-			log.debug("Returning unaltered stream " + item.getPath());
-		}
 		try {
 			response.setMimeType(getMime());
 			response.setModifiedDate(itemResource.getFile().lastModified());
@@ -611,6 +609,9 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 			long start = range.getMinimumNumber() != null ? range.getMinimumLong() : 0;
 			long end = range.getMaximumNumber() != null ? range.getMaximumLong() + 1 : fileLength;
 			byte[] buf = new byte[4096];
+			if ( log.isDebugEnabled() ) {
+				log.debug("Returning stream byte range {}-{} {}", start, end, item.getPath());
+			}
 			response.setPartialResponse(start, end - 1, fileLength);
 			OutputStream out = response.getOutputStream();
 			RandomAccessFile file = null;
@@ -637,6 +638,9 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 				}
 			}
 		} else {
+			if ( log.isDebugEnabled() ) {
+				log.debug("Returning unaltered stream " + item.getPath());
+			}
 			try {
 				if ( fileLength > 0 ) {
 					response.setMediaLength(fileLength);
