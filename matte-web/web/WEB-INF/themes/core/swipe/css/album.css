@@ -47,11 +47,12 @@ h2 {
 }
 
 .album-details .album-info + .album-info {
-	margin-top: -10px;
+	margin-top: -6px;
 }
 
 .album-details .album-info {
 	font-size: 14px;
+	line-height: 18px;
 }
 
 .video-slide {
