@@ -115,9 +115,7 @@ function setupMosaic(imageData) {
 
 function handleResize() {
 	resizeTimer = undefined;
-	if ( Array.isArray(app.imageData) ) {
-		setupMosaic(app.imageData);
-	}
+	displayAppropriateMosaic();
 }
 
 function selectChildAlbumLink(key, a) {
@@ -184,15 +182,19 @@ function getChildAlbumLinkElement(key) {
 	return anchor;
 }
 
-$(function() {
+function displayAppropriateMosaic() {
 	var childAlbumKey = getChildAlbumKey(window.location),
 		childAlbumLink = getChildAlbumLinkElement(childAlbumKey);
-	init();
 	if ( childAlbumLink ) {
 		selectChildAlbumLink(childAlbumKey, childAlbumLink);
 	} else if ( Array.isArray(app.imageData) ) {
 		setupMosaic(app.imageData);
 	}
+}
+
+$(function() {
+	init();
+	displayAppropriateMosaic();
 	$(window).on('resize', function() {
 		// re-calculate mosaic, but only if resize events have died down
 		if ( resizeTimer ) {
