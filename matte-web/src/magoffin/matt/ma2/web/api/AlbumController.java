@@ -83,7 +83,7 @@ public class AlbumController extends ControllerSupport {
 	@RequestMapping(value = { "", "/" }, method = RequestMethod.GET, params = { "!mode", "!userKey" })
 	@ResponseBody
 	public Response<Album> viewAlbum(HttpServletRequest request, @RequestParam("key") String key) {
-		BizContext context = getWebHelper().getBizContextWithViewSettings(request);
+		BizContext context = getWebHelper().getBizContext(request, false);
 		Album album = mediaBiz.getSharedAlbum(key, context);
 		return Response.response(album);
 	}
@@ -121,7 +121,7 @@ public class AlbumController extends ControllerSupport {
 	@ResponseBody
 	public Response<Album> viewVirtualAlbum(HttpServletRequest request, @RequestParam("key") String key,
 			@RequestParam("userKey") String userKey, @RequestParam("mode") String mode) {
-		BizContext context = getWebHelper().getBizContextWithViewSettings(request);
+		BizContext context = getWebHelper().getBizContext(request, false);
 
 		// get the album
 		Album album = null;
@@ -175,7 +175,7 @@ public class AlbumController extends ControllerSupport {
 	@RequestMapping(value = "/browse", method = RequestMethod.GET)
 	@ResponseBody
 	public Response<SearchResults> browse(HttpServletRequest request, BrowseAlbumsCommand cmd) {
-		BizContext context = getWebHelper().getBizContextWithViewSettings(request);
+		BizContext context = getWebHelper().getBizContext(request, false);
 
 		// set command Locale
 		cmd.setLocale(request.getLocale());
