@@ -122,8 +122,8 @@
 						<div class="col-md-3 album-details">
 							<xsl:apply-templates select="$display-album"/>
 							<xsl:if test="$album-hierarchy">
-								<ul>
-									<xsl:apply-templates select="$album-hierarchy/m:search-album"/>
+								<ul id="album-hierarchy">
+									<xsl:apply-templates select="$album-hierarchy"/>
 								</ul>
 							</xsl:if>
 						</div>
@@ -268,11 +268,11 @@
 	</xsl:template>
 	
 	<!-- Render child albums -->
-	<xsl:template match="m:search-album">
+	<xsl:template match="m:search-album | m:search-results/m:album">
 		<li>
 			<h2>
 				<a title="{concat(key('i18n','browse.album.view'), ' ', string(@name))}" 
-					href="#{@anonymous-key}" class="child-album">
+					href="#{@anonymous-key}" class="{concat('child-album', if (local-name(.) eq 'album') then ' root' else ())}">
 					<xsl:value-of select="@name"/>
 				</a>
 				<xsl:text> </xsl:text>
@@ -284,30 +284,6 @@
 				</ul>
 			</xsl:if>
 		</li>
-	</xsl:template>
-	
-	<xsl:template match="m:album" mode="child-albums">
-		<li>
-			<a href="{$web-context}/album.do?key={$root-album/@anonymous-key}&amp;childKey={@anonymous-key}">
-				<xsl:value-of select="@name"/>
-			</a>
-		</li>
-	</xsl:template>
-
-	<xsl:template match="m:album" mode="album-crumbs">
-		<xsl:if test="position() &gt; 1">
-			<xsl:text> &#187; </xsl:text>
-		</xsl:if>
-		<xsl:choose>
-			<xsl:when test="$display-album = .">
-				<span class="current"><xsl:value-of select="@name"/></span>
-			</xsl:when>
-			<xsl:otherwise>
-				<a href="{$web-context}/album.do?key={$root-album/@anonymous-key}&amp;childKey={@anonymous-key}">
-					<xsl:value-of select="@name"/>
-				</a>
-			</xsl:otherwise>
-		</xsl:choose>
 	</xsl:template>
 	
 	<xsl:template match="m:model" mode="js-data">
