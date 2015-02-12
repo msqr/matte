@@ -111,7 +111,7 @@
 									<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
 									<span class="caret"></span>
 								</button>
-								<ul class="dropdown-menu" role="menu" aria-labelledby="browse-mode-dropdown">
+								<ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="browse-mode-dropdown">
 									<li role="presentation" class="dropdown-header">
 										<xsl:value-of select="key('i18n','browse.modes.link')"/>
 									</li>
