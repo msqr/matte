@@ -11,7 +11,8 @@ var pswp,
 	webContext,
 	albumKey,
 	resizeDelay = 300,
-	resizeTimer;
+	resizeTimer,
+	windowWidth;
 
 if ( 'app' in window === false ) {
 	window.app = {};
@@ -20,6 +21,7 @@ if ( 'app' in window === false ) {
 function init() {
 	webContext = configValue('webContext', '');
 	albumKey = configValue('albumKey');
+	windowWidth = $(window).width();
 	
 	$('a.child-album').on('click', function(event) {
 		var key = getChildAlbumKey(this);
@@ -115,7 +117,9 @@ function setupMosaic(imageData) {
 
 function handleResize() {
 	resizeTimer = undefined;
-	displayAppropriateMosaic();
+	if ( $(window).width() !== windowWidth ) {
+		displayAppropriateMosaic();
+	}
 }
 
 function selectChildAlbumLink(key, a) {
