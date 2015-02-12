@@ -25,6 +25,11 @@ h2 {
 .album-details ul p {
 	font-size: 16px;
 	margin-bottom: 0;
+	display: none;
+}
+
+.album-details ul .selected p {
+	display: inherit;
 }
 
 /*
