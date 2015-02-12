@@ -27,6 +27,16 @@ function init() {
 		var key = getChildAlbumKey(this);
 		selectChildAlbumLink(key, $(this));
 	});
+	
+	$('#pswp').on('click', 'button.video-play-button', function() {
+		var button = $(this),
+			video = button.siblings('video').get(0);
+		if ( video ) {
+			console.log('Play video!');
+			video.play();
+			button.hide();
+		}
+	});
 }
 
 function configValue(key, defaultValue) {
@@ -74,9 +84,14 @@ function getPhotoSwipeItemForMediaItem(item, albumKey, mediaSpec) {
 		w : dim.w,
 		h : dim.h
 	};
-	if ( item.name && item.path.search(new RegExp(item.name + '$')) === -1 ) {
+	
+	// set the title to the item name, but only if the item name isn't set to the item's file name
+	if ( item.name && item.path.search(new RegExp(item.name + '(\\.\\w+)?$')) === -1 ) {
 		result.title = item.name;
 	}
+	
+	// if an item description is available, use that as the title unless a title already configured
+	// in which case add a custom 'comment' property with the description
 	if ( item.description && item.description.length > 0 ) {
 		if ( result.title ) {
 			result.comment = item.description;
@@ -84,6 +99,17 @@ function getPhotoSwipeItemForMediaItem(item, albumKey, mediaSpec) {
 			result.title = item.description;
 		}
 	}
+
+	// handle video items
+	if ( item.mime.match(/^video/i) ) {
+		var container = $('<div class="video-slide"/>');
+		$('<video/>').attr('src', result.src+'&original=true').appendTo(container);
+		$('<button type="button" class="btn btn-default video-play-button"><span class="glyphicon glyphicon-play play-button"></span></button>')
+			.appendTo(container);
+		result.html = container.get(0);
+		delete result.src;
+	}
+	
 	return result;
 }
 
@@ -118,6 +144,9 @@ function setupMosaic(imageData) {
 				return {x:rect.left, y:rect.top + pageYScroll, w:rect.width};
 			};
 		}
+		options.isClickableElement = function(el) {
+			return (el.tagName === 'A' || el.tagName === 'BUTTON');
+		};
 		pswp = new PhotoSwipe(pswpContainer, PhotoSwipeUI_Default, pswpData, options);
 		pswp.init();
 		pswp.listen('destroy', function() {
