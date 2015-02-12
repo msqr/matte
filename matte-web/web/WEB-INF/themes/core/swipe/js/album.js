@@ -21,7 +21,10 @@ function init() {
 	webContext = configValue('webContext', '');
 	albumKey = configValue('albumKey');
 	
-	$('a.child-album').on('click', handleChildAlbumClick);
+	$('a.child-album').on('click', function(event) {
+		var key = getChildAlbumKey(this);
+		selectChildAlbumLink(key, $(this));
+	});
 }
 
 function configValue(key, defaultValue) {
@@ -117,22 +120,20 @@ function handleResize() {
 	}
 }
 
-function handleChildAlbumClick(event) {
-	var key = this.hash.substring(1),
-		container;
-
-	container = $(this).closest('li').addClass('selected')
-		.siblings('.selected').removeClass('selected').end();
-	
+function selectChildAlbumLink(key, a) {
+	var container;
+	$('#album-hierarchy li.selected').removeClass('selected');
+	container = a.closest('li');
+	if ( a.hasClass('root') === false ) {
+		container.addClass('selected');
+	}
 	function populateAlbumDetails(album) {
 		if ( album === undefined ) {
 			return;
 		}
-		if ( container.hasClass('filled') === false && album.comment !== undefined && album.comment.length > 0 ) {
+		if ( container.hasClass('filled') === false 
+				&& album.comment !== undefined && album.comment.length > 0 ) {
 			container.append($('<p>').text(album.comment)).addClass('filled');
-		}
-		if ( mosaic === undefined ) {
-			return;
 		}
 		if ( Array.isArray(album.item) ) {
 			setupMosaic(album.item.map(function(item) {
@@ -148,18 +149,48 @@ function handleChildAlbumClick(event) {
 		}
 	}
 	
-	$.getJSON(webContext +'/api/v1/album/' +key).done(function(json) {
-		if ( json.success !== true || json.data === undefined ) {
-			console.log('Error getting child album %s', key);
-			return;
+	if ( a.hasClass('root') ) {
+		if ( Array.isArray(app.imageData) ) {
+			setupMosaic(app.imageData);
 		}
-		populateAlbumDetails(json.data);
+	} else {
+		$.getJSON(webContext +'/api/v1/album/' +key).done(function(json) {
+			if ( json.success !== true || json.data === undefined ) {
+				console.log('Error getting child album %s', key);
+				return;
+			}
+			populateAlbumDetails(json.data);
+		});
+	}
+}
+
+function getChildAlbumKey(location) {
+	var key;
+	if ( location && location.hash ) {
+		key = location.hash.substring(1);
+	}
+	return key;
+}
+
+function getChildAlbumLinkElement(key) {
+	var anchor,
+		hash = '#' + key;
+	$('a.child-album').each(function(idx, a) {
+		if ( a.hash === hash ) {
+			anchor = $(a);
+		}
+		return (anchor === undefined);
 	});
+	return anchor;
 }
 
 $(function() {
+	var childAlbumKey = getChildAlbumKey(window.location),
+		childAlbumLink = getChildAlbumLinkElement(childAlbumKey);
 	init();
-	if ( Array.isArray(app.imageData) ) {
+	if ( childAlbumLink ) {
+		selectChildAlbumLink(childAlbumKey, childAlbumLink);
+	} else if ( Array.isArray(app.imageData) ) {
 		setupMosaic(app.imageData);
 	}
 	$(window).on('resize', function() {
