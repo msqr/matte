@@ -27,7 +27,6 @@
 package magoffin.matt.ma2.biz.impl;
 
 import javax.xml.bind.JAXBException;
-
 import magoffin.matt.ma2.biz.DomainObjectFactory;
 import magoffin.matt.ma2.domain.Album;
 import magoffin.matt.ma2.domain.AlbumImportType;
@@ -66,7 +65,6 @@ import magoffin.matt.ma2.domain.UserSearchResult;
 import magoffin.matt.ma2.domain.UserTag;
 import magoffin.matt.xweb.XAppContext;
 import magoffin.matt.xweb.XwebParameter;
-
 import org.springframework.beans.BeanUtils;
 
 /**
@@ -76,16 +74,15 @@ import org.springframework.beans.BeanUtils;
  * @version $Revision$ $Date$
  */
 public class JAXBDomainObjectFactory implements DomainObjectFactory {
-	
+
 	private static final ObjectFactory MA2_OBJECT_FACTORY = new ObjectFactory();
-	private static final magoffin.matt.xweb.ObjectFactory XWEB_OBJECT_FACTORY = 
-		new magoffin.matt.xweb.ObjectFactory();
-	
-	private String[] albumPropertiesDoNotClone = new String[] {"item","album","poster"};
-	private String[] collectionPropertiesDoNotClone = new String[] {"item"};
-	private String[] mediaItemPropertiesDoNotClone = 
-		new String[] {"metadata","userComment","userRating","userTag"};
-	private String[] userPropertiesDoNotClone = new String[0];
+	private static final magoffin.matt.xweb.ObjectFactory XWEB_OBJECT_FACTORY = new magoffin.matt.xweb.ObjectFactory();
+
+	private String[] albumPropertiesDoNotClone = new String[] { "item", "album", "poster" };
+	private String[] collectionPropertiesDoNotClone = new String[] { "item" };
+	private String[] mediaItemPropertiesDoNotClone = new String[] { "metadata", "userComment",
+			"userRating", "userTag" };
+	private final String[] userPropertiesDoNotClone = new String[0];
 
 	public Album newAlbumInstance() {
 		try {
@@ -134,7 +131,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public UserSearchResult newUserSearchResultInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createUserSearchResult();
@@ -376,63 +373,84 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 	}
 
 	public Object clone(Object original) {
-	    if ( original == null ) {
-	        return null;
-	    }
-	    Class<?> clazz = original.getClass();
-	    if ( MediaItem.class.isAssignableFrom(clazz) ) {
-			return clone((MediaItem)original);
-	    } else if ( User.class.isAssignableFrom(clazz) ) {
-		    return clone((User)original);
-		} else if ( Collection.class.isAssignableFrom(clazz) ) {
-			return clone((Collection)original);
-		} else if ( Album.class.isAssignableFrom(clazz) ) {
-			return clone((Album)original);
+		if ( original == null ) {
+			return null;
 		}
-		
-		throw new IllegalArgumentException("The object [" 
-				+original.getClass().getName()
-		        +"] is not supported for cloneing.");
+		Class<?> clazz = original.getClass();
+		if ( MediaItem.class.isAssignableFrom(clazz) ) {
+			return clone((MediaItem) original);
+		} else if ( User.class.isAssignableFrom(clazz) ) {
+			return clone((User) original);
+		} else if ( Collection.class.isAssignableFrom(clazz) ) {
+			return clone((Collection) original);
+		} else if ( Album.class.isAssignableFrom(clazz) ) {
+			return clone((Album) original);
+		}
+
+		throw new IllegalArgumentException("The object [" + original.getClass().getName()
+				+ "] is not supported for cloneing.");
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private Album clone(Album original) {
 		Album cloned = newAlbumInstance();
 		BeanUtils.copyProperties(original, cloned, albumPropertiesDoNotClone);
-		
+
+		// map time zones to local time, because no tz stored in DB
+		if ( cloned.getAlbumDate() != null ) {
+			cloned.getAlbumDate().setTimeZone(java.util.TimeZone.getDefault());
+		}
+		if ( cloned.getCreationDate() != null ) {
+			cloned.getCreationDate().setTimeZone(java.util.TimeZone.getDefault());
+		}
+		if ( cloned.getModifyDate() != null ) {
+			cloned.getModifyDate().setTimeZone(java.util.TimeZone.getDefault());
+		}
+
 		// clone children
 		for ( int i = 0, length = original.getAlbum().size(); i < length; i++ ) {
-			Album child = (Album)original.getAlbum().get(i);
-			assert child != null : "Child album " +i 
-				+" is null in album [" +original.getAlbumId() 
-				+" - " +original.getName() +']';
+			Album child = (Album) original.getAlbum().get(i);
+			assert child != null : "Child album " + i + " is null in album [" + original.getAlbumId()
+					+ " - " + original.getName() + ']';
 			cloned.getAlbum().add(clone(child));
 		}
-		
+
 		// clone poster
 		if ( original.getPoster() != null ) {
 			cloned.setPoster(clone(original.getPoster()));
 		}
-		
+
 		return cloned;
 	}
-	
+
 	private Collection clone(Collection original) {
-	    Collection cloned = newCollectionInstance();
-	    BeanUtils.copyProperties(original, cloned, collectionPropertiesDoNotClone);
-	    return cloned;
+		Collection cloned = newCollectionInstance();
+		BeanUtils.copyProperties(original, cloned, collectionPropertiesDoNotClone);
+		return cloned;
 	}
 
 	private MediaItem clone(MediaItem original) {
 		MediaItem cloned = newMediaItemInstance();
 		BeanUtils.copyProperties(original, cloned, mediaItemPropertiesDoNotClone);
+
+		// map time zones to local time, because no tz stored in DB
+		if ( cloned.getItemDate() != null ) {
+			cloned.getItemDate().setTimeZone(java.util.TimeZone.getDefault());
+		}
+		if ( cloned.getCreationDate() != null ) {
+			cloned.getCreationDate().setTimeZone(java.util.TimeZone.getDefault());
+		}
+		if ( cloned.getModifyDate() != null ) {
+			cloned.getModifyDate().setTimeZone(java.util.TimeZone.getDefault());
+		}
+
 		return cloned;
 	}
-	
+
 	private User clone(User original) {
-	    User cloned = newUserInstance();
-	    BeanUtils.copyProperties(original, cloned, userPropertiesDoNotClone);
-	    return cloned;
+		User cloned = newUserInstance();
+		BeanUtils.copyProperties(original, cloned, userPropertiesDoNotClone);
+		return cloned;
 	}
 
 	/**
@@ -441,41 +459,42 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 	public String[] getAlbumPropertiesDoNotClone() {
 		return albumPropertiesDoNotClone;
 	}
-	
+
 	/**
-	 * @param albumPropertiesDoNotClone the albumPropertiesDoNotClone to set
+	 * @param albumPropertiesDoNotClone
+	 *        the albumPropertiesDoNotClone to set
 	 */
 	public void setAlbumPropertiesDoNotClone(String[] albumPropertiesDoNotClone) {
 		this.albumPropertiesDoNotClone = albumPropertiesDoNotClone;
 	}
-	
+
 	/**
 	 * @return the collectionPropertiesDoNotClone
 	 */
 	public String[] getCollectionPropertiesDoNotClone() {
 		return collectionPropertiesDoNotClone;
 	}
-	
+
 	/**
-	 * @param collectionPropertiesDoNotClone the collectionPropertiesDoNotClone to set
+	 * @param collectionPropertiesDoNotClone
+	 *        the collectionPropertiesDoNotClone to set
 	 */
-	public void setCollectionPropertiesDoNotClone(
-			String[] collectionPropertiesDoNotClone) {
+	public void setCollectionPropertiesDoNotClone(String[] collectionPropertiesDoNotClone) {
 		this.collectionPropertiesDoNotClone = collectionPropertiesDoNotClone;
 	}
-	
+
 	/**
 	 * @return the mediaItemPropertiesDoNotClone
 	 */
 	public String[] getMediaItemPropertiesDoNotClone() {
 		return mediaItemPropertiesDoNotClone;
 	}
-	
+
 	/**
-	 * @param mediaItemPropertiesDoNotClone the mediaItemPropertiesDoNotClone to set
+	 * @param mediaItemPropertiesDoNotClone
+	 *        the mediaItemPropertiesDoNotClone to set
 	 */
-	public void setMediaItemPropertiesDoNotClone(
-			String[] mediaItemPropertiesDoNotClone) {
+	public void setMediaItemPropertiesDoNotClone(String[] mediaItemPropertiesDoNotClone) {
 		this.mediaItemPropertiesDoNotClone = mediaItemPropertiesDoNotClone;
 	}
 
