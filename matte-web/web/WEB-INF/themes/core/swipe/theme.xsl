@@ -181,6 +181,15 @@
 				<script type="text/javascript">
 					<xsl:attribute name="src">
 						<xsl:call-template name="theme-resource-url">
+							<xsl:with-param name="resource" select="'js/swipe-jquery.js'"/>
+							<xsl:with-param name="theme" select="$theme"/>
+							<xsl:with-param name="web-context" select="$web-context"/>
+						</xsl:call-template>
+					</xsl:attribute>
+				</script>
+				<script type="text/javascript">
+					<xsl:attribute name="src">
+						<xsl:call-template name="theme-resource-url">
 							<xsl:with-param name="resource" select="'js/swipe-mosaic.js'"/>
 							<xsl:with-param name="theme" select="$theme"/>
 							<xsl:with-param name="web-context" select="$web-context"/>

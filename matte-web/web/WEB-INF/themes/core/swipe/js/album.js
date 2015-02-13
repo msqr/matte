@@ -14,6 +14,8 @@ var pswp,
 	resizeTimer,
 	windowWidth;
 
+$.createEventCapturing(['playing', 'pause']);
+
 if ( 'app' in window === false ) {
 	window.app = {};
 }
@@ -33,8 +35,24 @@ function init() {
 			video = button.siblings('video').get(0);
 		if ( video ) {
 			console.log('Play video!');
+			$('audio, video').not(video).each(function() {
+        		this.pause();
+    		});
 			video.play();
+		}
+	}).on('playing', function(event) {
+		var video = $(event.target),
+			button = video.siblings('.video-play-button');
+		console.log('Video playing: %s', video.attr('src'));
+		if ( button ) {
 			button.hide();
+		}
+	}).on('pause', function(event) {
+		var video = $(event.target),
+			button = video.siblings('.video-play-button');
+		console.log('Video paused: %s', video.attr('src'));
+		if ( button ) {
+			button.show();
 		}
 	});
 }
@@ -149,13 +167,11 @@ function setupMosaic(imageData) {
 		};
 		pswp = new PhotoSwipe(pswpContainer, PhotoSwipeUI_Default, pswpData, options);
 		pswp.init();
-		pswp.listen('destroy', function() {
-			// start flipping again
-			mosaic.startEyeCatcher();
-		});
 		pswp.listen('gettingData', function(index, item) {
 			preparePhotoSlide(index, item, imageData);
 		});
+		pswp.listen('destroy', handlePhotoSwipeDestroy);
+		pswp.listen('beforeChange', handlePhotoSwipeBeforeChange);
 	}
 	if ( mosaic === undefined ) {
 		mosaic = matte.imageMosaic('.mosaic:first');
@@ -167,6 +183,20 @@ function setupMosaic(imageData) {
 		}))
 		.render()
 		.startEyeCatcher();
+}
+
+function handlePhotoSwipeDestroy() {
+	// start flipping again
+	mosaic.startEyeCatcher();
+	$('audio, video').each(function() {
+        this.pause();
+    });
+}
+
+function handlePhotoSwipeBeforeChange() {
+	$('audio, video').each(function() {
+        this.pause();
+    });
 }
 
 function preparePhotoSlide(index, item, imageData) {
