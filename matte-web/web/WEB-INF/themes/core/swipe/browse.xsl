@@ -99,13 +99,13 @@
 			<body>
 				<div class="container heading">
 					<div class="row">
-						<div class="col-md-11">
+						<div class="col-xs-9 col-sm-10 col-md-11">
 							<h1><xsl:value-of select="$page.title"/></h1>
 							<div class="browse-index">
 								<xsl:apply-templates select="m:search-results/m:index/m:index-section" mode="section-index-link"/>
 							</div>
 						</div>
-						<div class="col-md-1">
+						<div class="col-xs-3 col-sm-2 col-md-1 text-right">
 							<div class="dropdown">
 								<button class="btn btn-default dropdown-toggle" type="button" id="browse-mode-dropdown" data-toggle="dropdown" aria-expanded="true">
 									<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
