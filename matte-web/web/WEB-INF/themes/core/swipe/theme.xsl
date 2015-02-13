@@ -30,7 +30,9 @@
 	</xsl:variable>
 	<xsl:variable name="display-item" select="$display-album/m:item[@item-id = $display-item-id]"/>
 	<xsl:variable name="author" select="x:x-data/x:x-model[1]/m:model[1]/m:user[1]"/>
-	<xsl:variable name="theme" select="(x:x-data/x:x-model/m:model/m:theme | $display-album/m:theme)[1]"/>
+	<xsl:variable name="theme" select="if (x:x-data/x:x-model/m:model/m:theme) 
+		then x:x-data/x:x-model/m:model/m:theme 
+		else $display-album/m:theme"/>
 	<xsl:variable name="date.format" select="'[D] [MNn,*-3] [Y0001]'"/>
 	
 	<xsl:variable name="browse-mode" select="string($req[@key='mode'])"/>
