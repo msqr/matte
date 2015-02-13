@@ -193,16 +193,7 @@
 	</xsl:template>
 	
 	<xsl:template match="m:album">
-		<xsl:variable name="album.date">
-			<xsl:choose>
-				<xsl:when test="@album-date">
-					<xsl:value-of select="@album-date"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="@creation-date"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
+		<xsl:variable name="album-date" select="m:album-date(., $date.format)"/>
 		<xsl:variable name="total-item-count" select="sum(.//@item-count)"/>
 		<xsl:variable name="min-date">
 			<xsl:for-each select=".//@item-min-date">
@@ -240,8 +231,8 @@
 					</a>
 				</h2>
 				<div class="album-info">
-					<xsl:if test="string-length($album.date) &gt; 0">
-						<xsl:value-of select="format-date(xs:date(substring-before($album.date,'T')),$date.format)"/>
+					<xsl:if test="string-length($album-date) &gt; 0">
+						<xsl:value-of select="$album-date"/>
 						<xsl:text> - </xsl:text>
 					</xsl:if>
 					<xsl:value-of select="$total-item-count"/>
