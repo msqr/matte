@@ -21,7 +21,6 @@
 	<xsl:variable name="user-locale" select="string($ctx/x:user-locale)"/>
 	<xsl:variable name="web-context" select="string($ctx/x:web-context)"/>
 	<xsl:variable name="web-path" select="string($ctx/x:path)"/>
-	<xsl:variable name="theme" select="x:x-data/x:x-model[1]/m:model[1]/m:theme[1]"/>
 	
 	<!-- application context defined as key for quick lookup -->
 	<xsl:key name="appenv" match="x:x-data/x:x-auxillary/x:x-app-context/x:param" use="@key"/>
