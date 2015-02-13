@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.web;
@@ -32,11 +30,9 @@ import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import magoffin.matt.ma2.MediaQuality;
 import magoffin.matt.ma2.MediaRequest;
 import magoffin.matt.ma2.MediaResponse;
@@ -49,7 +45,6 @@ import magoffin.matt.ma2.domain.MediaItem;
 import magoffin.matt.ma2.support.BasicMediaRequest;
 import magoffin.matt.ma2.web.util.WebConstants;
 import magoffin.matt.ma2.web.util.WebMediaResponse;
-
 import org.apache.commons.lang.math.LongRange;
 import org.apache.commons.lang.mutable.MutableLong;
 import org.springframework.util.StringUtils;
@@ -62,70 +57,75 @@ import org.springframework.web.servlet.mvc.LastModified;
  * Controller for serving up media items.
  * 
  * @author matt.magoffin
- * @version $Revision$ $Date$
+ * @version 1.1
  */
 public class MediaServerController extends AbstractCommandController implements LastModified {
 
 	private IOBiz ioBiz;
 	private MediaBiz mediaBiz;
 	private ExecutorService executorService;
-	
-	private static final EnumSet<MediaSize> THUMB_SIZES 
-		= EnumSet.of(MediaSize.THUMB_BIG, MediaSize.THUMB_BIGGER, 
-				MediaSize.THUMB_NORMAL, MediaSize.THUMB_SMALL);
-	
-	/* (non-Javadoc)
-	 * @see org.springframework.web.servlet.mvc.LastModified#getLastModified(javax.servlet.http.HttpServletRequest)
-	 */
+
+	private static final EnumSet<MediaSize> THUMB_SIZES = EnumSet.of(MediaSize.THUMB_BIG,
+			MediaSize.THUMB_BIGGER, MediaSize.THUMB_NORMAL, MediaSize.THUMB_SMALL);
+
 	public long getLastModified(HttpServletRequest request) {
-		BizContext context = getWebHelper().getBizContext(request,false);
+		BizContext context = getWebHelper().getBizContext(request, false);
 		Command cmd = new Command();
 		try {
+			@SuppressWarnings("deprecation")
 			ServletRequestDataBinder binder = createBinder(request, cmd);
 			binder.bind(request);
 		} catch ( Exception e ) {
 			throw new RuntimeException(e);
 		}
-		
-		BasicMediaRequest mediaRequest = getMediaRequest(request,cmd);
+
+		BasicMediaRequest mediaRequest = getMediaRequest(request, cmd);
 		final MutableLong result = new MutableLong(System.currentTimeMillis());
 		WorkInfo info = ioBiz.exportMedia(mediaRequest, new MediaResponse() {
+
 			public void setMimeType(String mime) {
 				// ignore
 			}
+
 			public void setMediaLength(long length) {
 				// ignore
 			}
+
 			public void setModifiedDate(long date) {
 				result.setValue(date);
 			}
+
 			public void setItem(MediaItem item) {
 				// ignore
 			}
+
 			public OutputStream getOutputStream() {
 				return null;
 			}
+
 			public void setFilename(String filename) {
 				// ignore
 			}
+
 			public void setPartialResponse(long start, long end, long total) {
 				// ignore
 			}
+
 			public boolean hasOutputStream() {
 				return false;
 			}
 		}, context);
-		
+
 		// wait for export to complete...
 		try {
 			info.get();
 		} catch ( Exception e ) {
-			logger.warn("Exception getting last modified for item " +cmd.getId(), e);
+			logger.warn("Exception getting last modified for item " + cmd.getId(), e);
 		}
-		
+
 		return result.longValue();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private BasicMediaRequest getMediaRequest(HttpServletRequest request, Command cmd) {
 		MediaSize size = MediaSize.valueOf(cmd.size);
@@ -136,21 +136,21 @@ public class MediaServerController extends AbstractCommandController implements 
 		mediaRequest.getParameters().putAll(request.getParameterMap());
 		mediaRequest.setQuality(quality);
 		mediaRequest.setSize(size);
-		
+
 		// extract some header info, which is case-insensitve so we have to
 		// enumerate through headers and compare in case-insensitive manner
-		
+
 		StringBuilder headerDebugBuf = null;
 		if ( logger.isTraceEnabled() ) {
 			headerDebugBuf = new StringBuilder("HTTP headers:\n");
 		}
-		
+
 		Enumeration<String> headers = request.getHeaderNames();
 		while ( headers.hasMoreElements() ) {
 			String header = headers.nextElement();
 			if ( headerDebugBuf != null ) {
-				headerDebugBuf.append(header).append(" = ")
-					.append(request.getHeader(header)).append("\n");
+				headerDebugBuf.append(header).append(" = ").append(request.getHeader(header))
+						.append("\n");
 			}
 			if ( HTTP_USER_AGENT_HEADER.equalsIgnoreCase(header) ) {
 				// copy the the user-agent parameter
@@ -169,45 +169,45 @@ public class MediaServerController extends AbstractCommandController implements 
 						start = Long.valueOf(range.substring(0, idx));
 					}
 					long end = 0;
-					if ( (idx+1) < range.length() ) {
-						end = Long.valueOf(range.substring(idx+1));
+					if ( (idx + 1) < range.length() ) {
+						end = Long.valueOf(range.substring(idx + 1));
 					}
 					mediaRequest.setPartialContentByteRange(new LongRange(start, end));
 				}
 			}
 		}
-		
+
 		if ( headerDebugBuf != null ) {
 			logger.trace(headerDebugBuf.toString());
 		}
-		
+
 		return mediaRequest;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.web.servlet.mvc.AbstractCommandController#handle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, org.springframework.validation.BindException)
-	 */
 	@Override
-	protected ModelAndView handle(final HttpServletRequest request,
-			final HttpServletResponse response, Object command, BindException errors)
-			throws Exception {
-		BizContext context = getWebHelper().getBizContext(request,false);
-		final Command cmd = (Command)command;
-		BasicMediaRequest mediaRequest = getMediaRequest(request,cmd);
-		
-		handleHitCount(request, cmd);
-		WebMediaResponse mediaResponse = new WebMediaResponse(
-				response, cmd.isDownload(), cmd.isOriginal());
+	protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
+			Object command, BindException errors) throws Exception {
+		BizContext context = getWebHelper().getBizContext(request, false);
+		final Command cmd = (Command) command;
+		BasicMediaRequest mediaRequest = getMediaRequest(request, cmd);
+
+		handleHitCount(request, cmd, mediaRequest);
+		WebMediaResponse mediaResponse = new WebMediaResponse(response, cmd.isDownload(),
+				cmd.isOriginal());
 		WorkInfo info = ioBiz.exportMedia(mediaRequest, mediaResponse, context);
 
 		// wait for export to complete...
 		info.get();
 		return null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private void handleHitCount(HttpServletRequest request, Command cmd) {
+	private void handleHitCount(HttpServletRequest request, Command cmd, MediaRequest mediaRequest) {
 		if ( !StringUtils.hasText(cmd.getAlbumKey()) ) {
+			return;
+		}
+		if ( mediaRequest.getPartialContentByteRange() != null ) {
+			// don't increment for byte range requests
 			return;
 		}
 		if ( StringUtils.hasText(cmd.getSize()) ) {
@@ -221,8 +221,8 @@ public class MediaServerController extends AbstractCommandController implements 
 		if ( session == null ) {
 			return;
 		}
-		Set<Long> viewedItems = (Set<Long>)session.getAttribute(
-				WebConstants.SES_KEY_VIEWED_MEDIA_ITEMS);
+		Set<Long> viewedItems = (Set<Long>) session
+				.getAttribute(WebConstants.SES_KEY_VIEWED_MEDIA_ITEMS);
 		if ( viewedItems == null ) {
 			viewedItems = new LinkedHashSet<Long>();
 			session.setAttribute(WebConstants.SES_KEY_VIEWED_MEDIA_ITEMS, viewedItems);
@@ -238,6 +238,7 @@ public class MediaServerController extends AbstractCommandController implements 
 			return;
 		}
 		executorService.submit(new Runnable() {
+
 			public void run() {
 				getMediaBiz().incrementMediaItemHits(mediaItemId);
 			}
@@ -248,13 +249,14 @@ public class MediaServerController extends AbstractCommandController implements 
 	 * Command for MediaServer.
 	 */
 	public static class Command {
+
 		private Long id;
 		private boolean download = false;
 		private boolean original = false;
 		private String size = MediaSize.NORMAL.toString();
 		private String quality = MediaQuality.GOOD.toString();
 		private String albumKey = null;
-		
+
 		/**
 		 * @return the albumKey
 		 */
@@ -263,7 +265,8 @@ public class MediaServerController extends AbstractCommandController implements 
 		}
 
 		/**
-		 * @param albumKey the albumKey to set
+		 * @param albumKey
+		 *        the albumKey to set
 		 */
 		public void setAlbumKey(String albumKey) {
 			this.albumKey = albumKey;
@@ -275,9 +278,10 @@ public class MediaServerController extends AbstractCommandController implements 
 		public boolean isDownload() {
 			return download;
 		}
-		
+
 		/**
-		 * @param download the download to set
+		 * @param download
+		 *        the download to set
 		 */
 		public void setDownload(boolean download) {
 			this.download = download;
@@ -289,37 +293,40 @@ public class MediaServerController extends AbstractCommandController implements 
 		public Long getId() {
 			return id;
 		}
-		
+
 		/**
-		 * @param id The id to set.
+		 * @param id
+		 *        The id to set.
 		 */
 		public void setId(Long id) {
 			this.id = id;
 		}
-		
+
 		/**
 		 * @return Returns the quality.
 		 */
 		public String getQuality() {
 			return quality;
 		}
-		
+
 		/**
-		 * @param quality The quality to set.
+		 * @param quality
+		 *        The quality to set.
 		 */
 		public void setQuality(String quality) {
 			this.quality = quality;
 		}
-		
+
 		/**
 		 * @return Returns the size.
 		 */
 		public String getSize() {
 			return size;
 		}
-		
+
 		/**
-		 * @param size The size to set.
+		 * @param size
+		 *        The size to set.
 		 */
 		public void setSize(String size) {
 			this.size = size;
@@ -333,12 +340,13 @@ public class MediaServerController extends AbstractCommandController implements 
 		}
 
 		/**
-		 * @param original The original to set.
+		 * @param original
+		 *        The original to set.
 		 */
 		public void setOriginal(boolean original) {
 			this.original = original;
 		}
-		
+
 	}
 
 	/**
@@ -349,7 +357,8 @@ public class MediaServerController extends AbstractCommandController implements 
 	}
 
 	/**
-	 * @param ioBiz The ioBiz to set.
+	 * @param ioBiz
+	 *        The ioBiz to set.
 	 */
 	public void setIoBiz(IOBiz ioBiz) {
 		this.ioBiz = ioBiz;
@@ -361,26 +370,28 @@ public class MediaServerController extends AbstractCommandController implements 
 	public ExecutorService getExecutorService() {
 		return executorService;
 	}
-	
+
 	/**
-	 * @param executorService the executorService to set
+	 * @param executorService
+	 *        the executorService to set
 	 */
 	public void setExecutorService(ExecutorService executorService) {
 		this.executorService = executorService;
 	}
-	
+
 	/**
 	 * @return the mediaBiz
 	 */
 	public MediaBiz getMediaBiz() {
 		return mediaBiz;
 	}
-	
+
 	/**
-	 * @param mediaBiz the mediaBiz to set
+	 * @param mediaBiz
+	 *        the mediaBiz to set
 	 */
 	public void setMediaBiz(MediaBiz mediaBiz) {
 		this.mediaBiz = mediaBiz;
 	}
-	
+
 }
