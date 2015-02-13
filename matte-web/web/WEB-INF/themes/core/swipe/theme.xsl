@@ -405,7 +405,6 @@
 		                <div class="dropdown pswp__button item-actions">
 			                <button type="button" class="dropdown-toggle" id="item-actions-dropdown" data-toggle="dropdown" aria-expanded="true">
 			                	<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-								<span class="caret"></span>
 			                </button>
 			                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="item-actions-dropdown">
 								<li role="presentation" class="item-action-download">
