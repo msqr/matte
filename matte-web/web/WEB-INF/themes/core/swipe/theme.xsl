@@ -361,7 +361,9 @@
 		<xsl:text>albumId : </xsl:text><xsl:value-of select="@album-id"/>
 		<xsl:text>, anonymousKey : </xsl:text><xsl:value-of select="m:js-string(@anonymous-key)"/>
 		<xsl:text>, name : </xsl:text><xsl:value-of select="m:js-string(@name)"/>
-		<xsl:text>, allowOriginal : </xsl:text><xsl:value-of select="@allow-original"/>
+		<xsl:if test="boolean(@allow-original) = true()">
+			<xsl:text>, allowOriginal : true</xsl:text>
+		</xsl:if>
 		<xsl:text> }</xsl:text>
 	</xsl:template>
 	
@@ -406,14 +408,14 @@
 								<span class="caret"></span>
 			                </button>
 			                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="item-actions-dropdown">
-								<li role="presentation">
-									<a role="menuitem" tabindex="-1">
-										Test 1
+								<li role="presentation" class="item-action-download">
+									<a role="menuitem" tabindex="-1" title="{key('i18n', 'action.download.title')}">
+										<xsl:value-of select="key('i18n', 'action.download')"/>
 									</a>
 								</li>
-								<li role="presentation">
-									<a role="menuitem" tabindex="-1">
-										Test 2
+								<li role="presentation" class="item-action-download-original">
+									<a role="menuitem" tabindex="-1" title="{key('i18n', 'action.download.original.title')}">
+										<xsl:value-of select="key('i18n', 'action.download.original')"/>
 									</a>
 								</li>
 							</ul>

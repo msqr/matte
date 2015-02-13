@@ -95,12 +95,14 @@ function aspectScaleToMediaSpec(width, height, specName) {
  * @param {Object} mediaSpec - The media size and quality specification to use.
  */
 function getPhotoSwipeItemForMediaItem(item, albumKey, mediaSpec) {
-	var dim = aspectScaleToMediaSpec(item.width, item.height, mediaSpec.size);
+	var dim = aspectScaleToMediaSpec(item.width, item.height, mediaSpec.size),
+		url = imageURL(item.itemId, albumKey, mediaSpec.size, mediaSpec.quality)
 	var result = {
-		src : imageURL(item.itemId, albumKey, mediaSpec.size, mediaSpec.quality),
+		src : url,
 		//msrc : imageURL(item.itemId, albumKey, thumbSpec.size, thumbSpec.quality),
 		w : dim.w,
-		h : dim.h
+		h : dim.h,
+		url : url // preserve URL for sildes we convert to html later on
 	};
 	
 	// set the title to the item name, but only if the item name isn't set to the item's file name
@@ -172,6 +174,7 @@ function setupMosaic(imageData) {
 		});
 		pswp.listen('destroy', handlePhotoSwipeDestroy);
 		pswp.listen('beforeChange', handlePhotoSwipeBeforeChange);
+		handlePhotoSwipeBeforeChange(); // PhotoSwipe does not call this for initial image
 	}
 	if ( mosaic === undefined ) {
 		mosaic = matte.imageMosaic('.mosaic:first');
@@ -194,9 +197,12 @@ function handlePhotoSwipeDestroy() {
 }
 
 function handlePhotoSwipeBeforeChange() {
+	var item = pswp.currItem;
 	$('audio, video').each(function() {
         this.pause();
     });
+    $('li.item-action-download a').attr('href', item.url + '&download=true');
+    $('li.item-action-download-original a').attr('href', item.url + '&download=true&original=true');
 }
 
 function preparePhotoSlide(index, item, imageData) {
@@ -212,6 +218,14 @@ function handleResize() {
 	}
 }
 
+function setupAlbum(album) {
+	if ( album && album.allowOriginal ) {
+		$('li.item-action-download-original').show();
+	} else {
+		$('li.item-action-download-original').hide();
+	}
+}
+
 function selectChildAlbumLink(key, a) {
 	var container;
 	$('#album-hierarchy li.selected').removeClass('selected');
@@ -223,6 +237,7 @@ function selectChildAlbumLink(key, a) {
 		if ( album === undefined ) {
 			return;
 		}
+		setupAlbum(album);
 		if ( container.hasClass('filled') === false 
 				&& album.comment !== undefined && album.comment.length > 0 ) {
 			container.append($('<p>').text(album.comment)).addClass('filled');
@@ -233,6 +248,7 @@ function selectChildAlbumLink(key, a) {
 	}
 	
 	if ( a.hasClass('root') ) {
+		setupAlbum(app.albumData);
 		if ( Array.isArray(app.imageData) ) {
 			setupMosaic(app.imageData);
 		}
@@ -274,6 +290,7 @@ function displayAppropriateMosaic() {
 	if ( childAlbumLink ) {
 		selectChildAlbumLink(childAlbumKey, childAlbumLink);
 	} else if ( Array.isArray(app.imageData) ) {
+		setupAlbum(app.albumData);
 		setupMosaic(app.imageData);
 	}
 	$('#album-hierarchy').toggleClass('dropdown-menu', showAlbumDropDown);
