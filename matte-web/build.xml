@@ -352,9 +352,6 @@
 				<include name="**"/>
 				<exclude name="version.jsp"/>
 				<exclude name="WEB-INF/classes/**"/>
-				
-				<!-- TODO: remove -->
-				<exclude name="WEB-INF/lib/**"/>
 			</fileset>
 		</copy>
 		
