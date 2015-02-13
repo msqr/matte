@@ -348,7 +348,21 @@
 			app.imageData = [
 			<xsl:apply-templates select="$display-album/m:item" mode="js-data"/>
 			];
+			
+			app.albumData = <xsl:apply-templates select="$display-album" mode="js-data"/>;
 		</script>
+	</xsl:template>
+	
+	<xsl:template match="m:album" mode="js-data">
+		<xsl:if test="position() &gt; 1">
+			<xsl:text>,&#10;</xsl:text>
+		</xsl:if>
+		<xsl:text>{ </xsl:text>
+		<xsl:text>albumId : </xsl:text><xsl:value-of select="@album-id"/>
+		<xsl:text>, anonymousKey : </xsl:text><xsl:value-of select="m:js-string(@anonymous-key)"/>
+		<xsl:text>, name : </xsl:text><xsl:value-of select="m:js-string(@name)"/>
+		<xsl:text>, allowOriginal : </xsl:text><xsl:value-of select="@allow-original"/>
+		<xsl:text> }</xsl:text>
 	</xsl:template>
 	
 	<xsl:template match="m:item" mode="js-data">
@@ -386,6 +400,24 @@
 		                <div class="pswp__counter"></div>
 		                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
 		                <button class="pswp__button pswp__button--share" title="Share"></button>
+		                <div class="dropdown pswp__button item-actions">
+			                <button type="button" class="dropdown-toggle" id="item-actions-dropdown" data-toggle="dropdown" aria-expanded="true">
+			                	<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+								<span class="caret"></span>
+			                </button>
+			                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="item-actions-dropdown">
+								<li role="presentation">
+									<a role="menuitem" tabindex="-1">
+										Test 1
+									</a>
+								</li>
+								<li role="presentation">
+									<a role="menuitem" tabindex="-1">
+										Test 2
+									</a>
+								</li>
+							</ul>
+						</div>
 		                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
 		                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
 		                <div class="pswp__preloader">
