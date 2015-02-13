@@ -162,7 +162,9 @@ public class ViewAlbumController extends AbstractCommandController {
 
 		Map<String, Object> viewModel = errors.getModel();
 		viewModel.put(WebConstants.DEFALUT_MODEL_OBJECT, model);
-		viewModel.put(DISPLAY_ALBUM_KEY, displayAlbum.getAnonymousKey());
+		if ( displayAlbum != null ) {
+			viewModel.put(DISPLAY_ALBUM_KEY, displayAlbum.getAnonymousKey());
+		}
 		viewModel.put(DISPLAY_ITEM_ID_KEY, cmd.getItemId());
 		return new ModelAndView(getSuccessView() + theme.getBasePath() + "/theme", viewModel);
 	}
