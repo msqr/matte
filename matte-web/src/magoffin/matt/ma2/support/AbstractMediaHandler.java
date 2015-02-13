@@ -606,8 +606,16 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 		}
 		if ( request.getPartialContentByteRange() != null ) {
 			Range range = request.getPartialContentByteRange();
-			long start = range.getMinimumNumber() != null ? range.getMinimumLong() : 0;
-			long end = range.getMaximumNumber() != null ? range.getMaximumLong() + 1 : fileLength;
+			long start = range.getMinimumLong();
+			if ( start < 0 ) {
+				start = 0;
+			}
+			long end = range.getMaximumLong();
+			if ( end < fileLength ) {
+				end += 1;
+			} else {
+				end = fileLength;
+			}
 			byte[] buf = new byte[4096];
 			if ( log.isDebugEnabled() ) {
 				log.debug("Returning stream byte range {}-{} {}", start, end, item.getPath());

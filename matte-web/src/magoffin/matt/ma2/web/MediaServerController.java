@@ -168,7 +168,7 @@ public class MediaServerController extends AbstractCommandController implements 
 					if ( idx > 0 ) {
 						start = Long.valueOf(range.substring(0, idx));
 					}
-					long end = 0;
+					long end = Long.MAX_VALUE;
 					if ( (idx + 1) < range.length() ) {
 						end = Long.valueOf(range.substring(idx + 1));
 					}
