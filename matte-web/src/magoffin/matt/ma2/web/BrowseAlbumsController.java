@@ -146,8 +146,10 @@ public class BrowseAlbumsController extends AbstractCommandController {
 					p.load(in);
 				}
 			} catch ( IOException e ) {
-				logger.warn("Error reading theme " + theme.getThemeId() + " properties file: "
-						+ e.getMessage());
+				if ( logger.isDebugEnabled() ) {
+					logger.debug("Error reading theme " + theme.getThemeId() + " properties file: "
+							+ e.getMessage());
+				}
 			} finally {
 				if ( in != null ) {
 					try {
