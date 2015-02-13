@@ -77,7 +77,8 @@ button.video-play-button {
 }
 
 .item-actions {
-	background: none;
+	background-image: none !important;
+	background: none !important;
 }
 
 .item-actions button {
