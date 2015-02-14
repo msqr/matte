@@ -32,11 +32,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import magoffin.matt.ma2.domain.AlbumSearchResult;
 import magoffin.matt.ma2.domain.PaginationCriteria;
 import magoffin.matt.ma2.domain.PaginationIndex;
@@ -46,6 +48,7 @@ import magoffin.matt.ma2.domain.SearchResults;
 import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.plugin.BrowseModePlugin;
 import magoffin.matt.ma2.support.BrowseAlbumsCommand;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -233,36 +236,41 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 				sqlBrowseParameters[1] = where.toString();
 
 				String sql = sqlBrowseTemplate.format(sqlBrowseParameters);
-				if ( log.isDebugEnabled() ) {
-					log.debug("searchForAlbumsForUserByDate with SQL [" + sql + "]");
+				List<Object> sqlParams = new ArrayList<Object>(8);
+				sqlParams.add(userId);
+				sqlParams.add(true);
+				if (browseOnly) {
+					sqlParams.add(browseOnly);
 				}
-				PreparedStatement psmt = con.prepareStatement(sql);
-				int pos = 1;
-				psmt.setLong(pos++, userId.longValue());
-				psmt.setBoolean(pos++, true);
-				if ( browseOnly ) {
-					psmt.setBoolean(pos++, browseOnly);
+				if (feedOnly) {
+					sqlParams.add(feedOnly);
 				}
-				if ( feedOnly ) {
-					psmt.setBoolean(pos++, feedOnly);
-				}
-				if ( cmd.getSection() != null && parentAlbumIds == null ) {
+				if (cmd.getSection() != null && parentAlbumIds == null) {
 					Integer year = null;
 					try {
 						year = Integer.valueOf(cmd.getSection());
-					} catch ( NumberFormatException e ) {
+					} catch (NumberFormatException e) {
 						// ignore this
 					}
-					if ( year != null ) {
+					if (year != null) {
 						Calendar c = Calendar.getInstance();
 						c.set(year, Calendar.JANUARY, 1, 0, 0, 0);
 						c.set(Calendar.MILLISECOND, 0);
-						psmt.setTimestamp(pos++, new Timestamp(c.getTimeInMillis()), c);
+						sqlParams.add(new Timestamp(c.getTimeInMillis()));
 						c.add(Calendar.YEAR, 1);
-						psmt.setTimestamp(pos++, new Timestamp(c.getTimeInMillis()), c);
+						sqlParams.add(new Timestamp(c.getTimeInMillis()));
 					}
 				}
-				if ( parentAlbumIds == null && cmd.getMaxEntries() > 0 ) {
+				if (log.isDebugEnabled()) {
+					log.debug("searchForAlbumsForUserByDate with SQL [" + sql
+							+ "]\n\tparams: " + sqlParams);
+				}
+				PreparedStatement psmt = con.prepareStatement(sql);
+				int pos = 0;
+				for (Object param : sqlParams) {
+					psmt.setObject(++pos, param);
+				}
+				if (parentAlbumIds == null && cmd.getMaxEntries() > 0) {
 					psmt.setMaxRows(cmd.getMaxEntries());
 				}
 				return psmt;
