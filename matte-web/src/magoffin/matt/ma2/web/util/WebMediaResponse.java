@@ -18,30 +18,25 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.web.util;
 
 import java.io.IOException;
 import java.io.OutputStream;
-
 import javax.servlet.http.HttpServletResponse;
-
 import magoffin.matt.ma2.MediaResponse;
 import magoffin.matt.ma2.domain.MediaItem;
-
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  * Web implementation of {@link MediaResponse}.
  * 
  * @author matt.magoffin
- * @version $Revision$ $Date$
+ * @version 1.1
  */
 public class WebMediaResponse implements MediaResponse {
-	
+
 	private HttpServletResponse webResponse = null;
 	private String filename = null;
 	private boolean download = false;
@@ -58,26 +53,32 @@ public class WebMediaResponse implements MediaResponse {
 
 	/**
 	 * Construct from an {@code HttpServletResponse}.
-	 * @param webResponse the HttpServletResponse to respond with
-	 * @param filename a filename to set on the response via a 
-	 * HTTP Content-Disposition header
+	 * 
+	 * @param webResponse
+	 *        the HttpServletResponse to respond with
+	 * @param filename
+	 *        a filename to set on the response via a HTTP Content-Disposition
+	 *        header
 	 */
-	public WebMediaResponse(HttpServletResponse webResponse,
-			String filename) {
+	public WebMediaResponse(HttpServletResponse webResponse, String filename) {
 		this.webResponse = webResponse;
-		this.filename = filename;
+		this.download = true;
+		setFilename(filename);
 	}
 
 	/**
 	 * Construct from an {@code HttpServletResponse}.
-	 * @param webResponse the HttpServletResponse to respond with
-	 * @param download <em>true</em> if should generate a download
-	 * HTTP Content-Disposition header
-	 * @param original <em>true</em> if this is an original media
-	 * request, and should support ranges
+	 * 
+	 * @param webResponse
+	 *        the HttpServletResponse to respond with
+	 * @param download
+	 *        <em>true</em> if should generate a download HTTP
+	 *        Content-Disposition header
+	 * @param original
+	 *        <em>true</em> if this is an original media request, and should
+	 *        support ranges
 	 */
-	public WebMediaResponse(HttpServletResponse webResponse,
-			boolean download, boolean original) {
+	public WebMediaResponse(HttpServletResponse webResponse, boolean download, boolean original) {
 		this.webResponse = webResponse;
 		this.download = download;
 		this.original = original;
@@ -86,19 +87,19 @@ public class WebMediaResponse implements MediaResponse {
 	public void setMimeType(String mime) {
 		webResponse.setContentType(mime);
 	}
-	
+
 	private void setETag() {
 		String etag = String.format("%d-%d", modDate, fileLength);
 		etag = DigestUtils.md5Hex(etag);
 		webResponse.setHeader("ETag", etag);
 		if ( original ) {
-			webResponse.setHeader("Accept-Ranges", "0-" +fileLength);
+			webResponse.setHeader("Accept-Ranges", "0-" + fileLength);
 		}
 	}
-	
+
 	public void setMediaLength(long length) {
 		fileLength = length;
-		webResponse.setContentLength((int)length);
+		webResponse.setContentLength((int) length);
 		setETag();
 	}
 
@@ -107,17 +108,19 @@ public class WebMediaResponse implements MediaResponse {
 			this.filename = item.getName();
 		}
 	}
-	
+
 	public void setPartialResponse(long start, long end, long total) {
 		fileLength = total;
 		String val = String.format("bytes %d-%d/%d", start, end, total);
 		webResponse.setHeader("Content-Range", val);
 		webResponse.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
-		webResponse.setContentLength((int)(end - start) + 1);
+		webResponse.setContentLength((int) (end - start) + 1);
 		setETag();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see magoffin.matt.ma2.MediaResponse#hasOutputStream()
 	 */
 	public boolean hasOutputStream() {
@@ -132,16 +135,17 @@ public class WebMediaResponse implements MediaResponse {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see magoffin.matt.ma2.MediaResponse#setFilename(java.lang.String)
 	 */
 	public void setFilename(String filename) {
 		this.filename = filename;
 		if ( this.filename != null && this.download ) {
 			// for download responses, add a filename header
-			webResponse.setHeader(
-				"Content-Disposition","attachment; filename=\"" 
-				+this.filename+ "\"");
+			webResponse.setHeader("Content-Disposition", "attachment; filename=\"" + this.filename
+					+ "\"");
 		}
 	}
 
