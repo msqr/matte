@@ -109,7 +109,6 @@
 							<div class="dropdown">
 								<button class="btn btn-default dropdown-toggle" type="button" id="browse-mode-dropdown" data-toggle="dropdown" aria-expanded="true">
 									<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-									<span class="caret"></span>
 								</button>
 								<ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="browse-mode-dropdown">
 									<li role="presentation" class="dropdown-header">
