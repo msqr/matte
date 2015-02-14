@@ -191,7 +191,7 @@
 			</fileset>
 			<mapper type="glob" from="*.xml" to="*.xjb"/>
 		</copy>
-		<delete>
+		<delete failonerror="no">
 			<fileset dir="${hjb.dir}/src/main/java">
 				<include name="**"/>
 			</fileset>
@@ -210,7 +210,7 @@
 		<!-- Extract SearchMatch.java from mmagoff.jar -->
 		<delete dir="${dir.build}/tmp" failonerror="no"/>
 		<mkdir dir="${dir.build}/tmp"/>
-		<unjar src="${dir.web.lib}/mmagoff.jar" 
+		<unjar src="${dir.web.lib}/mutil2.jar" 
 			dest="${dir.build}/tmp"/>
 		<copy todir="${hjb.dir}/src/main/java">
 			<fileset dir="${dir.build}/tmp">
