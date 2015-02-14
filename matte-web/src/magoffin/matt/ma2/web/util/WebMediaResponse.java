@@ -118,11 +118,6 @@ public class WebMediaResponse implements MediaResponse {
 		setETag();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.MediaResponse#hasOutputStream()
-	 */
 	public boolean hasOutputStream() {
 		return webResponse != null;
 	}
@@ -135,11 +130,6 @@ public class WebMediaResponse implements MediaResponse {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.MediaResponse#setFilename(java.lang.String)
-	 */
 	public void setFilename(String filename) {
 		this.filename = filename;
 		if ( this.filename != null && this.download ) {
