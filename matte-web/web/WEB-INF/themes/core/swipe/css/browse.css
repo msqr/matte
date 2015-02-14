@@ -26,6 +26,25 @@ h2 {
 	margin-bottom: 2px;
 }
 
+.album-actions {
+	font-family: 'Alegreya', serif;
+	font-weight: 400;
+	font-size: 20px;
+	margin-top: 20px;
+	margin-bottom: 2px;
+	line-height: 30px;
+	color: #ebe4da !important;
+}
+
+.album-actions a {
+	padding: 10px;
+	color: inherit;
+}
+
+.album-actions a:hover {
+	color: #23527c;
+}
+
 p {
 	font-size: 14px;
 }
@@ -36,6 +55,19 @@ p {
 
 .nowrap {
 	white-space: nowrap;
+}
+
+.btn, form {
+	font-family: 'Alegreya Sans', sans-serif !important;
+}
+
+form .btn {
+	font-weight: 700;
+}
+
+form h4 {
+	font-family: inherit;
+	font-weight: 700;
 }
 
 .browse-index {
@@ -90,4 +122,8 @@ p {
 
 .browse-album-sep {
 	border-top: 1px dotted #ccc;
+}
+
+#album-download-modal .form-group {
+	margin-bottom: 0;
 }

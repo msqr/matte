@@ -59,7 +59,7 @@
 						<xsl:value-of select="$author/@anonymous-key"/>
 					</xsl:attribute>
 				</link>
-				<link href="http://fonts.googleapis.com/css?family={encode-for-uri('Alegreya:700,400|Alegreya Sans:400,300')}" rel="stylesheet" type="text/css"/>
+				<link href="http://fonts.googleapis.com/css?family={encode-for-uri('Alegreya:700,400|Alegreya Sans:700,400,300')}" rel="stylesheet" type="text/css"/>
 				<link rel="stylesheet">
 					<xsl:attribute name="href">
 						<xsl:call-template name="theme-resource-url">
@@ -126,6 +126,9 @@
 				<div class="container">
 					<xsl:apply-templates select="m:search-results/m:album"/>
 				</div>
+				
+				<!-- Render download album modal -->
+				<xsl:apply-templates select="." mode="album-download-modal"/>
 				
 				<script type="text/javascript">
 					<xsl:attribute name="src">
@@ -217,19 +220,28 @@
 				<xsl:apply-templates select="m:search-poster"/>
 			</div>		
 			<div class="col-md-8">
-				<h2>
-					<a title="{concat(key('i18n','browse.album.view'), ' ', string(@name))}">
-						<xsl:attribute name="href">
-							<xsl:call-template name="shared-album-url">
-								<xsl:with-param name="album" select="."/>
-								<xsl:with-param name="user" select="$author"/>
-								<xsl:with-param name="mode" select="$mode"/>
-								<xsl:with-param name="web-context" select="$web-context"/>
-							</xsl:call-template>
-						</xsl:attribute>
-						<xsl:value-of select="@name"/>
-					</a>
-				</h2>
+				<div class="row">
+					<h2 class="col-xs-10">
+						<a title="{concat(key('i18n','browse.album.view'), ' ', string(@name))}">
+							<xsl:attribute name="href">
+								<xsl:call-template name="shared-album-url">
+									<xsl:with-param name="album" select="."/>
+									<xsl:with-param name="user" select="$author"/>
+									<xsl:with-param name="mode" select="$mode"/>
+									<xsl:with-param name="web-context" select="$web-context"/>
+								</xsl:call-template>
+							</xsl:attribute>
+							<xsl:value-of select="@name"/>
+						</a>
+					</h2>
+					<div class="col-xs-2 album-actions text-right">
+						<a class="download-album" href="{concat($web-context, '/downloadItems.do')}" 
+							data-album-key="{@anonymous-key}"
+							title="{key('i18n', 'action.download.album.form.title')}">
+							<span class="glyphicon glyphicon-download"></span>
+						</a>
+					</div>
+				</div>
 				<div class="album-info">
 					<xsl:if test="string-length($album-date) &gt; 0">
 						<xsl:value-of select="$album-date"/>
@@ -306,6 +318,84 @@
 				</xsl:attribute>
 			</img>
 		</a>
+	</xsl:template>
+	
+	<xsl:template match="m:model" mode="album-download-modal">
+		<form class="modal fade form-horizontal" id="album-download-modal" action="{concat($web-context, '/downloadAlbum.do')}" method="post">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="{key('i18n', 'close')}">
+							<span aria-hidden="true">&#xD7;</span>
+						</button>
+						<h4 class="modal-title"><xsl:value-of select="key('i18n', 'action.download.album.form')"/></h4>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label class="col-xs-2 control-label" for="album-download-size">
+								<xsl:value-of select="key('i18n', 'mediaspec.size.displayName')"/>
+							</label>
+							<div class="col-xs-10">
+					            <select name="size" class="form-control" id="album-download-size" aria-describedby="album-download-size-help">
+					            	<xsl:apply-templates select="m:media-size" mode="album-download-modal"/>
+					            </select>
+					            <div id="album-download-size-help" class="help-block"><xsl:value-of select="key('i18n', 'download.selected.items.size.caption')"/></div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-2 control-label" for="album-download-quality">
+								<xsl:value-of select="key('i18n', 'mediaspec.quality.displayName')"/>
+							</label>
+							<div class="col-xs-10">
+					            <select name="quality" class="form-control" id="album-download-quality" aria-describedby="album-download-quality-help">
+					            	<xsl:for-each select="('HIGHEST', 'HIGH', 'GOOD', 'AVERAGE', 'LOW')">
+					            		<option value="{.}">
+					            			<xsl:if test="$single-quality = .">
+					            				<xsl:attribute name="selected">selected</xsl:attribute>
+					            			</xsl:if>
+					            			<xsl:value-of select="key('i18n', concat('mediaspec.quality.', .), $top)"/>
+					            		</option>
+					            	</xsl:for-each>
+					            </select>
+					            <div id="album-download-quality-help" class="help-block"><xsl:value-of select="key('i18n', 'download.selected.items.quality.caption')"/></div>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<div class="col-xs-offset-2 col-xs-10">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" name="original" value="true"/>
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="key('i18n', 'download.originals.caption')"/>
+									</label>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">
+							<xsl:value-of select="key('i18n', 'close')"/>
+						</button>
+						<button type="submit" class="btn btn-primary">
+							<xsl:value-of select="key('i18n', 'link.download.album')"/>
+						</button>
+					</div>
+					<input type="hidden" name="albumKey"/>
+					<input type="hidden" name="direct" value="true"/>
+				</div>
+			</div>
+		</form>
+	</xsl:template>
+	
+	<xsl:template match="m:media-size" mode="album-download-modal">
+		<option value="{@size}">
+			<xsl:if test="$single-size = string(@size)">
+				<xsl:attribute name="selected">selected</xsl:attribute>
+			</xsl:if>
+			<xsl:value-of select="key('i18n', concat('mediaspec.size.', @size))"/>
+		</option>
 	</xsl:template>
 	
 </xsl:stylesheet>
