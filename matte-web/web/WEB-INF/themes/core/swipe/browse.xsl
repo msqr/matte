@@ -59,7 +59,7 @@
 						<xsl:value-of select="$author/@anonymous-key"/>
 					</xsl:attribute>
 				</link>
-				<link href="http://fonts.googleapis.com/css?family={encode-for-uri('Alegreya:700,400|Alegreya Sans:700,400,300')}" rel="stylesheet" type="text/css"/>
+				<link href="http://fonts.googleapis.com/css?family={encode-for-uri('Alegreya:700,400|Alegreya Sans:500,400,300')}" rel="stylesheet" type="text/css"/>
 				<link rel="stylesheet">
 					<xsl:attribute name="href">
 						<xsl:call-template name="theme-resource-url">
@@ -121,8 +121,13 @@
 					</div>
 				</div>
 				
+				<!-- Render search form -->
+				<div class="container" id="search-container">
+					<xsl:apply-templates select="." mode="search-form"/>
+				</div>
+				
 				<!-- Render albums -->
-				<div class="container">
+				<div class="container" id="albums-container">
 					<xsl:apply-templates select="m:search-results/m:album"/>
 				</div>
 				
@@ -395,6 +400,23 @@
 			</xsl:if>
 			<xsl:value-of select="key('i18n', concat('mediaspec.size.', @size))"/>
 		</option>
+	</xsl:template>
+	
+	<xsl:template match="m:model" mode="search-form">
+		<div class="row">
+			<form class="col-xs-12 form-inline" id="search-form" method="get" 
+				action="{concat($web-context,'/api/v1/media/search')}">
+				<div class="input-group">
+					<span class="input-group-addon glyphicon glyphicon-search"></span>
+					<input type="search" class="form-control" name="query"/>
+				</div>
+				<button type="submit" class="btn btn-primary">
+					<xsl:value-of select="key('i18n','search.displayName')"/>
+				</button>
+				<input type="hidden" name="userKey" value="{$author/@anonymous-key}"/>
+			</form>		
+		</div>
+		<div class="row" id="search-results-container"></div>
 	</xsl:template>
 	
 </xsl:stylesheet>

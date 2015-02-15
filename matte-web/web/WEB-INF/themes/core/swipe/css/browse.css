@@ -62,12 +62,16 @@ p {
 }
 
 form .btn {
-	font-weight: 700;
+	font-weight: 500;
 }
 
 form h4 {
 	font-family: inherit;
-	font-weight: 700;
+	font-weight: 500;
+}
+
+label {
+	font-weight: 500;
 }
 
 .browse-index {
@@ -126,4 +130,13 @@ form h4 {
 
 #album-download-modal .form-group {
 	margin-bottom: 0;
+}
+
+#search-container {
+	margin-top: 12px;
+	margin-bottom: 12px;
+}
+
+#search-form button[type=submit] {
+	margin-left: 6px;
 }
