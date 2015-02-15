@@ -143,7 +143,6 @@ public class ViewAlbumController extends AbstractCommandController {
 		if ( cmd.getThemeId() != null ) {
 			Theme customTheme = getSystemBiz().getThemeById(cmd.getThemeId());
 			if ( customTheme != null ) {
-				model.getTheme().add(customTheme);
 				theme = customTheme;
 			}
 		}
@@ -151,10 +150,10 @@ public class ViewAlbumController extends AbstractCommandController {
 		// if album does not have theme and none requested, provide default in model
 		if ( theme == null ) {
 			theme = getSystemBiz().getDefaultTheme();
-			model.getTheme().add(theme);
 		}
 
 		// save the request theme
+		model.getTheme().add(theme);
 		getWebHelper().saveRequestTheme(theme);
 
 		// add the media sizes
