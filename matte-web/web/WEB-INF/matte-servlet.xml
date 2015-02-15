@@ -37,6 +37,7 @@
 				<bean class="magoffin.matt.ma2.domain.support.MetadataSerializer"/>
 				<bean class="magoffin.matt.ma2.domain.support.TimeZoneSerializer"/>
 				<bean class="magoffin.matt.ma2.domain.support.UserSerializer"/>
+				<bean class="magoffin.matt.ma2.domain.support.UserTagSerializer"/>
 			</list>
 		</property>
 	</bean>
