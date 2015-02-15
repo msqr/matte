@@ -72,6 +72,19 @@
 		</property>
 	</bean>
 	
+	<mvc:interceptors>
+		<!-- Intercepter to clean up ThreadLocal resources added by controllers for use by views. -->
+        <mvc:interceptor>
+            <mvc:mapping  path="/album.do" />
+            <mvc:mapping  path="/browse.do" />
+            <mvc:mapping  path="/themeCss.do" />
+            <mvc:mapping  path="/themeJavaScript.do" />
+            <bean class="magoffin.matt.ma2.web.util.WebHelperInterceptor">
+            	<property name="webHelper" ref="webHelper"/>
+            </bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+	
 	<bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">
 			<props>
