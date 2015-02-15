@@ -416,7 +416,16 @@
 				<input type="hidden" name="userKey" value="{$author/@anonymous-key}"/>
 			</form>		
 		</div>
-		<div class="row" id="search-results-container"></div>
+		<div class="row" id="search-results-none">
+			<div class="col-xs-12">
+				<xsl:value-of select="key('i18n', 'search.results.none')"/>
+			</div>
+		</div>
+		<div class="row" id="search-results">
+			<div class="col-xs-12" id="search-results-container">
+				<xsl:value-of select="key('i18n', 'search.results.placeholder')"/>
+			</div>
+		</div>
 	</xsl:template>
 	
 </xsl:stylesheet>

@@ -133,10 +133,37 @@ label {
 }
 
 #search-container {
-	margin-top: 12px;
-	margin-bottom: 12px;
+	margin-top: 6px;
+	margin-bottom: 6px;
+}
+
+#search-results-none {
+	display: none;
+}
+
+#search-form {
+	margin-top: 6px;
+	margin-bottom: 6px;
 }
 
 #search-form button[type=submit] {
 	margin-left: 6px;
+	display: none;
 }
+
+@media (min-width:768px) {
+	#search-form button[type=submit] {
+		display: inline-block;
+	}
+}
+
+#search-results img {
+	padding: 6px;
+	border: 1px solid #ccc;
+	background-color: white;
+	margin: 10px;
+	-webkit-box-shadow: 2px 2px 6px 0px rgba(50, 50, 50, 0.3);
+	-moz-box-shadow:    2px 2px 6px 0px rgba(50, 50, 50, 0.3);
+	box-shadow:         2px 2px 6px 0px rgba(50, 50, 50, 0.3);
+}
+
