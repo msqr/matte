@@ -167,3 +167,12 @@ label {
 	box-shadow:         2px 2px 6px 0px rgba(50, 50, 50, 0.3);
 }
 
+#search-results {
+	display: none;
+	-webkit-box-shadow: inset 0px 0px 5px 1px rgba(0,0,0,0.2);
+	-moz-box-shadow: inset 0px 0px 5px 1px rgba(0,0,0,0.2);
+	box-shadow: inset 0px 0px 5px 1px rgba(0,0,0,0.2);
+	border-radius: 4px;
+	margin: 6px 0;
+	padding: 6px 0;
+}
