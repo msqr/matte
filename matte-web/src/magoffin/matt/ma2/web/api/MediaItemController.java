@@ -45,6 +45,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -112,6 +113,27 @@ public class MediaItemController extends ControllerSupport {
 			results = Collections.emptyList();
 		}
 		return Response.response(results);
+	}
+
+	/**
+	 * Perform a simple search for media items.
+	 * 
+	 * @param request
+	 *        The current request.
+	 * @param userKey
+	 *        The anonymous key of the owner of the items to search for.
+	 * @param query
+	 *        The search query.
+	 * @return The search results.
+	 */
+	@RequestMapping(value = "/search/{userKey}", method = RequestMethod.GET, params = "!userKey")
+	@ResponseBody
+	public Response<SearchResults> findItems(HttpServletRequest request,
+			@PathVariable("userKey") String userKey, @RequestParam("query") String query) {
+		MediaSearchCommand cmd = new MediaSearchCommand();
+		cmd.setUserKey(userKey);
+		cmd.setQuery(query);
+		return findItems(request, cmd);
 	}
 
 	/**
