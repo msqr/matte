@@ -7,6 +7,7 @@
 'use strict';
 
 var pswp,
+	albumImageData,
 	mosaic,
 	webContext,
 	albumKey,
@@ -54,6 +55,11 @@ function init() {
 		if ( button ) {
 			button.show();
 		}
+	});
+	
+	$('#play-slideshow').on('click', function(event) {
+		event.preventDefault();
+		startSlideshow();
 	});
 }
 
@@ -133,26 +139,19 @@ function getPhotoSwipeItemForMediaItem(item, albumKey, mediaSpec) {
 	return result;
 }
 
-function setupMosaic(imageData) {
-	if ( Array.isArray(imageData) === false || imageData.length < 1 ) {
+function launchPhotoSwipe(startIndex) {
+	if ( Array.isArray(albumImageData) == false ) {
 		return;
 	}
 	var singleSpec = configValue('singleSpec', { size: 'NORMAL', quality : 'GOOD' });
-	var thumbSpec = configValue('thumbSpec', { size: 'THUMB_NORMAL', quality : 'GOOD' });
-	var gridSize = Math.min(12, Math.floor(Math.sqrt(imageData.length)));
-	var pswpData = imageData.map(function(d) {
+	var pswpContainer = $('#pswp').get(0);
+	var pswpData = albumImageData.map(function(d) {
 		return getPhotoSwipeItemForMediaItem(d, albumKey, singleSpec);
 	});
-	function tileClickHandler(event, data) {
-		console.log('Clicked on image %d: %s', data.index, data.image.attr('src'));
-	
-		// stop flipping
-		mosaic.stopEyeCatcher();
-	
-		var pswpContainer = $('#pswp').get(0);
-		var options = {};
-		if ( data.index < imageData.length ) {
-			options.index = data.index;
+	var options = {};
+	if ( startIndex < albumImageData.length ) {
+		options.index = startIndex;
+		if ( mosaic !== undefined ) {
 			options.getThumbBoundsFn = function(index) {
 				var pageYScroll = window.pageYOffset || document.documentElement.scrollTop;
 				var img = mosaic.imageElementForIndex(index),
@@ -164,17 +163,37 @@ function setupMosaic(imageData) {
 				return {x:rect.left, y:rect.top + pageYScroll, w:rect.width};
 			};
 		}
+	}
+	if ( options.isClickableElement === undefined ) {
 		options.isClickableElement = function(el) {
 			return (el.tagName === 'A' || el.tagName === 'BUTTON');
 		};
-		pswp = new PhotoSwipe(pswpContainer, PhotoSwipeUI_Default, pswpData, options);
-		pswp.init();
-		pswp.listen('gettingData', function(index, item) {
-			preparePhotoSlide(index, item, imageData);
-		});
-		pswp.listen('destroy', handlePhotoSwipeDestroy);
-		pswp.listen('beforeChange', handlePhotoSwipeBeforeChange);
-		handlePhotoSwipeBeforeChange(); // PhotoSwipe does not call this for initial image
+	}
+	pswp = new PhotoSwipe(pswpContainer, PhotoSwipeUI_Default, pswpData, options);
+	pswp.init();
+	pswp.listen('gettingData', function(index, item) {
+		preparePhotoSlide(index, item, albumImageData);
+	});
+	pswp.listen('destroy', handlePhotoSwipeDestroy);
+	pswp.listen('beforeChange', handlePhotoSwipeBeforeChange);
+	handlePhotoSwipeBeforeChange(); // PhotoSwipe does not call this for initial image
+}
+
+function setupMosaic(imageData) {
+	if ( Array.isArray(imageData) === false || imageData.length < 1 ) {
+		return;
+	}
+	var gridSize = Math.min(12, Math.floor(Math.sqrt(imageData.length)));
+	
+	albumImageData = imageData;
+	
+	function tileClickHandler(event, data) {
+		console.log('Clicked on image %d: %s', data.index, data.image.attr('src'));
+	
+		// stop flipping
+		mosaic.stopEyeCatcher();
+	
+		launchPhotoSwipe(data.index);
 	}
 	if ( mosaic === undefined ) {
 		mosaic = matte.imageMosaic('.mosaic:first');
@@ -294,6 +313,10 @@ function displayAppropriateMosaic() {
 		setupMosaic(app.imageData);
 	}
 	$('#album-hierarchy').toggleClass('dropdown-menu', showAlbumDropDown);
+}
+
+function startSlideshow() {
+	launchPhotoSwipe(0);
 }
 
 $(function() {

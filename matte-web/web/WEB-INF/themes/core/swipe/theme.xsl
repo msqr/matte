@@ -220,6 +220,12 @@
 				<xsl:text> </xsl:text>
 				<small class="nowrap"><xsl:value-of select="$album-date"/></small>
 			</xsl:if>
+			<xsl:text> </xsl:text>
+			<small>
+				<a id="play-slideshow" class="action" aria-label="{key('i18n', 'action.playSlideshow')}">
+					<span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>
+				</a>
+			</small>
 		</h1>
 		<xsl:if test="m:comment">
 			<p><xsl:value-of select="m:comment"/></p>
