@@ -264,7 +264,9 @@
 			<p class="album-info">
 				<xsl:value-of select="key('i18n','browse.album.lastupdated')"/>
 				<xsl:text> </xsl:text>
-				<xsl:value-of select="format-date(xs:date(substring-before(@modify-date,'T')),$date.format)"/>
+				<span class="nowrap">
+					<xsl:value-of select="format-date(xs:date(substring-before(@modify-date,'T')),$date.format)"/>
+				</span>
 			</p>
 		</xsl:if>
 	</xsl:template>
