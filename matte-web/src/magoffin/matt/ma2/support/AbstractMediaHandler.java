@@ -627,7 +627,8 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 				file = new RandomAccessFile(itemResource.getFile(), "r");
 				file.seek(start);
 				while ( start < end ) {
-					int max = start + buf.length > end ? (int) (end - start) : buf.length;
+					int max = Math
+							.min(4096, start + buf.length > end ? (int) (end - start) : buf.length);
 					int len = file.read(buf, 0, max);
 					out.write(buf, 0, len);
 					start += len;
