@@ -356,7 +356,7 @@ matte.imageMosaic = function(container, imageSizes) {
 	self.render = function() {
 		root.empty();
 		coords = testMergeData; // reset test data
-		tileSize = Math.floor((root.width() - 20) / gridCols); // TODO: make right margin propery
+		tileSize = Math.floor(root.width() / gridCols);
 		boxes = generateBoxes(numMerge, gridCols, gridCols, maxLength, maxLength);
 		renderBoxes(function(index, box, width, height) {
 			var img, url, container;
