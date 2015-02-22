@@ -101,7 +101,7 @@ import org.springframework.util.FileCopyUtils;
  * </dl>
  *
  * @author matt
- * @version 1.0
+ * @version 1.1
  */
 public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 
@@ -116,8 +116,8 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 			MediaSize.THUMB_BIG, MediaSize.THUMB_NORMAL, MediaSize.THUMB_SMALL);
 	private String thumbnailProfile = DEFAULT_THUMBNAIL_PROFILE;
 	private String normalProfile = DEFAULT_NORMAL_PROFILE;
-	private final boolean useSizeHint = true;
-	private final boolean useJpegSizeHint = true;
+	private boolean useSizeHint = true;
+	private boolean useJpegSizeHint = true;
 
 	/**
 	 * Construct with a MIME type.
@@ -237,7 +237,6 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 	protected void defaultHandleRequest(MediaItem item, MediaRequest request, MediaResponse response) {
 		Resource itemResource = getMediaBiz().getMediaItemResource(item);
 		defaultHandleResource(item, request, response, itemResource);
-
 	}
 
 	/**
@@ -280,12 +279,11 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 	 */
 	protected void defaultHandleResource(MediaItem item, MediaRequest request, MediaResponse response,
 			Resource itemResource) {
+		if ( !needToAlter(item, request) ) {
+			defaultHandleRequestOriginal(item, itemResource, request, response);
+			return;
+		}
 		try {
-			if ( !needToAlter(item, request) ) {
-				defaultHandleRequestOriginal(item, itemResource, request, response);
-				return;
-			}
-
 			// set response MIME
 			response.setMimeType(getResponseMime(item, request, itemResource));
 
@@ -425,64 +423,52 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 		log.trace(cmd.getCommand() + " command: " + writer.toString());
 	}
 
-	/**
-	 * @return the im4javaMediaEffectMap
-	 */
 	public Map<String, IM4JavaMediaEffect> getIm4javaMediaEffectMap() {
 		return im4javaMediaEffectMap;
 	}
 
-	/**
-	 * @param im4javaMediaEffectMap
-	 *        the im4javaMediaEffectMap to set
-	 */
 	public void setIm4javaMediaEffectMap(Map<String, IM4JavaMediaEffect> im4javaMediaEffectMap) {
 		this.im4javaMediaEffectMap = im4javaMediaEffectMap;
 	}
 
-	/**
-	 * @return the profileThumbnailSizes
-	 */
 	public Set<MediaSize> getProfileThumbnailSizes() {
 		return profileThumbnailSizes;
 	}
 
-	/**
-	 * @param profileThumbnailSizes
-	 *        the profileThumbnailSizes to set
-	 */
 	public void setProfileThumbnailSizes(Set<MediaSize> profileThumbnailSizes) {
 		this.profileThumbnailSizes = profileThumbnailSizes;
 	}
 
-	/**
-	 * @return the thumbnailProfile
-	 */
 	public String getThumbnailProfile() {
 		return thumbnailProfile;
 	}
 
-	/**
-	 * @param thumbnailProfile
-	 *        the thumbnailProfile to set
-	 */
 	public void setThumbnailProfile(String thumbnailProfile) {
 		this.thumbnailProfile = thumbnailProfile;
 	}
 
-	/**
-	 * @return the normalProfile
-	 */
 	public String getNormalProfile() {
 		return normalProfile;
 	}
 
-	/**
-	 * @param normalProfile
-	 *        the normalProfile to set
-	 */
 	public void setNormalProfile(String normalProfile) {
 		this.normalProfile = normalProfile;
+	}
+
+	public boolean isUseSizeHint() {
+		return useSizeHint;
+	}
+
+	public void setUseSizeHint(boolean useSizeHint) {
+		this.useSizeHint = useSizeHint;
+	}
+
+	public boolean isUseJpegSizeHint() {
+		return useJpegSizeHint;
+	}
+
+	public void setUseJpegSizeHint(boolean useJpegSizeHint) {
+		this.useJpegSizeHint = useJpegSizeHint;
 	}
 
 }
