@@ -636,7 +636,7 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 				out.flush();
 				out.close();
 			} catch ( IOException e ) {
-				throw new RuntimeException(e);
+				log.info("IOException returning stream byte range {}-{}: {}", start, end, e);
 			} finally {
 				if ( file != null ) {
 					try {
