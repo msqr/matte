@@ -11,6 +11,9 @@ var pswp,
 	mosaic,
 	webContext,
 	albumKey,
+	autoPlay = false,
+	autoPlayDelay = 5000,
+	autoPlayTimer,
 	resizeDelay = 300,
 	resizeTimer,
 	windowWidth;
@@ -149,6 +152,10 @@ function launchPhotoSwipe(startIndex) {
 		return getPhotoSwipeItemForMediaItem(d, albumKey, singleSpec);
 	});
 	var options = {};
+
+	// stop flipping
+	mosaic.stopEyeCatcher();
+
 	if ( startIndex < albumImageData.length ) {
 		options.index = startIndex;
 		if ( mosaic !== undefined ) {
@@ -170,13 +177,14 @@ function launchPhotoSwipe(startIndex) {
 		};
 	}
 	pswp = new PhotoSwipe(pswpContainer, PhotoSwipeUI_Default, pswpData, options);
-	pswp.init();
 	pswp.listen('gettingData', function(index, item) {
 		preparePhotoSlide(index, item, albumImageData);
 	});
 	pswp.listen('destroy', handlePhotoSwipeDestroy);
 	pswp.listen('beforeChange', handlePhotoSwipeBeforeChange);
-	handlePhotoSwipeBeforeChange(); // PhotoSwipe does not call this for initial image
+	pswp.listen('afterChange', handlePhotoSwipeAfterChange);
+	pswp.listen('imageLoadComplete', handlePhotoSwipeImageLoadComplete);
+	pswp.init();
 }
 
 function setupMosaic(imageData) {
@@ -189,10 +197,6 @@ function setupMosaic(imageData) {
 	
 	function tileClickHandler(event, data) {
 		console.log('Clicked on image %d: %s', data.index, data.image.attr('src'));
-	
-		// stop flipping
-		mosaic.stopEyeCatcher();
-	
 		launchPhotoSwipe(data.index);
 	}
 	if ( mosaic === undefined ) {
@@ -213,10 +217,12 @@ function handlePhotoSwipeDestroy() {
 	$('audio, video').each(function() {
         this.pause();
     });
+	stopSlideshow();
 }
 
 function handlePhotoSwipeBeforeChange() {
-	var item = pswp.currItem;
+	var item = pswp.currItem,
+		index = pswp.getCurrentIndex();
 	$('audio, video').each(function() {
         this.pause();
     });
@@ -224,8 +230,49 @@ function handlePhotoSwipeBeforeChange() {
     $('li.item-action-download-original a').attr('href', item.url + '&download=true&original=true');
 }
 
+function handlePhotoSwipeAfterChange() {
+	var index = pswp.getCurrentIndex(),
+		item = pswp.currItem;
+	setupAutoSlideshowNext();
+}
+
 function preparePhotoSlide(index, item, imageData) {
 	console.log('Preparing slide %d with %s', index, item);
+}
+
+function handlePhotoSwipeImageLoadComplete(index) {
+	console.log('Slide %d image loaded', index);
+	setupAutoSlideshowNext();
+}
+
+function setupAutoSlideshowNext() {
+	var index = pswp.getCurrentIndex(),
+		item = pswp.currItem;
+	console.log('Slideshow %d next; autoPlay = %s; loaded = %s; loading = %s', index, autoPlay, item.loaded, item.loading);
+	if ( autoPlay && autoPlayTimer === undefined && item.loaded ) {
+		console.log('Auto next in %dms', autoPlayDelay);
+		autoPlayTimer = setTimeout(autoSlideshowNext, autoPlayDelay);
+	}
+}
+
+function startSlideshow() {
+	launchPhotoSwipe(0);
+	autoPlay = true;
+}
+
+function stopSlideshow() {
+	autoPlay = false;
+	if ( autoPlayTimer ) {
+		clearTimeout(autoPlayTimer);
+		autoPlayTimer = undefined;
+	}
+}
+
+function autoSlideshowNext() {
+	if ( autoPlay && pswp ) {
+		autoPlayTimer = undefined;
+		pswp.next();
+	}
 }
 
 function handleResize() {
@@ -313,10 +360,6 @@ function displayAppropriateMosaic() {
 		setupMosaic(app.imageData);
 	}
 	$('#album-hierarchy').toggleClass('dropdown-menu', showAlbumDropDown);
-}
-
-function startSlideshow() {
-	launchPhotoSwipe(0);
 }
 
 $(function() {
