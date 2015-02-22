@@ -369,7 +369,7 @@
 		<xsl:text>albumId : </xsl:text><xsl:value-of select="@album-id"/>
 		<xsl:text>, anonymousKey : </xsl:text><xsl:value-of select="m:js-string(@anonymous-key)"/>
 		<xsl:text>, name : </xsl:text><xsl:value-of select="m:js-string(@name)"/>
-		<xsl:if test="boolean(@allow-original) = true()">
+		<xsl:if test="@allow-original cast as xs:boolean? = true()">
 			<xsl:text>, allowOriginal : true</xsl:text>
 		</xsl:if>
 		<xsl:text> }</xsl:text>
@@ -389,7 +389,7 @@
 			<xsl:text>, description : </xsl:text><xsl:value-of select="m:js-string(normalize-space(m:description))"/>
 		</xsl:if>
 		<xsl:text>, date : </xsl:text><xsl:value-of select="m:js-string(m:item-date(., $date.format))"/>
-		<xsl:if test="boolean(@use-icon) = true()">
+		<xsl:if test="@use-icon cast as xs:boolean? = true()">
 			<xsl:text>, useIcon : true</xsl:text>
 		</xsl:if>
 		<xsl:text>, mime : </xsl:text><xsl:value-of select="m:js-string(@mime)"/>
