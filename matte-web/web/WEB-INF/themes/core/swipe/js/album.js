@@ -40,11 +40,15 @@ function init() {
 		var button = $(this),
 			video = button.siblings('video').get(0);
 		if ( video ) {
-			console.log('Play video!');
-			$('audio, video').not(video).each(function() {
-        		this.pause();
-    		});
-			video.play();
+			if ( button.hasClass('transparent') ) {
+				video.pause();
+			} else {
+				console.log('Play video!');
+				$('audio, video').not(video).each(function() {
+					this.pause();
+				});
+				video.play();
+			}
 		}
 	}).on('playing', function(event) {
 		var video = $(event.target),
@@ -60,14 +64,14 @@ function init() {
 			autoPlay = false;
 		}
 		if ( button ) {
-			button.hide();
+			button.addClass('transparent');
 		}
 	}).on('pause', function(event) {
 		var video = $(event.target),
 			button = video.siblings('.video-play-button');
 		console.log('Video paused: %s', video.attr('src'));
 		if ( button ) {
-			button.show();
+			button.removeClass('transparent');
 		}
 		if ( autoPlayAfterVideoPause ) {
 			autoPlayAfterVideoPause = false;
@@ -244,20 +248,26 @@ function handlePhotoSwipeDestroy() {
 	// start flipping again
 	mosaic.startEyeCatcher();
 	$('audio, video').each(function() {
-        this.pause();
-    });
+		this.pause();
+	});
 	stopSlideshow();
 	pswp = undefined;
 }
 
 function handlePhotoSwipeBeforeChange() {
 	var item = pswp.currItem,
-		index = pswp.getCurrentIndex();
+		index = pswp.getCurrentIndex(),
+		downloadLink = $('li.item-action-download a');
 	$('audio, video').each(function() {
-        this.pause();
-    });
-    $('li.item-action-download a').attr('href', item.url + '&download=true');
-    $('li.item-action-download-original a').attr('href', item.url + '&download=true&original=true');
+		this.pause();
+	});
+	downloadLink.attr('href', item.url + '&download=true');
+	if ( albumImageData[index].mime.match(/^video/i) ) {
+		downloadLink.hide();
+	} else {
+		downloadLink.show();
+	}
+	$('li.item-action-download-original a').attr('href', item.url + '&download=true&original=true');
 }
 
 function handlePhotoSwipeAfterChange() {
@@ -436,6 +446,7 @@ function handleKeyDown(event) {
 			} else {
 				startSlideshow();
 			}
+			event.preventDefault();
 		}
 	}
 }
