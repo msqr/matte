@@ -85,7 +85,8 @@ button.video-play-button {
 	background: none !important;
 }
 
-.item-actions button {
+.item-actions button,
+button.item-actions {
 	width: 44px;
 	height: 44px;
 	background: none;

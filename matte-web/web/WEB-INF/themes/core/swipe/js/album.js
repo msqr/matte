@@ -62,7 +62,16 @@ function init() {
 	
 	$('#play-slideshow').on('click', function(event) {
 		event.preventDefault();
+		launchPhotoSwipe(0);
 		startSlideshow();
+	});
+	
+	$('#slideshow-toggle-button').on('click', function(event) {
+		if ( autoPlay ) {
+			stopSlideshow();
+		} else {
+			startSlideshow();
+		}
 	});
 }
 
@@ -256,12 +265,22 @@ function setupAutoSlideshowNext() {
 }
 
 function startSlideshow() {
-	launchPhotoSwipe(0);
+	var btn = $('#slideshow-toggle-button');
 	autoPlay = true;
+	btn.attr('title', btn.data('title-pause'));
+	btn.find('.glyphicon')
+		.toggleClass('glyphicon-play', false)
+		.toggleClass('glyphicon-pause', true);
+	setupAutoSlideshowNext();
 }
 
 function stopSlideshow() {
+	var btn = $('#slideshow-toggle-button');
 	autoPlay = false;
+	btn.attr('title', btn.data('title-play'));
+	btn.find('.glyphicon')
+		.toggleClass('glyphicon-play', true)
+		.toggleClass('glyphicon-pause', false);
 	if ( autoPlayTimer ) {
 		clearTimeout(autoPlayTimer);
 		autoPlayTimer = undefined;

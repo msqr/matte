@@ -409,7 +409,6 @@
 		            <div class="pswp__top-bar">
 		                <div class="pswp__counter"></div>
 		                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-		                <button class="pswp__button pswp__button--share" title="Share"></button>
 		                <div class="dropdown pswp__button item-actions">
 			                <button type="button" class="dropdown-toggle" id="item-actions-dropdown" data-toggle="dropdown" aria-expanded="true">
 			                	<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
@@ -427,6 +426,12 @@
 								</li>
 							</ul>
 						</div>
+		                <button id="slideshow-toggle-button" class="pswp__button item-actions" 
+		                	title="{key('i18n', 'action.playSlideshow')}"
+		                	data-title-play="{key('i18n', 'action.playSlideshow')}"
+		                	data-title-paulse="{key('i18n', 'action.pauseSlideshow')}">
+			                <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+		                </button>
 		                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
 		                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
 		                <div class="pswp__preloader">
