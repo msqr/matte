@@ -632,9 +632,8 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 					int len = file.read(buf, 0, max);
 					out.write(buf, 0, len);
 					start += len;
+					out.flush();
 				}
-				out.flush();
-				out.close();
 			} catch ( IOException e ) {
 				log.info("IOException returning stream byte range {}-{}: {}", start, end, e);
 			} finally {
@@ -644,6 +643,11 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 					} catch ( IOException e ) {
 						// ignore this
 					}
+				}
+				try {
+					out.close();
+				} catch ( IOException e ) {
+					// ignore this one
 				}
 			}
 		} else {
