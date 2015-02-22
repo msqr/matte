@@ -84,6 +84,7 @@ function init() {
 	});
 	
 	$('#slideshow-toggle-button').on('click', function(event) {
+		event.preventDefault();
 		if ( autoPlay ) {
 			stopSlideshow();
 		} else {
