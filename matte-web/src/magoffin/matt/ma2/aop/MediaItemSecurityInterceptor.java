@@ -20,14 +20,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.aop;
 
 import java.util.List;
-
 import magoffin.matt.ma2.MediaRequest;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.UserBiz;
@@ -42,90 +39,84 @@ import magoffin.matt.ma2.support.MoveItemsCommand;
 import magoffin.matt.ma2.support.SortMediaItemsCommand;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
-
 import org.aopalliance.intercept.MethodInvocation;
 
 /**
  * AOP security interceptor for MediaItem instances.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public class MediaItemSecurityInterceptor extends AbstractSecurityInterceptor {
-	
+
 	private AlbumDao albumDao;
 	private MediaItemDao mediaItemDao;
 	private CollectionDao collectionDao;
-	
+
 	@Override
 	protected boolean isAllowed(MethodInvocation invocation, BizContext context) {
 		// look for MediaItem or Long in arguments...
 		if ( invocation.getArguments() != null ) {
 			for ( Object o : invocation.getArguments() ) {
 				if ( o instanceof MediaRequest ) {
-					MediaRequest request = (MediaRequest)o;
-					if ( !allowed(invocation, request.getMediaItemId(), 
-							request.isOriginal(), context) ) {
+					MediaRequest request = (MediaRequest) o;
+					if ( !allowed(invocation, request.getMediaItemId(), request.isOriginal(), context) ) {
 						return false;
 					}
 				} else if ( o instanceof MediaItem[] ) {
-					for ( MediaItem item : (MediaItem[])o ) {
-						if ( !allowed(invocation, item.getItemId(), 
-								false, context) ) {
+					for ( MediaItem item : (MediaItem[]) o ) {
+						if ( !allowed(invocation, item.getItemId(), false, context) ) {
 							return false;
 						}
 					}
 				} else if ( o instanceof MediaItem ) {
-					if ( !allowed(invocation, ((MediaItem)o).getItemId(), 
-							false, context) ) {
+					if ( !allowed(invocation, ((MediaItem) o).getItemId(), false, context) ) {
 						return false;
 					}
 				} else if ( o instanceof Long[] ) {
 					// treat as mediaItem IDs
-					for ( Long id : (Long[])o ) {
-						if ( !allowed(invocation, id, false, context)) {
+					for ( Long id : (Long[]) o ) {
+						if ( !allowed(invocation, id, false, context) ) {
 							return false;
 						}
 					}
 				} else if ( o instanceof Long ) {
-					
+
 					if ( invocation.getMethod().getName().contains("Album") ) {
 						// treat as album ID, skip
 						continue;
 					}
-					
+
 					// treat as mediaItem ID
-					if ( !allowed(invocation, (Long)o, false, context)) {
+					if ( !allowed(invocation, (Long) o, false, context) ) {
 						return false;
 					}
-					if ( invocation.getMethod().getName().equals(
-							"storeMediaItemPoster")) {
+					if ( invocation.getMethod().getName().equals("storeMediaItemPoster") ) {
 						break; // don't check remainder arguments
 					}
 				} else if ( o instanceof SortMediaItemsCommand ) {
-					SortMediaItemsCommand cmd = (SortMediaItemsCommand)o;
+					SortMediaItemsCommand cmd = (SortMediaItemsCommand) o;
 					for ( Long itemId : cmd.getItemIds() ) {
 						if ( !allowed(invocation, itemId, false, context) ) {
 							return false;
 						}
 					}
 				} else if ( o instanceof ExportItemsCommand ) {
-					ExportItemsCommand cmd = (ExportItemsCommand)o;
+					ExportItemsCommand cmd = (ExportItemsCommand) o;
 					if ( cmd.getItemIds() != null ) {
 						for ( Long itemId : cmd.getItemIds() ) {
-							if ( !allowed(invocation, itemId, cmd.isOriginal(), 
-									context) ) {
+							if ( !allowed(invocation, itemId, cmd.isOriginal(), context) ) {
 								return false;
 							}
 						}
 					}
 				} else if ( o instanceof MoveItemsCommand ) {
-					MoveItemsCommand cmd = (MoveItemsCommand)o;
+					MoveItemsCommand cmd = (MoveItemsCommand) o;
 					if ( cmd.getCollectionId() != null ) {
 						// must be owner of collection to move to
 						Collection c = collectionDao.get(cmd.getCollectionId());
-						if ( c != null && !c.getOwner().getUserId().equals(
-								context.getActingUser().getUserId())) {
+						if ( c != null
+								&& !c.getOwner().getUserId().equals(context.getActingUser().getUserId()) ) {
 							return false;
 						}
 					}
@@ -141,13 +132,13 @@ public class MediaItemSecurityInterceptor extends AbstractSecurityInterceptor {
 		}
 		return true;
 	}
-	
-	private boolean allowed(MethodInvocation invocation, Long mediaItemId, 
-			boolean wantOriginal, BizContext context) {
+
+	private boolean allowed(MethodInvocation invocation, Long mediaItemId, boolean wantOriginal,
+			BizContext context) {
 		if ( mediaItemId == null ) {
 			return true;
 		}
-		
+
 		Ehcache securityCache = getSecurityCache();
 		String name = invocation.getMethod().getName();
 		boolean getter = name.startsWith("get") || name.startsWith("export");
@@ -155,23 +146,21 @@ public class MediaItemSecurityInterceptor extends AbstractSecurityInterceptor {
 		if ( wantOriginal ) {
 			cacheKey += ":original";
 		}
-		
+
 		// if a getter method, allow if is a public item
 		if ( getter ) {
 			// check in public cache first
-			Element cachedElement = securityCache == null
-				? null : securityCache.get(cacheKey);
+			Element cachedElement = securityCache == null ? null : securityCache.get(cacheKey);
 			if ( cachedElement != null ) {
-				return ((Boolean)cachedElement.getValue()).booleanValue();
+				return ((Boolean) cachedElement.getValue()).booleanValue();
 			}
-			
+
 			// see if public, that is available in a shared album
 			MediaItem mediaItem = mediaItemDao.get(mediaItemId);
 			if ( mediaItem == null ) {
 				return true;
 			}
-			List<Album> sharedAlbums 
-				= albumDao.findSharedAlbumsContainingItem(mediaItem);
+			List<Album> sharedAlbums = albumDao.findSharedAlbumsContainingItem(mediaItem);
 			if ( sharedAlbums.size() > 0 ) {
 				boolean allowed = !wantOriginal && sharedAlbums.size() > 0;
 				if ( wantOriginal ) {
@@ -184,78 +173,54 @@ public class MediaItemSecurityInterceptor extends AbstractSecurityInterceptor {
 				}
 				if ( allowed ) {
 					if ( securityCache != null ) {
-						securityCache.put(new Element(cacheKey, 
-								Boolean.valueOf(allowed)));
+						securityCache.put(new Element(cacheKey, Boolean.valueOf(allowed)));
 					}
 					return allowed;
 				}
 			}
 		}
-		
+
 		// otherwise, user must be admin or owner
-		if ( getUserBiz().hasAccessLevel(context.getActingUser(), 
-				UserBiz.ACCESS_ADMIN) ) {
+		if ( getUserBiz().hasAccessLevel(context.getActingUser(), UserBiz.ACCESS_ADMIN) ) {
 			return true;
 		}
-		
-		cacheKey = (context.getActingUser() != null
-			? context.getActingUser().getUserId() : "ANONYMOUS")
-			+":" +mediaItemId;
-		Element cachedElement = securityCache == null
-			? null : securityCache.get(cacheKey);
+
+		cacheKey = (context.getActingUser() != null ? context.getActingUser().getUserId() : "ANONYMOUS")
+				+ ":" + mediaItemId;
+		Element cachedElement = securityCache == null ? null : securityCache.get(cacheKey);
 		if ( cachedElement != null ) {
-			return ((Boolean)cachedElement.getValue()).booleanValue();
+			return ((Boolean) cachedElement.getValue()).booleanValue();
 		}
-		
-		Collection c = collectionDao.getCollectionForMediaItem(
-				mediaItemId);
+
+		Collection c = collectionDao.getCollectionForMediaItem(mediaItemId);
 		boolean result = c.getOwner() != null && context.getActingUser() != null
-			&& c.getOwner().getUserId().equals(
-				context.getActingUser().getUserId());
+				&& c.getOwner().getUserId().equals(context.getActingUser().getUserId());
 		if ( securityCache != null ) {
 			securityCache.put(new Element(cacheKey, Boolean.valueOf(result)));
 		}
 		return result;
 	}
-	
-	/**
-	 * @return the mediaItemDao
-	 */
+
 	public MediaItemDao getMediaItemDao() {
 		return mediaItemDao;
 	}
-	
-	/**
-	 * @param mediaItemDao the mediaItemDao to set
-	 */
+
 	public void setMediaItemDao(MediaItemDao mediaItemDao) {
 		this.mediaItemDao = mediaItemDao;
 	}
 
-	/**
-	 * @return the collectionDao
-	 */
 	public CollectionDao getCollectionDao() {
 		return collectionDao;
 	}
-	
-	/**
-	 * @param collectionDao the collectionDao to set
-	 */
+
 	public void setCollectionDao(CollectionDao collectionDao) {
 		this.collectionDao = collectionDao;
 	}
 
-	/**
-	 * @return the albumDao
-	 */
 	public AlbumDao getAlbumDao() {
 		return albumDao;
 	}
-	
-	/**
-	 * @param albumDao the albumDao to set
-	 */
+
 	public void setAlbumDao(AlbumDao albumDao) {
 		this.albumDao = albumDao;
 	}
