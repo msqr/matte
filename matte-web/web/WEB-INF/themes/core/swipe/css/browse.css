@@ -196,3 +196,7 @@ label {
 #browse-mode-dropdown:hover {
 	color: #23527c;
 }
+
+.input-group-addon.glyphicon {
+	top: 0;
+}
