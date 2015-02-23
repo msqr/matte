@@ -44,6 +44,11 @@ public class WebMediaResponse implements MediaResponse {
 	private long modDate = 0;
 	private long fileLength = 0;
 
+	private OutputStream httpOutputStream = null;
+	private long bytesWritten = 0;
+	private long lastDataWrite = 0;
+	private boolean streamClosed = false;
+
 	/**
 	 * Default constructor.
 	 */
@@ -123,8 +128,44 @@ public class WebMediaResponse implements MediaResponse {
 	}
 
 	public OutputStream getOutputStream() {
+		if ( httpOutputStream != null ) {
+			return httpOutputStream;
+		}
 		try {
-			return webResponse.getOutputStream();
+			final OutputStream out = webResponse.getOutputStream();
+			httpOutputStream = new OutputStream() {
+
+				private void trackWriteBytes(int len) {
+					bytesWritten += len;
+					lastDataWrite = System.currentTimeMillis();
+				}
+
+				@Override
+				public void write(int b) throws IOException {
+					trackWriteBytes(1);
+					out.write(b);
+				}
+
+				@Override
+				public void write(byte[] b) throws IOException {
+					trackWriteBytes(b.length);
+					out.write(b);
+				}
+
+				@Override
+				public void write(byte[] b, int off, int len) throws IOException {
+					trackWriteBytes(len);
+					out.write(b, off, len);
+				}
+
+				@Override
+				public void close() throws IOException {
+					streamClosed = true;
+					out.close();
+				}
+
+			};
+			return httpOutputStream;
 		} catch ( IOException e ) {
 			throw new RuntimeException(e);
 		}
@@ -141,6 +182,33 @@ public class WebMediaResponse implements MediaResponse {
 
 	public void setModifiedDate(long date) {
 		modDate = date;
+	}
+
+	/**
+	 * Get the total number of bytes written to the HTTP output stream.
+	 * 
+	 * @return The total number of bytes written.
+	 */
+	public long getBytesWritten() {
+		return bytesWritten;
+	}
+
+	/**
+	 * Get the timestamp when bytes were last written to the HTTP output stream.
+	 * 
+	 * @return The timestamp when bytes were last written.
+	 */
+	public long getLastDataWrite() {
+		return lastDataWrite;
+	}
+
+	/**
+	 * Test if the HTTP output stream has been closed.
+	 * 
+	 * @return <em>true</em> if the HTTP output stream has been closed.
+	 */
+	public boolean isStreamClosed() {
+		return streamClosed;
 	}
 
 }

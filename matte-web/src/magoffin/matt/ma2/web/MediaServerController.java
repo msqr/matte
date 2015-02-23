@@ -30,6 +30,8 @@ import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -64,6 +66,7 @@ public class MediaServerController extends AbstractCommandController implements 
 	private IOBiz ioBiz;
 	private MediaBiz mediaBiz;
 	private ExecutorService executorService;
+	private long workTimeoutSeconds = 300;
 
 	private static final EnumSet<MediaSize> THUMB_SIZES = EnumSet.of(MediaSize.THUMB_BIG,
 			MediaSize.THUMB_BIGGER, MediaSize.THUMB_NORMAL, MediaSize.THUMB_SMALL);
@@ -118,7 +121,7 @@ public class MediaServerController extends AbstractCommandController implements 
 
 		// wait for export to complete...
 		try {
-			info.get();
+			info.get(workTimeoutSeconds, TimeUnit.SECONDS);
 		} catch ( Exception e ) {
 			logger.warn("Exception getting last modified for item " + cmd.getId(), e);
 		}
@@ -197,7 +200,20 @@ public class MediaServerController extends AbstractCommandController implements 
 		WorkInfo info = ioBiz.exportMedia(mediaRequest, mediaResponse, context);
 
 		// wait for export to complete...
-		info.get();
+		while ( true ) {
+			try {
+				info.get(workTimeoutSeconds, TimeUnit.SECONDS);
+				break;
+			} catch ( TimeoutException e ) {
+				final long ts = mediaResponse.getLastDataWrite();
+				if ( ts + TimeUnit.SECONDS.toMillis(workTimeoutSeconds) < System.currentTimeMillis() ) {
+					// haven't written anything in workTimeoutSeconds, so bail
+					throw e;
+				}
+				logger.info("Request not complete in " + workTimeoutSeconds + "s, but bytes written "
+						+ (System.currentTimeMillis() - ts) + "ms ago so waiting longer");
+			}
+		}
 		return null;
 	}
 
@@ -257,141 +273,86 @@ public class MediaServerController extends AbstractCommandController implements 
 		private String quality = MediaQuality.GOOD.toString();
 		private String albumKey = null;
 
-		/**
-		 * @return the albumKey
-		 */
 		public String getAlbumKey() {
 			return albumKey;
 		}
 
-		/**
-		 * @param albumKey
-		 *        the albumKey to set
-		 */
 		public void setAlbumKey(String albumKey) {
 			this.albumKey = albumKey;
 		}
 
-		/**
-		 * @return the download
-		 */
 		public boolean isDownload() {
 			return download;
 		}
 
-		/**
-		 * @param download
-		 *        the download to set
-		 */
 		public void setDownload(boolean download) {
 			this.download = download;
 		}
 
-		/**
-		 * @return Returns the id.
-		 */
 		public Long getId() {
 			return id;
 		}
 
-		/**
-		 * @param id
-		 *        The id to set.
-		 */
 		public void setId(Long id) {
 			this.id = id;
 		}
 
-		/**
-		 * @return Returns the quality.
-		 */
 		public String getQuality() {
 			return quality;
 		}
 
-		/**
-		 * @param quality
-		 *        The quality to set.
-		 */
 		public void setQuality(String quality) {
 			this.quality = quality;
 		}
 
-		/**
-		 * @return Returns the size.
-		 */
 		public String getSize() {
 			return size;
 		}
 
-		/**
-		 * @param size
-		 *        The size to set.
-		 */
 		public void setSize(String size) {
 			this.size = size;
 		}
 
-		/**
-		 * @return Returns the original.
-		 */
 		public boolean isOriginal() {
 			return original;
 		}
 
-		/**
-		 * @param original
-		 *        The original to set.
-		 */
 		public void setOriginal(boolean original) {
 			this.original = original;
 		}
 
 	}
 
-	/**
-	 * @return Returns the ioBiz.
-	 */
 	public IOBiz getIoBiz() {
 		return ioBiz;
 	}
 
-	/**
-	 * @param ioBiz
-	 *        The ioBiz to set.
-	 */
 	public void setIoBiz(IOBiz ioBiz) {
 		this.ioBiz = ioBiz;
 	}
 
-	/**
-	 * @return the executorService
-	 */
 	public ExecutorService getExecutorService() {
 		return executorService;
 	}
 
-	/**
-	 * @param executorService
-	 *        the executorService to set
-	 */
 	public void setExecutorService(ExecutorService executorService) {
 		this.executorService = executorService;
 	}
 
-	/**
-	 * @return the mediaBiz
-	 */
 	public MediaBiz getMediaBiz() {
 		return mediaBiz;
 	}
 
-	/**
-	 * @param mediaBiz
-	 *        the mediaBiz to set
-	 */
 	public void setMediaBiz(MediaBiz mediaBiz) {
 		this.mediaBiz = mediaBiz;
+	}
+
+	public long getWorkTimeoutSeconds() {
+		return workTimeoutSeconds;
+	}
+
+	public void setWorkTimeoutSeconds(long workTimeoutSeconds) {
+		this.workTimeoutSeconds = workTimeoutSeconds;
 	}
 
 }
