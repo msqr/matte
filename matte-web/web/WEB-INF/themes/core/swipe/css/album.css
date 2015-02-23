@@ -113,12 +113,15 @@ button.transparent {
 .item-actions {
 	background-image: none !important;
 	background: none !important;
+	font-family: "Alegreya Sans",sans-serif;
 }
 
 .item-actions button,
 button.item-actions {
 	width: 44px;
 	height: 44px;
+	font-size: 17px;
+	line-height: 17px;
 	background: none;
 	color: white;
 	border: none;
