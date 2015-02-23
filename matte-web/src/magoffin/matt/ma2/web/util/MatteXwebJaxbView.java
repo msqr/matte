@@ -121,7 +121,7 @@ public class MatteXwebJaxbView extends XwebJaxbView implements ContentTypeResolv
 		if ( delegateContentTypeResolver != null ) {
 			return delegateContentTypeResolver.resolveContentType(request, model);
 		}
-		return null;
+		return getContentType();
 	}
 
 	@Override
