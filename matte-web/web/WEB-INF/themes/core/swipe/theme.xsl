@@ -34,6 +34,7 @@
 		then x:x-data/x:x-model/m:model/m:theme 
 		else $display-album/m:theme"/>
 	<xsl:variable name="date.format" select="'[D] [MNn,*-3] [Y0001]'"/>
+	<xsl:variable name="referrer" select="x:x-data/x:x-request-headers/x:param[@key='referer'][1]" as="xs:string?"/>
 	
 	<xsl:variable name="browse-mode" select="string($req[@key='mode'])"/>
 	<xsl:variable name="user-key"  select="string($req[@key='userKey'])"/>
@@ -274,6 +275,15 @@
 					<xsl:value-of select="format-date(xs:date(substring-before(@modify-date,'T')),$date.format)"/>
 				</span>
 			</p>
+		</xsl:if>
+		<xsl:if test="$referrer">
+			<xsl:analyze-string select="$referrer" regex="{concat('https?://', $server-name, '(:', $server-port, ')?', $web-context, '.*userKey=([^=&amp;]+)')}">
+				<xsl:matching-substring>			
+					<div>
+						<a class="back action" href="{$referrer}" title="{key('i18n', 'action.back', $top)}"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a>
+					</div>				
+				</xsl:matching-substring>
+			</xsl:analyze-string>
 		</xsl:if>
 	</xsl:template>
 	

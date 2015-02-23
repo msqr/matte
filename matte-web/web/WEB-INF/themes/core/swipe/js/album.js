@@ -34,6 +34,14 @@ function init() {
 	$('a.child-album').on('click', function(event) {
 		var key = getChildAlbumKey(this);
 		selectChildAlbumLink(key, $(this));
+		//event.preventDefault();
+	});
+	
+	$('a.back').on('click', function(event) {
+		if ( window.history && window.history.length > 0 ) {
+			event.preventDefault();
+			window.history.back();
+		}
 	});
 	
 	$('#pswp').on('click', 'button.video-play-button', function() {
@@ -510,6 +518,13 @@ $(function() {
 		}
 		resizeTimer = setTimeout(handleResize, resizeDelay);
 	});
+});
+
+$(window).on('pageshow', function(event) {
+	if ( event.originalEvent.persisted ) {
+		init();
+		displayAppropriateMosaic();
+	}
 });
 
 }());
