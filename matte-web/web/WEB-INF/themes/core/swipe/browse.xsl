@@ -386,6 +386,8 @@
 							<xsl:value-of select="key('i18n', 'link.download.album')"/>
 						</button>
 					</div>
+					<input type="hidden" name="mode" value="{$mode}"/>
+					<input type="hidden" name="userKey" value="{$author/@anonymous-key}"/>
 					<input type="hidden" name="albumKey"/>
 					<input type="hidden" name="direct" value="true"/>
 				</div>

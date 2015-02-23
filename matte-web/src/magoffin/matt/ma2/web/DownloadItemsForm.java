@@ -18,8 +18,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.web;
@@ -28,20 +26,18 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import magoffin.matt.ma2.MediaQuality;
 import magoffin.matt.ma2.MediaRequest;
 import magoffin.matt.ma2.MediaResponse;
 import magoffin.matt.ma2.MediaSize;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.IOBiz;
+import magoffin.matt.ma2.biz.IOBiz.TwoPhaseExportRequest;
 import magoffin.matt.ma2.biz.MediaBiz;
 import magoffin.matt.ma2.biz.SearchBiz;
 import magoffin.matt.ma2.biz.WorkBiz;
-import magoffin.matt.ma2.biz.IOBiz.TwoPhaseExportRequest;
 import magoffin.matt.ma2.biz.WorkBiz.WorkInfo;
 import magoffin.matt.ma2.domain.Album;
 import magoffin.matt.ma2.domain.AlbumSearchResult;
@@ -55,7 +51,6 @@ import magoffin.matt.ma2.support.BrowseAlbumsCommand;
 import magoffin.matt.ma2.support.ExportItemsCommand;
 import magoffin.matt.ma2.web.util.WebConstants;
 import magoffin.matt.ma2.web.util.WebMediaResponse;
-
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.util.StringUtils;
@@ -67,15 +62,16 @@ import org.springframework.web.servlet.ModelAndView;
  * Form controller for downloading a set of media items.
  * 
  * @author matt.magoffin
- * @version $Revision$ $Date$
+ * @version 1.1
  */
+@SuppressWarnings("deprecation")
 public class DownloadItemsForm extends AbstractForm {
-	
+
 	private IOBiz ioBiz;
 	private WorkBiz workBiz;
 	private MediaBiz mediaBiz;
 	private SearchBiz searchBiz;
-	
+
 	@Override
 	protected boolean isFormSubmission(HttpServletRequest request) {
 		if ( StringUtils.hasText(request.getParameter("ticket")) ) {
@@ -86,12 +82,12 @@ public class DownloadItemsForm extends AbstractForm {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	protected Map referenceData(HttpServletRequest request, Object command,
-			Errors errors) throws Exception {
+	protected Map referenceData(HttpServletRequest request, Object command, Errors errors)
+			throws Exception {
 		BizContext context = getWebHelper().getBizContext(request, false);
-		Map<String,Object> viewModel = new LinkedHashMap<String,Object>();
+		Map<String, Object> viewModel = new LinkedHashMap<String, Object>();
 		Model model = getDomainObjectFactory().newModelInstance();
-		ExportItemsCommand cmd = (ExportItemsCommand)command;
+		ExportItemsCommand cmd = (ExportItemsCommand) command;
 		Album album = getRequestAlbum(request, cmd, context);
 		if ( album != null ) {
 			model.getAlbum().add(album);
@@ -101,49 +97,45 @@ public class DownloadItemsForm extends AbstractForm {
 	}
 
 	@Override
-	protected ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command,	BindException errors)
-			throws Exception {
+	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response,
+			Object command, BindException errors) throws Exception {
 		BizContext context = getWebHelper().getBizContext(request, false);
-		ExportItemsCommand cmd = (ExportItemsCommand)command;
+		ExportItemsCommand cmd = (ExportItemsCommand) command;
 		Album album = getRequestAlbum(request, cmd, context); // for album based requests
 		String filename = null;
 		if ( album != null ) {
 			filename = sanatizeFilename(album.getName());
 		} else {
-			filename = getMessageSourceAccessor().getMessage(
-					"download.selected.items.zip.name");
+			filename = getMessageSourceAccessor().getMessage("download.selected.items.zip.name");
 		}
 		filename += ".zip";
-		
+
 		if ( cmd.getTicket() != null ) {
 			// phase 2 of 2-phase request
 			WorkInfo info = workBiz.getInfo(cmd.getTicket());
-			TwoPhaseExportRequest tper = (TwoPhaseExportRequest)info.getWorkRequest();
+			TwoPhaseExportRequest tper = (TwoPhaseExportRequest) info.getWorkRequest();
 			tper.setMediaResponse(new WebMediaResponse(response, filename));
 			info.get();
 			return null;
 		}
-		
+
 		BasicMediaRequest mediaRequest = new BasicMediaRequest();
 		if ( StringUtils.hasText(cmd.getSize()) ) {
 			try {
 				mediaRequest.setSize(MediaSize.valueOf(cmd.getSize()));
 			} catch ( Exception e ) {
-				logger.warn("Unable to determine MediaSize from [" 
-						+cmd.getSize() +"]");
+				logger.warn("Unable to determine MediaSize from [" + cmd.getSize() + "]");
 			}
 		}
 		if ( StringUtils.hasText(cmd.getQuality()) ) {
 			try {
 				mediaRequest.setQuality(MediaQuality.valueOf(cmd.getQuality()));
 			} catch ( Exception e ) {
-				logger.warn("Unable to determine MediaQualtiy from [" 
-						+cmd.getQuality() +"]");
+				logger.warn("Unable to determine MediaQualtiy from [" + cmd.getQuality() + "]");
 			}
 		}
 		mediaRequest.setOriginal(cmd.isOriginal());
-		
+
 		if ( album instanceof AlbumSearchResult ) {
 			// add item IDs directly to cmd
 			Long[] mediaItemIds = getAlbumItemIds(album);
@@ -154,13 +146,13 @@ public class DownloadItemsForm extends AbstractForm {
 			newCmd.setItemIds(mediaItemIds);
 			cmd = newCmd;
 		}
-		
+
 		// set the user-agent parameter
 		String ua = request.getHeader(HTTP_USER_AGENT_HEADER);
 		if ( StringUtils.hasText(ua) ) {
 			mediaRequest.getParameters().put(MediaRequest.USER_AGENT_KEY, ua);
 		}
-		
+
 		MediaResponse mediaResponse = null;
 		if ( cmd.isDirect() ) {
 			mediaResponse = new WebMediaResponse(response, filename);
@@ -170,33 +162,31 @@ public class DownloadItemsForm extends AbstractForm {
 			info.get();
 			return null;
 		}
-		Map<String,Object> viewModel = new LinkedHashMap<String,Object>();
+		Map<String, Object> viewModel = new LinkedHashMap<String, Object>();
 		JobInfo job = getWebHelper().createJobInfo(context, info.getTicket());
 		viewModel.put(WebConstants.DEFALUT_MODEL_OBJECT, job);
 		MessageSourceResolvable msg = new DefaultMessageSourceResolvable(
-				new String[] {"download.items.success"}, 
-				null,
-				"The items are downloading.");
-		viewModel.put(WebConstants.ALERT_MESSAGES_OBJECT,msg);
+				new String[] { "download.items.success" }, null, "The items are downloading.");
+		viewModel.put(WebConstants.ALERT_MESSAGES_OBJECT, msg);
 		return new ModelAndView(getSuccessView(), viewModel);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private Long[] getAlbumItemIds(Album album) {
 		List<Long> itemIds = new LinkedList<Long>();
-		for ( MediaItem item : (List<MediaItem>)album.getItem() ) {
+		for ( MediaItem item : (List<MediaItem>) album.getItem() ) {
 			itemIds.add(item.getItemId());
 		}
 		return itemIds.toArray(new Long[itemIds.size()]);
 	}
 
 	@SuppressWarnings("unchecked")
-	private Album getRequestAlbum(HttpServletRequest request, ExportItemsCommand cmd, 
-			BizContext context) {
+	private Album getRequestAlbum(HttpServletRequest request, ExportItemsCommand cmd, BizContext context) {
 		Album album = null;
 		if ( cmd.getAlbumId() != null ) {
 			album = mediaBiz.getAlbum(cmd.getAlbumId(), context);
-		} else if ( cmd.getUserKey() != null && cmd.getMode() != null ) {
+		} else if ( cmd.getUserKey() != null && cmd.getMode() != null
+				&& !BrowseAlbumsCommand.MODE_ALBUMS.equals(cmd.getMode()) ) {
 			// virtual search results album
 			BrowseAlbumsCommand baCmd = new BrowseAlbumsCommand();
 			baCmd.setMode(cmd.getMode());
@@ -210,12 +200,11 @@ public class DownloadItemsForm extends AbstractForm {
 				album = searchAlbums.get(0);
 			}
 		} else if ( cmd.getAlbumKey() != null ) {
-			album = mediaBiz.getSharedAlbum(cmd.getAlbumKey(), 
-					context);
+			album = mediaBiz.getSharedAlbum(cmd.getAlbumKey(), context);
 		}
 		return album;
 	}
-	
+
 	private String sanatizeFilename(String name) {
 		return name.replaceAll("[\\/:*?\"<>|]", "_");
 	}
@@ -228,7 +217,8 @@ public class DownloadItemsForm extends AbstractForm {
 	}
 
 	/**
-	 * @param ioBiz the ioBiz to set
+	 * @param ioBiz
+	 *        the ioBiz to set
 	 */
 	public void setIoBiz(IOBiz ioBiz) {
 		this.ioBiz = ioBiz;
@@ -242,12 +232,13 @@ public class DownloadItemsForm extends AbstractForm {
 	}
 
 	/**
-	 * @param workBiz the workBiz to set
+	 * @param workBiz
+	 *        the workBiz to set
 	 */
 	public void setWorkBiz(WorkBiz workBiz) {
 		this.workBiz = workBiz;
 	}
-	
+
 	/**
 	 * @return the mediaBiz
 	 */
@@ -256,7 +247,8 @@ public class DownloadItemsForm extends AbstractForm {
 	}
 
 	/**
-	 * @param mediaBiz the mediaBiz to set
+	 * @param mediaBiz
+	 *        the mediaBiz to set
 	 */
 	public void setMediaBiz(MediaBiz mediaBiz) {
 		this.mediaBiz = mediaBiz;
@@ -270,7 +262,8 @@ public class DownloadItemsForm extends AbstractForm {
 	}
 
 	/**
-	 * @param searchBiz the searchBiz to set
+	 * @param searchBiz
+	 *        the searchBiz to set
 	 */
 	public void setSearchBiz(SearchBiz searchBiz) {
 		this.searchBiz = searchBiz;
