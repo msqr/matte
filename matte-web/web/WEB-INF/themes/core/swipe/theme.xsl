@@ -62,7 +62,7 @@
 				</title>
 				<meta charset="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
-				<link href="http://fonts.googleapis.com/css?family={encode-for-uri('Alegreya:700,400|Alegreya Sans:400,300')}" rel="stylesheet" type="text/css"/>
+				<link href="http://fonts.googleapis.com/css?family={encode-for-uri('Alegreya:700,400|Alegreya Sans:400,300|Cousine:700')}" rel="stylesheet" type="text/css"/>
 				<link rel="stylesheet">
 					<xsl:attribute name="href">
 						<xsl:call-template name="theme-resource-url">

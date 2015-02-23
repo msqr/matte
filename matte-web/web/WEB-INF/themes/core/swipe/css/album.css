@@ -64,9 +64,25 @@ a.action {
 }
 
 .video-slide video {
-	margin: 5%;
-	max-width: 90%;
-	max-height: 90%;
+	position: absolute;
+	top: 5%;
+	left: 5%;
+	width: 90%;
+	height: 90%;
+}
+
+.video-slide .video-info {
+	position: absolute;
+	color: rgb(90%,90%,90%);
+	font-family: 'Cousine', monospace !important;
+	font-weight: 400;
+	font-size: 13px;
+	line-height: 15px;
+	text-align: right;
+	top: 95%;
+	left: 5%;
+	width: 90%;
+	height: 5%;
 }
 
 button.video-play-button {
@@ -106,4 +122,11 @@ button.item-actions {
 	background: none;
 	color: white;
 	border: none;
+}
+
+.pswp__caption__center {
+	font-family: "Alegreya Sans",sans-serif;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 18px;
 }

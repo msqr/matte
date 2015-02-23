@@ -20,7 +20,7 @@ var pswp,
 	resizeTimer,
 	windowWidth;
 
-$.createEventCapturing(['playing', 'pause']);
+$.createEventCapturing(['playing', 'pause', 'timeupdate', 'loadedmetadata']);
 
 if ( 'app' in window === false ) {
 	window.app = {};
@@ -50,7 +50,8 @@ function init() {
 				video.play();
 			}
 		}
-	}).on('playing', function(event) {
+	});
+	$(document).on('playing', function(event) {
 		var video = $(event.target),
 			button = video.siblings('.video-play-button');
 		console.log('Video playing: %s', video.attr('src'));
@@ -79,6 +80,24 @@ function init() {
 			autoSlideshowNext();
 		}
 		activeVideo = undefined;
+	}).on('loadedmetadata', function(event) {
+		var video = $(event.target),
+			info = video.siblings('.video-info'),
+			position = Math.round(event.target.currentTime);
+		console.log('Video metadata loaded: %s', video.attr('src'));
+		video.data('display-time', position);
+		info.find('.video-curr-time').text(formatVideoTime(position))
+		info.find('.video-max-time').text(formatVideoTime(Math.round(event.target.duration)));
+	}).on('timeupdate', function(event) {
+		var video = $(event.target),
+			info = video.siblings('.video-info'),
+			position = Math.round(event.target.currentTime),
+			shownPosition = video.data('display-time');
+		console.log('Video playing: %s', position);
+		if ( position !== shownPosition ) {
+			video.data('display-time', position);
+			info.find('.video-curr-time').text(formatVideoTime(position));
+		}
 	});
 	
 	$('#play-slideshow').on('click', function(event) {
@@ -97,6 +116,22 @@ function init() {
 	});
 	
 	$(document).on('keydown', handleKeyDown);
+}
+
+function formatVideoTime(totalSeconds) {
+	var hours, minutes, seconds, result;
+	if ( isNaN(totalSeconds) ) {
+		return 'N/A';
+	}
+	hours = parseInt(totalSeconds / 3600 ) % 24;
+	minutes = parseInt(totalSeconds / 60 ) % 60;
+	seconds = totalSeconds % 60;
+	result = '';
+	if ( hours > 0 ) {
+		result += String(hours) + ':';
+	}
+	result += (minutes < 10 && hours > 0 ? '0' + minutes : minutes) + ':' + (seconds  < 10 ? '0' + seconds : seconds);
+	return result;
 }
 
 function configValue(key, defaultValue) {
@@ -144,7 +179,8 @@ function getPhotoSwipeItemForMediaItem(item, albumKey, mediaSpec) {
 		//msrc : imageURL(item.itemId, albumKey, thumbSpec.size, thumbSpec.quality),
 		w : dim.w,
 		h : dim.h,
-		url : url // preserve URL for sildes we convert to html later on
+		url : url, // preserve URL for sildes we convert to html later on
+		mime : item.mime
 	};
 	
 	// set the title to the item name, but only if the item name isn't set to the item's file name
@@ -161,17 +197,17 @@ function getPhotoSwipeItemForMediaItem(item, albumKey, mediaSpec) {
 			result.title = item.description;
 		}
 	}
-
-	// handle video items
-	if ( item.mime.match(/^video/i) ) {
-		var container = $('<div class="video-slide"/>');
-		$('<video/>').attr('src', result.src+'&original=true').appendTo(container);
-		$('<button type="button" class="btn btn-default video-play-button"><span class="glyphicon glyphicon-play play-button"></span></button>')
-			.appendTo(container);
-		result.html = container.get(0);
-		delete result.src;
-	}
 	
+	if ( item.mime.match(/^video/i) ) { 
+		delete result.src;
+		result.html = 
+				'<div class="video-slide"><video src="' 
+				+url+'&original=true' + '"></video>'
+				+'<button type="button" class="btn btn-default video-play-button"><span class="glyphicon glyphicon-play play-button"></span></button>'
+				+'<div class="video-info"><span class="video-curr-time">0:00</span> / <span class="video-max-time">0:00</span></div>'
+				+'</div>';
+	}
+
 	return result;
 }
 
@@ -240,8 +276,10 @@ function setupMosaic(imageData) {
 		.images(imageData.map(function(d) {
 			return imageURL(d.itemId, albumKey, 'THUMB_BIGGER', 'GOOD');
 		}))
-		.render()
-		.startEyeCatcher();
+		.render();
+	if ( pswp === undefined ) {
+		mosaic.startEyeCatcher();
+	}
 }
 
 function handlePhotoSwipeDestroy() {
@@ -276,8 +314,8 @@ function handlePhotoSwipeAfterChange() {
 	setupAutoSlideshowNext();
 }
 
-function preparePhotoSlide(index, item, imageData) {
-	console.log('Preparing slide %d with %s', index, item);
+function preparePhotoSlide(index, item) {
+	console.log('Preparing slide %d', index);
 }
 
 function handlePhotoSwipeImageLoadComplete(index) {
@@ -292,11 +330,9 @@ function setupAutoSlideshowNext() {
 	}
 	index = pswp.getCurrentIndex();
 	item = pswp.currItem;
-	console.log('Slideshow %d next; autoPlay = %s; loaded = %s; loading = %s', index, autoPlay, item.loaded, item.loading);
 	if ( autoPlay && autoPlayTimer === undefined && (item.html !== undefined || item.loaded) ) {
-		console.log('Auto next in %dms', autoPlayDelay);
 		if ( item.html ) {
-			video = $(item.html).find('video'); 
+			video = $(item.container).find('video'); 
 		}
 		if ( video ) {
 			video.get(0).play();
