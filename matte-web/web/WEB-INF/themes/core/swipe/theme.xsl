@@ -307,12 +307,11 @@
 	<xsl:template match="m:search-album | m:search-results/m:album">
 		<li>
 			<h2>
+				<span class="nowrap album-info"><xsl:value-of select="m:item-count(@item-count)"/></span>
 				<a title="{concat(key('i18n','browse.album.view'), ' ', string(@name))}" 
 					href="#{@anonymous-key}" class="{concat('child-album', if (local-name(.) eq 'album') then ' root' else ())}">
 					<xsl:value-of select="@name"/>
 				</a>
-				<xsl:text> </xsl:text>
-				<small class="nowrap"><xsl:value-of select="m:item-count(@item-count)"/></small>
 			</h2>
 			<xsl:if test="m:search-album">
 				<ul>
