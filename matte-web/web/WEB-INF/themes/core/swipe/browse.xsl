@@ -248,19 +248,21 @@
 				</div>
 				<div class="album-info">
 					<xsl:if test="string-length($album-date) &gt; 0">
-						<xsl:value-of select="$album-date"/>
+						<span class="nowrap"><xsl:value-of select="$album-date"/></span>
 						<xsl:text> - </xsl:text>
 					</xsl:if>
-					<xsl:value-of select="$total-item-count"/>
-					<xsl:text> </xsl:text>
-					<xsl:choose>
-						<xsl:when test="@total-item-count = 1">
-							<xsl:value-of select="key('i18n','browse.items.count.single')"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="key('i18n','browse.items.count')"/>
-						</xsl:otherwise>
-					</xsl:choose>
+					<span class="nowrap">
+						<xsl:value-of select="$total-item-count"/>
+						<xsl:text> </xsl:text>
+						<xsl:choose>
+							<xsl:when test="@total-item-count = 1">
+								<xsl:value-of select="key('i18n','browse.items.count.single')"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="key('i18n','browse.items.count')"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</span>
 					<xsl:if test="$total-album-count &gt; 1">
 						<xsl:text> </xsl:text>
 						<xsl:value-of select="key('i18n','in')"/>
@@ -273,17 +275,17 @@
 						<xsl:text> </xsl:text>
 						<xsl:value-of select="key('i18n', 'browse.items.ranging')"/>
 						<xsl:text> </xsl:text>
-						<xsl:value-of select="format-date(xs:date(substring-before($min-date,'T')), $date.format)"/>
+						<span class="nowrap"><xsl:value-of select="format-date(xs:date(substring-before($min-date,'T')), $date.format)"/></span>
 						<xsl:text> </xsl:text>
 						<xsl:value-of select="key('i18n', 'to')"/>
 						<xsl:text> </xsl:text>
-						<xsl:value-of select="format-date(xs:date(substring-before($max-date,'T')), $date.format)"/>
+						<span class="nowrap"><xsl:value-of select="format-date(xs:date(substring-before($max-date,'T')), $date.format)"/></span>
 					</xsl:if>
 					<xsl:if test="@modify-date">
 						<xsl:text> - </xsl:text>
 						<xsl:value-of select="key('i18n','browse.album.lastupdated')"/>
 						<xsl:text> </xsl:text>
-						<xsl:value-of select="format-date(xs:date(substring-before(@modify-date,'T')),$date.format)"/>
+						<span class="nowrap"><xsl:value-of select="format-date(xs:date(substring-before(@modify-date,'T')),$date.format)"/></span>
 					</xsl:if>
 				</div>
 				<xsl:if test="string-length(m:comment) &gt; 0">
