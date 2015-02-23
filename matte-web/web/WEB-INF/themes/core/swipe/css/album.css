@@ -24,16 +24,23 @@ a.action {
 .album-details ul {
     list-style-type: none;
 	padding-left: 0;
-	margin-left: -20px; 
-	margin-right: -20px
+	margin-left: -15px; 
+	margin-right: -15px
 }
 
 .album-details li {
-	padding: 4px 24px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 26px;
+	padding-right: 15px;
 }
 
 .album-details li.selected {
 	background-color: #EEECE8;
+}
+
+#album-hierarchy > li {
+	padding-left: 15px;
 }
 
 .album-details ul p {
