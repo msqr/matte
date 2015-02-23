@@ -128,6 +128,10 @@ label {
 	border-top: 1px dotted #ccc;
 }
 
+.dropdown-menu {
+	font-family: "Alegreya Sans",sans-serif;
+}
+
 #album-download-modal .form-group {
 	margin-bottom: 0;
 }
