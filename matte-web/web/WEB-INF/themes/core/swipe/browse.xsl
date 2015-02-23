@@ -107,7 +107,7 @@
 						</div>
 						<div class="col-xs-3 col-sm-2 col-md-1 text-right">
 							<div class="dropdown">
-								<button class="btn btn-default dropdown-toggle" type="button" id="browse-mode-dropdown" data-toggle="dropdown" aria-expanded="true">
+								<button class="btn dropdown-toggle" type="button" id="browse-mode-dropdown" data-toggle="dropdown" aria-expanded="true">
 									<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
 								</button>
 								<ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="browse-mode-dropdown">

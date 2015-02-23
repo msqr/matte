@@ -176,3 +176,19 @@ label {
 	margin: 6px 0;
 	padding: 6px 0;
 }
+
+#browse-mode-dropdown {
+	color: #ebe4da;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 30px;
+	border: none;
+	background-color: transparent !important;
+	-webkit-box-shadow: none !important;
+	-moz-box-shadow:    none !important;
+	box-shadow:         none !important;
+}
+
+#browse-mode-dropdown:hover {
+	color: #23527c;
+}
