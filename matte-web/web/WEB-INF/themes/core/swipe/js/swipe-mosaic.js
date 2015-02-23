@@ -203,7 +203,9 @@ matte.imageMosaic = function(container, imageSizes) {
 	function renderBoxes(callback) {
 		var i, len, box, t, l, w, h, stop = false, 
 			mosaicHeight = root.height(),
-			mosaicWidth = root.width();
+			mosaicWidth = root.width(),
+			renderHeight = 0,
+			renderWidth = 0;
 		for ( i = 0, len = boxes.length; i < len && !stop; i += 1 ) {
 			box = boxes[i];
 			t = box.y * tileSize;
@@ -223,12 +225,20 @@ matte.imageMosaic = function(container, imageSizes) {
 				stop = callback.call(div, i, box, w, h);
 			}
 			root.append(div);
-			if ( t + h > mosaicHeight ) {
-				root.css('height', String(t + h) + 'px');
+			if ( t + h > renderHeight ) {
+				renderHeight = t + h;
 			}
-			if ( l + w > mosaicWidth ) {
-				root.css('width', String(l + w) + 'px');
+			if ( l + w > renderWidth ) {
+				renderWidth = l + w;
 			}
+		}
+		if ( renderHeight > mosaicHeight ) {
+			root.css('height', String(renderHeight) + 'px');
+		}
+		root.css('width', String(renderWidth) + 'px');
+		if ( renderWidth < mosaicWidth ) {
+			// center within parent
+			root.css('left', String(Math.floor((mosaicWidth - renderWidth) / 2)) + 'px');
 		}
 	}
 	
