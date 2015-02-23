@@ -220,10 +220,10 @@
 		</xsl:variable>
 		<xsl:variable name="total-album-count" select="count(m:search-album) + 1"/>
 		<div class="row browse-album">
-			<div class="col-md-4 text-center">
+			<div class="col-sm-5 col-md-4 text-center">
 				<xsl:apply-templates select="m:search-poster"/>
 			</div>		
-			<div class="col-md-8">
+			<div class="col-sm-7 col-md-8">
 				<div class="row">
 					<h2 class="col-xs-10">
 						<a title="{concat(key('i18n','browse.album.view'), ' ', string(@name))}">
