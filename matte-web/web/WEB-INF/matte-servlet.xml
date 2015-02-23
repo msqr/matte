@@ -232,7 +232,7 @@
 		<property name="xsltPathSuffix" value=".xsl"/>
 	</bean>
 	<bean id="xhtmlContentTypeResolver" class="magoffin.matt.xweb.util.XhtmlContentTypeResolver"/>
-	<bean id="defaultXsltViewTemplate" class="magoffin.matt.xweb.util.XwebJaxbView" scope="prototype">
+	<bean id="defaultXsltViewTemplate" class="magoffin.matt.ma2.web.util.MatteXwebJaxbView" scope="prototype">
 		<property name="contentType" value="text/html; charset=UTF-8"/>
 		<property name="requestContextAttribute" value="magoffin.matt.xweb.REQ"/>
 		<property name="cache" value="${xslt.cache}"/>

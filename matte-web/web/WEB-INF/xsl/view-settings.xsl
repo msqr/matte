@@ -7,11 +7,7 @@
 	
 	<xsl:import href="tmpl/global.xsl"/>
 	
-	<xsl:output method="xml" indent="no" 
-		omit-xml-declaration="no"
-		doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
-		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
-		media-type="text/xml"/>
+	<xsl:output method="html" version="5.0" indent="yes" omit-xml-declaration="yes"/>
 	
 	<xsl:variable name="mediaspec.thumb" select="$ses/m:session[1]/m:thumbnail-setting"/>
 	<xsl:variable name="mediaspec.view" select="$ses/m:session[1]/m:view-setting"/>
@@ -19,10 +15,20 @@
 	<xsl:template match="x:x-data">
 		<html>
 			<head>
+				<meta charset="utf-8" />
+				<meta name="viewport" content="width=480, initial-scale=1" />
 				<title>
 					<xsl:value-of select="key('i18n','view.prefs.title')"/>
 				</title>
 				<link rel="stylesheet" type="text/css" href="{$web-context}/css/matte-global.css" media="screen"><xsl:text> </xsl:text></link>				
+				<style type="text/css">
+				h1 {
+					/* Some tweaks for better mobile webapp style */
+					height: 32px;
+					background-position: bottom left;
+					background-repeat: repeat-x;
+				}
+				</style>
 			</head>
 			<body>
 				<h1><xsl:value-of select="key('i18n','view.prefs.title')"/></h1>
