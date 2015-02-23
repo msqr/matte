@@ -20,7 +20,7 @@ var pswp,
 	resizeTimer,
 	windowWidth;
 
-$.createEventCapturing(['playing', 'pause', 'timeupdate', 'loadedmetadata']);
+$.createEventCapturing(['playing', 'pause', 'timeupdate', 'loadedmetadata', 'error']);
 
 if ( 'app' in window === false ) {
 	window.app = {};
@@ -93,11 +93,12 @@ function init() {
 			info = video.siblings('.video-info'),
 			position = Math.round(event.target.currentTime),
 			shownPosition = video.data('display-time');
-		console.log('Video playing: %s', position);
 		if ( position !== shownPosition ) {
 			video.data('display-time', position);
 			info.find('.video-curr-time').text(formatVideoTime(position));
 		}
+	}).on('error', function(event) {
+		console.log('Error event from a ' +event.target +': ' +(event.target.error ? event.target.error.code : 'N/A'));
 	});
 	
 	$('#play-slideshow').on('click', function(event) {
@@ -201,8 +202,7 @@ function getPhotoSwipeItemForMediaItem(item, albumKey, mediaSpec) {
 	if ( item.mime.match(/^video/i) ) { 
 		delete result.src;
 		result.html = 
-				'<div class="video-slide"><video src="' 
-				+url+'&original=true' + '"></video>'
+				'<div class="video-slide"><video></video>'
 				+'<button type="button" class="btn btn-default video-play-button"><span class="glyphicon glyphicon-play play-button"></span></button>'
 				+'<div class="video-info"><span class="video-curr-time">0:00</span> / <span class="video-max-time">0:00</span></div>'
 				+'</div>';
@@ -295,8 +295,10 @@ function handlePhotoSwipeDestroy() {
 function handlePhotoSwipeBeforeChange() {
 	var item = pswp.currItem,
 		index = pswp.getCurrentIndex(),
-		downloadLink = $('li.item-action-download a');
-	$('audio, video').each(function() {
+		downloadLink = $('li.item-action-download a'),
+		video = $(item.container).find('video'),
+		videoURL;
+	$('audio, video').not(video).each(function() {
 		this.pause();
 	});
 	downloadLink.attr('href', item.url + '&download=true');
@@ -306,6 +308,13 @@ function handlePhotoSwipeBeforeChange() {
 		downloadLink.show();
 	}
 	$('li.item-action-download-original a').attr('href', item.url + '&download=true&original=true');
+	if ( video.length > 0 ) {
+		videoURL = item.url+'&original=true';
+		if ( video.attr('src') !== videoURL ) {
+			console.log('Changing video %d source from %s to %s', index, video.attr('src'), videoURL);
+			video.attr('src',  videoURL);
+		}
+	}
 }
 
 function handlePhotoSwipeAfterChange() {
@@ -334,8 +343,9 @@ function setupAutoSlideshowNext() {
 		if ( item.html ) {
 			video = $(item.container).find('video'); 
 		}
-		if ( video ) {
+		if ( video && video.length > 0 ) {
 			video.get(0).play();
+			// FIXME: why does Safari sometimes not play the video, or report an error when it doesn't?
 		} else {
 			autoPlayTimer = setTimeout(autoSlideshowNext, autoPlayDelay);
 		}
