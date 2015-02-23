@@ -42,7 +42,8 @@ matte.imageMosaic = function(container, imageSizes) {
 		tileSize,
 		eyeCatcherPeriod = 5000, 
 		eyeCatcherTimer,
-		tileClickHandlerFn;
+		tileClickHandlerFn,
+		debug = false;
 
 	function sizeNameForTile(box, width, height) {
 		var size, spec, result = 'BIGGEST', resultSpec = mediaSizes.BIGGEST;
@@ -60,7 +61,9 @@ matte.imageMosaic = function(container, imageSizes) {
 				}
 			}
 		}
-		console.log('%s (%dx%d) image size for box %dx%d', result, resultSpec.width, resultSpec.height, width, height);
+		if ( debug ) {
+			console.log('%s (%dx%d) image size for box %dx%d', result, resultSpec.width, resultSpec.height, width, height);
+		}
 		return result;
 	}
 	
@@ -114,7 +117,9 @@ matte.imageMosaic = function(container, imageSizes) {
 						continue MERGE;
 					}
 				}
-				console.log('Merging %d,%d %dx%d up', box.x, box.y, box.w, box.h);
+				if ( debug ) {
+					console.log('Merging %d,%d %dx%d up', box.x, box.y, box.w, box.h);
+				}
 				box.y = ny;
 				box.h += 1;
 				for ( i = box.x, len = box.x + box.w; i < len; i += 1 ) {
@@ -132,7 +137,9 @@ matte.imageMosaic = function(container, imageSizes) {
 						continue MERGE;
 					}
 				}
-				console.log('Merging %d,%d %dx%d ri', box.x, box.y, box.w, box.h);
+				if ( debug ) {
+					console.log('Merging %d,%d %dx%d ri', box.x, box.y, box.w, box.h);
+				}
 				box.w += 1;
 				for ( j = box.y, len = box.y + box.h; j < len; j += 1 ) {
 					grid[nx][j] = box;
@@ -149,7 +156,9 @@ matte.imageMosaic = function(container, imageSizes) {
 						continue MERGE;
 					}
 				}
-				console.log('Merging %d,%d %dx%d do', box.x, box.y, box.w, box.h);
+				if ( debug ) {
+					console.log('Merging %d,%d %dx%d do', box.x, box.y, box.w, box.h);
+				}
 				box.h += 1;
 				for ( i = box.x, len = box.x + box.w; i < len; i += 1 ) {
 					grid[i][ny] = box;
@@ -166,7 +175,9 @@ matte.imageMosaic = function(container, imageSizes) {
 						continue MERGE;
 					}
 				}
-				console.log('Merging %d,%d %dx%d le', box.x, box.y, box.w, box.h);
+				if ( debug ) {
+					console.log('Merging %d,%d %dx%d le', box.x, box.y, box.w, box.h);
+				}
 				box.x = nx;
 				box.w += 1;
 				for ( j = box.y, len = box.y + box.h; j < len; j += 1 ) {
@@ -227,8 +238,9 @@ matte.imageMosaic = function(container, imageSizes) {
 			tileWidth = data.tileSize * data.box.w,
 			tileHeight = data.tileSize * data.box.h,
 			imgDimensions = { w : img.width(), h : img.height() };
-		console.log('Loaded box %d,%d image %s', data.box.x, data.box.y, this.src);
-		
+		if ( debug ) {
+			console.log('Loaded box %d,%d image %s', data.box.x, data.box.y, this.src);
+		}
 		// aspect-fill scale image to tile
 		if ( imgDimensions.h < tileHeight ) {
 			img.css('height', '100%');
@@ -258,7 +270,9 @@ matte.imageMosaic = function(container, imageSizes) {
 	
 	function nextEyeCatcherDelay() {
 		var result = Math.round(eyeCatcherPeriod * 0.8 + (Math.random() * eyeCatcherPeriod * 0.3));
-		console.log('Next eye catcher in %dms', result);
+		if ( debug ) {
+			console.log('Next eye catcher in %dms', result);
+		}
 		return result;
 	}
 	
@@ -282,7 +296,9 @@ matte.imageMosaic = function(container, imageSizes) {
 		while ( boxIndex === imageIndex ) {
 			if ( numTries < 1 ) {
 				// cowardly give up trying any more times to prevent endless loop
-				console.log('Giving up picking random tile for eye catcher!');
+				if ( debug ) {
+					console.log('Giving up picking random tile for eye catcher!');
+				}
 				return;
 			}
 			boxIndex = Math.floor(Math.random() * tiles.length);
@@ -318,7 +334,7 @@ matte.imageMosaic = function(container, imageSizes) {
 			data = img.data();
 		if ( tileClickHandlerFn ) {
 			tileClickHandlerFn.call(self, event, { index : data.index, image : img });
-		} else {
+		} else if ( debug ) {
 			console.log('Tapped on image %d', data.index);
 		}
 	}
@@ -360,7 +376,9 @@ matte.imageMosaic = function(container, imageSizes) {
 		boxes = generateBoxes(numMerge, gridCols, gridCols, maxLength, maxLength);
 		renderBoxes(function(index, box, width, height) {
 			var img, url, container;
-			console.log('Rendering box %d %dx%d', (index + 1), width, height);
+			if ( debug ) {
+				console.log('Rendering box %d %dx%d', (index + 1), width, height);
+			}
 			img = $('<img class="new"/>').on('load', {index:index, box:box, tileSize:tileSize}, tileImageLoaded);
 			url = imageURLForTile(box, width, height, imageURLs[index]);
 			img.attr('src', url);
