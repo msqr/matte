@@ -25,6 +25,7 @@
 				h1 {
 					/* Some tweaks for better mobile webapp style */
 					height: 32px;
+					line-height: 32px;
 					background-position: bottom left;
 					background-repeat: repeat-x;
 				}
