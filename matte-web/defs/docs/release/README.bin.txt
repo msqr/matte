@@ -15,9 +15,9 @@ hosting provider or your own personal server).
 INSTALLATION ==========================================================
 
 Matte is a Java web application, and requires a Java 5 runtime and a
-J2EE servlet container to run in, such as Tomcat or JBoss. Matte also 
-requires a relational database to store the data in. Matte has been 
-tested with PostgreSQL, MySQL, and Apache Derby.
+J2EE servlet 2.5 container to run in, such as Tomcat or JBoss. Matte
+also  requires a relational database to store the data in. Matte has
+been tested with PostgreSQL, MySQL, and Apache Derby.
 
 FIRST-TIME DATABASE CREATION ==========================================
 
@@ -106,7 +106,7 @@ FIRST-TIME APPSERVER SETUP ============================================
   Session for sending mail with. Thus you must configure the DataSource
   and Session the first time you install Matte.
   
-  For Tomcat 5.5+, create the DataSource first by creating a deployment
+  For Tomcat 6+, create the DataSource first by creating a deployment
   context file named <TOMCAT HOME>/conf/Catalina/localhost/matte.xml.
   Add the below XML (adjust the parameter values as necessary for your 
   environment, but if you are following these directions from the start, 
@@ -116,14 +116,13 @@ FIRST-TIME APPSERVER SETUP ============================================
   download both JavaMail and the required Java Activation Framework for
   for the javax.mail.Session support required by Matte. See the 
   
-  http://tomcat.apache.org/tomcat-5.5-doc/jndi-resources-howto.html
+  http://tomcat.apache.org/tomcat-6.0-doc/jndi-resources-howto.html
   
   page (the JavaMail Sessions section) for more information and links
   to the associated download pages. Place the JARs in the 
-  <TOMCAT HOME>/common/lib directory (Tomcat 5.5) or in the
-  <TOMCAT HOME>/lib directory (Tomcat 6+).
+  <TOMCAT HOME>/lib directory.
   
-  Note that Java 6 comes with the Activation Framework already.
+  Note that Java 6+ comes with the Activation Framework already.
   
   
   POSTGRES ------------------------------------------------------------
@@ -156,9 +155,8 @@ FIRST-TIME APPSERVER SETUP ============================================
   </Context>
     
   Then, if you don't already have the Postgres JDBC driver added to 
-  Tomcat, copy setup/lib/postgresql-8.1-407.jdbc3.jar to the 
-  <TOMCAT HOME>/common/lib directory (Tomcat 5.5) or in the
-  <TOMCAT HOME>/lib directory (Tomcat 6+).
+  Tomcat, copy setup/lib/postgresql-*.jar to the 
+  <TOMCAT HOME>/lib directory.
 
 
   MYSQL ---------------------------------------------------------------
@@ -179,9 +177,8 @@ FIRST-TIME APPSERVER SETUP ============================================
   </Context>
 
   Then, if you don't already have the MySQL JDBC driver added to
-  Tomcat, copy setup/lib/mysql-connector-java-5.0.5-bin.jar to the
-  <TOMCAT HOME>/common/lib directory (Tomcat 5.5) or in the
-  <TOMCAT HOME>/lib directory (Tomcat 6+).
+  Tomcat, copy setup/lib/mysql-connector-java-*.jar to the
+  <TOMCAT HOME>/lib directory.
   
   
 APPLICATION SETUP =====================================================
