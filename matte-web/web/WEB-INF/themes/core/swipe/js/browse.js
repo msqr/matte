@@ -50,6 +50,30 @@ function init() {
 		return false;
 	});
 	
+	// when running as webapp, don't kick out to Safari for internal links
+	(function() {
+		var stop = /^(a|html)$/i,
+			relative = /^[a-z\+\.\-]+:/i;
+		if ( ('standalone' in window.navigator) && window.navigator.standalone ) {
+			$(document).on('click', 'a', function(event) {
+				var curnode = event.target, 
+					location = document.location, 
+					dest;
+				while ( !(stop).test(curnode.nodeName) ) {
+					curnode = curnode.parentNode;
+				}
+				dest = curnode.href;
+				if ( 'href' in curnode 
+						&& event.originalEvent.defaultPrevented !== true
+						&& dest.replace(location.href,'').indexOf('#') !== 0
+						&& (relative.test(dest) === false || dest.indexOf(location.protocol+'//'+location.host) === 0) ) {
+					event.preventDefault();
+					location.href = dest;
+				}
+			});
+		}
+	}());
+	
 	gotoLocationHash(window.location);
 }
 

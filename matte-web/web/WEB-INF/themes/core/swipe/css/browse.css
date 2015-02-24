@@ -41,12 +41,6 @@ h2 {
 	color: inherit;
 }
 
-a.back.action {
-	font-size: 20px;
-	line-height: 20px;
-	padding: 10px 0;
-}
-
 .album-actions a:hover {
 	color: #23527c;
 }

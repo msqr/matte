@@ -63,6 +63,8 @@
 				</title>
 				<meta charset="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
+				<meta name="apple-mobile-web-app-capable" content="yes" />
+				<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 				<link href="http://fonts.googleapis.com/css?family={encode-for-uri('Alegreya:700,400|Alegreya Sans:400,300|Cousine:700')}" rel="stylesheet" type="text/css"/>
 				<link rel="stylesheet">
 					<xsl:attribute name="href">
@@ -279,7 +281,7 @@
 		<xsl:if test="$referrer">
 			<xsl:analyze-string select="$referrer" regex="{concat('https?://', $server-name, '(:', $server-port, ')?', $web-context, '.*userKey=([^=&amp;]+)')}">
 				<xsl:matching-substring>			
-					<div>
+					<div class="back">
 						<a class="back action" href="{$referrer}" title="{key('i18n', 'action.back', $top)}"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a>
 					</div>				
 				</xsl:matching-substring>

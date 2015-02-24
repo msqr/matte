@@ -17,6 +17,8 @@
 			<head>
 				<meta charset="utf-8" />
 				<meta name="viewport" content="width=480, initial-scale=1" />
+				<meta name="apple-mobile-web-app-capable" content="yes" />
+				<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 				<title>
 					<xsl:value-of select="key('i18n','view.prefs.title')"/>
 				</title>
@@ -24,8 +26,9 @@
 				<style type="text/css">
 				h1 {
 					/* Some tweaks for better mobile webapp style */
-					height: 32px;
-					line-height: 32px;
+					height: 42px;
+					padding-top: 10px;
+					line-height: 42px;
 					background-position: bottom left;
 					background-repeat: repeat-x;
 				}
