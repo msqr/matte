@@ -18,8 +18,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.dao.support;
@@ -131,7 +129,7 @@ import org.springframework.util.StringUtils;
  * </dl>
  * 
  * @author matt.magoffin
- * @version $Revision$ $Date$
+ * @version 1.1
  */
 public class PopularityBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 
@@ -163,12 +161,6 @@ public class PopularityBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 	private MessageFormat sqlBrowseTemplate;
 	private MessageSource messages;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.plugin.BrowseModePlugin#supportsMode(java.lang.String)
-	 */
 	public boolean supportsMode(String mode) {
 		return MODE_POPULARITY.equalsIgnoreCase(mode);
 	}
@@ -179,20 +171,10 @@ public class PopularityBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 		init();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.plugin.Plugin#getMessageResourceNames()
-	 */
 	public String[] getMessageResourceNames() {
 		return MESSAGE_RESOURCE_NAMES;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.plugin.BrowseModePlugin#getSupportedModes()
-	 */
 	public String[] getSupportedModes() {
 		return SUPPORTED_MODES;
 	}
@@ -208,13 +190,6 @@ public class PopularityBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 		this.sqlBrowseTemplate = new MessageFormat(this.sqlBrowse);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.plugin.BrowseModePlugin#find(magoffin.matt.ma2.support
-	 * .BrowseAlbumsCommand, magoffin.matt.ma2.domain.PaginationCriteria)
-	 */
 	@SuppressWarnings("unchecked")
 	public SearchResults find(BrowseAlbumsCommand command, PaginationCriteria pagination) {
 		final SearchResults results = getDomainObjectFactory().newSearchResultsInstance();
@@ -355,6 +330,8 @@ public class PopularityBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 						item.setItemId(rs.getLong("item_id"));
 						item.setName(rs.getString("item_name"));
 						item.setMime(rs.getString("item_mime"));
+						item.setWidth(rs.getInt("item_width"));
+						item.setHeight(rs.getInt("item_height"));
 						currAlbum.getItem().add(item);
 					}
 
@@ -399,77 +376,42 @@ public class PopularityBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 		album.setAnonymousKey(indexKey);
 	}
 
-	/**
-	 * @return the sqlBrowse
-	 */
 	public String getSqlBrowse() {
 		return sqlBrowse;
 	}
 
-	/**
-	 * @param sqlBrowse
-	 *        the sqlBrowse to set
-	 */
 	public void setSqlBrowse(String sqlBrowse) {
 		this.sqlBrowse = sqlBrowse;
 	}
 
-	/**
-	 * @return the sqlBrowseSection
-	 */
 	public String getSqlBrowseSection() {
 		return sqlBrowseSection;
 	}
 
-	/**
-	 * @param sqlBrowseSection
-	 *        the sqlBrowseSection to set
-	 */
 	public void setSqlBrowseSection(String sqlBrowseSection) {
 		this.sqlBrowseSection = sqlBrowseSection;
 	}
 
-	/**
-	 * @return the sectionAlbumMaxSize
-	 */
 	public int getSectionAlbumMaxSize() {
 		return sectionAlbumMaxSize;
 	}
 
-	/**
-	 * @param sectionAlbumMaxSize
-	 *        the sectionAlbumMaxSize to set
-	 */
 	public void setSectionAlbumMaxSize(int sectionAlbumMaxSize) {
 		this.sectionAlbumMaxSize = sectionAlbumMaxSize;
 	}
 
-	/**
-	 * @return the messages
-	 */
 	public MessageSource getMessages() {
 		return messages;
 	}
 
-	/**
-	 * @param messages
-	 *        the messages to set
-	 */
 	public void setMessages(MessageSource messages) {
 		this.messages = messages;
 	}
 
-	/**
-	 * @return the popularityBucketSize
-	 */
 	public int getPopularityBucketSize() {
 		return popularityBucketSize;
 	}
 
-	/**
-	 * @param popularityBucketSize
-	 *        the popularityBucketSize to set
-	 */
 	public void setPopularityBucketSize(int popularityBucketSize) {
 		this.popularityBucketSize = popularityBucketSize;
 	}
