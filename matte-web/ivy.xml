@@ -10,7 +10,7 @@
 		<conf name="demo-tomcat" visibility="private" description="utilities needed for demo"/>
 		<conf name="jdbc" visibility="private" description="JDBC drivers for bin release"/>
 	</configurations>
-	<dependencies defaultconfmapping="runtime->default(runtime);compile->default(compile);test->runtime(default);jdbc->runtime(default);demo-tomcat->runtime(default)">
+	<dependencies defaultconfmapping="runtime->default(runtime);compile->default(compile);test->runtime(default);jdbc->default(runtime);demo-tomcat->default(runtime)">
 		
 		<!-- Logging -->
 		<dependency org="log4j" name="log4j" rev="1.2.17" conf="compile,runtime"/>
@@ -110,7 +110,11 @@
 			<artifact name="derby"/>
 		</dependency>
 		<dependency org="mysql" name="mysql-connector-java" rev="5.1.18" conf="test,jdbc"/>
-		<dependency org="postgresql" name="postgresql" rev="9.1-901-1.jdbc4" conf="test,jdbc"/>
+		<dependency org="org.postgresql" name="postgresql" rev="9.4-1200-jdbc4" conf="test,jdbc">
+			<exclude org="com.github.dblock.waffle"/>
+			<exclude org="net.java.dev.jna"/>
+			<exclude org="org.slf4j"/>
+		</dependency>
 		
 		<!-- Services -->
 		<dependency org="opensymphony" name="quartz" rev="1.6.3" conf="compile,runtime">
