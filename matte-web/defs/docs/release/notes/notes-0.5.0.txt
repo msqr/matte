@@ -1,0 +1,28 @@
+Matte Release Notes
+
+@VERSION@ @BUILD_DATE@
+
+Note: the database schema has changed from the previous 0.4 release.
+To update a 0.4 release database to 0.5, see the setup/sql/release
+directory included in this package. Run the appropriate setup script
+for your database type.
+
+- Implemented media item quick search in administration UI.
+
+- Update Matte namespace to http://msqr.us/xsd/matte.
+
+- Work on Theme HOWTO documentation.
+
+- Adjustments to Woosh slideshow view to better support small
+  browser windows (i.e. 800x600 screens).
+  
+- Enable key shortcuts in Woosh slideshow view.
+
+- Update how tags are stored to allow for users other than the 
+  item's owner to tag items (ala Flickr).
+
+- Fix support of item time zones, so can display correct media
+  local time.
+  
+- Generate DDLs for MySQL and test against MySQL 4.1. Update docs
+  to include MySQL information.

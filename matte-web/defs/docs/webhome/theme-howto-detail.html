@@ -1,0 +1,821 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Matte: Theme HOWTO: Detail View</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" type="text/css" href="whoosh-matte.css" />
+	<link type="text/css" rel="stylesheet" href="css/SyntaxHighlighter.css"></link>
+	<script type="text/javascript" src="js/shCore.js"></script>
+	<script type="text/javascript" src="js/shBrushJScript.js"></script>
+	<script type="text/javascript" src="js/shBrushXml.js"></script>
+</head>
+<body class="full">
+
+<h1><a name="top"></a>Matte: Theme HOWTO: Detail View</h1>
+
+<div class="pagenav">
+	<ul>
+		<li><a href="theme-howto.html">Overview</a></li>
+		<li><a href="theme-howto-browse.html">Browse View</a></li>
+		<li><a href="theme-howto-album.html">Album View</a></li>
+		<li>Detail View</li>
+	</ul>
+</div>
+
+<p>The Matte detail view allows people to view dettailed information about
+a single media items within a shared album. This can be used in themes to 
+dynamically display information about the current media item being shown in an album
+view (for example via an AJAX request).</p>
+
+<h2>Sample detail data model</h2>
+
+<p>The detail data model includes the <b>album</b> the item is shared in
+(a <code>&lt;m:album&gt;</code> element) as well as the <b>item</b> requested 
+(a <code>&lt;m:item&gt;</code> element). The item will have as much information as available 
+populated so the detail view can render it as desired (i.e. they <b>will</b> have 
+<code>&lt;m:metadata&gt;</code> elements populated).</p>
+
+<p>Here is a sample of the detail data model:</p>
+
+<textarea name="code" rows="1" cols="80" class="xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;x:x-data xmlns:x="http://msqr.us/xsd/jaxb-web"
+  xmlns:m="http://msqr.us/xsd/matte"&gt;
+  &lt;x:x-context&gt;
+    &lt;x:server-name&gt;localhost&lt;/x:server-name&gt;
+    &lt;x:server-port&gt;8080&lt;/x:server-port&gt;
+    &lt;x:user-agent&gt;Mozilla/5.0 (Macintosh; U; PPC Mac OS X Mach-O; en-US;
+      rv:1.8.1.4) Gecko/20070515 Firefox/2.0.0.4&lt;/x:user-agent&gt;
+    &lt;x:user-locale&gt;en_US&lt;/x:user-locale&gt;
+    &lt;x:web-context&gt;/matte&lt;/x:web-context&gt;
+    &lt;x:path&gt;/viewMediaItemInfo.do&lt;/x:path&gt;
+  &lt;/x:x-context&gt;
+  &lt;x:x-auxillary&gt;
+    &lt;x:x-param key="item.info.flag"&gt;true&lt;/x:x-param&gt;
+  &lt;/x:x-auxillary&gt;
+  &lt;x:x-session&gt;
+    &lt;m:session&gt;
+      &lt;m:thumbnail-setting quality="GOOD" size="THUMB_NORMAL"/&gt;
+      &lt;m:view-setting quality="GOOD" size="NORMAL"/&gt;
+    &lt;/m:session&gt;
+  &lt;/x:x-session&gt;
+  &lt;x:x-request&gt;
+    &lt;x:param key="themeId"&gt;1&lt;/x:param&gt;
+    &lt;x:param key="itemId"&gt;32&lt;/x:param&gt;
+    &lt;x:param key="albumKey"&gt;gVL9ZPlb2pW7MuntmQQwd7gSPuCA&lt;/x:param&gt;
+  &lt;/x:x-request&gt;
+  &lt;x:x-request-headers&gt;
+    &lt;x:param key="host"&gt;localhost&lt;/x:param&gt;
+    &lt;x:param key="user-agent"&gt;Mozilla/5.0 (Macintosh; U; PPC Mac OS X
+      Mach-O; en-US; rv:1.8.1.4) Gecko/20070515 Firefox/2.0.0.4&lt;/x:param&gt;
+    &lt;x:param key="accept"
+      &gt;text/xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5&lt;/x:param&gt;
+    &lt;x:param key="accept-language"&gt;en-us,en;q=0.5&lt;/x:param&gt;
+    &lt;x:param key="accept-encoding"&gt;gzip,deflate&lt;/x:param&gt;
+    &lt;x:param key="accept-charset"&gt;ISO-8859-1,utf-8;q=0.7,*;q=0.7&lt;/x:param&gt;
+    &lt;x:param key="Keep-Alive"&gt;300&lt;/x:param&gt;
+    &lt;x:param key="connection"&gt;keep-alive&lt;/x:param&gt;
+    &lt;x:param key="Cache-Control"&gt;max-age=0&lt;/x:param&gt;
+    &lt;x:param key="content-length"&gt;0&lt;/x:param&gt;
+  &lt;/x:x-request-headers&gt;
+  &lt;x:x-model&gt;
+    &lt;m:model&gt;
+      &lt;m:album album-id="44" allow-anonymous="true" allow-browse="true"
+        allow-feed="true" allow-original="true"
+        anonymous-key="gVL9ZPlb2pW7MuntmQQwd7gSPuCA"
+        creation-date="2007-02-15T17:32:06.829+13:00" name="4 months!"
+        sort-mode="1"&gt;
+        &lt;m:owner access-level="0"
+          anonymous-key="db35b2faa3ad4527e76be12fba4ceab1"
+          country="US" creation-date="2006-12-17T12:10:50.123+13:00"
+          email="matt@localhost" language="en" login="matt" name="Matt"
+          password="{SHA}Mv+VCPQnH3dNmi0W7qXI9nQCI78=" quota="0"
+          user-id="3"&gt;
+          &lt;m:tz code="Pacific/Auckland" name="Pacific/Auckland"
+            offset="43200000" ordering="563"/&gt;
+        &lt;/m:owner&gt;
+        &lt;m:theme author="Matte Development Team"
+          author-email="matte@noplace" base-path="/core/woosh"
+          creation-date="2006-12-17T12:06:38.387+13:00" name="Woosh"
+          theme-id="1"&gt;
+          &lt;m:description&gt;Default theme.&lt;/m:description&gt;
+        &lt;/m:theme&gt;
+        &lt;m:item creation-date="2007-01-02T18:45:31+13:00"
+          display-order="0" file-size="3531640" height="2336" hits="6"
+          item-date="2007-01-02T18:45:31+13:00" item-id="32"
+          mime="image/jpeg"
+          name="Lillian having fun on the boucenette"
+          path="4 months!/IMG_4525.JPG" use-icon="false" width="3504"&gt;
+          &lt;m:tz code="Pacific/Auckland" name="Pacific/Auckland"
+            offset="43200000" ordering="563"/&gt;
+          &lt;m:tz-display code="Pacific/Auckland"
+            name="Pacific/Auckland" offset="43200000" ordering="563"/&gt;
+          &lt;m:description&gt;She's a pretty happy camper in this bouncy
+            chair!&lt;/m:description&gt;
+        &lt;/m:item&gt;
+        &lt;m:item creation-date="2007-01-09T14:41:27+13:00"
+          display-order="0" file-size="3621531" height="3504" hits="0"
+          item-id="46" mime="image/jpeg" name="Matt cradling Lillian"
+          path="4 months!/IMG_4544.JPG" use-icon="false" width="2336"&gt;
+          &lt;m:tz code="Pacific/Auckland" name="Pacific/Auckland"
+            offset="43200000" ordering="563"/&gt;
+          &lt;m:tz-display code="Pacific/Auckland"
+            name="Pacific/Auckland" offset="43200000" ordering="563"
+          /&gt;
+        &lt;/m:item&gt;
+      &lt;/m:album&gt;
+      &lt;m:item creation-date="2007-01-02T18:45:31+13:00" display-order="0"
+        file-size="3531640" height="2336" hits="6"
+        item-date="2007-01-02T18:45:31+13:00" item-id="32"
+        mime="image/jpeg" name="Lillian having fun on the boucenette"
+        path="4 months!/IMG_4525.JPG" use-icon="false" width="3504"&gt;
+        &lt;m:tz code="Pacific/Auckland" name="Pacific/Auckland"
+          offset="43200000" ordering="563"/&gt;
+        &lt;m:tz-display code="Pacific/Auckland" name="Pacific/Auckland"
+          offset="43200000" ordering="563"/&gt;
+        &lt;m:description&gt;She's a pretty happy camper in this bouncy chair!&lt;/m:description&gt;
+        &lt;m:metadata key="APERTURE"&gt;5.3106995&lt;/m:metadata&gt;
+        &lt;m:metadata key="CAMERA_MAKE"&gt;Canon&lt;/m:metadata&gt;
+        &lt;m:metadata key="CAMERA_MODEL"&gt;Canon EOS 20D&lt;/m:metadata&gt;
+        &lt;m:metadata key="EXPOSURE_BIAS"&gt;0&lt;/m:metadata&gt;
+        &lt;m:metadata key="EXPOSURE_TIME"&gt;1/8&lt;/m:metadata&gt;
+        &lt;m:metadata key="F_STOP"&gt;F6.3&lt;/m:metadata&gt;
+        &lt;m:metadata key="FLASH"&gt;true&lt;/m:metadata&gt;
+        &lt;m:metadata key="FOCAL_LENGTH"&gt;90.0&lt;/m:metadata&gt;
+        &lt;m:metadata key="FOCAL_LENGTH_35MM_EQUIV"&gt;144&lt;/m:metadata&gt;
+        &lt;m:metadata key="ORIENTATION"&gt;1&lt;/m:metadata&gt;
+        &lt;m:metadata key="SHUTTER_SPEED"&gt;1/8&lt;/m:metadata&gt;
+        &lt;m:user-rating creation-date="2007-07-20T17:29:06.068+12:00"
+          rating="3" rating-id="1707"&gt;
+          &lt;m:rating-user access-level="0"
+            anonymous-key="db35b2faa3ad4527e76be12fba4ceab1"
+            country="US"
+            creation-date="2006-12-17T12:10:50.123+13:00"
+            email="matt@localhost" language="en" login="matt"
+            name="Matt" password="{SHA}Mv+VCPQnH3dNmi0W7qXI9nQCI78="
+            quota="0" user-id="3"&gt;
+            &lt;m:tz code="Pacific/Auckland" name="Pacific/Auckland"
+              offset="43200000" ordering="563"/&gt;
+          &lt;/m:rating-user&gt;
+        &lt;/m:user-rating&gt;
+        &lt;m:user-tag creation-date="2007-07-20T17:07:18.013+12:00"
+          tag-id="1706"&gt;
+          &lt;m:tagging-user access-level="0"
+            anonymous-key="db35b2faa3ad4527e76be12fba4ceab1"
+            country="US"
+            creation-date="2006-12-17T12:10:50.123+13:00"
+            email="matt@localhost" language="en" login="matt"
+            name="Matt" password="{SHA}Mv+VCPQnH3dNmi0W7qXI9nQCI78="
+            quota="0" user-id="3"&gt;
+            &lt;m:tz code="Pacific/Auckland" name="Pacific/Auckland"
+              offset="43200000" ordering="563"/&gt;
+          &lt;/m:tagging-user&gt;
+          &lt;m:tag&gt;Lillian&lt;/m:tag&gt;
+        &lt;/m:user-tag&gt;
+      &lt;/m:item&gt;
+      &lt;m:theme author="Matte Development Team"
+        author-email="matte@noplace" base-path="/core/woosh"
+        creation-date="2006-12-17T12:06:38.387+13:00" name="Woosh"
+        theme-id="1"&gt;
+        &lt;m:description&gt;Default theme.&lt;/m:description&gt;
+      &lt;/m:theme&gt;
+    &lt;/m:model&gt;
+  &lt;/x:x-model&gt;
+&lt;/x:x-data&gt;
+</textarea>
+
+<h2>Woosh - Dissection</h2>
+
+<p>Here is a dissection of the Woosh theme detail view so you can see where the elements come from
+the Matte XML data model.</p>
+
+<div class="screenshot">
+	<img src="img/th2-detail-dissection.png" alt="Woosh Detail View" width="370" height="450" />
+	<div>The Woosh detail view.</div>
+</div>
+
+<p>The Woosh theme presents the media item detail view with information about the selected 
+item as well as some links to other URLs for performing some other actions, like downloading
+the media item or downloading the entire album.</p>
+
+<ol>
+	<li>
+		<p><b>Item name:</b> here the item's name is displayed, with XSLT like this:</p>
+		
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;xsl:template match="m:model" mode="meta"&gt;
+	&lt;xsl:variable name="meta-item" select="m:item[1]"/&gt;
+	&lt;h2 id="ii-imageTitle"&gt;
+		&lt;xsl:choose&gt;
+			&lt;xsl:when test="$meta-item/@name"&gt;
+				&lt;xsl:value-of select="$meta-item/@name"/&gt;
+			&lt;/xsl:when&gt;
+			&lt;xsl:otherwise&gt;
+				&lt;xsl:value-of select="$meta-item/@path"/&gt;
+			&lt;/xsl:otherwise&gt;
+		&lt;/xsl:choose&gt;
+	&lt;/h2&gt;
+&lt;/xsl:template&gt;
+</textarea>
+	</li>
+	<li>
+		<p><b>Item date:</b> here the item's date is displayed. If the current user is anonymous, 
+		or logged in but with a different time zone set in the Matte user profile, the item's
+		time zone is also displayed.</p>
+		
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;div id="ii-imageDate"&gt;
+	&lt;xsl:choose&gt;
+		&lt;xsl:when test="string-length($meta-item/@item-date) &gt;= 19"&gt;
+			&lt;xsl:value-of select="format-dateTime(xs:dateTime($meta-item/@item-date), 
+				'[D] [MNn,*-3] [Y0001] [H]:[m01]')"/&gt;
+		&lt;/xsl:when&gt;
+		&lt;xsl:otherwise&gt;
+			&lt;xsl:value-of select="format-dateTime(xs:dateTime($meta-item/@creation-date), 
+				'[D] [MNn,*-3] [Y0001] [H]:[m01]')"/&gt;
+		&lt;/xsl:otherwise&gt;
+	&lt;/xsl:choose&gt;
+	&lt;xsl:if test="(not($acting-user/m:tz/@code = $meta-item/m:tz/@code))
+		or not($meta-item/m:tz-display and $acting-user/m:tz/@code = $meta-item/m:tz-display/@code)"&gt;
+		&lt;!-- Display the TZ, as it is different from the user's time zone --&gt;
+		&lt;xsl:text&gt; (&lt;/xsl:text&gt;
+		&lt;xsl:choose&gt;
+			&lt;xsl:when test="$meta-item/m:tz-display"&gt;
+				&lt;xsl:value-of select="$meta-item/m:tz-display/@name"/&gt;
+			&lt;/xsl:when&gt;
+			&lt;xsl:otherwise&gt;
+				&lt;xsl:value-of select="$meta-item/m:tz/@name"/&gt;
+			&lt;/xsl:otherwise&gt;
+		&lt;/xsl:choose&gt;
+		&lt;xsl:text&gt;)&lt;/xsl:text&gt;
+	&lt;/xsl:if&gt;
+&lt;/div&gt;
+</textarea>
+
+		<p>Which renders HTML like this:</p>
+		
+<textarea name="code" rows="1" cols="80" class="html">
+&lt;div id="ii-imageDate"&gt;2 Jan 2007 18:45 (Pacific/Auckland)&lt;/div&gt;
+</textarea>
+	</li>
+	<li>
+		<p><b>Comment:</b> next comes the item's comments, stored in the item's
+		<code>&lt;m:description&gt;</code> element. The comments are a free text field entered
+		by the owner of the item. Woosh renders it like this:</p>
+		
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;xsl:value-of select="$meta-item/m:description"/&gt;
+</textarea>
+	</li>
+	<li>
+		<p><b>Metadata:</b> next comes a select list of the available item metadata.
+		This metadata is extracted from the items when it is added to Matte, using the 
+		<a href="http://smeta.sourceforge.net/">sMeta</a> library. Any metadata 
+		sMeta is able to extract is stored as <code>&lt;m:metadata&gt;</code> elements 
+		within the item. Typically this includes EXIF information from digital photos
+		and ID3 information from MP3 files.</p>
+		
+		<p>Our example here is for a photograph. The metadata available from this item is:</p>
+		
+<textarea name="code" rows="1" cols="80" class="xml">
+&lt;m:metadata key="APERTURE"&gt;5.3106995&lt;/m:metadata&gt;
+&lt;m:metadata key="CAMERA_MAKE"&gt;Canon&lt;/m:metadata&gt;
+&lt;m:metadata key="CAMERA_MODEL"&gt;Canon EOS 20D&lt;/m:metadata&gt;
+&lt;m:metadata key="EXPOSURE_BIAS"&gt;0&lt;/m:metadata&gt;
+&lt;m:metadata key="EXPOSURE_TIME"&gt;1/8&lt;/m:metadata&gt;
+&lt;m:metadata key="F_STOP"&gt;F6.3&lt;/m:metadata&gt;
+&lt;m:metadata key="FLASH"&gt;true&lt;/m:metadata&gt;
+&lt;m:metadata key="FOCAL_LENGTH"&gt;90.0&lt;/m:metadata&gt;
+&lt;m:metadata key="FOCAL_LENGTH_35MM_EQUIV"&gt;144&lt;/m:metadata&gt;
+&lt;m:metadata key="ORIENTATION"&gt;1&lt;/m:metadata&gt;
+&lt;m:metadata key="SHUTTER_SPEED"&gt;1/8&lt;/m:metadata&gt;
+</textarea>
+		
+		<p>Most of the metadata keys are self-explainatory. The Woosh theme looks for specific 
+		ones to display for photographs: the <b>shutter speed</b>, <b>f-stop</b>, <b>focal length</b>,
+		and <b>camera model</b>. It uses a simple trick in the XSLT to render 
+		different metadata for different media types, based on the item's MIME type, which 
+		is available in the <code>@mime</code> attribute of each item: if the MIME type starts
+		with <code>image</code>, it renders these specific types.</p>
+		
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;xsl:template match="m:item[starts-with(@mime,'image')]" mode="extra-extra-info"&gt;
+	&lt;xsl:choose&gt;
+		&lt;xsl:when test="key('item-meta','EXPOSURE_TIME')"&gt;
+			&lt;span class="ii-attribute"&gt;Shutter: &lt;/span&gt;
+			&lt;xsl:value-of select="key('item-meta','EXPOSURE_TIME')"/&gt;
+			&lt;xsl:text&gt;s&lt;/xsl:text&gt;
+			&lt;br /&gt;
+		&lt;/xsl:when&gt;
+		&lt;xsl:when test="key('item-meta','SHUTTER_SPEED')"&gt;
+			&lt;span class="ii-attribute"&gt;Shutter: &lt;/span&gt;
+			&lt;xsl:value-of select="key('item-meta','SHUTTER_SPEED')"/&gt;
+			&lt;br /&gt;
+		&lt;/xsl:when&gt;
+	&lt;/xsl:choose&gt;
+	&lt;xsl:if test="key('item-meta','F_STOP')"&gt;
+		&lt;span class="ii-attribute"&gt;F-Stop: &lt;/span&gt;
+		&lt;xsl:value-of select="key('item-meta','F_STOP')"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="key('item-meta','FOCAL_LENGTH')"&gt;
+		&lt;span class="ii-attribute"&gt;Focal length: &lt;/span&gt;
+		&lt;xsl:value-of select="key('item-meta','FOCAL_LENGTH')"/&gt;
+		&lt;xsl:text&gt;mm&lt;/xsl:text&gt;
+		&lt;xsl:if test="key('item-meta','FOCAL_LENGTH_35MM_EQUIV')"&gt;
+			&lt;xsl:text&gt; (&lt;/xsl:text&gt;
+			&lt;xsl:value-of select="key('item-meta','FOCAL_LENGTH_35MM_EQUIV')"/&gt;
+			&lt;xsl:text&gt; @ 35mm)&lt;/xsl:text&gt;
+		&lt;/xsl:if&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='CAMERA_MODEL']"&gt;
+		&lt;span class="ii-attribute"&gt;Camera: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='CAMERA_MODEL']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;!--  The following are not m:metadata elements, but we display them here --&gt;
+	&lt;span class="ii-attribute"&gt;File: &lt;/span&gt;&lt;xsl:value-of select="@path"/&gt;&lt;br /&gt;
+	&lt;xsl:if test="@width &gt; 0"&gt;
+		&lt;span class="ii-attribute"&gt;Original size: &lt;/span&gt;
+		&lt;xsl:value-of select="@width"/&gt;
+		&lt;xsl:text&gt; x &lt;/xsl:text&gt;
+		&lt;xsl:value-of select="@height"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+&lt;/xsl:template&gt;
+</textarea>
+
+		<p>Note the last two items are not really metadata elements, in the data model
+		at least. The <b>File</b> listing is simply the item's <code>@path</code> attribute, which is 
+		the path to the file in the Matte server's filesystem. The <b>Original size</b> listing
+		are the <code>@width</code> and <code>@height</code> attributes of the item.
+		All of this renders HTML like the following:</p>
+		
+<textarea name="code" rows="1" cols="80" class="html">
+&lt;span class="ii-attribute"&gt;Shutter: &lt;/span&gt;1/8s&lt;br/&gt;
+&lt;span class="ii-attribute"&gt;F-Stop: &lt;/span&gt;F6.3&lt;br/&gt;
+&lt;span class="ii-attribute"&gt;Focal length: &lt;/span&gt;90.0mm (144 @ 35mm)&lt;br/&gt;
+&lt;span class="ii-attribute"&gt;Camera: &lt;/span&gt;Canon EOS 20D&lt;br/&gt;
+&lt;span class="ii-attribute"&gt;File: &lt;/span&gt;4 months!/IMG_4525.JPG&lt;br/&gt;
+&lt;span class="ii-attribute"&gt;Original size: &lt;/span&gt;3504 x 2336&lt;br/&gt;
+</textarea>
+		
+		<p>Woosh also has similar XSLT templates for audio media items and video media items:</p>
+		
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;xsl:template match="m:item[starts-with(@mime,'audio')]" mode="extra-extra-info"&gt;
+	&lt;xsl:if test="m:metadata[@key='SONG_NAME']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.audio.songName')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='SONG_NAME']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='ARTIST']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.audio.artist')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='ARTIST']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='ALBUM']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.audio.album')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='ALBUM']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='TRACK_NUM']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.audio.track')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='TRACK_NUM']"/&gt;
+		&lt;xsl:if test="m:metadata[@key='TRACK_TOTAL']"&gt;
+			&lt;xsl:text&gt; &lt;/xsl:text&gt;
+			&lt;xsl:value-of select="key('i18n','meta.of')"/&gt;
+			&lt;xsl:text&gt; &lt;/xsl:text&gt;
+			&lt;xsl:value-of select="m:metadata[@key='TRACK_TOTAL']"/&gt;
+		&lt;/xsl:if&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='GENRE']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.audio.genre')"/&gt;: &lt;/span&gt;
+		&lt;xsl:call-template name="render-id3-genre"&gt;
+			&lt;xsl:with-param name="genre" select="string(m:metadata[@key='GENRE'])"/&gt;
+		&lt;/xsl:call-template&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='AUDIO_FORMAT']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.audio.format')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='AUDIO_FORMAT']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='BIT_RATE']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.audio.bitRate')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='BIT_RATE']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='SAMPLE_RATE']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.audio.sampleRate')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='SAMPLE_RATE']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+&lt;/xsl:template&gt;
+
+&lt;xsl:template match="m:item[starts-with(@mime,'video')]" mode="extra-extra-info"&gt;
+	&lt;xsl:if test="m:metadata[@key='DURATION_TIME']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.video.duration')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='DURATION_TIME']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="@width &gt; 0 and @height &gt; 0"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.dimensions')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="@width"/&gt;
+		&lt;xsl:text&gt; x &lt;/xsl:text&gt;
+		&lt;xsl:value-of select="@height"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='FPS']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.video.fps')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="format-number(m:metadata[@key='FPS'],'#0.#')"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='VIDEO_FORMAT']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.video.format')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='VIDEO_FORMAT']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="m:metadata[@key='AUDIO_FORMAT']"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.audio.format')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="m:metadata[@key='AUDIO_FORMAT']"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+	&lt;xsl:if test="not(m:metadata[@key='VIDEO_FORMAT'] or m:metadata[@key='AUDIO_FORMAT'])"&gt;
+		&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','mime.displayName')"/&gt;: &lt;/span&gt;
+		&lt;xsl:value-of select="@mime"/&gt;
+		&lt;br /&gt;
+	&lt;/xsl:if&gt;
+&lt;/xsl:template&gt;
+</textarea>
+		
+	</li>
+	<li>
+		<p><b>File path, item dimensions:</b> these are covered in the previous discussion on 
+		metadata, but hilighted here to remind us that they are not strictly metadata elements, 
+		but attributes of the <code>&lt;m:item&gt;</code> element.</p>
+	</li>
+	<li>
+		<p><b>Tags:</b> media items can be tagged with keywords. They are available on items 
+		as <code>&lt;m:user-tag&gt;</code> elements. The element has the date the tag was created, 
+		the user who created the tag, and the tags, as a comma-delimited list. The XML looks
+		like this:</p>
+		
+<textarea name="code" rows="1" cols="80" class="xml">
+&lt;m:user-tag creation-date="2007-07-20T17:07:18.013+12:00"
+  tag-id="1706"&gt;
+  &lt;m:tagging-user access-level="0"
+    anonymous-key="db35b2faa3ad4527e76be12fba4ceab1"
+    country="US" creation-date="2006-12-17T12:10:50.123+13:00"
+    email="matt@localhost" language="en" login="matt"
+    name="Matt" password="{SHA}Mv+VCPQnH3dNmi0W7qXI9nQCI78="
+    quota="0" user-id="3"&gt;
+    &lt;m:tz code="Pacific/Auckland" name="Pacific/Auckland"
+      offset="43200000" ordering="563"/&gt;
+  &lt;/m:tagging-user&gt;
+  &lt;m:tag&gt;Lillian&lt;/m:tag&gt;
+&lt;/m:user-tag&gt;
+</textarea>
+
+		<p>Woosh renders all available tags as a single list, like this:</p>
+		
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;xsl:if test="m:user-tag"&gt;
+	&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.tags')"/&gt;: &lt;/span&gt;
+	&lt;xsl:for-each select="m:user-tag"&gt;
+		&lt;xsl:if test="position() &gt; 1"&gt;
+			&lt;xsl:text&gt;, &lt;/xsl:text&gt;
+		&lt;/xsl:if&gt;
+		&lt;xsl:value-of select="m:tag"/&gt;
+	&lt;/xsl:for-each&gt;
+	&lt;br/&gt;
+&lt;/xsl:if&gt;
+</textarea>
+
+	</li>
+	<li>
+		<p><b>Hits:</b> the number of times each media item is viewed, the "hit" counter
+		for that item is incremented. The current count is available as the <code>@hits</code>
+		attribute of the item. Woosh displays the hit count, making use of several message
+		bundle keys to display the appropriate message based on how many hits there are:</p>
+
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;span class="ii-attribute"&gt;&lt;xsl:value-of select="key('i18n','meta.hits')"/&gt;: &lt;/span&gt;
+&lt;xsl:choose&gt;
+	&lt;xsl:when test="@hits &gt; 0"&gt;
+		&lt;xsl:value-of select="@hits"/&gt;
+		&lt;xsl:text&gt; &lt;/xsl:text&gt;
+		&lt;xsl:choose&gt;
+			&lt;xsl:when test="@hits &gt; 1"&gt;
+				&lt;xsl:value-of select="key('i18n','meta.hits.times')"/&gt;
+			&lt;/xsl:when&gt;
+			&lt;xsl:otherwise&gt;
+				&lt;xsl:value-of select="key('i18n','meta.hits.time')"/&gt;
+			&lt;/xsl:otherwise&gt;
+		&lt;/xsl:choose&gt;
+	&lt;/xsl:when&gt;
+	&lt;xsl:otherwise&gt;
+		&lt;xsl:value-of select="key('i18n','meta.hits.never')"/&gt;
+	&lt;/xsl:otherwise&gt;
+&lt;/xsl:choose&gt;
+</textarea>
+
+		<p>All of this will render one of</p>
+		
+		<ol>
+			<li>Viewed: never</li>
+			<li>Viewed: 1 time</li>
+			<li>Viewed: x times</li>
+		</ol>
+		
+		<p>The rendered HTML looks like:</p>
+		
+<textarea name="code" rows="1" cols="80" class="html">
+&lt;span class="ii-attribute"&gt;Viewed: &lt;/span&gt; 7 times&lt;br/&gt;
+</textarea>
+	
+	</li>
+	<li>
+		<p><b>Download item:</b> the Matte <code>/media.do</code> URL for rendering media items
+		can also be used to allow users to download the item to their computer. You can download
+		the item scaled to the current view settings just by calling the <code>render-media-server-url</code>
+		XSLT template with a <code>download</code> parameter set to <em>true</em>.</p>
+		
+		<p>Woosh only shows a link to download the current view size item if the item is an image,
+		because in most other cases Matte probably does not know how to scale the item to different 
+		sizes. The XSLT looks like this:</p>
+		
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;!-- if MIME is an image, MediaServer can scale for download... --&gt;
+&lt;xsl:if test="starts-with($meta-item/@mime,'image')"&gt;
+	&lt;li&gt;
+		&lt;a title="{key('i18n','action.download.title')}"&gt;
+			&lt;xsl:attribute name="href"&gt;
+				&lt;xsl:call-template name="render-media-server-url"&gt;
+					&lt;xsl:with-param name="item" select="$meta-item"/&gt;
+					&lt;xsl:with-param name="album-key" select="m:album[1]/@anonymous-key"/&gt;
+					&lt;xsl:with-param name="size" select="$single-size"/&gt;
+					&lt;xsl:with-param name="quality" select="$single-quality"/&gt;
+					&lt;xsl:with-param name="download" select="true()"/&gt;
+					&lt;xsl:with-param name="web-context" select="$web-context"/&gt;
+				&lt;/xsl:call-template&gt;
+			&lt;/xsl:attribute&gt;
+			&lt;xsl:value-of select="key('i18n','action.download')"/&gt;
+			&lt;xsl:text&gt; &lt;/xsl:text&gt;
+			&lt;xsl:value-of select="$meta-item-type-name"/&gt;
+		&lt;/a&gt;
+	&lt;/li&gt;
+&lt;/xsl:if&gt;
+</textarea>
+
+	<p>Here you can see on line 11 Woosh is passing <code>true()</code> as the <code>download</code>
+	parameter. This will cause Matte to return the media item at the requested size, but with 
+	an additional HTTP header that triggers most browsers to prompt the user to save the response
+	to a file, named the original media item's file name.</p>
+	
+	<p>There is an attribute present in <code>&lt;m:album&gt;</code> elements called 
+	<code>@allow-original</code> that, when true, signifies the owner of the album does allow
+	other users to download the original version of the media item (i.e. not re-sized or 
+	re-compressed, just the original file that was uploaded into Matte). To download the original
+	of any item, the <code>render-media-server-url</code> accepts another parameter, 
+	<code>original</code>, that you should pass a value of <em>true</em> to in order to 
+	download the original media file.</p>
+	
+	<p>In Woosh, the XSLT looks like this:</p>
+	
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;xsl:if test="m:album[1]/@allow-original = 'true'"&gt;
+	&lt;li&gt;
+		&lt;a title="{key('i18n','action.download.original.title')}"&gt;
+			&lt;xsl:attribute name="href"&gt;
+				&lt;xsl:call-template name="render-media-server-url"&gt;
+					&lt;xsl:with-param name="item" select="$meta-item"/&gt;
+					&lt;xsl:with-param name="album-key" select="m:album[1]/@anonymous-key"/&gt;
+					&lt;xsl:with-param name="download" select="true()"/&gt;
+					&lt;xsl:with-param name="original" select="true()"/&gt;
+					&lt;xsl:with-param name="web-context" select="$web-context"/&gt;
+				&lt;/xsl:call-template&gt;
+			&lt;/xsl:attribute&gt;
+			&lt;xsl:value-of select="key('i18n','action.download.original')"/&gt;
+			&lt;xsl:text&gt; &lt;/xsl:text&gt;
+			&lt;xsl:value-of select="$meta-item-type-name"/&gt;
+		&lt;/a&gt; 
+		&lt;xsl:text&gt; (&lt;/xsl:text&gt;
+		&lt;xsl:call-template name="render-file-size"&gt;
+			&lt;xsl:with-param name="size" select="$meta-item/@file-size"/&gt;
+		&lt;/xsl:call-template&gt;
+		&lt;xsl:text&gt;)&lt;/xsl:text&gt;
+	&lt;/li&gt;
+&lt;/xsl:if&gt;
+</textarea>
+		
+		<p>Notice here on lines 8 and 9, both <code>download</code> and <code>original</code>
+		are set to <code>true()</code>. Also notice there is no need to pass the 
+		<code>size</code> or <code>quality</code> parameters, as these are not needed when
+		downloading the original item file. Finally, notice the last few lines call a template
+		called <code>render-file-size</code>. That will be discussed in the next point.</p>
+		
+		<p>The final HTML rendered by Woosh looks like this:</p>
+		
+<textarea name="code" rows="1" cols="80" class="html">
+&lt;li&gt;
+	&lt;a title="Download this image at the current size you are viewing it at." 
+		href="/matte/media.do?id=32&amp;albumKey=gVL9ZPlb2pW7MuntmQQwd7gSPuCA&amp;size=NORMAL&amp;quality=GOOD&amp;download=true"&gt;
+		Download current size image
+	&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;
+	&lt;a title="Download the original image" 
+		href="/matte/media.do?id=32&amp;albumKey=gVL9ZPlb2pW7MuntmQQwd7gSPuCA&amp;original=true&amp;download=true"&gt;
+		Download original image
+	&lt;/a&gt; 
+	(3.37 MB)
+&lt;/li&gt;
+</textarea>
+		
+	</li>
+	<li>
+		<p><b>File size:</b> the size of the original media item, in bytes, is available on 
+		<code>&lt;m:item&gt;</code> elements as the <code>@file-size</code> attribute. Woosh
+		displays this in a friendly way, using kilobytes or megabytes, by using the 
+		<code>render-file-size</code> template that is available in Matte:</p>
+
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;!--
+	Named Template: render-file-size
+	
+	Generate text representation of the size of a file. For example:
+	
+	render-file-size(size = 14875) =&gt; 14.53 KB
+	
+	Parameters:
+	size - an integer, assumed to be the number of bytes of the file
+--&gt;
+&lt;xsl:template name="render-file-size"&gt;
+	&lt;xsl:param name="size"/&gt;
+	&lt;xsl:choose&gt;
+		&lt;xsl:when test="$size &gt; 1048576"&gt;
+			&lt;xsl:value-of select="format-number($size div 1048576,'#,##0.##')"/&gt;
+			&lt;xsl:text&gt; MB&lt;/xsl:text&gt;
+		&lt;/xsl:when&gt;
+		&lt;xsl:when test="$size &gt; 1024"&gt;
+			&lt;xsl:value-of select="format-number($size div 1024,'#,##0.##')"/&gt;
+			&lt;xsl:text&gt; KB&lt;/xsl:text&gt;
+		&lt;/xsl:when&gt;
+		&lt;xsl:otherwise&gt;
+			&lt;xsl:value-of select="format-number($size div 1024,'#,##0')"/&gt;
+			&lt;xsl:text&gt; bytes&lt;/xsl:text&gt;
+		&lt;/xsl:otherwise&gt;
+	&lt;/xsl:choose&gt;
+&lt;/xsl:template&gt;
+</textarea>
+
+	</li>
+	<li>
+		<p><b>Download album:</b> Matte provides another URL for downloading all the media items 
+		within an album, combined into a single zip archive. This is useful in themes for 
+		providing a link to download an album currently being viewed. The URL for downloading an 
+		album supports either downloading the items based on the current view settings or the 
+		original files.</p>
+		
+		<p>Woosh prsents two links to users for downloading the album, one for the album with
+		items sized to the current view settings, and one for downloading the original files.
+		The XSLT looks like this:</p>
+		
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;li class="sep"&gt;
+	&lt;a title="{key('i18n','action.download.album.title')}"&gt;
+		&lt;xsl:attribute name="href"&gt;
+			&lt;xsl:call-template name="render-download-album-url"&gt;
+				&lt;xsl:with-param name="album-key" select="m:album[1]/@anonymous-key"/&gt;
+				&lt;xsl:with-param name="original" select="false()"/&gt;
+				&lt;xsl:with-param name="web-context" select="$web-context"/&gt;
+			&lt;/xsl:call-template&gt;
+		&lt;/xsl:attribute&gt;
+		&lt;xsl:value-of select="key('i18n','action.download.album')"/&gt;
+	&lt;/a&gt;
+&lt;/li&gt;
+&lt;xsl:if test="m:album[1]/@allow-original = 'true'"&gt;
+	&lt;li&gt;
+		&lt;a title="{key('i18n','action.download.album.original.title')}"&gt;
+			&lt;xsl:attribute name="href"&gt;
+				&lt;xsl:call-template name="render-download-album-url"&gt;
+					&lt;xsl:with-param name="album-key" select="m:album[1]/@anonymous-key"/&gt;
+					&lt;xsl:with-param name="original" select="true()"/&gt;
+					&lt;xsl:with-param name="web-context" select="$web-context"/&gt;
+				&lt;/xsl:call-template&gt;
+			&lt;/xsl:attribute&gt;
+			&lt;xsl:value-of select="key('i18n','action.download.album.original')"/&gt;
+		&lt;/a&gt; 
+	&lt;/li&gt;
+&lt;/xsl:if&gt;
+</textarea>
+
+		<p>This renders HTML like this:</p>
+		
+<textarea name="code" rows="1" cols="80" class="html">
+&lt;li class="sep"&gt;
+	&lt;a title="Download all the items in this album as a zip archive, with the items sized..." 
+		href="/matte/downloadAlbum.do?albumKey=gVL9ZPlb2pW7MuntmQQwd7gSPuCA"&gt;
+		Download album (current size items)
+	&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;
+	&lt;a title="Download all the original items in this album as a zip archive (can be quite large)." 
+		href="/matte/downloadAlbum.do?albumKey=gVL9ZPlb2pW7MuntmQQwd7gSPuCA&amp;original=true"&gt;
+		Download album (originals)
+	&lt;/a&gt;
+&lt;/li&gt;
+</textarea>
+
+	</li>
+	<li>
+		<p><b>Ratings:</b> Users can rate media items on a scale from 1 to 5. They are stored as 
+		<code>&lt;m:user-rating&gt;</code> elements within the item. The user who set the rating is 
+		available as a child <code>&lt;rating-user&gt;</code> element (which is a normal Matte 
+		<code>&lt;m:user&gt;</code> object). The rating value is stored as the 
+		<code>@rating</code> attribute:</p>
+		
+<textarea name="code" rows="1" cols="80" class="xml">
+&lt;m:user-rating creation-date="2007-07-20T17:29:06.068+12:00"
+  rating="3" rating-id="1707"&gt;
+  &lt;m:rating-user access-level="0"
+    anonymous-key="db35b2faa3ad4527e76be12fba4ceab1"
+    country="US"
+    creation-date="2006-12-17T12:10:50.123+13:00"
+    email="matt@localhost" language="en" login="matt"
+    name="Matt" password="{SHA}Mv+VCPQnH3dNmi0W7qXI9nQCI78="
+    quota="0" user-id="3"&gt;
+    &lt;m:tz code="Pacific/Auckland" name="Pacific/Auckland"
+      offset="43200000" ordering="563"/&gt;
+  &lt;/m:rating-user&gt;
+&lt;/m:user-rating&gt;
+</textarea>
+		
+		<p>Woosh displays all available user ratings, using the following XSLT:</p>
+		
+<textarea name="code" rows="1" cols="80" class="xslt">
+&lt;xsl:if test="$meta-item/m:user-rating"&gt;
+	&lt;div id="ii-ratings"&gt;
+		&lt;h3&gt;User Ratings&lt;/h3&gt;
+		&lt;xsl:apply-templates select="$meta-item/m:user-rating" mode="meta"/&gt;
+		&lt;xsl:variable name="num-ratings" select="count($meta-item/m:user-rating)"/&gt;
+		&lt;xsl:if test="$num-ratings &gt; 1"&gt;
+			&lt;div class="sep"&gt;&lt;/div&gt;
+			
+			&lt;span class="ii-attribute"&gt;
+				&lt;xsl:text&gt;Average (from &lt;/xsl:text&gt;
+				&lt;xsl:value-of select="$num-ratings"/&gt;
+				&lt;xsl:text&gt; ratings): &lt;/xsl:text&gt;
+			&lt;/span&gt;
+			&lt;xsl:value-of select="format-number(
+				sum($meta-item/m:user-rating/@rating) div $num-ratings, '0.#')"/&gt;
+			&lt;br /&gt;
+		&lt;/xsl:if&gt;
+	&lt;/div&gt;
+&lt;/xsl:if&gt;
+
+&lt;!--  follwed by later... --&gt;
+&lt;xsl:template match="m:user-rating" mode="meta"&gt;
+	&lt;span class="ii-attribute"&gt;
+		&lt;xsl:choose&gt;
+			&lt;xsl:when test="m:rating-user"&gt;
+				&lt;xsl:value-of select="m:rating-user/@name"/&gt;
+			&lt;/xsl:when&gt;
+			&lt;xsl:otherwise&gt;
+				&lt;xsl:text&gt;Anonymous user&lt;/xsl:text&gt;
+			&lt;/xsl:otherwise&gt;
+		&lt;/xsl:choose&gt;
+	&lt;/span&gt;
+	&lt;xsl:text&gt;: &lt;/xsl:text&gt;
+	&lt;xsl:value-of select="@rating"/&gt;
+	&lt;em&gt;
+		&lt;xsl:text&gt; (&lt;/xsl:text&gt;
+		&lt;xsl:value-of select="format-dateTime(xs:dateTime(@creation-date),'[D] [MNn,*-3] [Y0001], [H]:[m01]')"/&gt;
+		&lt;xsl:text&gt;)&lt;/xsl:text&gt;
+	&lt;/em&gt;
+	&lt;br /&gt;
+&lt;/xsl:template&gt;
+</textarea>
+		
+		<p>Woosh calculates the average user rating, if there are more than one available, followed
+		by the actual user ratings.</p>
+		
+	</li>
+</ol>
+
+<div>
+<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=103583&amp;type=1" 
+	width="88" height="31" alt="SourceForge.net Logo" /></a>
+</div>
+<script type="text/javascript">
+	dp.SyntaxHighlighter.ClipboardSwf = 'js/clipboard.swf';
+	dp.SyntaxHighlighter.HighlightAll('code');
+</script>
+</body>
+</html>
+
+

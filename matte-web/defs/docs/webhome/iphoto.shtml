@@ -1,0 +1,3 @@
+<!--#set var="currPage" value="iphoto"-->
+<!--#set var="pageTitle" value="Matte: iPhoto support"-->
+<!--#include virtual="layout.shtml"-->

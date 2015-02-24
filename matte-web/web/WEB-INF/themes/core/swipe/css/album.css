@@ -1,0 +1,150 @@
+h1 {
+	margin-bottom: 12px !important;
+}
+
+h2 {
+	font-size: 20px;
+	margin-top: 0;
+}
+
+a.action {
+	cursor: pointer;
+}
+
+#album-dropdown {
+	margin-bottom: 10px;
+}
+
+@media (min-width:992px) {
+	#album-dropdown {
+		display: none;
+	}
+}
+
+.album-details ul {
+    list-style-type: none;
+	padding-left: 0;
+	margin-left: -15px; 
+	margin-right: -15px
+}
+
+.album-details li {
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 26px;
+	padding-right: 15px;
+}
+
+.album-details li.selected {
+	background-color: #EEECE8;
+}
+
+.album-details li .album-info {
+	float: right;
+	margin-top: 5px;
+	margin-left: 8px;
+	margin-bottom: 0;
+	margin-right: 0;
+}
+
+#album-hierarchy > li {
+	padding-left: 15px;
+}
+
+.album-details ul p {
+	font-size: 16px;
+	margin-bottom: 0;
+	display: none;
+}
+
+.album-details ul .selected p {
+	display: inherit;
+}
+
+.album-details p {
+	font-size: 18px;
+}
+
+.album-details .album-info + .album-info {
+	margin-top: -6px;
+}
+
+.album-details .album-info {
+	font-size: 14px;
+	line-height: 18px;
+}
+
+.video-slide {
+	text-align: center;
+}
+
+.video-slide video {
+	position: absolute;
+	top: 5%;
+	left: 5%;
+	width: 90%;
+	height: 90%;
+}
+
+.video-slide .video-info {
+	position: absolute;
+	color: rgb(90%,90%,90%);
+	font-family: 'Cousine', monospace !important;
+	font-weight: 400;
+	font-size: 13px;
+	line-height: 15px;
+	text-align: right;
+	top: 95%;
+	left: 5%;
+	width: 90%;
+	height: 5%;
+}
+
+button.video-play-button {
+	position: absolute;
+	top: 10%;
+	left: 10%;
+	width: 80%;
+	height: 80%;
+	color: rgba(90%,90%,90%,0.8);
+	background-color: transparent;
+	font-size: 44px;
+	line-height: 52px;
+	border: none;
+	-webkit-box-shadow: none !important;
+	-moz-box-shadow:    none !important;
+	box-shadow:         none !important;
+}
+
+button.video-play-button:hover {
+	background-color: transparent;
+	color: #23527c;
+}
+
+button.transparent {
+	color: transparent !important;
+}
+
+.item-actions {
+	background-image: none !important;
+	background: none !important;
+	font-family: "Alegreya Sans",sans-serif;
+}
+
+.item-actions button,
+button.item-actions {
+	width: 44px;
+	height: 44px;
+	font-size: 17px;
+	line-height: 17px;
+	background: none;
+	color: white;
+	border: none;
+}
+
+.pswp__caption__center {
+	font-family: "Alegreya Sans",sans-serif;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 18px;
+}

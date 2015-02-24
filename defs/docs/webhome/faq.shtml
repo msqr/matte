@@ -1,3 +1,0 @@
-<!--#set var="currPage" value="faq"-->
-<!--#set var="pageTitle" value="Matte: FAQ"-->
-<!--#include virtual="layout.shtml"-->
