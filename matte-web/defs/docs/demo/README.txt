@@ -9,11 +9,11 @@ upload media items to your web server and then organize these items
 into albums, which you can then publish and share with friends and
 family. This Live Demo is a complete stand-alone Matte application 
 pre-configured to run without any modification so you can see how 
-Matte works. The only thing you need besides the Live Demo (which you 
-have if you're reading this) is a Java 5 Runtime Environment (i.e. 
-version 1.5) or higher. You can get a JRE from Sun at 
-http://java.sun.com/. Other vendors make JREs, any one of them should
-work as long as they are version 1.5 or higher.
+Matte works.
+
+The only thing you need besides the Live Demo (which you have if 
+you're reading this) is a Java 5 Runtime Environment (i.e. version 1.5)
+or higher.
 
 Starting the Live Demo  -----------------------------------------------
 
