@@ -1,0 +1,677 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ctx="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/jee
+		http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+
+	<ctx:annotation-config/>
+	<ctx:component-scan base-package="magoffin.matt.ma2"  use-default-filters="true">
+		<ctx:exclude-filter type="regex" expression=".*\.web\..*"/>
+	</ctx:component-scan>
+
+	<bean id="messageSource" name="messagesSource" 
+		class="magoffin.matt.xweb.util.ResourceBundleMessagesSource">
+		<property name="basenames">
+			<list>
+				<value>messages</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 
+	 jaxbContext: the JAXBContext instanced used as the entry point for ALS XML handling
+	 -->
+	<bean id="jaxbContext" class="javax.xml.bind.JAXBContext" factory-method="newInstance">
+		<constructor-arg index="0"  type="java.lang.String" 
+			value="magoffin.matt.ma2.domain:magoffin.matt.xweb"/>
+	</bean>
+	
+	<!--  
+	 validatingDocumentBuilderFactory: a validating JAXP DocumentBuilderFactory
+	 -->
+	<bean id="validatingDocumentBuilderFactory" class="javax.xml.parsers.DocumentBuilderFactory" 
+		factory-method="newInstance">
+		<property name="validating" value="true"/>
+	</bean>
+	
+	<!--  
+	 nonValidatingDocumentBuilderFactory: a validating JAXP DocumentBuilderFactory
+	 -->
+	<bean id="nonValidatingDocumentBuilderFactory" class="javax.xml.parsers.DocumentBuilderFactory" 
+		factory-method="newInstance">
+		<property name="namespaceAware" value="true"/>
+		<property name="validating" value="false"/>
+	</bean>
+	
+	<!--  
+	 xpathFactory: a JAXP XPathFactory
+	 -->
+	<bean id="xpathFactory" class="javax.xml.xpath.XPathFactory" 
+		factory-method="newInstance">
+	</bean>
+	
+	<!-- 
+	 transformerFactory: a default JAXP TranformerFactory
+	 -->
+	<bean id="transformerFactory" class="javax.xml.transform.TransformerFactory"
+		factory-method="newInstance">
+		<!--  set any desired features or attributes here -->
+	</bean>
+	
+	<bean id="domainObjectFactory" 
+		class="magoffin.matt.ma2.biz.impl.JAXBDomainObjectFactory"/>
+	
+	<bean id="jaxbNamespacePrefixMapper" 
+		class="magoffin.matt.xweb.util.JAXBNamespacePrefixMapper">
+		<property name="namespaceMapping">
+			<map>
+				<entry key="http://msqr.us/xsd/jaxb-web" value="x"/>
+				<entry key="http://msqr.us/xsd/matte" value="m"/>
+			</map>
+		</property>
+		<property name="predeclareUriList">
+			<list>
+				<value>http://msqr.us/xsd/jaxb-web</value>
+				<value>http://msqr.us/xsd/matte</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- xmlHelper: helper class for XML functions -->
+	<bean id="xmlHelper" class="magoffin.matt.ma2.util.XmlHelper" init-method="init">
+		<property name="documentBuilderFactory" ref="nonValidatingDocumentBuilderFactory"/>
+		<property name="transformerFactory" ref="transformerFactory"/>
+		<property name="xpathFactory" ref="xpathFactory"/>
+		<property name="jaxbContext" ref="jaxbContext"/>
+		<property name="objectFactory">
+			<bean class="magoffin.matt.ma2.domain.ObjectFactory"/>
+		</property>
+		<property name="xpathNamespaceContext" ref="namespaceContext"/>
+		<property name="marshallerProperties">
+			<map>
+				<entry key="com.sun.xml.bind.namespacePrefixMapper" 
+					value-ref="jaxbNamespacePrefixMapper"/>
+			</map>
+		</property>
+		<property name="schemaCache">
+			<bean name="schemaCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"> 
+				<property name="cacheManager" ref="cacheManager"/> 
+				<property name="cacheName" value="magoffin.matt.ma2.SCHEMA"/> 
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- namespaceContext: XML namespace support -->
+	<bean id="namespaceContext" class="magoffin.matt.xweb.util.BasicNamespaceContext"
+		init-method="init">
+		<property name="namespacePrefixMap">
+			<map>
+				<entry key="m" value="http://msqr.us/xsd/matte"/>
+				<entry key="x" value="http://msqr.us/xsd/jaxb-web"/>
+				<entry key="xmime" value="http://www.w3.org/2005/05/xmlmime"/>
+				<entry key="wsse" value="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+			</map>
+		</property>
+	</bean>
+	
+	<!-- 
+	 cacheManager: the EHCache CacheManager to enable injecting caches into beans
+	 -->
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"> 
+		<property name="configLocation" value="classpath:/ehcache.xml"/>
+	</bean>
+	
+	<!-- 
+		mailMessage: mail message template for specifying outgoing mail defaults 
+	-->
+	<bean id="mailMessage" class="org.springframework.mail.SimpleMailMessage">
+		<property name="from" value="${mail.from}"/>
+	</bean>
+	
+	<bean id="fileTypeMap" class="javax.activation.MimetypesFileTypeMap">
+		<constructor-arg index="0" type="java.io.InputStream">
+			<bean class="magoffin.matt.util.InputStreamFactoryBean">
+				<property name="resource" value="classpath:mime.types"/>
+			</bean>
+		</constructor-arg>
+	</bean>
+	
+	<!--======================================================================
+		Validator implementations
+	    ======================================================================-->
+	
+	<bean id="logonValidator" class="magoffin.matt.ma2.validation.LogonValidator"/>
+	<bean id="userValidator" class="magoffin.matt.ma2.validation.UserValidator"/>
+	
+	<!--======================================================================
+		Biz definitions
+		======================================================================-->
+	
+	<!-- IOBiz: for import/export of media data -->
+	<bean id="ioBiz" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="ioBizTarget"/>
+		<property name="proxyInterfaces">
+			<list>
+				<value>magoffin.matt.ma2.biz.IOBiz</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>myTransactionInterceptor</value>
+				<value>albumSecurityAdvisor</value>
+				<value>mediaItemSecurityAdvisor</value>
+				<value>mediaItemIndexAdvisor</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="ioBizTarget" class="magoffin.matt.ma2.biz.impl.IOBizImpl" 
+		init-method="init" destroy-method="finish">
+		<property name="albumDao" ref="albumDao"/>
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="collectionDao" ref="collectionDao"/>
+		<property name="workBiz" ref="workBiz"/>
+		<property name="mediaBiz" ref="mediaBizTarget"/>
+		<property name="mediaItemDao" ref="mediaItemDao"/>
+		<property name="systemBiz" ref="systemBiz"/>
+		<property name="metadataSchemaResource" value="/WEB-INF/xsd/import.xsd"/>
+		<property name="zipContentTypes">
+			<set>
+				<value>application/zip</value>
+				<value>application/x-zip-compressed</value>
+				<value>application/octet-stream</value>
+			</set>
+		</property>
+		<property name="fileTypeMap" ref="fileTypeMap"/>
+		<property name="messages" ref="messageSource"/>
+		<property name="xmlHelper" ref="xmlHelper"/>
+		<property name="zipIgnorePatterns">
+			<list>
+				<value>^__MACOSX</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- MediaSize Enum beans for use by other classes -->
+	<bean id="magoffin.matt.ma2.MediaSize.BIGGEST" 
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+	<bean id="magoffin.matt.ma2.MediaSize.BIGGER" 
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+	<bean id="magoffin.matt.ma2.MediaSize.BIG" 
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+	<bean id="magoffin.matt.ma2.MediaSize.NORMAL" 
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+	<bean id="magoffin.matt.ma2.MediaSize.SMALL" 
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+	<bean id="magoffin.matt.ma2.MediaSize.TINY" 
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>
+	
+	<!-- MediaBiz: for dealing with media -->
+	<bean id="mediaBiz" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="mediaBizTarget"/>
+		<property name="proxyInterfaces">
+			<list>
+				<value>magoffin.matt.ma2.biz.MediaBiz</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>albumSecurityAdvisor</value>
+				<value>mediaItemSecurityAdvisor</value>
+				<value>mediaItemIndexAdvisor</value>
+				<value>mediaItemIndexDeleteAdvisor</value>
+				<value>myTransactionInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="mediaBizTarget" class="magoffin.matt.ma2.biz.impl.MediaBizImpl" 
+		init-method="init" destroy-method="finish">
+		<property name="userBiz" ref="userBiz"/>
+		<property name="systemBiz" ref="systemBiz"/>
+		<property name="albumDao" ref="albumDao"/>
+		<property name="collectionDao" ref="collectionDao"/>
+		<property name="mediaItemDao" ref="mediaItemDao"/>
+		<property name="ioBiz" ref="ioBizTarget"/>
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="messages" ref="messageSource"/>
+		<property name="mediaHandlerFileExtensionMap" ref="mediaHandlerFileExtensionMap"/>
+		<property name="mediaHandlerMimeMap" ref="mediaHandlerMimeMap"/>
+	</bean>
+	
+	<!-- SearchBiz / IndexBiz: search and index functions. -->
+	<bean id="searchBiz" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="searchBizTarget"/>
+		<property name="proxyInterfaces">
+			<list>
+				<value>magoffin.matt.ma2.biz.IndexBiz</value>
+				<value>magoffin.matt.ma2.biz.SearchBiz</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>myTransactionInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="searchBizTarget" name="indexBiz" class="magoffin.matt.ma2.lucene.LuceneBiz">
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="messages" ref="messageSource"/>
+		<property name="albumDao" ref="albumDao"/>
+		<property name="userBiz" ref="userBiz"/>
+		<property name="lucene" ref="luceneService"/>
+		<property name="systemBiz" ref="systemBiz"/>
+		<property name="workBiz" ref="workBiz"/>
+	</bean>
+	<bean id="luceneService" class="magoffin.matt.lucene.LuceneSearchService" 
+			init-method="initialize" destroy-method="finish">
+		<property name="baseIndexDirectoryPath" value="${lucene.index.base.path}"/>
+		<property name="optimizeTriggerCount" value="${lucene.index.optimize.trigger}"/>
+		<property name="updateBufferSize" value="${lucene.update.buffer.size}"/>
+		<property name="updateBufferFlushMs" value="${lucene.update.buffer.flush}"/>
+		<property name="discardedIndexReaderMinCloseTime" value="60000"/>
+		<property name="discardedIndexReaderProcessorMs" value="120000"/>
+		<property name="neverOptimize" value="${lucene.index.optimize.never}"/>
+		<property name="indexTimeZone" ref="indexTimeZone"/>
+		<property name="plugins">
+			<list>
+				<ref local="mediaItemLucenePlugin"/>
+				<ref local="userLucenePlugin"/>
+			</list>
+		</property>
+	</bean>
+	<bean id="mediaItemLucenePlugin"
+		class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target"><ref local="mediaItemLucenePluginTarget"/></property>
+		<property name="proxyInterfaces">
+			<list>
+				<value>magoffin.matt.lucene.LucenePlugin</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>myTransactionInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="mediaItemLucenePluginTarget" 
+		class="magoffin.matt.ma2.lucene.MediaItemLucenePlugin">
+		<property name="config">
+			<bean class="magoffin.matt.lucene.BasicIndexConfig"/>
+		</property>
+		<property name="analyzer" ref="standardAnalyzer"/>
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="messages" ref="messageSource"/>
+		<property name="mediaItemDao" ref="batchMediaItemDao"/>
+		<property name="albumDao" ref="albumDao"/>
+		<property name="collectionDao" ref="collectionDao"/>
+	</bean>
+	<bean id="userLucenePlugin" class="magoffin.matt.ma2.lucene.UserLucenePlugin">
+		<property name="config">
+			<bean class="magoffin.matt.lucene.BasicIndexConfig"/>
+		</property>
+		<property name="analyzer" ref="standardAnalyzer"/>
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="messages" ref="messageSource"/>
+		<property name="userDao" ref="batchUserDao"/>
+	</bean>
+	<bean id="standardAnalyzer" class="magoffin.matt.ma2.lucene.StandardMatteAnalyzer">
+		<property name="snowballStemmerName" value="${lucene.snowball.stemmer.name}"/>
+		<property name="indexKeyLength" value="1"/>
+	</bean>
+	<bean id="indexTimeZone" class="java.util.TimeZone" factory-method="getTimeZone">
+		<constructor-arg index="0" type="java.lang.String">
+			<value>${index.timezone.java}</value>
+		</constructor-arg>
+	</bean>
+	<bean id="indexDateFormat" name="searchDateFormat"
+			class="magoffin.matt.util.FastThreadSafeDateFormat">
+		<constructor-arg value="yyyy-MM-dd"/>
+		<constructor-arg ref="indexTimeZone"/>
+	</bean>
+	
+	<bean id="UTC" class="java.util.TimeZone" factory-method="getTimeZone">
+        <constructor-arg value="UTC" />
+    </bean>
+	
+	<!-- SystemBiz: system-wide functions. -->
+	<bean id="systemBiz" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="systemBizTarget"/>
+		<property name="proxyInterfaces">
+			<list>
+				<value>magoffin.matt.ma2.biz.SystemBiz</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>myTransactionInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="systemBizTarget" 
+		class="magoffin.matt.ma2.biz.impl.SystemBizImpl"
+		init-method="init" destroy-method="finish">
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="timeZoneDao" ref="timeZoneDao"/>
+		<property name="collectionRootDirectory" value="${collection.root.path}"/>
+		<property name="cacheDirectory" value="${cache.path}"/>
+		<property name="resourceDirectory" value="${resource.path}"/>
+		<property name="albumDao" ref="albumDao"/>
+		<property name="settingsDao" ref="settingsDao"/>
+		<property name="themeDao" ref="themeDao"/>
+		<property name="sharedAlbumUrlTemplate" value="${url.shared.album}"/>		
+		<property name="coreThemeTemplates">
+			<map>
+				<entry key="Woosh">
+					<map>
+						<entry key="author" value="Matte Development Team"/>
+						<entry key="authorEmail" value="matte@noplace"/>
+						<entry key="basePath" value="/core/woosh"/>
+						<entry key="description" value="Default theme."/>
+						<entry key="name" value="Woosh"/>
+						<entry key="creationDate">
+							<bean id="calendar" class="java.util.Calendar" factory-method="getInstance">
+       							 <constructor-arg ref="UTC" />
+        						<property name="timeInMillis" value="1191407400054" />
+    						</bean>
+						</entry>
+					</map>
+				</entry>
+				<entry key="Swipe">
+					<map>
+						<entry key="author" value="Matte Development Team"/>
+						<entry key="authorEmail" value="matte@noplace"/>
+						<entry key="basePath" value="/core/swipe"/>
+						<entry key="description" value="Touch friendly theme."/>
+						<entry key="name" value="Swipe"/>
+						<entry key="creationDate">
+							<bean id="calendar" class="java.util.Calendar" factory-method="getInstance">
+       							 <constructor-arg ref="UTC" />
+        						<property name="timeInMillis" value="1422933720286" />
+    						</bean>
+						</entry>
+					</map>
+				</entry>
+			</map>
+		</property>
+		<property name="externalThemeDirectory" value="${theme.path}/themes"/>
+		<property name="messages" ref="messageSource"/>
+	</bean>
+
+	<!-- UserBiz: user maintenance. -->
+	<bean id="userBizTarget" class="magoffin.matt.ma2.biz.impl.UserBizImpl" 
+		init-method="init" destroy-method="finish">
+		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="messages" ref="messageSource"/>
+		<property name="albumDao" ref="albumDao"/>
+		<property name="collectionDao" ref="collectionDao"/>
+		<property name="userDao" ref="userDao"/>
+		<property name="ioBiz" ref="ioBizTarget"/>
+		<property name="encryptor">
+			<bean class="magoffin.matt.util.DataEncryption">
+				<constructor-arg index="0" value="${crypto.provider}"/>
+				<constructor-arg index="1" value="${crypto.key.type}"/>
+				<constructor-arg index="2" value="${crypto.cipher.type}"/>
+				<constructor-arg index="3" value="${crypto.key}"/>
+				<constructor-arg index="4" value="${crypto.pbe.salt}"/>
+			</bean>			
+		</property>
+		<property name="systemBiz" ref="systemBiz"/>
+		<property name="adminUserTemplate">
+			<map>
+				<entry key="email" value="matte-admin@localhost.localdomain"/>
+				<entry key="login" value="matte-admin"/>
+				<entry key="name" value="Admin"/>
+				<entry key="password" value="password"/>
+			</map>
+		</property>
+		<property name="anonymousUserTemplate">
+			<map>
+				<entry key="name" value="Anonymous"/>
+				<entry key="userId" value="-1"/>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="baseMailMergeHelper" abstract="true" 
+		class="magoffin.matt.ma2.util.MailMergeHelper">
+		<property name="templatePath" value="mailmerge"/>
+		<property name="mailSender" ref="mailSender"/>
+		<property name="messageTemplate" ref="mailMessage"/>
+		<property name="messageSource" ref="messageSource"/>
+		<property name="ignoreMailExceptions" value="${ignore.mail.exceptions}"/>
+	</bean>
+	
+	<!-- AOP action to send registration email -->
+	<bean id="registrationEmailAdvisor"
+		class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+		<property name="advice">
+			<bean class="magoffin.matt.ma2.aop.UserEmailInterceptor">
+				<property name="mailMergeSupport">
+					<bean parent="baseMailMergeHelper">
+						<property name="templateName" value="registration.txt"/>
+						<property name="subjectMessageKey" value="registration-complete.mail.subject"/>
+					</bean>
+				</property>
+				<property name="confirmUrl" value="${url.registration.confirm}"/>
+			</bean>
+		</property>
+		<property name="mappedNames">
+			<list>
+				<value>registerUser</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- AOP action to send registration email -->
+	<bean id="forgotPasswordEmailAdvisor"
+		class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+		<property name="advice">
+			<bean class="magoffin.matt.ma2.aop.UserLoginEmailInterceptor">
+				<property name="mailMergeSupport">
+					<bean parent="baseMailMergeHelper">
+						<property name="templateName" value="forgot-password.txt"/>
+						<property name="subjectMessageKey" value="forgot-password.mail.subject"/>
+					</bean>
+				</property>
+				<property name="userDao" ref="userDao"/>
+				<property name="confirmUrl" value="${url.forgot-password.confirm}"/>
+			</bean>
+		</property>
+		<property name="mappedNames">
+			<list>
+				<value>forgotPassword</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="userBiz" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target"><ref local="userBizTarget"/></property>
+		<property name="proxyInterfaces">
+			<list>
+				<value>magoffin.matt.ma2.biz.UserBiz</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<!--value>userRegistrationIndexAdvisor</value-->
+				<value>userIndexAdvisor</value>
+				<value>userIndexDeleteAdvisor</value>
+				<value>myTransactionInterceptor</value>
+				<value>registrationEmailAdvisor</value>
+				<value>forgotPasswordEmailAdvisor</value>
+				<!--value>welcomeEmailAdvisor</value-->
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="mediaItemIndexAdvisor"
+		class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+		<property name="advice">
+			<bean class="magoffin.matt.ma2.aop.MediaItemIndexInterceptor">
+				<property name="indexBiz" ref="indexBiz"/>
+				<property name="messages" ref="messageSource"/>
+				<property name="workBiz" ref="workBiz"/>
+				<property name="albumDao" ref="albumDao"/>
+				<property name="transactionTemplate" 
+					ref="transactionTemplate"/>
+			</bean>
+		</property>
+		<property name="mappedNames">
+			<list>
+				<value>addMediaItemsToAlbum</value>
+				<value>importMedia</value>
+				<value>removeMediaItemsFromAlbum</value>
+				<value>shareAlbum</value>
+				<value>storeAlbum</value>
+				<value>storeMediaItemInfo</value>
+				<value>storeMediaItemRating</value>
+				<value>unShareAlbum</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="mediaItemIndexDeleteAdvisor"
+		class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+		<property name="advice">
+			<bean class="magoffin.matt.ma2.aop.MediaItemDeleteIndexInterceptor">
+				<property name="indexBiz" ref="indexBiz"/>
+			</bean>
+		</property>
+		<property name="mappedNames">
+			<list>
+				<value>deleteMediaItems</value>
+				<value>deleteCollectionAndItems</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="userIndexAdvisor"
+		class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+		<property name="advice">
+			<bean class="magoffin.matt.ma2.aop.UserIndexInterceptor">
+				<property name="indexBiz" ref="indexBiz"/>
+			</bean>
+		</property>
+		<property name="mappedNames">
+			<list>
+				<value>confirmRegisteredUser</value>
+				<value>storeUser</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="userIndexDeleteAdvisor"
+		class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+		<property name="advice">
+			<bean class="magoffin.matt.ma2.aop.UserDeleteIndexInterceptor">
+				<property name="indexBiz" ref="indexBiz"/>
+			</bean>
+		</property>
+		<property name="mappedNames">
+			<list>
+				<value>removeUser</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="albumSecurityAdvisor" 
+		class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+		<property name="advice">
+			<bean class="magoffin.matt.ma2.aop.AlbumSecurityInterceptor">
+				<property name="albumDao" ref="albumDao"/>
+				<property name="userBiz" ref="userBizTarget"/>
+			</bean>
+		</property>
+		<property name="mappedNames">
+			<list>
+				<!-- IOBiz -->
+				<value>export*</value>
+				
+				<!-- MediaBiz -->
+				<value>addMediaItemsToAlbum</value>
+				<value>deleteAlbum</value>
+				<value>getAlbum</value>
+				<value>getAlbumParent</value>
+				<value>getAlbumWithItems</value>
+				<value>getMediaItemsForAlbum</value>
+				<value>removeMediaItemsFromAlbum</value>
+				<value>shareAlbum</value>
+				<value>storeAlbum*</value>
+				<value>storeMediaItemOrdering</value>
+				<value>unShareAlbum</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="mediaItemSecurityAdvisor" 
+		class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+		<property name="advice">
+			<bean class="magoffin.matt.ma2.aop.MediaItemSecurityInterceptor">
+				<property name="albumDao" ref="albumDao"/>
+				<property name="collectionDao" ref="collectionDao"/>
+				<property name="mediaItemDao" ref="mediaItemDao"/>
+				<property name="userBiz" ref="userBizTarget"/>
+				<property name="securityCache">
+					<bean class="org.springframework.cache.ehcache.EhCacheFactoryBean"> 
+						<property name="cacheManager" ref="cacheManager"/> 
+						<property name="cacheName" value="magoffin.matt.ma2.security.MEDIA_ITEM"/> 
+					</bean>					
+				</property>
+			</bean>
+		</property>
+		<property name="mappedNames">
+			<list>
+				<!-- IOBiz -->
+				<value>export*</value>
+				
+				<!-- MediaBiz -->
+				<value>addMediaItemsToAlbum</value>
+				<value>getMediaItemWithInfo</value>
+				<value>moveMediaItems</value>
+				<value>removeMediaItemsFromAlbum</value>
+				<value>storeMediaItemPoster</value>
+				<value>storeMediaItemOrdering</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="threadPoolExecutorService" class="java.util.concurrent.Executors" 
+		factory-method="newCachedThreadPool"/>
+	
+	<bean id="workBiz" class="magoffin.matt.ma2.biz.impl.WorkBizImpl" 
+		init-method="init" destroy-method="finish">
+		<property name="executor">
+			<bean class="java.util.concurrent.ThreadPoolExecutor">
+				<!-- 1,1,1,
+					TimeUnit.SECONDS,new PriorityBlockingQueue<Runnable>(),
+					new ThreadPoolExecutor.CallerRunsPolicy()) -->
+				<constructor-arg index="0" value="${workbiz.threads.core}"/>
+				<constructor-arg index="1" value="${workbiz.threads.max}"/>
+				<constructor-arg index="2" value="${workbiz.threads.keepalive}"/>
+				<constructor-arg index="3">
+					<bean class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+						<property name="staticField" value="java.util.concurrent.TimeUnit.SECONDS"/>
+					</bean>
+				</constructor-arg>
+				<constructor-arg index="4">
+					<bean class="java.util.concurrent.PriorityBlockingQueue"/>
+				</constructor-arg>
+				<constructor-arg index="5">
+					<bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy"/>
+				</constructor-arg>
+			</bean>
+		</property>
+		<property name="transactionManager">
+			<ref bean="transactionManager"/>
+		</property>
+		<property name="forceTransactionRollback" value="false"/>
+	</bean>
+	
+</beans>

@@ -1,0 +1,67 @@
+Matte Release Notes
+
+@VERSION@ @BUILD_DATE@
+
+This update provides a new, more modern theme called Swipe. The theme
+works with modern browsers and has a responsive design that works great
+with mobile devices. A new JSON RESTful API has been added that helps
+power the new Swipe theme. Many packages used internally by Matte have
+been updated to newer versions, and the build system has moved to use
+Apache Ivy for dependency management. Finally, the source has moved
+to Github.
+
+=======================================================================
+Updates since 1.7 release
+
+- Create new modern theme: Swipe. Integrates the PhotoSwipe photo 
+  viewer (http://photoswipe.com/).
+
+- Update to require Servlet 2.5 minimum.
+
+- Switch to Apache Ivy based build.
+
+- Update to sMeta 1.0.3
+
+- Fix average rating calculation in Apache Derby SQL. (8dc842c)
+
+- Update to Spring Framework 3.2.
+
+- Start work on JSON RESTful API support. Endpoints implemented to
+  support new Swipe theme.
+
+- Create new optimized theme XSLT 2 support templates. Old XSLT 1
+  templates remain to support old Woosh theme.
+
+- Support theme XSLT to render HTML 5, with text/html content type.
+
+- Add theme resource resolvers that simplifies theme resource URLs to
+  simple paths like /matte/theme/1/css/swipe.css.
+
+- Optimize date-based browse SQL queries by allowing queries to
+  specify year range directly, rather than rely on XSLT to filter the
+  results of all available data.
+
+- Change album anonymous key generation so URL-unfriendly characters
+  are no longer present. Now keys are hex MD5 hashes.
+
+- Don't increment video "viewed" counts when streaming byte range
+  requests. (82cc71c)
+
+- Fix bug in handling "0-" byte range requests. (adc813b)
+
+- Fix bug in setting appropriate file name for zip file in album
+  download. (94a199f)
+
+- Fix generated Postgres SQL to use "date with time zone" type for all
+  date values, so that time zones are properly supported.
+
+- Fix leak of Theme ThreadLocal objects. (5de6e14)
+
+- Limit bytes read into memory to at most 4k when processing byte range
+  requests. Previously the entire range would be read, which might be
+  entire files. (4bdba58)
+
+- Update demo Apache Tomcat to version 6.0.43.
+
+- Include width/height values in items returned in virtual albums, to
+  allow working with PhotoSwipe.
