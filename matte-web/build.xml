@@ -69,6 +69,7 @@
 	<property name="compile.nowarn" value="true" />
 	
 	<property name="jaxb.version" value="1.4"/>
+	<property name="tomcat.version" value="6.0.43"/>
 	
 	<property name="build.version" value="(local build)"/>
 	
@@ -1054,7 +1055,12 @@
 		<echo message="JavaDocs built to ${dir.javadoc}"/>
 	</target>
 	
-	<target name="demo" description="Create the Live Demo">
+	<target name="demo" description="Create the Live Demo" depends="ivy-init">
+		
+		<antcall target="prepare" inheritall="true">
+			<param name="env.src" value="demo"/>
+			<param name="dir.env.src" value="${dir.env}/demo"/>
+		</antcall>
 		
 		<antcall target="compile" inheritall="true">
 			<param name="env.src" value="demo"/>
@@ -1072,13 +1078,15 @@
 		
 		<!-- expand Tomcat zip -->
 		<unzip dest="${dir.build}/${app.name}-demo" 
-			src="${dir.base}/defs/demo/apache-tomcat.zip"/>
-
+			src="${dir.base}/defs/demo/apache-tomcat-${tomcat.version}.zip"/>
+		<delete dir="${dir.build}/${app.name}-demo/apache-tomcat" failonerror="no"/>
+		<move file="${dir.build}/${app.name}-demo/apache-tomcat-${tomcat.version}"
+			tofile="${dir.build}/${app.name}-demo/apache-tomcat"/>
+		
 		<!-- expand database zip -->
 		<delete dir="${dir.build}/${app.name}-demo/matte/db" failonerror="no"/>
 		<mkdir dir="${dir.build}/${app.name}-demo/matte/db"/>
-		<unzip dest="${dir.build}/${app.name}-demo/matte/db" 
-			src="${dir.base}/defs/demo/db.zip"/>
+		<unzip dest="${dir.build}/${app.name}-demo/matte/db" src="${dir.base}/defs/demo/db.zip"/>
 		
 		<mkdir dir="${dir.build}/${app.name}-demo/matte/cache"/>
 		<mkdir dir="${dir.build}/${app.name}-demo/matte/collections/demo/default"/>
@@ -1093,22 +1101,17 @@
 		</chmod>
 		
 		<!-- add Derby, etc JARs to Tomcat classpath -->
-		<copy todir="${dir.build}/${app.name}-demo/apache-tomcat/common/lib">
-			<fileset dir="${dir.base}/lib/jdbc" includes="derby*.jar"/>
-			<fileset dir="${dir.base}/lib/j2ee">
-				<include name="activation.jar"/>
-				<include name="mail.jar"/>
-			</fileset>
-		</copy>
+		<ivy:retrieve pattern="${dir.build}/${app.name}-demo/apache-tomcat/lib/[artifact]-[revision].[ext]" 
+			conf="demo-tomcat" />
 		
 		<!-- add resources required on Tomcat classpath -->
-		<copy todir="${dir.build}/${app.name}-demo/apache-tomcat/common/classes">
+		<jar destfile="${dir.build}/${app.name}-demo/apache-tomcat/lib/matte-support.jar">
 			<fileset dir="${dir.env}/demo" includes="META-INF/mime.types"/>
-			<fileset dir="${dir.compile.dest}"
-				includes="magoffin/matt/ma2/dao/hbm/Derby*"/>
-		</copy>
+			<fileset dir="${dir.compile.dest}" includes="magoffin/matt/ma2/dao/hbm/Derby*"/>
+		</jar>
 		
 		<!-- add matte.xml Tomcat configuration -->
+		<mkdir dir="${dir.build}/${app.name}-demo/apache-tomcat/conf/Catalina/localhost"/>
 		<copy todir="${dir.build}/${app.name}-demo/apache-tomcat/conf/Catalina/localhost">
 			<fileset dir="${dir.base}/defs/demo" includes="matte.xml"/>
 		</copy>
