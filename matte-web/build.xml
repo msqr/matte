@@ -1086,6 +1086,12 @@
 	<target name="git-prepare">
 	</target>
 
+	<!-- For local builds with production/staging targets, you can specify the absolute path
+	     for the dir.env.src property to copy your desired environment settings into the WAR,
+	     for example:
+	     
+	     ant -Denv.src=production -Ddir.env.src=$PWD/environment/production -Dgit.tag=1.8 git-build
+	-->
 	<target name="git-build" depends="clean,git-prepare" description="Build from git tag versions">
 		
 		<property name="app.archive.name" value="${app.name}-${git.tag}"/>
@@ -1098,7 +1104,8 @@
 			<property name="dir.build" value="${dir.build}"/>
 			<property name="app.name" value="${app.archive.name}"/>
 			<property name="dir.dist" value="${dir.dist}"/>
-			<property name="env.src" value="${git.env.src}"/>
+			<property name="env.src" value="${env.src}"/>
+			<property name="dir.env.src" value="${git.env.src}"/>
 		</ant>
 	</target>
 	
