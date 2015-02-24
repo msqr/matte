@@ -846,7 +846,6 @@
 		<copy filtering="true" todir="${dir.build}/${app.name}-demo">
 			<fileset dir="${dir.base}/defs/docs/demo"
 				includes="README*.txt"/>
-			<mapper type="glob" from="*.txt" to="*"/>
 			<filterset>
 				<filter token="VERSION" value="${build.version}" />
 				<filter token="BUILD_DATE" value="${build.time}" />
@@ -1123,7 +1122,7 @@
 
 		<echo message="Creating source README" />
 		<copy file="${git.dir.build}/defs/docs/release/README.src.txt" 
-			tofile="${release-source-dir}/README" filtering="true">
+			tofile="${release-source-dir}/README.txt" filtering="true">
 			<filterset>
 				<filter token="VERSION" value="${git.tag}" />
 				<filter token="BUILD_DATE" value="${build.time}" />
@@ -1132,7 +1131,7 @@
 
 		<echo message="Creating LICENSE" />
 		<copy file="${git.dir.build}/defs/docs/release/LICENSE.txt" 
-			tofile="${release-source-dir}/LICENSE" filtering="true">
+			tofile="${release-source-dir}/LICENSE.txt" filtering="true">
 			<filterset>
 				<filter token="VERSION" value="${git.tag}" />
 				<filter token="BUILD_DATE" value="${build.time}" />
@@ -1196,7 +1195,7 @@
 		<copy filtering="true" todir="${release-dir}">
 			<fileset dir="${git.dir.build}/defs/docs/release/notes"
 				includes="notes-${git.tag.base}*.txt"/>
-			<mapper type="merge" to="NOTES"/>
+			<mapper type="merge" to="NOTES.txt"/>
 			<filterset>
 				<filter token="VERSION" value="${git.tag}" />
 				<filter token="BUILD_DATE" value="${build.time}" />
@@ -1208,7 +1207,6 @@
 		<copy filtering="true" todir="${release-dir}">
 			<fileset dir="${git.dir.build}/defs/docs"
 				includes="README-*.txt"/>
-			<mapper type="glob" from="*.txt" to="*"/>
 			<filterset>
 				<filter token="VERSION" value="${git.tag}" />
 				<filter token="BUILD_DATE" value="${build.time}" />
@@ -1220,7 +1218,6 @@
 		<mkdir dir="${release-dir}/licenses"/>
 		<copy todir="${release-dir}/licenses" flatten="true">
 			<fileset dir="${git.dir.build}/defs/docs/licenses" includes="**/*.txt"/>
-			<mapper type="glob" from="*.txt" to="*"/>
 			<filterset>
 				<filter token="VERSION" value="${git.tag}" />
 				<filter token="BUILD_DATE" value="${build.time}" />
@@ -1286,7 +1283,65 @@
 	
 	</target>
 
-	<target name="git-release" depends="clean,git-bin-release,git-src-release,git-javadoc" 
-		description="Create release artifacts from git"/>
+	<target name="git-demo-release" description="Create the Live Demo from Git sources"
+		depends="git-prepare">
+		
+		<property name="app.archive.name" value="${app.name}-${git.tag}"/>
+		<property name="demo.build.dir" value="${app.archive.name}-livedemo"/>
+		
+		<!-- call the demo target on the code checked out from SVN -->
+		<ant dir="${git.dir.build}" inheritall="true" target="demo">
+			<property name="dir.build" value="${dir.build}"/>
+			<property name="build.version" value="${git.tag}"/>
+			<property name="env.src" value="demo"/>
+		</ant>
+		
+		<!-- copy licenses -->
+		<echo message="Copying licenses" />
+		<mkdir dir="${dir.build}/${demo.build.dir}/licenses"/>
+		<copy todir="${dir.build}/${demo.build.dir}/licenses" flatten="true">
+			<fileset dir="${git.dir.build}/defs/docs/licenses" includes="**/*.txt"/>
+			<filterset>
+				<filter token="VERSION" value="${git.tag}" />
+				<filter token="BUILD_DATE" value="${build.time}" />
+			</filterset>
+		</copy>
+		
+		<!-- copy demo build -->
+		<echo message="Copying demo build into Git tar structure"/>
+		<copy todir="${dir.build}/${demo.build.dir}">
+			<fileset dir="${dir.build}/${app.name}-demo" includes="**"/>
+		</copy>
+		
+		<!-- fix file permissions -->
+		<chmod perm="755">
+			<fileset dir="${dir.build}/${demo.build.dir}">
+				<include name="**/*.sh"/>
+			</fileset>
+		</chmod>
+		
+		<!-- tar it up -->
+		<tar destfile="${dir.dist}/${app.archive.name}-livedemo.tbz2" 
+				compression="bzip2" longfile="gnu">
+			<tarfileset dir="${dir.build}" mode="775">
+				<include name="${demo.build.dir}/**/*.sh"/>
+			</tarfileset>
+			<tarfileset dir="${dir.build}">
+				<include name="${demo.build.dir}/**"/>
+				<exclude name="${demo.build.dir}/**/*.sh"/>
+			</tarfileset>
+		</tar>
+	</target>
+	
+	<!-- 
+		Git Full Release
+		
+		Typically, after an initial "ant git-clone" you will perform a full release
+		like:
+		   
+		$ ant -Dgit.tag=1.8 git-fetch git-checkout git-release
+	-->
+	<target name="git-release" depends="clean,git-bin-release,git-src-release,git-demo-release" 
+		description="Create release artifacts from Git"/>
 	
 </project>
