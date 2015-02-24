@@ -375,8 +375,7 @@
 			<xsl:text>,&#10;</xsl:text>
 		</xsl:if>
 		<xsl:text>{ </xsl:text>
-		<xsl:text>albumId : </xsl:text><xsl:value-of select="@album-id"/>
-		<xsl:text>, anonymousKey : </xsl:text><xsl:value-of select="m:js-string(@anonymous-key)"/>
+		<xsl:text>anonymousKey : </xsl:text><xsl:value-of select="m:js-string(@anonymous-key)"/>
 		<xsl:text>, name : </xsl:text><xsl:value-of select="m:js-string(@name)"/>
 		<xsl:if test="@allow-original cast as xs:boolean? = true()">
 			<xsl:text>, allowOriginal : true</xsl:text>
