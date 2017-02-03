@@ -65,7 +65,7 @@
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<meta name="apple-mobile-web-app-capable" content="yes" />
 				<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-				<link href="http://fonts.googleapis.com/css?family={encode-for-uri('Alegreya:700,400|Alegreya Sans:400,300|Cousine:700')}" rel="stylesheet" type="text/css"/>
+				<link href="//fonts.googleapis.com/css?family={encode-for-uri('Alegreya:700,400|Alegreya Sans:400,300|Cousine:700')}" rel="stylesheet" type="text/css"/>
 				<link rel="stylesheet">
 					<xsl:attribute name="href">
 						<xsl:call-template name="theme-resource-url">
