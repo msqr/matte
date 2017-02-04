@@ -76,7 +76,7 @@
 		<property name="useJpeg2000" value="true"/>
 		<property name="jpeg2000UserAgentRegExp">
 			<list>
-				<value>WebKit</value>
+				<value>Version/\S+(\sMobile/\S+)?\sSafari/</value>
 			</list>
 		</property>
 		<property name="smetaPropertyMap">
