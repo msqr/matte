@@ -36,6 +36,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.lang.math.Range;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.core.io.Resource;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.FileCopyUtils;
 import magoffin.matt.ma2.MediaEffect;
 import magoffin.matt.ma2.MediaHandler;
 import magoffin.matt.ma2.MediaMetadata;
@@ -53,14 +61,6 @@ import magoffin.matt.ma2.domain.Metadata;
 import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.image.EmbeddedImageMetadata;
 import magoffin.matt.ma2.util.BizContextUtil;
-import org.apache.commons.lang.math.Range;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.core.io.Resource;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.FileCopyUtils;
 
 /**
  * Base class for {@link MediaHandler} implementations.
@@ -122,7 +122,7 @@ import org.springframework.util.FileCopyUtils;
  * </dl>
  * 
  * @author matt.magoffin
- * @version 1.1
+ * @version 1.2
  */
 public abstract class AbstractMediaHandler implements MediaHandler {
 
@@ -221,7 +221,8 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 	 * @return the resulting metadata instance
 	 */
 	@SuppressWarnings("unchecked")
-	protected MediaMetadata handleMetadata(MediaRequest request, Resource mediaResource, MediaItem item) {
+	protected MediaMetadata handleMetadata(MediaRequest request, Resource mediaResource,
+			MediaItem item) {
 		MediaMetadata resultMeta = getMediaMetadataInstance(request, mediaResource, item);
 		resultMeta = resultMeta.setMediaResource(mediaResource);
 		List<Metadata> metadata = createMetadataList(resultMeta.getMetadataMap());
@@ -393,8 +394,8 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 		// handle watermark
 		if ( CollectionUtils.isEmpty(this.noWatermarkSizes)
 				|| !this.noWatermarkSizes.contains(request.getSize()) ) {
-			Resource watermark = (Resource) request.getParameters().get(
-					MediaEffect.MEDIA_REQUEST_PARAM_WATERMARK_RESOURCE);
+			Resource watermark = (Resource) request.getParameters()
+					.get(MediaEffect.MEDIA_REQUEST_PARAM_WATERMARK_RESOURCE);
 			if ( watermark == null ) {
 				Collection collection = mediaBiz.getMediaItemCollection(item);
 				if ( collection != null && collection.getOwner() != null ) {
@@ -470,7 +471,8 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 	 * <li>Resize (scale): if the request is for a size different from the
 	 * {@link MediaItem#getWidth()} or {@link MediaItem#getHeight()}.</li>
 	 * 
-	 * <li>Recompress: if the request is not for {@link MediaQuality#HIGHEST}.</li>
+	 * <li>Recompress: if the request is not for
+	 * {@link MediaQuality#HIGHEST}.</li>
 	 * 
 	 * <li>Effects: if {@link MediaRequest#getEffects()} has at least one effect
 	 * in it.</li>
@@ -627,15 +629,21 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 				file = new RandomAccessFile(itemResource.getFile(), "r");
 				file.seek(start);
 				while ( start < end ) {
-					int max = Math
-							.min(4096, start + buf.length > end ? (int) (end - start) : buf.length);
+					int max = Math.min(4096,
+							start + buf.length > end ? (int) (end - start) : buf.length);
 					int len = file.read(buf, 0, max);
 					out.write(buf, 0, len);
 					start += len;
 					out.flush();
 				}
 			} catch ( IOException e ) {
-				log.info("IOException returning stream byte range {}-{}: {}", start, end, e);
+				// the org.apache.catalina.connector.ClientAbortException exception can happen a lot
+				// so don't log as info; compare to string so don't depend directly on Tomcat
+				if ( "ClientAbortException".equals(e.getClass().getSimpleName()) ) {
+					log.info("Client aborted while returning stream byte range {}-{}", start, end);
+				} else {
+					log.info("IOException returning stream byte range {}-{}: {}", start, end, e);
+				}
 			} finally {
 				if ( file != null ) {
 					try {
@@ -661,7 +669,9 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 				FileCopyUtils.copy(itemResource.getInputStream(), response.getOutputStream());
 			} catch ( IOException e ) {
 				// not much we can do, lets just log a message
-				if ( log.isDebugEnabled() ) {
+				if ( "ClientAbortException".equals(e.getClass().getSimpleName()) ) {
+					log.info("Client aborted while sending media response");
+				} else if ( log.isDebugEnabled() ) {
 					log.debug("IOException sending media response", e);
 				} else if ( log.isInfoEnabled() ) {
 					log.info("IOException sending media response: " + e.getMessage());
