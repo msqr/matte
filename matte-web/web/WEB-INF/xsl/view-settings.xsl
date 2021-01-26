@@ -56,7 +56,7 @@
 														<xsl:value-of select="$mediaspec.thumb/@size"/>
 													</xsl:when>
 													<xsl:otherwise>
-														<xsl:text>THUMB_NORMAL</xsl:text>
+														<xsl:value-of select="key('appenv','media.default.thumb.size')"/>
 													</xsl:otherwise>
 												</xsl:choose>
 											</xsl:with-param>
@@ -79,7 +79,7 @@
 														<xsl:value-of select="$mediaspec.thumb/@quality"/>
 													</xsl:when>
 													<xsl:otherwise>
-														<xsl:text>GOOD</xsl:text>
+														<xsl:value-of select="key('appenv','media.default.thumb.quality')"/>
 													</xsl:otherwise>
 												</xsl:choose>
 											</xsl:with-param>
@@ -108,7 +108,7 @@
 														<xsl:value-of select="$mediaspec.view/@size"/>
 													</xsl:when>
 													<xsl:otherwise>
-														<xsl:text>NORMAL</xsl:text>
+														<xsl:value-of select="key('appenv','media.default.view.size')"/>
 													</xsl:otherwise>
 												</xsl:choose>
 											</xsl:with-param>
@@ -131,11 +131,15 @@
 														<xsl:value-of select="$mediaspec.view/@quality"/>
 													</xsl:when>
 													<xsl:otherwise>
-														<xsl:text>GOOD</xsl:text>
+														<xsl:value-of select="key('appenv','media.default.view.quality')"/>
 													</xsl:otherwise>
 												</xsl:choose>
 											</xsl:with-param>
 										</xsl:call-template>
+										<xsl:comment>
+										Howdy.
+										Default view quality: <xsl:value-of select="key('appenv','media.default.view.quality')"/>
+										</xsl:comment>
 									</select>
 								</div>
 							</div>	

@@ -59,6 +59,10 @@
 			<map>
 				<entry key="feature.registration" value="${feature.registration}"/>
 				<entry key="feature.upload.applet" value="${feature.upload.applet}"/>
+				<entry key="media.default.thumb.quality" value="${media.default.thumb.quality:GOOD}"/>
+				<entry key="media.default.thumb.size" value="${media.default.thumb.size:THUMB_NORMAL}"/>
+				<entry key="media.default.view.quality" value="${media.default.view.quality:GOOD}"/>
+				<entry key="media.default.view.size" value="${media.default.view.size:NORMAL}"/>
 			</map>
 		</property>
 	</bean>
@@ -212,6 +216,10 @@
 		<property name="workBiz" ref="workBiz"/>
 		<property name="messageSource" ref="messagesSource"/>
 		<property name="domainObjectFactory" ref="domainObjectFactory"/>
+		<property name="thumbQualityDefault" value="${media.default.thumb.quality:GOOD}"/>
+		<property name="thumbSizeDefault" value="${media.default.thumb.size:THUMB_NORMAL}"/>
+		<property name="viewQualityDefault" value="${media.default.view.quality:GOOD}"/>
+		<property name="viewSizeDefault" value="${media.default.view.size:NORMAL}"/>
 	</bean>
 
 	<!-- Custom XSLT view resolver

@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.TimeZone;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.springframework.context.MessageSource;
 import magoffin.matt.ma2.ApplicationNotConfiguredException;
 import magoffin.matt.ma2.AuthorizationException;
 import magoffin.matt.ma2.AuthorizationException.Reason;
@@ -56,7 +57,6 @@ import magoffin.matt.ma2.support.Geometry;
 import magoffin.matt.ma2.web.NoUserSessionException;
 import magoffin.matt.xweb.util.AppContextSupport;
 import magoffin.matt.xweb.util.BasicXwebHelper;
-import org.springframework.context.MessageSource;
 
 /**
  * Utility methods for web layer.
@@ -71,7 +71,7 @@ import org.springframework.context.MessageSource;
  * </dl>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.1
+ * @version 1.2
  */
 public final class WebHelper extends BasicXwebHelper {
 
@@ -85,6 +85,10 @@ public final class WebHelper extends BasicXwebHelper {
 	private String datePattern = "dd MMM yyyy HH:mm:ss";
 	private TimeZone dateTimeZone = TimeZone.getTimeZone("UTC");
 	private MessageSource messageSource;
+	private MediaQuality thumbQualityDefault = MediaQuality.GOOD;
+	private MediaSize thumbSizeDefault = MediaSize.THUMB_NORMAL;
+	private MediaQuality viewQualityDefault = MediaQuality.GOOD;
+	private MediaSize viewSizeDefault = MediaSize.NORMAL;
 
 	/**
 	 * Create a JobInfo instance from a WorkInfo instance.
@@ -113,21 +117,23 @@ public final class WebHelper extends BasicXwebHelper {
 			job.setPriority(info.getPriority());
 			job.setTicket(info.getTicket());
 			if ( info.getCompleteTime() > 0 ) {
-				job.setTimeCompleted(info.getCompleteTime() + " "
-						+ sdf.format(new Date(info.getCompleteTime())));
+				job.setTimeCompleted(
+						info.getCompleteTime() + " " + sdf.format(new Date(info.getCompleteTime())));
 			}
 			if ( info.getStartTime() > 0 ) {
-				job.setTimeStarted(info.getStartTime() + " " + sdf.format(new Date(info.getStartTime())));
+				job.setTimeStarted(
+						info.getStartTime() + " " + sdf.format(new Date(info.getStartTime())));
 			}
-			job.setTimeSubmitted(info.getSubmitTime() + " " + sdf.format(new Date(info.getSubmitTime())));
+			job.setTimeSubmitted(
+					info.getSubmitTime() + " " + sdf.format(new Date(info.getSubmitTime())));
 		} else {
 			// job not found
 			job.setAmountCompleted(0f);
 			job.setError(getMessageSource().getMessage("jobinfo.not.available", new Object[] { ticket },
 					"Job not available.", context.getLocale()));
 			job.setTicket(ticket);
-			job.setTimeSubmitted(getMessageSource().getMessage("not.available", null, "N/A",
-					context.getLocale()));
+			job.setTimeSubmitted(
+					getMessageSource().getMessage("not.available", null, "N/A", context.getLocale()));
 		}
 		return job;
 	}
@@ -253,11 +259,10 @@ public final class WebHelper extends BasicXwebHelper {
 		if ( userSession != null && userSession.getActingUser() != null ) {
 			context.setActingUser(userSession.getActingUser());
 		}
-		String baseUrl = request.getScheme()
-				+ "://"
-				+ request.getServerName()
-				+ (request.getServerPort() == 80 || request.getServerPort() == 443 ? "" : ":"
-						+ String.valueOf(request.getServerPort())) + request.getContextPath();
+		String baseUrl = request.getScheme() + "://" + request.getServerName()
+				+ (request.getServerPort() == 80 || request.getServerPort() == 443 ? ""
+						: ":" + String.valueOf(request.getServerPort()))
+				+ request.getContextPath();
 		context.setAttribute(WebBizContext.URL_BASE, baseUrl);
 		return context;
 	}
@@ -289,16 +294,16 @@ public final class WebHelper extends BasicXwebHelper {
 			userSession.setThumbnailSetting(user.getThumbnailSetting());
 		} else {
 			MediaSpec spec = getDomainObjectFactory().newMediaSpecInstance();
-			spec.setQuality(MediaQuality.GOOD.name());
-			spec.setSize(MediaSize.THUMB_NORMAL.name());
+			spec.setQuality(thumbQualityDefault.name());
+			spec.setSize(thumbSizeDefault.name());
 			userSession.setThumbnailSetting(spec);
 		}
 		if ( user != null && user.getViewSetting() != null ) {
 			userSession.setViewSetting(user.getViewSetting());
 		} else {
 			MediaSpec spec = getDomainObjectFactory().newMediaSpecInstance();
-			spec.setQuality(MediaQuality.GOOD.name());
-			spec.setSize(MediaSize.NORMAL.name());
+			spec.setQuality(viewQualityDefault.name());
+			spec.setSize(viewSizeDefault.name());
 			userSession.setViewSetting(spec);
 		}
 		HttpSession session = request.getSession(true);
@@ -623,6 +628,38 @@ public final class WebHelper extends BasicXwebHelper {
 	 */
 	public void setMediaBiz(MediaBiz mediaBiz) {
 		this.mediaBiz = mediaBiz;
+	}
+
+	public MediaQuality getThumbQualityDefault() {
+		return thumbQualityDefault;
+	}
+
+	public void setThumbQualityDefault(MediaQuality thumbQualityDefault) {
+		this.thumbQualityDefault = thumbQualityDefault;
+	}
+
+	public MediaSize getThumbSizeDefault() {
+		return thumbSizeDefault;
+	}
+
+	public void setThumbSizeDefault(MediaSize thumbSizeDefault) {
+		this.thumbSizeDefault = thumbSizeDefault;
+	}
+
+	public MediaQuality getViewQualityDefault() {
+		return viewQualityDefault;
+	}
+
+	public void setViewQualityDefault(MediaQuality viewQualityDefault) {
+		this.viewQualityDefault = viewQualityDefault;
+	}
+
+	public MediaSize getViewSizeDefault() {
+		return viewSizeDefault;
+	}
+
+	public void setViewSizeDefault(MediaSize viewSizeDefault) {
+		this.viewSizeDefault = viewSizeDefault;
 	}
 
 }
