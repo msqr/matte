@@ -83,8 +83,8 @@
 		<dependency org="org.opensaml" name="opensaml" rev="1.1" conf="compile,runtime">
 			<artifact name="opensaml"/>
 		</dependency>
-		<dependency org="com.googlecode.mp4parser" name="isoparser" rev="1.0.5.4" conf="runtime,test"/>
-		<dependency org="com.drewnoakes" name="metadata-extractor" rev="2.6.2" conf="runtime,test"/>
+		<dependency org="com.googlecode.mp4parser" name="isoparser" rev="1.1.22" conf="runtime,test"/>
+		<dependency org="com.drewnoakes" name="metadata-extractor" rev="2.18.0" conf="runtime,test"/>
 		
 		<!-- Lucene -->
 		<dependency org="org.apache.lucene" name="lucene-core" rev="2.9.4" conf="compile,runtime">
