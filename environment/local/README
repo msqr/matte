@@ -1,0 +1,4 @@
+This directory is for local development, nothing here should be 
+checked into source control. To get started, copy all the files from 
+the environment/example directory into this directory and then
+modify the properties according to your environment.

@@ -1,3 +1,10 @@
-.DS_Store
-
-matte-web/defs/demo/matte
+/build.properties
+/version.properties
+/bin/
+/build/
+/dist/
+/tmp/
+/work/
+/src/main/webapp/WEB-INF/classes/
+/derby.log
+/.gradle/
