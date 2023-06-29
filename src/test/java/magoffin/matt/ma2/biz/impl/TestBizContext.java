@@ -38,33 +38,30 @@ import magoffin.matt.xweb.util.AppContextSupport;
  * BizContext for test cases.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class TestBizContext extends BasicBizContext {
-	
+
 	private final Logger log = Logger.getLogger(TestBizContext.class);
-	
+
 	/**
 	 * Constructor.
-	 * @param context the application context
+	 * 
+	 * @param context    the application context
 	 * @param actingUser the acting user
 	 */
-	@SuppressWarnings({"unchecked"})
 	public TestBizContext(ApplicationContext context, User actingUser) {
 		super();
-		
-		Map<String,? extends DomainObjectFactory> map = 
-			BeanFactoryUtils.beansOfTypeIncludingAncestors(
-				context,DomainObjectFactory.class,false,false);
-		if ( map == null || map.size() < 1 ) {
-			throw new RuntimeException(DomainObjectFactory.class.getName() 
-					+" implementation not found.");
+
+		Map<String, ? extends DomainObjectFactory> map = BeanFactoryUtils.beansOfTypeIncludingAncestors(context,
+				DomainObjectFactory.class, false, false);
+		if (map == null || map.size() < 1) {
+			throw new RuntimeException(DomainObjectFactory.class.getName() + " implementation not found.");
 		}
-		if ( map.size() > 1 ) {
-			log.warn("More than one implementation of " +DomainObjectFactory.class.getName()
-					+" found in ApplicationContext, bean names are "
-					+map.keySet().toString() +"; using [" 
-					+map.keySet().iterator().next() +"]");
+		if (map.size() > 1) {
+			log.warn("More than one implementation of " + DomainObjectFactory.class.getName()
+					+ " found in ApplicationContext, bean names are " + map.keySet().toString() + "; using ["
+					+ map.keySet().iterator().next() + "]");
 		}
 		DomainObjectFactory domainObjectFactory = map.values().iterator().next();
 		XAppContext appContext = domainObjectFactory.newXAppContextInstance();
@@ -72,11 +69,12 @@ public class TestBizContext extends BasicBizContext {
 		setAppContextSupport(appContextSupport);
 		setActingUser(actingUser);
 	}
-	
+
 	/**
 	 * Construct from an {@link AppContextSupport}.
+	 * 
 	 * @param appContextSupport the application context support
-	 * @param actingUser the acting user
+	 * @param actingUser        the acting user
 	 */
 	public TestBizContext(AppContextSupport appContextSupport, User actingUser) {
 		super(appContextSupport);
@@ -87,5 +85,5 @@ public class TestBizContext extends BasicBizContext {
 	public boolean isFeatureEnabled(Feature feature) {
 		return true;
 	}
-	
+
 }

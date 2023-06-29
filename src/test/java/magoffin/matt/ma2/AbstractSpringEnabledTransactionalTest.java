@@ -58,7 +58,7 @@ import magoffin.matt.util.TemporaryFile;
  * helper methods for the Media Album project.
  * 
  * @author matt.magoffin
- * @version 1.0
+ * @version 1.1
  */
 @ContextConfiguration(locations = { "classpath:magoffin/matt/ma2/TestContext.xml",
 		"file:src/main/webapp/WEB-INF/applicationContext.xml",
@@ -81,6 +81,7 @@ public abstract class AbstractSpringEnabledTransactionalTest
 	/**
 	 * Execute some pre-test tasks.
 	 */
+	@SuppressWarnings("deprecation")
 	@Before
 	public void onSetUpInTransaction() {
 		// just in case any themes owned by a user... update themes now

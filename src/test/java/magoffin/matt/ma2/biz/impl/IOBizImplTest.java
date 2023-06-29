@@ -29,6 +29,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,6 +42,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -48,6 +50,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.FileCopyUtils;
+
 import magoffin.matt.ma2.AbstractSpringEnabledTransactionalTest;
 import magoffin.matt.ma2.MediaQuality;
 import magoffin.matt.ma2.MediaRequest;
@@ -121,7 +124,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		String confKey = null;
 		try {
 			confKey = testUserBiz.registerUser(newUser, context);
-		} catch ( ProcessingException e ) {
+		} catch (ProcessingException e) {
 			// whatever!
 			confKey = (String) e.getProcessResult();
 		}
@@ -134,20 +137,17 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test importing a single JPEG image.
 	 * 
-	 * @throws Exception
-	 *         if an error occurs
+	 * @throws Exception if an error occurs
 	 */
 	@Test
 	public void testImportSingleJpeg() throws Exception {
-		importImage("magoffin/matt/ma2/image/bee-action.jpg", collectionDao, testIOBizImpl,
-				testCollection, testUser);
+		importImage("magoffin/matt/ma2/image/bee-action.jpg", collectionDao, testIOBizImpl, testCollection, testUser);
 	}
 
 	/**
 	 * Test importing a Zip of JPEG images.
 	 * 
-	 * @throws Exception
-	 *         if an error occurs
+	 * @throws Exception if an error occurs
 	 */
 	@Test
 	public void testImportZip() throws Exception {
@@ -174,22 +174,26 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		final Resource testZip = new FileSystemResource(tempZipFile);
 		addCmd.setTempFile(new TemporaryFile() {
 
+			@Override
 			public InputStream getInputStream() throws IOException {
 				return testZip.getInputStream();
 			}
 
+			@Override
 			public String getName() {
 				return testZip.getFilename();
 			}
 
+			@Override
 			public String getContentType() {
 				return "application/zip";
 			}
 
+			@Override
 			public long getSize() {
 				try {
 					return testZip.getFile().length();
-				} catch ( IOException e ) {
+				} catch (IOException e) {
 					throw new RuntimeException(e);
 				}
 			}
@@ -209,8 +213,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test importing a Zip of JPEG images with AutoAlbum mode enabled
 	 * 
-	 * @throws Exception
-	 *         if an error occurs
+	 * @throws Exception if an error occurs
 	 */
 	@Test
 	public void testImportZipAutoAlbum() throws Exception {
@@ -237,22 +240,26 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		final Resource testZip = new FileSystemResource(tempZipFile);
 		addCmd.setTempFile(new TemporaryFile() {
 
+			@Override
 			public InputStream getInputStream() throws IOException {
 				return testZip.getInputStream();
 			}
 
+			@Override
 			public String getName() {
 				return testZip.getFilename();
 			}
 
+			@Override
 			public String getContentType() {
 				return "application/zip";
 			}
 
+			@Override
 			public long getSize() {
 				try {
 					return testZip.getFile().length();
-				} catch ( IOException e ) {
+				} catch (IOException e) {
 					throw new RuntimeException(e);
 				}
 			}
@@ -280,8 +287,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test importing a Zip of JPEG images with AutoAlbum mode enabled
 	 * 
-	 * @throws Exception
-	 *         if an error occurs
+	 * @throws Exception if an error occurs
 	 */
 	@Test
 	public void testImportZipAutoAlbumNestedAlbums() throws Exception {
@@ -318,22 +324,26 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		final Resource testZip = new FileSystemResource(tempZipFile);
 		addCmd.setTempFile(new TemporaryFile() {
 
+			@Override
 			public InputStream getInputStream() throws IOException {
 				return testZip.getInputStream();
 			}
 
+			@Override
 			public String getName() {
 				return testZip.getFilename();
 			}
 
+			@Override
 			public String getContentType() {
 				return "application/zip";
 			}
 
+			@Override
 			public long getSize() {
 				try {
 					return testZip.getFile().length();
-				} catch ( IOException e ) {
+				} catch (IOException e) {
 					throw new RuntimeException(e);
 				}
 			}
@@ -371,8 +381,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test importing a Zip of JPEG images with an album XML metadata file.
 	 * 
-	 * @throws Exception
-	 *         if an error occurs
+	 * @throws Exception if an error occurs
 	 */
 	@Test
 	public void testImportZipWithAlbumXml() throws Exception {
@@ -404,22 +413,26 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		final Resource testZip = new FileSystemResource(tempZipFile);
 		addCmd.setTempFile(new TemporaryFile() {
 
+			@Override
 			public InputStream getInputStream() throws IOException {
 				return testZip.getInputStream();
 			}
 
+			@Override
 			public String getName() {
 				return testZip.getFilename();
 			}
 
+			@Override
 			public String getContentType() {
 				return "application/zip";
 			}
 
+			@Override
 			public long getSize() {
 				try {
 					return testZip.getFile().length();
-				} catch ( IOException e ) {
+				} catch (IOException e) {
 					throw new RuntimeException(e);
 				}
 			}
@@ -449,8 +462,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	 * Test able to import a Mac OS X zip archive that contains resource forks
 	 * (skipping resource forks).
 	 * 
-	 * @throws Exception
-	 *         if an error occurs
+	 * @throws Exception if an error occurs
 	 */
 	@Test
 	@SuppressWarnings("unchecked")
@@ -461,22 +473,26 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		final Resource testZip = new ClassPathResource("/magoffin/matt/ma2/image/Archive.zip");
 		addCmd.setTempFile(new TemporaryFile() {
 
+			@Override
 			public InputStream getInputStream() throws IOException {
 				return testZip.getInputStream();
 			}
 
+			@Override
 			public String getName() {
 				return testZip.getFilename();
 			}
 
+			@Override
 			public String getContentType() {
 				return "application/zip";
 			}
 
+			@Override
 			public long getSize() {
 				try {
 					return testZip.getFile().length();
-				} catch ( IOException e ) {
+				} catch (IOException e) {
 					throw new RuntimeException(e);
 				}
 			}
@@ -502,14 +518,12 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test exporting an item.
 	 * 
-	 * @throws Exception
-	 *         if an error occurs
+	 * @throws Exception if an error occurs
 	 */
 	@Test
 	public void testExportItem() throws Exception {
 		// import first...
-		importImage("magoffin/matt/ma2/image/bee-action.jpg", collectionDao, testIOBizImpl,
-				testCollection, testUser);
+		importImage("magoffin/matt/ma2/image/bee-action.jpg", collectionDao, testIOBizImpl, testCollection, testUser);
 
 		Collection c = collectionDao.get(this.testCollection.getCollectionId());
 		MediaItem item = (MediaItem) c.getItem().get(0);
@@ -527,14 +541,13 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test exporting an image with roration of 270 degrees.
 	 * 
-	 * @throws Exception
-	 *         if any error occurs
+	 * @throws Exception if any error occurs
 	 */
 	@Test
 	public void testExportItemWithRotate270() throws Exception {
 		// import first...
-		importImage("magoffin/matt/ma2/image/IMG_ORIENTATION_8.JPG", collectionDao, testIOBizImpl,
-				testCollection, testUser);
+		importImage("magoffin/matt/ma2/image/IMG_ORIENTATION_8.JPG", collectionDao, testIOBizImpl, testCollection,
+				testUser);
 		Collection c = collectionDao.get(this.testCollection.getCollectionId());
 		MediaItem item = (MediaItem) c.getItem().get(0);
 		MediaRequest request = new BasicMediaRequest(item.getItemId());
@@ -551,14 +564,13 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test exporting an image with roration of 180 degrees.
 	 * 
-	 * @throws Exception
-	 *         if any error occurs
+	 * @throws Exception if any error occurs
 	 */
 	@Test
 	public void testExportItemWithRotate180() throws Exception {
 		// import first...
-		importImage("magoffin/matt/ma2/image/IMG_ORIENTATION_3.JPG", collectionDao, testIOBizImpl,
-				testCollection, testUser);
+		importImage("magoffin/matt/ma2/image/IMG_ORIENTATION_3.JPG", collectionDao, testIOBizImpl, testCollection,
+				testUser);
 		Collection c = collectionDao.get(this.testCollection.getCollectionId());
 		MediaItem item = (MediaItem) c.getItem().get(0);
 		MediaRequest request = new BasicMediaRequest(item.getItemId());
@@ -575,14 +587,13 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test exporting an image with roration of 90 degrees.
 	 * 
-	 * @throws Exception
-	 *         if any error occurs
+	 * @throws Exception if any error occurs
 	 */
 	@Test
 	public void testExportItemWithRotate90() throws Exception {
 		// import first...
-		importImage("magoffin/matt/ma2/image/IMG_ORIENTATION_6.JPG", collectionDao, testIOBizImpl,
-				testCollection, testUser);
+		importImage("magoffin/matt/ma2/image/IMG_ORIENTATION_6.JPG", collectionDao, testIOBizImpl, testCollection,
+				testUser);
 		Collection c = collectionDao.get(this.testCollection.getCollectionId());
 		MediaItem item = (MediaItem) c.getItem().get(0);
 		MediaRequest request = new BasicMediaRequest(item.getItemId());
@@ -599,8 +610,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test exporting of an album.
 	 * 
-	 * @throws Exception
-	 *         if an error occurs
+	 * @throws Exception if an error occurs
 	 */
 	@Test
 	@SuppressWarnings("unchecked")
@@ -615,7 +625,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		album.setName("TEST ALBUM");
 
 		Collection c = collectionDao.get(testCollection.getCollectionId());
-		for ( MediaItem item : (List<MediaItem>) c.getItem() ) {
+		for (MediaItem item : (List<MediaItem>) c.getItem()) {
 			album.getItem().add(item);
 		}
 
@@ -625,7 +635,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 
 		// now export album in "normal" size
 		File outputZip = File.createTempFile("IOBizImplTest-", ".zip");
-		if ( logger.isDebugEnabled() ) {
+		if (logger.isDebugEnabled()) {
 			logger.debug("Exporting album archive: " + outputZip.getAbsolutePath());
 		}
 		BasicMediaRequest request = new BasicMediaRequest(null, MediaSize.NORMAL, MediaQuality.GOOD);
@@ -640,24 +650,25 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		assertEquals(2, objectIds.size());
 
 		assertTrue(outputZip.length() > 0);
-		if ( logger.isDebugEnabled() ) {
+		if (logger.isDebugEnabled()) {
 			logger.debug("Export album  complete to archive: " + outputZip.getAbsolutePath());
 		}
 
 		// verify all items + metadata exported into zip
-		ZipFile zFile = new ZipFile(outputZip);
-		Enumeration<? extends ZipEntry> entries = zFile.entries();
 		int count = 0;
 		boolean metaFound = false;
-		while ( entries.hasMoreElements() ) {
-			ZipEntry entry = entries.nextElement();
-			if ( logger.isDebugEnabled() ) {
-				logger.debug("Got entry: " + entry);
+		try (ZipFile zFile = new ZipFile(outputZip)) {
+			Enumeration<? extends ZipEntry> entries = zFile.entries();
+			while (entries.hasMoreElements()) {
+				ZipEntry entry = entries.nextElement();
+				if (logger.isDebugEnabled()) {
+					logger.debug("Got entry: " + entry);
+				}
+				if (entry.getName().equals("metadata.xml")) {
+					metaFound = true;
+				}
+				count++;
 			}
-			if ( entry.getName().equals("metadata.xml") ) {
-				metaFound = true;
-			}
-			count++;
 		}
 		assertEquals(3, count);
 		assertTrue(metaFound);
@@ -666,8 +677,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test exporting a set of items.
 	 * 
-	 * @throws Exception
-	 *         if an error occurs
+	 * @throws Exception if an error occurs
 	 */
 	@Test
 	@SuppressWarnings("unchecked")
@@ -677,7 +687,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		Collection c = collectionDao.get(testCollection.getCollectionId());
 		Long[] itemIds = new Long[c.getItem().size()];
 		int i = 0;
-		for ( Iterator<MediaItem> itr = c.getItem().iterator(); itr.hasNext(); i++ ) {
+		for (Iterator<MediaItem> itr = c.getItem().iterator(); itr.hasNext(); i++) {
 			itemIds[i] = itr.next().getItemId();
 		}
 
@@ -685,7 +695,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 
 		// now export album in "normal" size
 		File outputZip = File.createTempFile("IOBizImplTest-", ".zip");
-		if ( logger.isDebugEnabled() ) {
+		if (logger.isDebugEnabled()) {
 			logger.debug("Exporting item archive: " + outputZip.getAbsolutePath());
 		}
 		BasicMediaRequest request = new BasicMediaRequest(null, MediaSize.NORMAL, MediaQuality.GOOD);
@@ -700,20 +710,21 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		assertEquals(2, objectIds.size());
 
 		assertTrue(outputZip.length() > 0);
-		if ( logger.isDebugEnabled() ) {
+		if (logger.isDebugEnabled()) {
 			logger.debug("Export items  complete to archive: " + outputZip.getAbsolutePath());
 		}
 
 		// verify all items exported into zip
-		ZipFile zFile = new ZipFile(outputZip);
-		Enumeration<? extends ZipEntry> entries = zFile.entries();
 		int count = 0;
-		while ( entries.hasMoreElements() ) {
-			ZipEntry entry = entries.nextElement();
-			if ( logger.isDebugEnabled() ) {
-				logger.debug("Got entry: " + entry);
+		try (ZipFile zFile = new ZipFile(outputZip)) {
+			Enumeration<? extends ZipEntry> entries = zFile.entries();
+			while (entries.hasMoreElements()) {
+				ZipEntry entry = entries.nextElement();
+				if (logger.isDebugEnabled()) {
+					logger.debug("Got entry: " + entry);
+				}
+				count++;
 			}
-			count++;
 		}
 		assertEquals(2, count);
 	}
@@ -721,8 +732,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test exporting a set of items in two-phase style.
 	 * 
-	 * @throws Exception
-	 *         if an error occurs
+	 * @throws Exception if an error occurs
 	 */
 	@Test
 	@SuppressWarnings("unchecked")
@@ -732,7 +742,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		Collection c = collectionDao.get(testCollection.getCollectionId());
 		Long[] itemIds = new Long[c.getItem().size()];
 		int i = 0;
-		for ( Iterator<MediaItem> itr = c.getItem().iterator(); itr.hasNext(); i++ ) {
+		for (Iterator<MediaItem> itr = c.getItem().iterator(); itr.hasNext(); i++) {
 			itemIds[i] = itr.next().getItemId();
 		}
 
@@ -740,7 +750,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 
 		// now export album in "normal" size
 		File outputZip = File.createTempFile("IOBizImplTest-", ".zip");
-		if ( logger.isDebugEnabled() ) {
+		if (logger.isDebugEnabled()) {
 			logger.debug("Exporting item archive: " + outputZip.getAbsolutePath());
 		}
 		BasicMediaRequest request = new BasicMediaRequest(null, MediaSize.NORMAL, MediaQuality.GOOD);
@@ -768,20 +778,21 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		assertEquals(2, objectIds.size());
 
 		assertTrue(outputZip.length() > 0);
-		if ( logger.isDebugEnabled() ) {
+		if (logger.isDebugEnabled()) {
 			logger.debug("Export items  complete to archive: " + outputZip.getAbsolutePath());
 		}
 
 		// verify all items exported into zip
-		ZipFile zFile = new ZipFile(outputZip);
-		Enumeration<? extends ZipEntry> entries = zFile.entries();
 		int count = 0;
-		while ( entries.hasMoreElements() ) {
-			ZipEntry entry = entries.nextElement();
-			if ( logger.isDebugEnabled() ) {
-				logger.debug("Got entry: " + entry);
+		try (ZipFile zFile = new ZipFile(outputZip)) {
+			Enumeration<? extends ZipEntry> entries = zFile.entries();
+			while (entries.hasMoreElements()) {
+				ZipEntry entry = entries.nextElement();
+				if (logger.isDebugEnabled()) {
+					logger.debug("Got entry: " + entry);
+				}
+				count++;
 			}
-			count++;
 		}
 		assertEquals(2, count);
 	}
@@ -789,8 +800,7 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 	/**
 	 * Test able to move media files.
 	 * 
-	 * @throws Exception
-	 *         if any error occurs
+	 * @throws Exception if any error occurs
 	 */
 	@Test
 	@SuppressWarnings("unchecked")
@@ -804,8 +814,8 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		newCollection.setPath("test-move-media");
 		newCollection.setCreationDate(Calendar.getInstance());
 		File destDir = new File(testSystemBiz.getCollectionRootDirectory(), newCollection.getPath());
-		if ( destDir.exists() ) {
-			for ( File f : destDir.listFiles() ) {
+		if (destDir.exists()) {
+			for (File f : destDir.listFiles()) {
 				f.delete();
 			}
 			destDir.delete();
@@ -829,14 +839,14 @@ public class IOBizImplTest extends AbstractSpringEnabledTransactionalTest {
 		try {
 			byte[] buffer = new byte[FileCopyUtils.BUFFER_SIZE];
 			int bytesRead = -1;
-			while ( (bytesRead = in.read(buffer)) != -1 ) {
+			while ((bytesRead = in.read(buffer)) != -1) {
 				out.write(buffer, 0, bytesRead);
 			}
 			out.flush();
 		} finally {
 			try {
 				in.close();
-			} catch ( IOException ex ) {
+			} catch (IOException ex) {
 				logger.warn("Could not close InputStream", ex);
 			}
 		}
