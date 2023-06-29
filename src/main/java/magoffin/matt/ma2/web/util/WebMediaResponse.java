@@ -25,15 +25,15 @@ package magoffin.matt.ma2.web.util;
 import java.io.IOException;
 import java.io.OutputStream;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.codec.digest.DigestUtils;
 import magoffin.matt.ma2.MediaResponse;
 import magoffin.matt.ma2.domain.MediaItem;
-import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  * Web implementation of {@link MediaResponse}.
  * 
  * @author matt.magoffin
- * @version 1.1
+ * @version 1.2
  */
 public class WebMediaResponse implements MediaResponse {
 
@@ -89,6 +89,7 @@ public class WebMediaResponse implements MediaResponse {
 		this.original = original;
 	}
 
+	@Override
 	public void setMimeType(String mime) {
 		webResponse.setContentType(mime);
 	}
@@ -102,18 +103,21 @@ public class WebMediaResponse implements MediaResponse {
 		}
 	}
 
+	@Override
 	public void setMediaLength(long length) {
 		fileLength = length;
 		webResponse.setContentLength((int) length);
 		setETag();
 	}
 
+	@Override
 	public void setItem(MediaItem item) {
 		if ( this.filename == null ) {
 			this.filename = item.getName();
 		}
 	}
 
+	@Override
 	public void setPartialResponse(long start, long end, long total) {
 		fileLength = total;
 		String val = String.format("bytes %d-%d/%d", start, end, total);
@@ -123,10 +127,12 @@ public class WebMediaResponse implements MediaResponse {
 		setETag();
 	}
 
+	@Override
 	public boolean hasOutputStream() {
 		return webResponse != null;
 	}
 
+	@Override
 	public OutputStream getOutputStream() {
 		if ( httpOutputStream != null ) {
 			return httpOutputStream;
@@ -171,15 +177,17 @@ public class WebMediaResponse implements MediaResponse {
 		}
 	}
 
+	@Override
 	public void setFilename(String filename) {
 		this.filename = filename;
 		if ( this.filename != null && this.download ) {
 			// for download responses, add a filename header
-			webResponse.setHeader("Content-Disposition", "attachment; filename=\"" + this.filename
-					+ "\"");
+			webResponse.setHeader("Content-Disposition",
+					"attachment; filename=\"" + this.filename + "\"");
 		}
 	}
 
+	@Override
 	public void setModifiedDate(long date) {
 		modDate = date;
 	}

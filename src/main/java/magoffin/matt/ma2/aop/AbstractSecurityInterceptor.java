@@ -24,39 +24,36 @@
 
 package magoffin.matt.ma2.aop;
 
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+import org.apache.log4j.Logger;
 import magoffin.matt.ma2.AuthorizationException;
 import magoffin.matt.ma2.AuthorizationException.Reason;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.UserBiz;
 import net.sf.ehcache.Ehcache;
 
-import org.aopalliance.intercept.MethodInterceptor;
-import org.aopalliance.intercept.MethodInvocation;
-import org.apache.log4j.Logger;
-
 /**
  * Base AOP interceptor to validate security.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public abstract class AbstractSecurityInterceptor implements MethodInterceptor {
-	
+
 	private final Logger log = Logger.getLogger(getClass());
-	
+
 	private UserBiz userBiz;
 	private Ehcache securityCache;
-	
-	/* (non-Javadoc)
-	 * @see org.aopalliance.intercept.MethodInterceptor#invoke(org.aopalliance.intercept.MethodInvocation)
-	 */
+
+	@Override
 	public final Object invoke(MethodInvocation invocation) throws Throwable {
 		// look for BizContext in method args to tell who current user is
 		BizContext context = null;
 		if ( invocation.getArguments() != null ) {
 			for ( Object o : invocation.getArguments() ) {
 				if ( o instanceof BizContext ) {
-					context = (BizContext)o;
+					context = (BizContext) o;
 					break;
 				}
 			}
@@ -64,34 +61,32 @@ public abstract class AbstractSecurityInterceptor implements MethodInterceptor {
 		if ( context == null ) {
 			// no security...
 			log.warn("No BizContext found in method arguments, security ignored: "
-					+invocation.toString());
+					+ invocation.toString());
 			return invocation.proceed();
 		}
-		
+
 		if ( isAllowed(invocation, context) ) {
 			return invocation.proceed();
 		}
-		
-		log.warn("Security error: invocation [" +invocation 
-			+"] denied for user [" 
-			+(userBiz.isAnonymousUser(context.getActingUser())
-					? "anonymous" : context.getActingUser().getUserId()
-							+":"+context.getActingUser().getLogin())
-			+"]");
 
-		throw new AuthorizationException(context.getActingUser().getLogin(),
-				Reason.ACCESS_DENIED);
+		log.warn("Security error: invocation [" + invocation + "] denied for user ["
+				+ (userBiz.isAnonymousUser(context.getActingUser()) ? "anonymous"
+						: context.getActingUser().getUserId() + ":" + context.getActingUser().getLogin())
+				+ "]");
+
+		throw new AuthorizationException(context.getActingUser().getLogin(), Reason.ACCESS_DENIED);
 	}
-	
+
 	/**
 	 * Return <em>true</em> if the method invocation should be allowed.
 	 * 
-	 * @param invocation the invocation
-	 * @param context the context
+	 * @param invocation
+	 *        the invocation
+	 * @param context
+	 *        the context
 	 * @return boolean
 	 */
-	abstract protected boolean isAllowed(MethodInvocation invocation, 
-			BizContext context);
+	abstract protected boolean isAllowed(MethodInvocation invocation, BizContext context);
 
 	/**
 	 * @return the userBiz
@@ -99,9 +94,10 @@ public abstract class AbstractSecurityInterceptor implements MethodInterceptor {
 	public UserBiz getUserBiz() {
 		return userBiz;
 	}
-	
+
 	/**
-	 * @param userBiz the userBiz to set
+	 * @param userBiz
+	 *        the userBiz to set
 	 */
 	public void setUserBiz(UserBiz userBiz) {
 		this.userBiz = userBiz;
@@ -115,7 +111,8 @@ public abstract class AbstractSecurityInterceptor implements MethodInterceptor {
 	}
 
 	/**
-	 * @param securityCache the securityCache to set
+	 * @param securityCache
+	 *        the securityCache to set
 	 */
 	public void setSecurityCache(Ehcache securityCache) {
 		this.securityCache = securityCache;

@@ -26,28 +26,25 @@ package magoffin.matt.ma2.dao.hbm;
 
 import java.util.Calendar;
 import java.util.List;
-
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import magoffin.matt.dao.BasicBatchResult;
 import magoffin.matt.dao.hbm.CriteriaBuilder;
 import magoffin.matt.dao.hbm.GenericHibernateDao;
 import magoffin.matt.ma2.dao.UserDao;
 import magoffin.matt.ma2.domain.User;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Order;
-
 /**
  * Hibernate implementation of {@link magoffin.matt.ma2.dao.UserDao}.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
-public class HibernateUserDao extends GenericHibernateDao<User, Long>
-implements UserDao {
+public class HibernateUserDao extends GenericHibernateDao<User, Long> implements UserDao {
 
 	/** Find a user by its username. */
 	public static final String QUERY_USER_BY_LOGIN = "UserForLogin";
-	
+
 	/** Find a user by its email. */
 	public static final String QUERY_USER_BY_EMAIL = "UserForEmail";
 
@@ -58,8 +55,7 @@ implements UserDao {
 	public static final String QUERY_USERS_BY_ACCESS_LEVEL = "UsersForAccessLevel";
 
 	/** Find users not confirmed in a long time. */
-	public static final String QUERY_USERS_UNCONFIRMED_FOR_LONG_TIME 
-		= "UsersUnconfirmedForLongTime";
+	public static final String QUERY_USERS_UNCONFIRMED_FOR_LONG_TIME = "UsersUnconfirmedForLongTime";
 
 	/**
 	 * Default constructor.
@@ -70,38 +66,33 @@ implements UserDao {
 
 	@Override
 	protected Long getPrimaryKey(User domainObject) {
-		if ( domainObject == null ) return null;
+		if ( domainObject == null )
+			return null;
 		return domainObject.getUserId();
 	}
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.dao.UserDao#findUsersForAccess(java.lang.Integer)
-	 */
+
+	@Override
 	public List<User> findUsersForAccess(Integer accessLevel) {
-		return findByNamedQuery(QUERY_USERS_BY_ACCESS_LEVEL, new Object[]{accessLevel});
+		return findByNamedQuery(QUERY_USERS_BY_ACCESS_LEVEL, new Object[] { accessLevel });
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.dao.UserDao#getUserByEmail(java.lang.String)
-	 */
+	@Override
 	public User getUserByEmail(String email) {
-		List<User> results = findByNamedQuery(QUERY_USER_BY_EMAIL, new Object[]{email});
-		if ( results.size() < 1 ) return null;
+		List<User> results = findByNamedQuery(QUERY_USER_BY_EMAIL, new Object[] { email });
+		if ( results.size() < 1 )
+			return null;
 		return results.get(0);
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.dao.UserDao#getUserByLogin(java.lang.String)
-	 */
+	@Override
 	public User getUserByLogin(String login) {
-		List<User> results = findByNamedQuery(QUERY_USER_BY_LOGIN, new Object[]{login});
-		if ( results.size() < 1 ) return null;
+		List<User> results = findByNamedQuery(QUERY_USER_BY_LOGIN, new Object[] { login });
+		if ( results.size() < 1 )
+			return null;
 		return results.get(0);
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.dao.BatchableDao#batchProcess(magoffin.matt.dao.BatchableDao.BatchCallback, magoffin.matt.dao.BatchableDao.BatchOptions)
-	 */
+	@Override
 	public BatchResult batchProcess(BatchCallback<User> callback, BatchOptions options) {
 		if ( callback == null || options == null ) {
 			throw new IllegalArgumentException("Batch parameters and options are required");
@@ -113,38 +104,35 @@ implements UserDao {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.dao.UserDao#getUserByKey(java.lang.String)
-	 */
+	@Override
 	public User getUserByKey(String key) {
-		List<User> results = findByNamedQuery(QUERY_USER_BY_KEY, new Object[]{key});
-		if ( results.size() < 1 ) return null;
+		List<User> results = findByNamedQuery(QUERY_USER_BY_KEY, new Object[] { key });
+		if ( results.size() < 1 )
+			return null;
 		return results.get(0);
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.dao.UserDao#deleteUnconfirmedRegistrations(int)
-	 */
+	@Override
 	public List<User> deleteUnconfirmedRegistrations(int minDaysOld) {
 		Calendar now = Calendar.getInstance();
 		now.add(Calendar.DATE, -minDaysOld);
-		final List<User> results = findByNamedQuery(QUERY_USERS_UNCONFIRMED_FOR_LONG_TIME, 
-				new Object[]{now});
+		final List<User> results = findByNamedQuery(QUERY_USERS_UNCONFIRMED_FOR_LONG_TIME,
+				new Object[] { now });
 		getHibernateTemplate().deleteAll(results);
 		if ( log.isDebugEnabled() ) {
-			log.debug("Deleted " +results.size() +" stale user registrations");
+			log.debug("Deleted " + results.size() + " stale user registrations");
 		}
 		return results;
 	}
 
-	private BatchResult handleBatchIndex(BatchCallback<User> callback,
-			BatchOptions batchOptions) {
-		Integer numProcessed = executeLiveCriteriaBatchCallback(
-				new CriteriaBuilder() {
-					public void buildCriteria(Criteria criteria) {
-						criteria.addOrder(Order.asc("id"));
-					}
-				}, callback, batchOptions);
+	private BatchResult handleBatchIndex(BatchCallback<User> callback, BatchOptions batchOptions) {
+		Integer numProcessed = executeLiveCriteriaBatchCallback(new CriteriaBuilder() {
+
+			@Override
+			public void buildCriteria(Criteria criteria) {
+				criteria.addOrder(Order.asc("id"));
+			}
+		}, callback, batchOptions);
 		return new BasicBatchResult(numProcessed);
 	}
 

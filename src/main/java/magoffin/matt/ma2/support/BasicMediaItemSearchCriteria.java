@@ -25,7 +25,6 @@
 package magoffin.matt.ma2.support;
 
 import java.util.Calendar;
-
 import magoffin.matt.ma2.biz.SearchBiz.MediaItemSearchCriteria;
 import magoffin.matt.ma2.domain.MediaItem;
 
@@ -33,10 +32,10 @@ import magoffin.matt.ma2.domain.MediaItem;
  * Basic implementation of {@link MediaItemSearchCriteria}.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class BasicMediaItemSearchCriteria implements MediaItemSearchCriteria {
-	
+
 	private Calendar endDate = null;
 	private Calendar startDate = null;
 	private MediaItem mediaItemTemplate = null;
@@ -45,16 +44,17 @@ public class BasicMediaItemSearchCriteria implements MediaItemSearchCriteria {
 	private Long userId = null;
 	private String userAnonymousKey = null;
 	private boolean sharedOnly = false;
-	
+
 	/**
 	 * Default constructor.
 	 */
 	public BasicMediaItemSearchCriteria() {
 		super();
 	}
-	
+
 	/**
 	 * Construct with a quick search.
+	 * 
 	 * @param quickSearch
 	 */
 	public BasicMediaItemSearchCriteria(String quickSearch) {
@@ -64,124 +64,111 @@ public class BasicMediaItemSearchCriteria implements MediaItemSearchCriteria {
 
 	@Override
 	public String toString() {
-		return "BasicMediaItemSearchCriteria{quickSearch="
-			+this.quickSearch +",startDate="
-			+(this.startDate == null ? "" : this.startDate.getTime())
-			+",endDate="
-			+(this.endDate == null ? "" : this.endDate.getTime())
-			+",countOnly=" +countOnly
-			+",userId=" +userId
-			+",userKey=" +userAnonymousKey
-			+"}";
+		return "BasicMediaItemSearchCriteria{quickSearch=" + this.quickSearch + ",startDate="
+				+ (this.startDate == null ? "" : this.startDate.getTime()) + ",endDate="
+				+ (this.endDate == null ? "" : this.endDate.getTime()) + ",countOnly=" + countOnly
+				+ ",userId=" + userId + ",userKey=" + userAnonymousKey + "}";
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.biz.SearchBiz.MediaItemSearchCriteria#getEndDate()
-	 */
+	@Override
 	public Calendar getEndDate() {
 		return endDate;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.biz.SearchBiz.MediaItemSearchCriteria#getMediaItemTemplate()
-	 */
+	@Override
 	public MediaItem getMediaItemTemplate() {
 		return mediaItemTemplate;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.biz.SearchBiz.MediaItemSearchCriteria#getQuickSearch()
-	 */
+	@Override
 	public String getQuickSearch() {
 		return quickSearch;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.biz.SearchBiz.MediaItemSearchCriteria#getStartDate()
-	 */
+	@Override
 	public Calendar getStartDate() {
 		return startDate;
 	}
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.biz.SearchBiz.MediaItemSearchCriteria#isCountOnly()
-	 */
+
+	@Override
 	public boolean isCountOnly() {
 		return countOnly;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.biz.SearchBiz.MediaItemSearchCriteria#getUserId()
-	 */
+	@Override
 	public Long getUserId() {
 		return userId;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.biz.SearchBiz.MediaItemSearchCriteria#isSharedOnly()
-	 */
+	@Override
 	public boolean isSharedOnly() {
 		return sharedOnly;
 	}
 
 	/**
-	 * @param endDate the endDate to set
+	 * @param endDate
+	 *        the endDate to set
 	 */
 	public void setEndDate(Calendar endDate) {
 		this.endDate = endDate;
 	}
 
 	/**
-	 * @param mediaItemTemplate the mediaItemTemplate to set
+	 * @param mediaItemTemplate
+	 *        the mediaItemTemplate to set
 	 */
 	public void setMediaItemTemplate(MediaItem mediaItemTemplate) {
 		this.mediaItemTemplate = mediaItemTemplate;
 	}
-	
+
 	/**
-	 * @param quickSearch the quickSearch to set
+	 * @param quickSearch
+	 *        the quickSearch to set
 	 */
 	public void setQuickSearch(String quickSearch) {
 		this.quickSearch = quickSearch;
 	}
-	
+
 	/**
-	 * @param startDate the startDate to set
+	 * @param startDate
+	 *        the startDate to set
 	 */
 	public void setStartDate(Calendar startDate) {
 		this.startDate = startDate;
 	}
-	
+
 	/**
-	 * @param countOnly the countOnly to set
+	 * @param countOnly
+	 *        the countOnly to set
 	 */
 	public void setCountOnly(boolean countOnly) {
 		this.countOnly = countOnly;
 	}
-	
+
 	/**
-	 * @param sharedOnly the sharedOnly to set
+	 * @param sharedOnly
+	 *        the sharedOnly to set
 	 */
 	public void setSharedOnly(boolean sharedOnly) {
 		this.sharedOnly = sharedOnly;
 	}
-	
+
 	/**
-	 * @param userId the userId to set
+	 * @param userId
+	 *        the userId to set
 	 */
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
-	
-	/**
-	 * @return the userAnonymousKey
-	 */
+
+	@Override
 	public String getUserAnonymousKey() {
 		return userAnonymousKey;
 	}
-	
+
 	/**
-	 * @param userAnonymousKey the userAnonymousKey to set
+	 * @param userAnonymousKey
+	 *        the userAnonymousKey to set
 	 */
 	public void setUserAnonymousKey(String userAnonymousKey) {
 		this.userAnonymousKey = userAnonymousKey;

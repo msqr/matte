@@ -24,10 +24,13 @@ package magoffin.matt.ma2.web;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.validation.BindException;
+import org.springframework.validation.Errors;
+import org.springframework.web.servlet.ModelAndView;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.MediaBiz;
 import magoffin.matt.ma2.domain.MediaItem;
@@ -35,30 +38,24 @@ import magoffin.matt.ma2.domain.Model;
 import magoffin.matt.ma2.support.UserCommentCommand;
 import magoffin.matt.ma2.web.util.WebConstants;
 
-import org.springframework.context.MessageSourceResolvable;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
-import org.springframework.web.servlet.ModelAndView;
-
 /**
  * Form controller for adding user comments to media items.
  * 
  * @author matt.magoffin
- * @version 1.0
+ * @version 1.1
  */
 public class AddCommentForm extends AbstractForm {
 
 	private MediaBiz mediaBiz;
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	protected Map referenceData(HttpServletRequest request, Object command,
-			Errors errors) throws Exception {
+	protected Map referenceData(HttpServletRequest request, Object command, Errors errors)
+			throws Exception {
 		BizContext context = getWebHelper().getAnonymousBizContext(request);
-		Map<String,Object> viewModel = new LinkedHashMap<String,Object>();
+		Map<String, Object> viewModel = new LinkedHashMap<String, Object>();
 		Model model = getDomainObjectFactory().newModelInstance();
-		UserCommentCommand cmd = (UserCommentCommand)command;
+		UserCommentCommand cmd = (UserCommentCommand) command;
 		MediaItem item = mediaBiz.getMediaItemWithInfo(cmd.getItemId(), context);
 		if ( item != null ) {
 			model.getItem().add(item);
@@ -67,19 +64,18 @@ public class AddCommentForm extends AbstractForm {
 		return viewModel;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	protected ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command,	BindException errors)
-			throws Exception {
+	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response,
+			Object command, BindException errors) throws Exception {
 		BizContext context = getWebHelper().getAnonymousBizContext(request);
-		UserCommentCommand cmd = (UserCommentCommand)command;
+		UserCommentCommand cmd = (UserCommentCommand) command;
 		mediaBiz.storeMediaItemUserComment(cmd, context);
-		
-		Map<String,Object> viewModel = new LinkedHashMap<String,Object>();
+
+		Map<String, Object> viewModel = new LinkedHashMap<String, Object>();
 		MessageSourceResolvable msg = new DefaultMessageSourceResolvable(
-				new String[] {"add.comment.saved"}, null,
-				"Your comment has been saved.");
-		viewModel.put(WebConstants.ALERT_MESSAGES_OBJECT,msg);
+				new String[] { "add.comment.saved" }, null, "Your comment has been saved.");
+		viewModel.put(WebConstants.ALERT_MESSAGES_OBJECT, msg);
 		return new ModelAndView(getSuccessView(), viewModel);
 	}
 
@@ -91,10 +87,11 @@ public class AddCommentForm extends AbstractForm {
 	}
 
 	/**
-	 * @param mediaBiz the mediaBiz to set
+	 * @param mediaBiz
+	 *        the mediaBiz to set
 	 */
 	public void setMediaBiz(MediaBiz mediaBiz) {
 		this.mediaBiz = mediaBiz;
 	}
-	
+
 }

@@ -41,57 +41,58 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
-
-import magoffin.matt.ma2.biz.WorkBiz;
-
 import org.apache.log4j.Logger;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+import magoffin.matt.ma2.biz.WorkBiz;
 
 /**
- * Implementation of WorkBiz that uses an {@link java.util.concurrent.ExecutorService}
- * to schedule the work in different threads.
+ * Implementation of WorkBiz that uses an
+ * {@link java.util.concurrent.ExecutorService} to schedule the work in
+ * different threads.
  * 
- * <p>The configurable properties of this class are:</p>
+ * <p>
+ * The configurable properties of this class are:
+ * </p>
  * 
  * <dl class="class-properties">
- *   <dt>executor</dt>
- *   <dd>The {@link java.util.concurrent.ExecutorService} to use for executing
- *   the submitted work in {@link #submitWork(WorkRequest)}. If not configured, 
- *   
- *   <dt>completedJobMinRememberTimeMs</dt>
- *   <dd>The length of time, in milliseconds, to maintain a reference to 
- *   completed jobs. Defaults to 10 minutes.</dd>
- *   
- *   <dt>delayedJobMaxRememberTimeMs</dt>
- *   <dd>The length of time, in milliseconds, to maintain a refernce to 
- *   a delayed job. If a delayed job is found to be delayed longer than this
- *   amount of time, it will be cancelled and removed.</dd>
- *   
- *   <dt>scanJobTimerMs</dt>
- *   <dd>The frequency at which to look for completed jobs to purge as well
- *   as delayed jobs to start. Completed jobs will have to be completed longer 
- *   than <em>completedJobMinRememberTimeMs</em> milliseconds ago. Defaults 
- *   to 2 minutes.</dd>
- *   
- *   <dt>transactionManager</dt>
- *   <dd>The <code>PlatformTransactionManager</code> to manage transactions
- *   with. Each job is executed in a transaction, either by joining an 
- *   exiting one or starting a new one. If left <em>null</em> then no 
- *   transactions will be used.</dd>
- *   
- *   <dt>forceTransactionRollback</dt>
- *   <dd>Force all transactions to be rolled back when the job completes.
- *   This can be used for testing. Defaults to <em>false</em>.</dd>
+ * <dt>executor</dt>
+ * <dd>The {@link java.util.concurrent.ExecutorService} to use for executing the
+ * submitted work in {@link #submitWork(WorkRequest)}. If not configured,
+ * 
+ * <dt>completedJobMinRememberTimeMs</dt>
+ * <dd>The length of time, in milliseconds, to maintain a reference to completed
+ * jobs. Defaults to 10 minutes.</dd>
+ * 
+ * <dt>delayedJobMaxRememberTimeMs</dt>
+ * <dd>The length of time, in milliseconds, to maintain a refernce to a delayed
+ * job. If a delayed job is found to be delayed longer than this amount of time,
+ * it will be cancelled and removed.</dd>
+ * 
+ * <dt>scanJobTimerMs</dt>
+ * <dd>The frequency at which to look for completed jobs to purge as well as
+ * delayed jobs to start. Completed jobs will have to be completed longer than
+ * <em>completedJobMinRememberTimeMs</em> milliseconds ago. Defaults to 2
+ * minutes.</dd>
+ * 
+ * <dt>transactionManager</dt>
+ * <dd>The <code>PlatformTransactionManager</code> to manage transactions with.
+ * Each job is executed in a transaction, either by joining an exiting one or
+ * starting a new one. If left <em>null</em> then no transactions will be
+ * used.</dd>
+ * 
+ * <dt>forceTransactionRollback</dt>
+ * <dd>Force all transactions to be rolled back when the job completes. This can
+ * be used for testing. Defaults to <em>false</em>.</dd>
  * </dl>
  * 
  * @author matt.magoffin
- * @version 1.0
+ * @version 1.1
  */
 public class WorkBizImpl implements WorkBiz {
-	
+
 	private ExecutorService executor = null;
 	private long completedJobMinRememberTimeMs = 600000; // 10 minutes
 	private long delayedJobMaxRememberTimeMs = 600000; // 10 minutes
@@ -100,29 +101,26 @@ public class WorkBizImpl implements WorkBiz {
 	private boolean forceTransactionRollback = false;
 
 	private Timer scanJobCleanupTimer = null;
-	private Map<Long,MyWorkInfo> jobs = new LinkedHashMap<Long,MyWorkInfo>();
-	private Map<Long,MyWorkInfo> delayedJobs = new LinkedHashMap<Long,MyWorkInfo>();
+	private final Map<Long, MyWorkInfo> jobs = new LinkedHashMap<Long, MyWorkInfo>();
+	private final Map<Long, MyWorkInfo> delayedJobs = new LinkedHashMap<Long, MyWorkInfo>();
 
 	private final Logger log = Logger.getLogger(WorkBizImpl.class);
-	
+
 	/**
 	 * Initialize this instance.
 	 */
 	public void init() {
 		if ( log.isInfoEnabled() ) {
-			log.info("Starting WorkBiz [" +this +"]");
+			log.info("Starting WorkBiz [" + this + "]");
 		}
 		// start cleanup thread to purge jobs list
 		this.scanJobCleanupTimer = new Timer("ScanJobsTimer", true);
-		this.scanJobCleanupTimer.schedule(
-				new ScanJobsTask(),
-				new Date(),
-				this.scanJobTimerMs);
+		this.scanJobCleanupTimer.schedule(new ScanJobsTask(), new Date(), this.scanJobTimerMs);
 		if ( log.isInfoEnabled() ) {
-			log.info("WorkBiz [" +this +"] ready");
+			log.info("WorkBiz [" + this + "] ready");
 		}
 	}
-	
+
 	/**
 	 * Shutdown the work queue.
 	 */
@@ -130,13 +128,13 @@ public class WorkBizImpl implements WorkBiz {
 		if ( this.scanJobCleanupTimer != null ) {
 			if ( this.executor != null && !this.executor.isShutdown() ) {
 				if ( log.isInfoEnabled() ) {
-					log.info("Shutting down WorkBiz [" +this +"]");
+					log.info("Shutting down WorkBiz [" + this + "]");
 				}
 				this.executor.shutdown();
 				try {
-					this.executor.awaitTermination(60,TimeUnit.SECONDS);
-				} catch (InterruptedException e) {
-					log.warn("Interrupted waiting for jobs to finish: " +e);
+					this.executor.awaitTermination(60, TimeUnit.SECONDS);
+				} catch ( InterruptedException e ) {
+					log.warn("Interrupted waiting for jobs to finish: " + e);
 				}
 			}
 			this.scanJobCleanupTimer.cancel();
@@ -144,29 +142,31 @@ public class WorkBizImpl implements WorkBiz {
 			processDeleayedJobs();
 			this.jobs.clear();
 			if ( log.isInfoEnabled() ) {
-				log.info("WorkBiz [" +this +"] shut down");
+				log.info("WorkBiz [" + this + "] shut down");
 			}
 		} else {
 			if ( log.isInfoEnabled() ) {
-				log.info("WorkBiz [" +this +"] is already shut down");
+				log.info("WorkBiz [" + this + "] is already shut down");
 			}
 		}
 	}
-	
+
 	/**
-	 * FutureTask implementation that also implements Comparable so can
-	 * work with PriorityBlockingQueue based ThreadPoolExecutor.
+	 * FutureTask implementation that also implements Comparable so can work
+	 * with PriorityBlockingQueue based ThreadPoolExecutor.
 	 */
-	private class WorkInfoFutureTask extends FutureTask<WorkInfo> 
-	implements Comparable<WorkInfoFutureTask> {
-		
+	private class WorkInfoFutureTask extends FutureTask<WorkInfo>
+			implements Comparable<WorkInfoFutureTask> {
+
 		private MyWorkInfo myWorkInfo;
-		
+
 		private WorkInfoFutureTask(final MyWorkInfo workInfo) {
 			super(new Callable<WorkInfo>() {
+
+				@Override
 				public WorkInfo call() throws Exception {
 					if ( log.isTraceEnabled() ) {
-						log.trace("Thread starting work ticket " +workInfo.ticket);
+						log.trace("Thread starting work ticket " + workInfo.ticket);
 					}
 					try {
 						handleWork(workInfo);
@@ -174,13 +174,12 @@ public class WorkBizImpl implements WorkBiz {
 					} catch ( Exception e ) {
 						workInfo.exception = e;
 						if ( log.isDebugEnabled() ) {
-							log.debug("Work [" +workInfo.ticket 
-									+"] threw exception", e);
+							log.debug("Work [" + workInfo.ticket + "] threw exception", e);
 						}
 						throw e;
 					} finally {
 						if ( log.isTraceEnabled() ) {
-							log.trace("Thread finished work ticket " +workInfo.ticket);
+							log.trace("Thread finished work ticket " + workInfo.ticket);
 						}
 					}
 				}
@@ -188,37 +187,36 @@ public class WorkBizImpl implements WorkBiz {
 			this.myWorkInfo = workInfo;
 			this.myWorkInfo.future = this;
 		}
-		
+
+		@Override
 		public int compareTo(WorkInfoFutureTask other) {
 			return myWorkInfo.compareTo(other.myWorkInfo);
 		}
-		
+
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.biz.WorkBiz#submitWork(magoffin.matt.ma2.biz.WorkBiz.WorkRequest)
-	 */
+	@Override
 	public WorkInfo submitWork(WorkRequest work) {
 		MyWorkInfo workInfo = new MyWorkInfo(work);
 		if ( log.isTraceEnabled() ) {
-			log.trace("Submitting work ticket " +workInfo.ticket);
+			log.trace("Submitting work ticket " + workInfo.ticket);
 		}
 
 		// add work info to jobs list
 		if ( work.canStart() ) {
-			synchronized (this.jobs) {
-				this.jobs.put(workInfo.getTicket(),workInfo);
+			synchronized ( this.jobs ) {
+				this.jobs.put(workInfo.getTicket(), workInfo);
 			}
 		} else {
 			if ( log.isTraceEnabled() ) {
-				log.trace("Work ticket " +workInfo.ticket +" cannot start yet");
+				log.trace("Work ticket " + workInfo.ticket + " cannot start yet");
 			}
-			synchronized (this.delayedJobs) {
+			synchronized ( this.delayedJobs ) {
 				this.delayedJobs.put(workInfo.getTicket(), workInfo);
 			}
 			return workInfo;
 		}
-		
+
 		processWorkInfo(workInfo);
 		return workInfo;
 	}
@@ -230,7 +228,7 @@ public class WorkBizImpl implements WorkBiz {
 		} else {
 			// execute directly in this thread
 			try {
-				/*workInfo.future = new Future<WorkInfo>() {
+				/*-workInfo.future = new Future<WorkInfo>() {
 					public boolean cancel(boolean mayInterruptIfRunning) {
 						return false;
 					}
@@ -260,7 +258,7 @@ public class WorkBizImpl implements WorkBiz {
 				handleWork(workInfo);
 			} catch ( Exception e ) {
 				if ( log.isDebugEnabled() ) {
-					log.debug("Exception performing work " +workInfo.ticket, e);
+					log.debug("Exception performing work " + workInfo.ticket, e);
 				}
 				workInfo.exception = e;
 			} finally {
@@ -269,22 +267,18 @@ public class WorkBizImpl implements WorkBiz {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.biz.WorkBiz#workReadyNow(long)
-	 */
+	@Override
 	public boolean workReadyNow(long ticket) {
 		processDeleayedJobs();
 		WorkInfo info = getInfo(ticket);
 		if ( info != null && this.executor == null ) {
 			// this is only called when single-threaded access is configured
-			processWorkInfo((MyWorkInfo)info);
+			processWorkInfo((MyWorkInfo) info);
 		}
 		return info != null;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.biz.WorkBiz#getInfo(int)
-	 */
+	@Override
 	public WorkInfo getInfo(long ticket) {
 		WorkInfo result = jobs.get(ticket);
 		if ( result == null ) {
@@ -292,10 +286,8 @@ public class WorkBizImpl implements WorkBiz {
 		}
 		return result;
 	}
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.biz.WorkBiz#infoExists(long)
-	 */
+
+	@Override
 	public boolean infoExists(long ticket) {
 		return jobs.containsKey(ticket);
 	}
@@ -304,23 +296,22 @@ public class WorkBizImpl implements WorkBiz {
 	 * Timer task to periodically delete completed jobs from jobs list.
 	 */
 	private class ScanJobsTask extends TimerTask {
+
 		@Override
 		public void run() {
 			if ( jobs != null ) {
 				synchronized ( jobs ) {
 					if ( log.isDebugEnabled() ) {
-						log.debug("Scanning " +jobs.size() 
-								+" remembered jobs for items to purge");
+						log.debug("Scanning " + jobs.size() + " remembered jobs for items to purge");
 					}
-					for ( Iterator<MyWorkInfo> itr = jobs.values().iterator(); 
-							itr.hasNext(); ) {
+					for ( Iterator<MyWorkInfo> itr = jobs.values().iterator(); itr.hasNext(); ) {
 						MyWorkInfo job = itr.next();
 						long age = System.currentTimeMillis() - job.completeTime;
 						if ( job.isDone() && age > completedJobMinRememberTimeMs ) {
 							// ok to discard job now
 							if ( log.isInfoEnabled() ) {
-								log.info("Discarding " +job 
-										+"; work complete and is " +age +"ms old");
+								log.info("Discarding " + job + "; work complete and is " + age
+										+ "ms old");
 							}
 							itr.remove();
 						}
@@ -341,34 +332,33 @@ public class WorkBizImpl implements WorkBiz {
 		workInfo.startTime = System.currentTimeMillis();
 		try {
 			if ( log.isDebugEnabled() ) {
-				log.debug("Starting work ticket " +workInfo.ticket);
+				log.debug("Starting work ticket " + workInfo.ticket);
 			}
 			workInfo.work.startWork();
 		} catch ( Throwable e ) {
 			workInfo.exception = e;
-			if ( status != null ) transactionManager.rollback(status);
+			if ( status != null )
+				transactionManager.rollback(status);
 		} finally {
 			workInfo.completeTime = System.currentTimeMillis();
 		}
 		if ( workInfo.getException() != null ) {
-			log.error("Work " +workInfo +" threw exception",workInfo.exception);
+			log.error("Work " + workInfo + " threw exception", workInfo.exception);
 		} else {
 			if ( status != null ) {
 				if ( forceTransactionRollback ) {
 					if ( log.isInfoEnabled() ) {
-						log.info("Force rolling back transaction for ticket " 
-								+workInfo.getTicket());
+						log.info("Force rolling back transaction for ticket " + workInfo.getTicket());
 					}
 					transactionManager.rollback(status);
 				} else {
 					if ( log.isDebugEnabled() ) {
-						log.debug("Commiting transaction for ticket " 
-								+workInfo.getTicket());
+						log.debug("Commiting transaction for ticket " + workInfo.getTicket());
 					}
 					transactionManager.commit(status);
 				}
 			}
-			log.debug("Completed work ticket " +workInfo.ticket);
+			log.debug("Completed work ticket " + workInfo.ticket);
 		}
 	}
 
@@ -377,16 +367,13 @@ public class WorkBizImpl implements WorkBiz {
 			List<MyWorkInfo> jobsToResubmit = new LinkedList<MyWorkInfo>();
 			synchronized ( delayedJobs ) {
 				if ( log.isDebugEnabled() ) {
-					log.debug("Scanning " +delayedJobs.size() 
-							+" delayed jobs for items to start");
+					log.debug("Scanning " + delayedJobs.size() + " delayed jobs for items to start");
 				}
-				for ( Iterator<MyWorkInfo> itr = delayedJobs.values().iterator(); 
-						itr.hasNext(); ) {
+				for ( Iterator<MyWorkInfo> itr = delayedJobs.values().iterator(); itr.hasNext(); ) {
 					MyWorkInfo job = itr.next();
 					if ( job.work.canStart() ) {
 						if ( log.isInfoEnabled() ) {
-							log.info("Submitting delayed job ["
-									+ job.ticket +"]");
+							log.info("Submitting delayed job [" + job.ticket + "]");
 						}
 						itr.remove();
 						if ( jobs != null ) {
@@ -397,11 +384,11 @@ public class WorkBizImpl implements WorkBiz {
 						if ( this.executor != null ) {
 							processWorkInfo(job);
 						}
-					} else if ( (job.submitTime+this.delayedJobMaxRememberTimeMs) 
-							< System.currentTimeMillis() ) {
+					} else if ( (job.submitTime + this.delayedJobMaxRememberTimeMs) < System
+							.currentTimeMillis() ) {
 						// delayed job never started... remove
-						log.warn("Delayed job [" +job.ticket +"] has not started in "
-								+this.delayedJobMaxRememberTimeMs +"ms, removing");
+						log.warn("Delayed job [" + job.ticket + "] has not started in "
+								+ this.delayedJobMaxRememberTimeMs + "ms, removing");
 						job.cancel(false);
 						itr.remove();
 					}
@@ -420,92 +407,103 @@ public class WorkBizImpl implements WorkBiz {
 	private static class MyWorkInfo implements WorkInfo {
 
 		private static AtomicLong TICKET_COUNTER = new AtomicLong(0);
-		
-		private long ticket;
-		private long submitTime;
+
+		private final long ticket;
+		private final long submitTime;
 		private long startTime;
 		private long completeTime;
 		private boolean forcedDone;
-		private List<Long> objectIdList;
+		private final List<Long> objectIdList;
 		private Throwable exception;
-		private WorkRequest work;
-		private Integer priority;
+		private final WorkRequest work;
+		private final Integer priority;
 		private Future<WorkInfo> future;
-		
+
 		private MyWorkInfo(WorkRequest work) {
 			this.ticket = TICKET_COUNTER.incrementAndGet();
 			this.work = work;
 			this.submitTime = System.currentTimeMillis();
 			this.startTime = completeTime = 0;
 			this.exception = null;
-			this.priority = work.getPriority() != null
-				? work.getPriority() : DEFAULT_PRIORITY;
+			this.priority = work.getPriority() != null ? work.getPriority() : DEFAULT_PRIORITY;
 			this.forcedDone = false;
 			this.objectIdList = work.getObjectIdList();
 		}
-		
+
+		@Override
 		public WorkRequest getWorkRequest() {
 			return work;
 		}
 
+		@Override
 		public int compareTo(WorkInfo other) {
 			if ( !this.priority.equals(other.getPriority()) ) {
 				return other.getPriority().compareTo(this.priority);
 			}
-			
+
 			// tickets can never (nearly!) be equal here...
 			return this.ticket < other.getTicket() ? -1 : 1;
 		}
-		
+
 		@Override
 		public String toString() {
 			SimpleDateFormat df = new SimpleDateFormat("dd MMM yyyy hh:mm:ss.S");
-			return "WorkInfo{ticket="
-				+ticket +",submit=" +df.format(new Date(submitTime))
-				+",start=" +startTime +",complete=" +completeTime
-				+",exception=" +exception +",work=" +work +"}";
+			return "WorkInfo{ticket=" + ticket + ",submit=" + df.format(new Date(submitTime)) + ",start="
+					+ startTime + ",complete=" + completeTime + ",exception=" + exception + ",work="
+					+ work + "}";
 		}
 
+		@Override
 		public List<Long> getObjectIds() {
 			return this.objectIdList;
 		}
 
+		@Override
 		public Integer getPriority() {
 			return priority;
 		}
 
+		@Override
 		public float getAmountCompleted() {
 			return work.getAmountCompleted();
 		}
 
+		@Override
 		public String getDisplayName() {
 			return work.getDisplayName();
 		}
 
+		@Override
 		public String getMessage() {
 			return work.getMessage();
 		}
 
+		@Override
 		public Throwable getException() {
 			return exception;
 		}
 
+		@Override
 		public long getCompleteTime() {
 			return completeTime;
 		}
 
+		@Override
 		public long getStartTime() {
 			return startTime;
 		}
 
+		@Override
 		public long getSubmitTime() {
 			return submitTime;
 		}
 
+		@Override
 		public long getTicket() {
 			return ticket;
 		}
 
+		@Override
 		public boolean cancel(boolean mayInterruptIfRunning) {
 			if ( future == null ) {
 				this.forcedDone = true;
@@ -514,25 +512,35 @@ public class WorkBizImpl implements WorkBiz {
 			return future.cancel(mayInterruptIfRunning);
 		}
 
+		@Override
 		public boolean isCancelled() {
-			if ( future == null ) return forcedDone;
+			if ( future == null )
+				return forcedDone;
 			return future.isCancelled();
 		}
 
+		@Override
 		public boolean isDone() {
-			if ( forcedDone ) return true;
-			if ( future == null ) return false;
+			if ( forcedDone )
+				return true;
+			if ( future == null )
+				return false;
 			return future.isDone();
 		}
 
+		@Override
 		public WorkInfo get() throws InterruptedException, ExecutionException {
-			if ( future == null ) return null;
+			if ( future == null )
+				return null;
 			return future.get();
 		}
 
-		public WorkInfo get(long timeout, TimeUnit units) throws InterruptedException, ExecutionException, TimeoutException {
-			if ( future == null ) return null;
-			return future.get(timeout,units);
+		@Override
+		public WorkInfo get(long timeout, TimeUnit units)
+				throws InterruptedException, ExecutionException, TimeoutException {
+			if ( future == null )
+				return null;
+			return future.get(timeout, units);
 		}
 
 	}
@@ -545,7 +553,8 @@ public class WorkBizImpl implements WorkBiz {
 	}
 
 	/**
-	 * @param executor The executor to set.
+	 * @param executor
+	 *        The executor to set.
 	 */
 	public void setExecutor(ExecutorService executor) {
 		this.executor = executor;
@@ -559,7 +568,8 @@ public class WorkBizImpl implements WorkBiz {
 	}
 
 	/**
-	 * @param scanJobTimerMs The scanJobTimerMs to set.
+	 * @param scanJobTimerMs
+	 *        The scanJobTimerMs to set.
 	 */
 	public void setScanJobTimerMs(long scanJobTimerMs) {
 		this.scanJobTimerMs = scanJobTimerMs;
@@ -573,7 +583,8 @@ public class WorkBizImpl implements WorkBiz {
 	}
 
 	/**
-	 * @param completedJobMinRememberTimeMs The completedJobMinRememberTimeMs to set.
+	 * @param completedJobMinRememberTimeMs
+	 *        The completedJobMinRememberTimeMs to set.
 	 */
 	public void setCompletedJobMinRememberTimeMs(long completedJobMinRememberTimeMs) {
 		this.completedJobMinRememberTimeMs = completedJobMinRememberTimeMs;
@@ -587,7 +598,8 @@ public class WorkBizImpl implements WorkBiz {
 	}
 
 	/**
-	 * @param transactionManager The transactionManager to set.
+	 * @param transactionManager
+	 *        The transactionManager to set.
 	 */
 	public void setTransactionManager(PlatformTransactionManager transactionManager) {
 		this.transactionManager = transactionManager;
@@ -601,7 +613,8 @@ public class WorkBizImpl implements WorkBiz {
 	}
 
 	/**
-	 * @param forceTransactionRollback The forceTransactionRollback to set.
+	 * @param forceTransactionRollback
+	 *        The forceTransactionRollback to set.
 	 */
 	public void setForceTransactionRollback(boolean forceTransactionRollback) {
 		this.forceTransactionRollback = forceTransactionRollback;
@@ -615,7 +628,8 @@ public class WorkBizImpl implements WorkBiz {
 	}
 
 	/**
-	 * @param delayedJobMaxRememberTimeMs the delayedJobMaxRememberTimeMs to set
+	 * @param delayedJobMaxRememberTimeMs
+	 *        the delayedJobMaxRememberTimeMs to set
 	 */
 	public void setDelayedJobMaxRememberTimeMs(long delayedJobMaxRememberTimeMs) {
 		this.delayedJobMaxRememberTimeMs = delayedJobMaxRememberTimeMs;

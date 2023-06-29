@@ -26,23 +26,22 @@ package magoffin.matt.ma2.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import magoffin.matt.ma2.domain.MediaSpec;
-
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
+import magoffin.matt.ma2.domain.MediaSpec;
 
 /**
  * Form controller for updating the current (session only) view settings.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class ViewSettingsForm extends AbstractForm {
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected Object formBackingObject(HttpServletRequest request) throws Exception {
-		Command cmd = (Command)super.formBackingObject(request);
+		Command cmd = (Command) super.formBackingObject(request);
 		if ( cmd.thumb == null ) {
 			cmd.thumb = getDomainObjectFactory().newMediaSpecInstance();
 		}
@@ -52,14 +51,15 @@ public class ViewSettingsForm extends AbstractForm {
 		return cmd;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	protected ModelAndView onSubmit(HttpServletRequest request, 
-			HttpServletResponse response, Object command, BindException errors) throws Exception {
-		
-		Command cmd = (Command)command;
+	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response,
+			Object command, BindException errors) throws Exception {
+
+		Command cmd = (Command) command;
 
 		getWebHelper().saveAnonymousUserSession(request, cmd.getThumb(), cmd.getView());
-		
+
 		if ( getWebHelper().getSavedRequestURL(request) != null ) {
 			String savedUrl = getWebHelper().getSavedRequestURL(request);
 			getWebHelper().clearSavedRequestURL(request);
@@ -71,37 +71,40 @@ public class ViewSettingsForm extends AbstractForm {
 
 	/** Command class. */
 	public static class Command {
+
 		private MediaSpec thumb;
 		private MediaSpec view;
-		
+
 		/**
 		 * @return the thumb
 		 */
 		public MediaSpec getThumb() {
 			return thumb;
 		}
-		
+
 		/**
-		 * @param thumb the thumb to set
+		 * @param thumb
+		 *        the thumb to set
 		 */
 		public void setThumb(MediaSpec thumb) {
 			this.thumb = thumb;
 		}
-		
+
 		/**
 		 * @return the view
 		 */
 		public MediaSpec getView() {
 			return view;
 		}
-		
+
 		/**
-		 * @param view the view to set
+		 * @param view
+		 *        the view to set
 		 */
 		public void setView(MediaSpec view) {
 			this.view = view;
 		}
-		
+
 	}
 
 }

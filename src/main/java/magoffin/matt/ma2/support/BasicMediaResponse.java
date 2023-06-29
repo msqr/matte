@@ -25,7 +25,6 @@
 package magoffin.matt.ma2.support;
 
 import java.io.OutputStream;
-
 import magoffin.matt.ma2.MediaResponse;
 import magoffin.matt.ma2.domain.MediaItem;
 
@@ -33,17 +32,17 @@ import magoffin.matt.ma2.domain.MediaItem;
  * Basic implementation of {@link magoffin.matt.ma2.MediaResponse}.
  * 
  * @author matt.magoffin
- * @version 1.0
+ * @version 1.1
  */
 public class BasicMediaResponse implements MediaResponse {
-	
+
 	private String mime = null;
 	private String filename = null;
 	private long length = 0;
 	private long modifiedDate = 0;
 	private MediaItem item = null;
 	private OutputStream outputStream = null;
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -53,64 +52,50 @@ public class BasicMediaResponse implements MediaResponse {
 
 	/**
 	 * Construct with some parameters.
-	 * @param outputStream the output stream
+	 * 
+	 * @param outputStream
+	 *        the output stream
 	 */
 	public BasicMediaResponse(OutputStream outputStream) {
 		this.outputStream = outputStream;
 	}
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaResponse#setMimeType(java.lang.String)
-	 */
+
+	@Override
 	public void setMimeType(String mime) {
 		this.mime = mime;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaResponse#setMediaLength(long)
-	 */
+	@Override
 	public void setMediaLength(long length) {
 		this.length = length;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaResponse#setModifiedDate(long)
-	 */
+	@Override
 	public void setModifiedDate(long date) {
 		this.modifiedDate = date;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaResponse#setItem(magoffin.matt.ma2.domain.MediaItem)
-	 */
+	@Override
 	public void setItem(MediaItem item) {
 		this.item = item;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaResponse#hasOutputStream()
-	 */
+	@Override
 	public boolean hasOutputStream() {
 		return outputStream != null;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaResponse#getOutputStream()
-	 */
+	@Override
 	public OutputStream getOutputStream() {
 		return outputStream;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaResponse#setFilename(java.lang.String)
-	 */
+	@Override
 	public void setFilename(String filename) {
 		this.filename = filename;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaResponse#setPartialResponse(long, long, long)
-	 */
+	@Override
 	public void setPartialResponse(long start, long end, long total) {
 		// not supported here
 	}
@@ -123,7 +108,8 @@ public class BasicMediaResponse implements MediaResponse {
 	}
 
 	/**
-	 * @param length The length to set.
+	 * @param length
+	 *        The length to set.
 	 */
 	public void setLength(long length) {
 		this.length = length;
@@ -137,7 +123,8 @@ public class BasicMediaResponse implements MediaResponse {
 	}
 
 	/**
-	 * @param mime The mime to set.
+	 * @param mime
+	 *        The mime to set.
 	 */
 	public void setMime(String mime) {
 		this.mime = mime;
@@ -158,7 +145,8 @@ public class BasicMediaResponse implements MediaResponse {
 	}
 
 	/**
-	 * @param outputStream The outputStream to set.
+	 * @param outputStream
+	 *        The outputStream to set.
 	 */
 	public void setOutputStream(OutputStream outputStream) {
 		this.outputStream = outputStream;

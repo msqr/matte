@@ -27,36 +27,38 @@ package magoffin.matt.ma2.aop;
 import java.lang.reflect.Method;
 
 /**
- * Interceptor to support removal of User domain objects from 
- * the search index.
+ * Interceptor to support removal of User domain objects from the search index.
  * 
- * <p>This method expects an <code>Long</code> value to exist on the 
- * <code>args</code> parameter passed to the 
+ * <p>
+ * This method expects an <code>Long</code> value to exist on the
+ * <code>args</code> parameter passed to the
  * {@link #afterReturning(Object, Method, Object[], Object)} method. It will
- * assume the first Long object found is the <code>userId</code> of the 
- * user that should be removed from the user index via 
- * {@link magoffin.matt.ma2.biz.IndexBiz#removeUserFromIndex(Long)}.</p>
+ * assume the first Long object found is the <code>userId</code> of the user
+ * that should be removed from the user index via
+ * {@link magoffin.matt.ma2.biz.IndexBiz#removeUserFromIndex(Long)}.
+ * </p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class UserDeleteIndexInterceptor extends AbstractIndexInterceptor {
 
-	public void afterReturning(Object returnValue, Method method,
-			Object[] args, Object target) throws Throwable {
-		
+	@Override
+	public void afterReturning(Object returnValue, Method method, Object[] args, Object target)
+			throws Throwable {
+
 		// assume one parameter is the Long User ID of the User to delete
 		Long userId = null;
 		for ( int i = 0; i < args.length && userId == null; i++ ) {
 			if ( args[i] instanceof Long ) {
-				userId = (Long)args[i];
+				userId = (Long) args[i];
 			}
 		}
-		
+
 		if ( userId == null ) {
 			throw new RuntimeException("User ID not available in method arguments");
 		}
-		
+
 		getIndexBiz().removeUserFromIndex(userId);
 	}
 

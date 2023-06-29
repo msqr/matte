@@ -30,72 +30,71 @@ import magoffin.matt.ma2.MediaRequest;
 import magoffin.matt.ma2.domain.MediaItem;
 
 /**
- * Effect that rotates an image, based on the degrees specified by
- * the {@link MediaEffect#MEDIA_REQUEST_PARAM_ROTATE_DEGREES} request 
- * parameter.
+ * Effect that rotates an image, based on the degrees specified by the
+ * {@link MediaEffect#MEDIA_REQUEST_PARAM_ROTATE_DEGREES} request parameter.
  * 
  * @author matt.magoffin
- * @version 1.0
+ * @version 1.1
  */
 public class RotateEffect extends BaseJMagickMediaEffect {
 
 	/**
 	 * The key for this effect.
 	 */
-	public static final String ROTATE_KEY = "image.jmagick." +MediaEffect.KEY_ROTATE;
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.image.jmagick.JMagickMediaEffect#applyEffect(magoffin.matt.ma2.domain.MediaItem, magoffin.matt.ma2.MediaRequest, magick.ImageInfo, magick.MagickImage)
-	 */
-	public MagickImage applyEffect(MediaItem item, MediaRequest request,
-			ImageInfo inInfo, MagickImage image) {
-		Integer degrees = getRotateDegrees(item, request);	
-		if ( degrees == null ) return image;
-		
+	public static final String ROTATE_KEY = "image.jmagick." + MediaEffect.KEY_ROTATE;
+
+	@Override
+	public MagickImage applyEffect(MediaItem item, MediaRequest request, ImageInfo inInfo,
+			MagickImage image) {
+		Integer degrees = getRotateDegrees(item, request);
+		if ( degrees == null )
+			return image;
+
 		if ( log.isDebugEnabled() ) {
-			log.debug("Applying rotate effect on item [" +item.getItemId() +"] of " 
-					+degrees +" degrees");
+			log.debug("Applying rotate effect on item [" + item.getItemId() + "] of " + degrees
+					+ " degrees");
 		}
 		double deg = degrees.doubleValue();
 		try {
 			MagickImage result = image.rotateImage(deg);
 			if ( log.isDebugEnabled() ) {
-				log.debug("Rotate effect complete on item [" +item.getItemId() +"] of " 
-						+degrees +" degrees");
+				log.debug("Rotate effect complete on item [" + item.getItemId() + "] of " + degrees
+						+ " degrees");
 			}
 			return result;
 		} catch ( MagickException e ) {
-			throw new RuntimeException("MagickException rotating: " +e,e);
+			throw new RuntimeException("MagickException rotating: " + e, e);
 		}
 	}
 
 	/**
-	 * Get the degrees necessary for rotation of a media item that has a 
-	 * {@link MediaEffect#MEDIA_REQUEST_PARAM_ROTATE_DEGREES} request 
-	 * parameter set.
+	 * Get the degrees necessary for rotation of a media item that has a
+	 * {@link MediaEffect#MEDIA_REQUEST_PARAM_ROTATE_DEGREES} request parameter
+	 * set.
 	 * 
-	 * @param item the item being processed
-	 * @param request the current request
-	 * @return integer value, or <em>null</em> if no rotation should be performed
+	 * @param item
+	 *        the item being processed
+	 * @param request
+	 *        the current request
+	 * @return integer value, or <em>null</em> if no rotation should be
+	 *         performed
 	 */
 	private Integer getRotateDegrees(MediaItem item, MediaRequest request) {
 		if ( request.getParameters().containsKey(MediaEffect.MEDIA_REQUEST_PARAM_ROTATE_DEGREES) ) {
 			Object val = request.getParameters().get(MediaEffect.MEDIA_REQUEST_PARAM_ROTATE_DEGREES);
 			if ( val instanceof Integer ) {
-				return (Integer)val;
+				return (Integer) val;
 			}
 			try {
 				return Integer.valueOf(val.toString());
 			} catch ( Exception e ) {
-				log.warn("Unable to parse integer from degree [" +val +"]");
+				log.warn("Unable to parse integer from degree [" + val + "]");
 			}
-		}	
+		}
 		return null;
 	}
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaEffect#getKey()
-	 */
+
+	@Override
 	public String getKey() {
 		return ROTATE_KEY;
 	}

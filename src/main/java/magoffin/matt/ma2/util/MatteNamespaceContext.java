@@ -27,17 +27,15 @@ package magoffin.matt.ma2.util;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
-
 import magoffin.matt.ma2.SystemConstants;
 
 /**
  * {@link NamespaceContext} implementation for Matte.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  * @deprecated see {@link magoffin.matt.xweb.util.BasicNamespaceContext}
  * @see magoffin.matt.xweb.util.BasicNamespaceContext
  */
@@ -61,22 +59,24 @@ public class MatteNamespaceContext implements NamespaceContext {
 
 	private String xWebNamespaceURI = "http://msqr.us/xsd/jaxb-web";
 
+	@Override
 	public String getNamespaceURI(String prefix) {
 		if ( matteNamespacePrefix.equals(prefix) ) {
 			return matteNamespaceURI;
-		} else if ( ma2NamespacePrefix.equals(prefix)) {
+		} else if ( ma2NamespacePrefix.equals(prefix) ) {
 			return ma2NamespaceURI;
 		} else if ( xWebNamespacePrefix.equals(prefix) ) {
 			return xWebNamespaceURI;
-		} else if (prefix.equals(XMLConstants.XML_NS_PREFIX)) {
+		} else if ( prefix.equals(XMLConstants.XML_NS_PREFIX) ) {
 			return XMLConstants.XML_NS_URI;
-		} else if (prefix.equals(XMLConstants.XMLNS_ATTRIBUTE)) {
+		} else if ( prefix.equals(XMLConstants.XMLNS_ATTRIBUTE) ) {
 			return XMLConstants.XMLNS_ATTRIBUTE_NS_URI;
 		} else {
 			return XMLConstants.NULL_NS_URI;
 		}
 	}
 
+	@Override
 	public String getPrefix(String namespaceURI) {
 		if ( matteNamespaceURI.equals(namespaceURI) ) {
 			return matteNamespacePrefix;
@@ -84,100 +84,107 @@ public class MatteNamespaceContext implements NamespaceContext {
 			return ma2NamespacePrefix;
 		} else if ( xWebNamespaceURI.equals(namespaceURI) ) {
 			return xWebNamespacePrefix;
-		} else if (namespaceURI.equals(XMLConstants.XML_NS_URI)) {
+		} else if ( namespaceURI.equals(XMLConstants.XML_NS_URI) ) {
 			return XMLConstants.XML_NS_PREFIX;
-		} else if (namespaceURI.equals(XMLConstants.XMLNS_ATTRIBUTE_NS_URI)) {
+		} else if ( namespaceURI.equals(XMLConstants.XMLNS_ATTRIBUTE_NS_URI) ) {
 			return XMLConstants.XMLNS_ATTRIBUTE;
 		} else {
 			return null;
 		}
 	}
 
+	@Override
 	public Iterator<String> getPrefixes(String namespaceURI) {
 		List<String> tmpList = new ArrayList<String>(1);
 		tmpList.add(getPrefix(namespaceURI));
 		return tmpList.iterator();
 	}
-	
+
 	/**
 	 * @return the ma2NamespacePrefix
 	 */
 	public String getMa2NamespacePrefix() {
 		return ma2NamespacePrefix;
 	}
-	
+
 	/**
-	 * @param ma2NamespacePrefix the ma2NamespacePrefix to set
+	 * @param ma2NamespacePrefix
+	 *        the ma2NamespacePrefix to set
 	 */
 	public void setMa2NamespacePrefix(String ma2NamespacePrefix) {
 		this.ma2NamespacePrefix = ma2NamespacePrefix;
 	}
-	
+
 	/**
 	 * @return the ma2NamespaceURI
 	 */
 	public String getMa2NamespaceURI() {
 		return ma2NamespaceURI;
 	}
-	
+
 	/**
-	 * @param ma2NamespaceURI the ma2NamespaceURI to set
+	 * @param ma2NamespaceURI
+	 *        the ma2NamespaceURI to set
 	 */
 	public void setMa2NamespaceURI(String ma2NamespaceURI) {
 		this.ma2NamespaceURI = ma2NamespaceURI;
 	}
-	
+
 	/**
 	 * @return the matteNamespacePrefix
 	 */
 	public String getMatteNamespacePrefix() {
 		return matteNamespacePrefix;
 	}
-	
+
 	/**
-	 * @param matteNamespacePrefix the matteNamespacePrefix to set
+	 * @param matteNamespacePrefix
+	 *        the matteNamespacePrefix to set
 	 */
 	public void setMatteNamespacePrefix(String matteNamespacePrefix) {
 		this.matteNamespacePrefix = matteNamespacePrefix;
 	}
-	
+
 	/**
 	 * @return the matteNamespaceURI
 	 */
 	public String getMatteNamespaceURI() {
 		return matteNamespaceURI;
 	}
-	
+
 	/**
-	 * @param matteNamespaceURI the matteNamespaceURI to set
+	 * @param matteNamespaceURI
+	 *        the matteNamespaceURI to set
 	 */
 	public void setMatteNamespaceURI(String matteNamespaceURI) {
 		this.matteNamespaceURI = matteNamespaceURI;
 	}
-	
+
 	/**
 	 * @return the xWebNamespacePrefix
 	 */
 	public String getXWebNamespacePrefix() {
 		return xWebNamespacePrefix;
 	}
-	
+
 	/**
-	 * @param webNamespacePrefix the xWebNamespacePrefix to set
+	 * @param webNamespacePrefix
+	 *        the xWebNamespacePrefix to set
 	 */
 	public void setXWebNamespacePrefix(String webNamespacePrefix) {
 		xWebNamespacePrefix = webNamespacePrefix;
 	}
-	
+
 	/**
 	 * @return the xWebNamespaceURI
 	 */
 	public String getXWebNamespaceURI() {
 		return xWebNamespaceURI;
 	}
-	
+
 	/**
-	 * @param webNamespaceURI the xWebNamespaceURI to set
+	 * @param webNamespaceURI
+	 *        the xWebNamespaceURI to set
 	 */
 	public void setXWebNamespaceURI(String webNamespaceURI) {
 		xWebNamespaceURI = webNamespaceURI;

@@ -29,10 +29,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.validation.BindException;
+import org.springframework.validation.Errors;
+import org.springframework.web.servlet.ModelAndView;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.MediaBiz;
 import magoffin.matt.ma2.domain.Album;
@@ -41,41 +46,34 @@ import magoffin.matt.ma2.domain.Model;
 import magoffin.matt.ma2.support.SortMediaItemsCommand;
 import magoffin.matt.ma2.web.util.WebConstants;
 
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.context.MessageSourceResolvable;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
-import org.springframework.web.servlet.ModelAndView;
-
 /**
  * Controller to save the ordering of child albums within an album.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class SortMediaItemsForm extends AbstractForm {
-	
+
 	private MediaBiz mediaBiz;
-	
+
 	/**
 	 * Command class.
 	 */
 	public static class Command {
-		
+
 		private Long albumId = null;
 		private MediaItemData[] items = new MediaItemData[0];
-		
+
 		/**
 		 * @return the albumId
 		 */
 		public Long getAlbumId() {
 			return albumId;
 		}
-		
+
 		/**
-		 * @param albumId the albumId to set
+		 * @param albumId
+		 *        the albumId to set
 		 */
 		public void setAlbumId(Long albumId) {
 			this.albumId = albumId;
@@ -89,21 +87,23 @@ public class SortMediaItemsForm extends AbstractForm {
 		}
 
 		/**
-		 * @param items the items to set
+		 * @param items
+		 *        the items to set
 		 */
 		public void setItems(MediaItemData[] items) {
 			this.items = items;
 		}
-		
+
 	}
-	
+
 	/**
 	 * MediaItem sort data structure.
 	 */
 	public static class MediaItemData {
+
 		private Long itemId = null;
 		private Integer order = null;
-		
+
 		/**
 		 * @return the itemId
 		 */
@@ -112,7 +112,8 @@ public class SortMediaItemsForm extends AbstractForm {
 		}
 
 		/**
-		 * @param itemId the itemId to set
+		 * @param itemId
+		 *        the itemId to set
 		 */
 		public void setItemId(Long itemId) {
 			this.itemId = itemId;
@@ -124,22 +125,26 @@ public class SortMediaItemsForm extends AbstractForm {
 		public Integer getOrder() {
 			return order;
 		}
-		
+
 		/**
-		 * @param order the order to set
+		 * @param order
+		 *        the order to set
 		 */
 		public void setOrder(Integer order) {
 			this.order = order;
 		}
-		
+
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.web.servlet.mvc.AbstractFormController#formBackingObject(javax.servlet.http.HttpServletRequest)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.web.servlet.mvc.AbstractFormController#
+	 * formBackingObject(javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
 	protected Object formBackingObject(HttpServletRequest request) throws Exception {
-		BizContext context = getWebHelper().getBizContext(request,true);
+		BizContext context = getWebHelper().getBizContext(request, true);
 		Command cmd = new Command();
 		if ( request.getParameter("albumId") != null ) {
 			BeanWrapper wrapper = new BeanWrapperImpl(cmd);
@@ -155,19 +160,18 @@ public class SortMediaItemsForm extends AbstractForm {
 	}
 
 	@Override
-	protected void onBindOnNewForm(HttpServletRequest request, Object command) 
-	throws Exception {
-		BizContext context = getWebHelper().getBizContext(request,true);
-		
+	protected void onBindOnNewForm(HttpServletRequest request, Object command) throws Exception {
+		BizContext context = getWebHelper().getBizContext(request, true);
+
 		// populate album data from albumIds
-		Command cmd = (Command)command;
+		Command cmd = (Command) command;
 		if ( cmd.getAlbumId() == null ) {
 			return;
 		}
 		Album a = this.mediaBiz.getAlbumWithItems(cmd.getAlbumId(), context);
 		MediaItemData[] itemData = cmd.getItems();
 		for ( int i = 0, length = cmd.getItems().length; i < length; i++ ) {
-			MediaItem item = (MediaItem)a.getItem().get(i);
+			MediaItem item = (MediaItem) a.getItem().get(i);
 			MediaItemData data = new MediaItemData();
 			data.setItemId(item.getItemId());
 			data.setOrder(i);
@@ -177,12 +181,13 @@ public class SortMediaItemsForm extends AbstractForm {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	protected Map referenceData(HttpServletRequest request, Object command, Errors errors) throws Exception {
-		Command cmd = (Command)command;
+	protected Map referenceData(HttpServletRequest request, Object command, Errors errors)
+			throws Exception {
+		Command cmd = (Command) command;
 		BizContext context = getWebHelper().getBizContext(request, true);
 		Map<String, Object> viewModel = new HashMap<String, Object>();
 		Model model = getDomainObjectFactory().newModelInstance();
-		
+
 		Album a = mediaBiz.getAlbumWithItems(cmd.getAlbumId(), context);
 		model.getAlbum().add(a);
 
@@ -190,13 +195,13 @@ public class SortMediaItemsForm extends AbstractForm {
 		return viewModel;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	protected ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command,	BindException errors)
-			throws Exception {
-		BizContext context = getWebHelper().getBizContext(request,true);
-		Command cmd = (Command)command;
-		
+	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response,
+			Object command, BindException errors) throws Exception {
+		BizContext context = getWebHelper().getBizContext(request, true);
+		Command cmd = (Command) command;
+
 		SortMediaItemsCommand sortCmd = new SortMediaItemsCommand();
 		sortCmd.setAlbumId(cmd.getAlbumId());
 		SortedMap<Integer, Long> orderedItems = new TreeMap<Integer, Long>();
@@ -208,28 +213,29 @@ public class SortMediaItemsForm extends AbstractForm {
 		Long[] itemIds = orderedItems.values().toArray(new Long[0]);
 		sortCmd.setItemIds(itemIds);
 		this.mediaBiz.storeMediaItemOrdering(sortCmd, context);
-		
+
 		Map<String, Object> viewModel = new LinkedHashMap<String, Object>();
 		MessageSourceResolvable msg = new DefaultMessageSourceResolvable(
-				new String[] {"save.items.ordering.success"}, 
-				null, "The item ordering has been saved.");
+				new String[] { "save.items.ordering.success" }, null,
+				"The item ordering has been saved.");
 		viewModel.put(WebConstants.ALERT_MESSAGES_OBJECT, msg);
 		viewModel.put("albumId", cmd.getAlbumId());
 		return new ModelAndView(getSuccessView(), viewModel);
 	}
-	
+
 	/**
 	 * @return the mediaBiz
 	 */
 	public MediaBiz getMediaBiz() {
 		return mediaBiz;
 	}
-	
+
 	/**
-	 * @param mediaBiz the mediaBiz to set
+	 * @param mediaBiz
+	 *        the mediaBiz to set
 	 */
 	public void setMediaBiz(MediaBiz mediaBiz) {
 		this.mediaBiz = mediaBiz;
 	}
-	
+
 }

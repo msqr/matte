@@ -27,6 +27,7 @@ package magoffin.matt.ma2.biz.impl;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import org.springframework.beans.BeanUtils;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.DomainObjectFactory;
 import magoffin.matt.ma2.biz.SearchBiz;
@@ -42,13 +43,12 @@ import magoffin.matt.ma2.domain.PosterSearchResult;
 import magoffin.matt.ma2.domain.SearchResults;
 import magoffin.matt.ma2.plugin.BrowseModePlugin;
 import magoffin.matt.ma2.support.BrowseAlbumsCommand;
-import org.springframework.beans.BeanUtils;
 
 /**
  * Base implementation of {@link SearchBiz} that builds on DAO searching.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.1
+ * @version 1.2
  */
 public abstract class AbstractSearchBiz implements SearchBiz {
 
@@ -57,6 +57,7 @@ public abstract class AbstractSearchBiz implements SearchBiz {
 	private AlbumDao albumDao;
 	private SystemBiz systemBiz;
 
+	@Override
 	public SearchResults findAlbumsForBrowsing(final BrowseAlbumsCommand command,
 			PaginationCriteria pagination, BizContext context) {
 		// look for BrowseModePlugin to support this mode
@@ -69,6 +70,7 @@ public abstract class AbstractSearchBiz implements SearchBiz {
 		throw new UnsupportedOperationException("Browse mode [" + command.getMode() + "] not supported");
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public SearchResults findAlbums(AlbumSearchCriteria criteria, PaginationCriteria pagination,
 			BizContext context) {
@@ -114,8 +116,8 @@ public abstract class AbstractSearchBiz implements SearchBiz {
 		sr.setItemCount(Long.valueOf(album.getItem().size()));
 		if ( album.getItem().size() > 0 ) {
 			for ( MediaItem item : (List<MediaItem>) album.getItem() ) {
-				Calendar itemDate = item.getItemDate() != null ? item.getItemDate() : item
-						.getCreationDate();
+				Calendar itemDate = item.getItemDate() != null ? item.getItemDate()
+						: item.getCreationDate();
 				if ( sr.getItemMinDate() == null || itemDate.before(sr.getItemMinDate()) ) {
 					sr.setItemMinDate(itemDate);
 				}

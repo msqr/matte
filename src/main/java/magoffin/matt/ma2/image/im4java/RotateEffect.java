@@ -24,19 +24,17 @@
 
 package magoffin.matt.ma2.image.im4java;
 
+import org.im4java.core.IMOperation;
 import magoffin.matt.ma2.MediaEffect;
 import magoffin.matt.ma2.MediaRequest;
 import magoffin.matt.ma2.domain.MediaItem;
 
-import org.im4java.core.IMOperation;
-
 /**
- * Effect that rotates an image, based on the degrees specified by
- * the {@link MediaEffect#MEDIA_REQUEST_PARAM_ROTATE_DEGREES} request 
- * parameter.
+ * Effect that rotates an image, based on the degrees specified by the
+ * {@link MediaEffect#MEDIA_REQUEST_PARAM_ROTATE_DEGREES} request parameter.
  *
  * @author matt
- * @version 1.0
+ * @version 1.1
  */
 public class RotateEffect extends BaseIM4JavaMediaEffect {
 
@@ -46,44 +44,46 @@ public class RotateEffect extends BaseIM4JavaMediaEffect {
 	public RotateEffect() {
 		super(MediaEffect.KEY_ROTATE);
 	}
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.image.im4java.IM4JavaMediaEffect#applyEffect(magoffin.matt.ma2.domain.MediaItem, magoffin.matt.ma2.MediaRequest, org.im4java.core.IMOperation)
-	 */
+
+	@Override
 	public ImageCommandAndOperation applyEffect(MediaItem item, MediaRequest request,
 			IMOperation baseOperation) {
-		Integer degrees = getRotateDegrees(item, request);	
-		if ( degrees == null ) return null;
-		
+		Integer degrees = getRotateDegrees(item, request);
+		if ( degrees == null )
+			return null;
+
 		if ( log.isDebugEnabled() ) {
-			log.debug("Applying rotate effect on item [" +item.getItemId() +"] of " 
-					+degrees +" degrees");
+			log.debug("Applying rotate effect on item [" + item.getItemId() + "] of " + degrees
+					+ " degrees");
 		}
 		baseOperation.rotate(degrees.doubleValue());
 		return null;
 	}
 
 	/**
-	 * Get the degrees necessary for rotation of a media item that has a 
-	 * {@link MediaEffect#MEDIA_REQUEST_PARAM_ROTATE_DEGREES} request 
-	 * parameter set.
+	 * Get the degrees necessary for rotation of a media item that has a
+	 * {@link MediaEffect#MEDIA_REQUEST_PARAM_ROTATE_DEGREES} request parameter
+	 * set.
 	 * 
-	 * @param item the item being processed
-	 * @param request the current request
-	 * @return integer value, or <em>null</em> if no rotation should be performed
+	 * @param item
+	 *        the item being processed
+	 * @param request
+	 *        the current request
+	 * @return integer value, or <em>null</em> if no rotation should be
+	 *         performed
 	 */
 	private Integer getRotateDegrees(MediaItem item, MediaRequest request) {
 		if ( request.getParameters().containsKey(MediaEffect.MEDIA_REQUEST_PARAM_ROTATE_DEGREES) ) {
 			Object val = request.getParameters().get(MediaEffect.MEDIA_REQUEST_PARAM_ROTATE_DEGREES);
 			if ( val instanceof Integer ) {
-				return (Integer)val;
+				return (Integer) val;
 			}
 			try {
 				return Integer.valueOf(val.toString());
 			} catch ( Exception e ) {
-				log.warn("Unable to parse integer from degree [" +val +"]");
+				log.warn("Unable to parse integer from degree [" + val + "]");
 			}
-		}	
+		}
 		return null;
 	}
 

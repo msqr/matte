@@ -32,6 +32,16 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.log4j.Logger;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause.Occur;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
+import org.springframework.util.StringUtils;
 import magoffin.matt.dao.BasicBatchOptions;
 import magoffin.matt.dao.BatchableDao.BatchCallbackResult;
 import magoffin.matt.dao.BatchableDao.BatchMode;
@@ -55,23 +65,12 @@ import magoffin.matt.ma2.domain.SharedAlbumSearchResult;
 import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.domain.UserTag;
 import magoffin.matt.util.DelegatingInvocationHandler;
-import org.apache.log4j.Logger;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.BooleanClause.Occur;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.ConstantScoreRangeQuery;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TermQuery;
-import org.springframework.util.StringUtils;
 
 /**
  * Lucene search plugin implementation for {@link MediaItem} objects.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.1
+ * @version 1.2
  */
 public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 
@@ -90,13 +89,7 @@ public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 		setIndexType(IndexType.MEDIA_ITEM.toString());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.lucene.LucenePlugin#build(org.apache.lucene.document.Document
-	 * )
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public SearchMatch build(Document doc) {
 		MediaItemSearchResult searchResult = getDomainObjectFactory().newMediaItemSearchResultInstance();
@@ -193,11 +186,7 @@ public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 		return match;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.lucene.LucenePlugin#getIdForObject(java.lang.Object)
-	 */
+	@Override
 	public Object getIdForObject(Object object) {
 		if ( object instanceof MediaItem ) {
 			return ((MediaItem) object).getItemId();
@@ -205,13 +194,7 @@ public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.lucene.LucenePlugin#getNativeQuery(magoffin.matt.lucene
-	 * .SearchCriteria)
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public Object getNativeQuery(SearchCriteria criteria) {
 		MediaItemLuceneSearchCriteria crit = (MediaItemLuceneSearchCriteria) criteria;
@@ -220,8 +203,9 @@ public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 
 		BooleanQuery root = new BooleanQuery();
 		if ( itemCriteria.getUserId() != null ) {
-			root.add(new TermQuery(new Term(IndexField.ITEM_OWNER.getFieldName(), itemCriteria
-					.getUserId().toString())), Occur.MUST);
+			root.add(new TermQuery(
+					new Term(IndexField.ITEM_OWNER.getFieldName(), itemCriteria.getUserId().toString())),
+					Occur.MUST);
 		}
 
 		if ( itemCriteria.isSharedOnly() ) {
@@ -231,8 +215,9 @@ public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 
 		if ( template != null && template.getItemId() != null ) {
 			// find by item ID
-			root.add(new TermQuery(new Term(IndexField.ITEM_ID.getFieldName(), template.getItemId()
-					.toString())), Occur.MUST);
+			root.add(new TermQuery(
+					new Term(IndexField.ITEM_ID.getFieldName(), template.getItemId().toString())),
+					Occur.MUST);
 			return root;
 		}
 
@@ -274,6 +259,7 @@ public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 		return name;
 	}
 
+	@SuppressWarnings("deprecation")
 	private Query getDateRangeQuery(IndexField dayField, IndexField monthField,
 			SearchBiz.MediaItemSearchCriteria criteria) {
 		Calendar start = criteria.getStartDate();
@@ -286,80 +272,63 @@ public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 			if ( start.get(Calendar.YEAR) == end.get(Calendar.YEAR)
 					&& start.get(Calendar.DAY_OF_YEAR) == end.get(Calendar.DAY_OF_YEAR) ) {
 				// same day, use single day term
-				return new TermQuery(new Term(dayField.getFieldName(), getLucene().formatDateToDay(
-						start.getTime())));
+				return new TermQuery(
+						new Term(dayField.getFieldName(), getLucene().formatDateToDay(start.getTime())));
 			} else if ( start.get(Calendar.DAY_OF_MONTH) != 1
 					|| end.get(Calendar.DAY_OF_MONTH) != end.getActualMaximum(Calendar.DAY_OF_MONTH) ) {
 				// need to use day range
-				return new ConstantScoreRangeQuery(dayField.getFieldName(), getLucene().formatDateToDay(
-						start.getTime()), getLucene().formatDateToDay(end.getTime()), true, true);
+				return new org.apache.lucene.search.ConstantScoreRangeQuery(dayField.getFieldName(),
+						getLucene().formatDateToDay(start.getTime()),
+						getLucene().formatDateToDay(end.getTime()), true, true);
 			} else if ( start.get(Calendar.MONTH) != end.get(Calendar.MONTH)
 					|| start.get(Calendar.YEAR) != end.get(Calendar.YEAR) ) {
 				// multiple months, use month range
-				return new ConstantScoreRangeQuery(monthField.getFieldName(), getLucene()
-						.formatDateToMonth(start.getTime()), getLucene()
-						.formatDateToMonth(end.getTime()), true, true);
+				return new org.apache.lucene.search.ConstantScoreRangeQuery(monthField.getFieldName(),
+						getLucene().formatDateToMonth(start.getTime()),
+						getLucene().formatDateToMonth(end.getTime()), true, true);
 			} else {
 				// single month, use single month term
-				return new TermQuery(new Term(monthField.getFieldName(), getLucene().formatDateToMonth(
-						start.getTime())));
+				return new TermQuery(new Term(monthField.getFieldName(),
+						getLucene().formatDateToMonth(start.getTime())));
 			}
 		} else if ( end == null && start != null && start.get(Calendar.DAY_OF_MONTH) == 1 ) {
 			// use open ended month range
-			return new ConstantScoreRangeQuery(monthField.getFieldName(), getLucene().formatDateToMonth(
-					start.getTime()), null, true, false);
+			return new org.apache.lucene.search.ConstantScoreRangeQuery(monthField.getFieldName(),
+					getLucene().formatDateToMonth(start.getTime()), null, true, false);
 		} else if ( end == null && start != null ) {
 			// use open ended day range
-			return new ConstantScoreRangeQuery(dayField.getFieldName(), getLucene().formatDateToDay(
-					start.getTime()), null, true, false);
+			return new org.apache.lucene.search.ConstantScoreRangeQuery(dayField.getFieldName(),
+					getLucene().formatDateToDay(start.getTime()), null, true, false);
 		} else if ( start == null && end != null
 				&& end.get(Calendar.DAY_OF_MONTH) == end.getActualMaximum(Calendar.DAY_OF_MONTH) ) {
 			// use open starting month range
-			return new ConstantScoreRangeQuery(monthField.getFieldName(), null, getLucene()
-					.formatDateToMonth(end.getTime()), false, true);
+			return new org.apache.lucene.search.ConstantScoreRangeQuery(monthField.getFieldName(), null,
+					getLucene().formatDateToMonth(end.getTime()), false, true);
 		} else if ( end != null ) {
 			// use open starting day range
-			return new ConstantScoreRangeQuery(dayField.getFieldName(), null, getLucene()
-					.formatDateToDay(end.getTime()), false, true);
+			return new org.apache.lucene.search.ConstantScoreRangeQuery(dayField.getFieldName(), null,
+					getLucene().formatDateToDay(end.getTime()), false, true);
 		}
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.lucene.LucenePlugin#index(java.lang.Iterable)
-	 */
+	@Override
 	public void index(Iterable<?> data) {
 		throw new UnsupportedOperationException();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.lucene.LucenePlugin#index(java.lang.Object,
-	 * org.apache.lucene.index.IndexWriter)
-	 */
+	@Override
 	public void index(Object objectId, IndexWriter writer) {
 		MediaItem item = this.mediaItemDao.get((Long) objectId);
 		indexMediaItem(item, writer);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.lucene.LucenePlugin#indexObject(java.lang.Object,
-	 * org.apache.lucene.index.IndexWriter)
-	 */
+	@Override
 	public void indexObject(Object object, IndexWriter writer) {
 		indexMediaItem((MediaItem) object, writer);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.lucene.LucenePlugin#reindex()
-	 */
+	@Override
 	public IndexResults reindex() {
 		final MediaItemIndexResultsCallback results = new MediaItemIndexResultsCallback();
 		final BasicBatchOptions batchOptions = new BasicBatchOptions(MediaItemDao.BATCH_NAME_INDEX,
@@ -368,6 +337,7 @@ public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 			try {
 				getLucene().doIndexWriterOp(getIndexType(), true, false, true, new IndexWriterOp() {
 
+					@Override
 					public void doWriterOp(String type, IndexWriter writer) {
 						results.setWriter(writer);
 						mediaItemDao.batchProcess(results, batchOptions);
@@ -379,11 +349,13 @@ public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 		} else {
 			new Thread(new Runnable() {
 
+				@Override
 				public void run() {
 					try {
 						getLucene().doIndexWriterOp(getIndexType(), true, false, true,
 								new IndexWriterOp() {
 
+									@Override
 									public void doWriterOp(String type, IndexWriter writer) {
 										results.setWriter(writer);
 										mediaItemDao.batchProcess(results, batchOptions);
@@ -398,24 +370,12 @@ public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 		return results;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.lucene.LucenePlugin#reindex(magoffin.matt.lucene.SearchCriteria
-	 * )
-	 */
+	@Override
 	public IndexResults reindex(SearchCriteria criteria) {
 		throw new UnsupportedOperationException();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.lucene.LucenePlugin#search(magoffin.matt.lucene.SearchCriteria
-	 * )
-	 */
+	@Override
 	public List<SearchMatch> search(SearchCriteria criteria) {
 		throw new UnsupportedOperationException();
 	}
@@ -522,8 +482,8 @@ public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 			doc.add(new Field(IndexField.MEDIA_SHARED_ALBUM_NAME.getFieldName(), album.getName(),
 					Field.Store.YES, Field.Index.NOT_ANALYZED));
 		}
-		doc.add(new Field(IndexField.MEDIA_SHARED_FLAG.getFieldName(), sharedAlbums.size() > 0 ? "1"
-				: "0", Field.Store.NO, Field.Index.NOT_ANALYZED));
+		doc.add(new Field(IndexField.MEDIA_SHARED_FLAG.getFieldName(),
+				sharedAlbums.size() > 0 ? "1" : "0", Field.Store.NO, Field.Index.NOT_ANALYZED));
 
 		// owner
 		Collection c = collectionDao.getCollectionForMediaItem(item.getItemId());
@@ -545,8 +505,8 @@ public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 		}
 
 		// general text
-		doc.add(new Field(IndexField.GENERAL_TEXT.getFieldName(), generalText.toString(),
-				Field.Store.NO, Field.Index.ANALYZED));
+		doc.add(new Field(IndexField.GENERAL_TEXT.getFieldName(), generalText.toString(), Field.Store.NO,
+				Field.Index.ANALYZED));
 
 		try {
 			writer.addDocument(doc);
@@ -557,8 +517,8 @@ public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 		return errors;
 	}
 
-	private final class MediaItemIndexResultsCallback extends
-			AbstractIndexResultCallback<MediaItem, Long> {
+	private final class MediaItemIndexResultsCallback
+			extends AbstractIndexResultCallback<MediaItem, Long> {
 
 		private MediaItemIndexResultsCallback() {
 			super(MediaItemLucenePlugin.super.getMessages());
@@ -573,8 +533,9 @@ public class MediaItemLucenePlugin extends AbstractLucenePlugin {
 						+ item.getItemId() + ",created=" + item.getCreationDate() + "}");
 			}
 			List<Object> indexErrors = MediaItemLucenePlugin.this.indexMediaItem(item, getWriter());
-			LuceneServiceUtils.publishIndexEvent(new IndexEvent(item.getItemId(),
-					IndexEvent.EventType.UPDATE, getIndexType()), getIndexEventListeners());
+			LuceneServiceUtils.publishIndexEvent(
+					new IndexEvent(item.getItemId(), IndexEvent.EventType.UPDATE, getIndexType()),
+					getIndexEventListeners());
 			if ( indexErrors.size() > 0 ) {
 				getErrorMap().put(item.getItemId(),
 						MediaItemLucenePlugin.super.getIndexErrorMessage(indexErrors));

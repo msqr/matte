@@ -27,122 +27,131 @@ package magoffin.matt.ma2.lucene;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
+import org.apache.log4j.Logger;
+import org.apache.lucene.index.IndexWriter;
+import org.springframework.context.MessageSource;
 import magoffin.matt.dao.BatchableDao.BatchCallback;
 import magoffin.matt.dao.BatchableDao.BatchCallbackResult;
 import magoffin.matt.lucene.IndexResults;
 
-import org.apache.log4j.Logger;
-import org.apache.lucene.index.IndexWriter;
-import org.springframework.context.MessageSource;
-
 /**
- * Abstract implementation that combines {@link IndexResults} and 
+ * Abstract implementation that combines {@link IndexResults} and
  * {@link BatchCallback}.
  * 
- * @param <T> the domain object type
- * @param <PK> the primary key type
+ * @param <T>
+ *        the domain object type
+ * @param <PK>
+ *        the primary key type
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public abstract class AbstractIndexResultCallback<T, PK extends Serializable>
-implements IndexResults, magoffin.matt.dao.BatchableDao.BatchCallback<T> {
+		implements IndexResults, magoffin.matt.dao.BatchableDao.BatchCallback<T> {
 
 	/** Default number of error percent fraction digits. */
 	public static final int DEFAULT_ERROR_PERCENT_MAX_FRACTION_DIGITS = 3;
 
 	private int numProcessed = 0;
-	private Map<PK, String> errors = new LinkedHashMap<PK, String>();
+	private final Map<PK, String> errors = new LinkedHashMap<PK, String>();
 	private IndexWriter writer = null;
 	private boolean finished = false;
 	private MessageSource messages = null;
-	
+
 	/** A class logger. */
 	protected final Logger log = Logger.getLogger(getClass());
 
 	/**
 	 * Construct.
 	 * 
-	 * @param messages a MessageSource
+	 * @param messages
+	 *        a MessageSource
 	 */
 	public AbstractIndexResultCallback(MessageSource messages) {
 		this.messages = messages;
 	}
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.dao.BatchableDao.BatchCallback#handle(java.lang.Object)
-	 */
+
+	@Override
 	public final BatchCallbackResult handle(T domainObject) {
 		try {
 			return doHandle(domainObject);
 		} catch ( Exception e ) {
 			StackTraceElement[] stack = e.getStackTrace();
-			log.warn("Unable to index object [" +domainObject +"]: " +e
-					+(stack != null && stack.length > 0 
-							? " at " +stack[0].getClassName() +":" +stack[0].getLineNumber()
+			log.warn("Unable to index object [" + domainObject + "]: " + e
+					+ (stack != null && stack.length > 0
+							? " at " + stack[0].getClassName() + ":" + stack[0].getLineNumber()
 							: ""));
-			getErrorMap().put(getPrimaryKey(domainObject), 
-					getIndexErrorMessage(domainObject, e));
+			getErrorMap().put(getPrimaryKey(domainObject), getIndexErrorMessage(domainObject, e));
 			return getExceptionResult(domainObject, e);
 		} finally {
 			numProcessed++;
 		}
 	}
-	
+
 	/**
 	 * Get the result for when an exception occurs.
 	 * 
-	 * @param domainObject the domain object that caused the error
-	 * @param e the exception
+	 * @param domainObject
+	 *        the domain object that caused the error
+	 * @param e
+	 *        the exception
 	 * @return the result
 	 */
-	protected BatchCallbackResult getExceptionResult(
-			T domainObject, Exception e ) {
+	protected BatchCallbackResult getExceptionResult(T domainObject, Exception e) {
 		return BatchCallbackResult.CONTINUE;
 	}
-	
+
 	/**
 	 * Get an error message for an index operation.
 	 * 
-	 * @param domainObject the domain object that caused the error
-	 * @param e the exception
+	 * @param domainObject
+	 *        the domain object that caused the error
+	 * @param e
+	 *        the exception
 	 * @return the message
 	 */
 	protected abstract String getIndexErrorMessage(T domainObject, Exception e);
-	
+
 	/**
 	 * Get the primary key for a domain object.
-	 * @param domainObject the domain object
+	 * 
+	 * @param domainObject
+	 *        the domain object
 	 * @return the primary key
 	 */
 	protected abstract PK getPrimaryKey(T domainObject);
-	
+
 	/**
 	 * Handle the domain object callback.
 	 * 
-	 * @param domainObject the domain object
+	 * @param domainObject
+	 *        the domain object
 	 * @return the callback results
-	 * @throws Exception if an error occurs
+	 * @throws Exception
+	 *         if an error occurs
 	 */
 	protected abstract BatchCallbackResult doHandle(T domainObject) throws Exception;
 
+	@Override
 	public Map<? extends Serializable, String> getErrors() {
 		return errors;
 	}
 
+	@Override
 	public int getNumIndexed() {
 		return numProcessed - errors.size();
 	}
 
+	@Override
 	public int getNumProcessed() {
 		return numProcessed;
 	}
 
+	@Override
 	public boolean isFinished() {
 		return finished;
 	}
 
-	/*public void finish() {
+	/*-public void finish() {
 		indexObject(this.currItem);
 		this.finished = true;
 		if ( log.isInfoEnabled() ) {
@@ -158,9 +167,10 @@ implements IndexResults, magoffin.matt.dao.BatchableDao.BatchCallback<T> {
 					+errors.keySet());
 		}
 	}*/
-	
+
 	/**
-	 * @param finished the finished to set
+	 * @param finished
+	 *        the finished to set
 	 */
 	protected void setFinished(boolean finished) {
 		this.finished = finished;
@@ -168,35 +178,38 @@ implements IndexResults, magoffin.matt.dao.BatchableDao.BatchCallback<T> {
 
 	/**
 	 * Get the map of errors.
+	 * 
 	 * @return error map
 	 */
 	protected Map<PK, String> getErrorMap() {
 		return errors;
 	}
-	
+
 	/**
 	 * @return the messages
 	 */
 	protected MessageSource getMessages() {
 		return messages;
 	}
-	
+
 	/**
 	 * @return the writer
 	 */
 	protected IndexWriter getWriter() {
 		return writer;
 	}
-	
+
 	/**
-	 * @param messages the messages to set
+	 * @param messages
+	 *        the messages to set
 	 */
 	protected void setMessages(MessageSource messages) {
 		this.messages = messages;
 	}
-	
+
 	/**
-	 * @param writer the writer to set
+	 * @param writer
+	 *        the writer to set
 	 */
 	protected void setWriter(IndexWriter writer) {
 		this.writer = writer;

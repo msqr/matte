@@ -27,57 +27,55 @@ package magoffin.matt.dao;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import magoffin.matt.dao.IndexCallback.IndexData;
 
 /**
  * Basic implementation of IndexData.
  * 
- * @param <PK> the primary key type
+ * @param <PK>
+ *        the primary key type
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class BasicIndexData<PK extends Serializable> implements IndexData<PK> {
-	
+
 	private PK id;
-	private Map<String,Object> dataMap;
-	
+	private Map<String, Object> dataMap;
+
 	/**
 	 * Default constructor.
 	 */
 	public BasicIndexData() {
 		this.id = null;
-		this.dataMap = new LinkedHashMap<String,Object>();
+		this.dataMap = new LinkedHashMap<String, Object>();
 	}
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.dao.IndexCallback.IndexData#getDataMap()
-	 */
+
+	@Override
 	public Map<String, Object> getDataMap() {
 		return this.dataMap;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.dao.IndexCallback.IndexData#getId()
-	 */
+	@Override
 	public PK getId() {
 		return this.id;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "BasicIndexData{id="+id+",dataMap="+dataMap+"}";
+		return "BasicIndexData{id=" + id + ",dataMap=" + dataMap + "}";
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *        the id to set
 	 */
 	public void setId(PK id) {
 		this.id = id;
 	}
-	
+
 	/**
-	 * @param dataMap the dataMap to set
+	 * @param dataMap
+	 *        the dataMap to set
 	 */
 	public void setDataMap(Map<String, Object> dataMap) {
 		this.dataMap = dataMap;

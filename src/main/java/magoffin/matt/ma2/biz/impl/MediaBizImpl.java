@@ -39,6 +39,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.BeanUtils;
+import org.springframework.context.MessageSource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindException;
+import org.springframework.validation.ObjectError;
 import magoffin.matt.dao.BasicBatchOptions;
 import magoffin.matt.dao.BatchableDao.BatchCallback;
 import magoffin.matt.dao.BatchableDao.BatchCallbackResult;
@@ -81,15 +90,6 @@ import magoffin.matt.ma2.support.UserCommentCommand;
 import magoffin.matt.ma2.util.DateTimeUtil;
 import magoffin.matt.ma2.util.MediaItemSorter;
 import magoffin.matt.ma2.util.MediaItemSorter.SortMode;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.BeanUtils;
-import org.springframework.context.MessageSource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindException;
-import org.springframework.validation.ObjectError;
 
 /**
  * Default implementation of MediaBiz.
@@ -132,7 +132,7 @@ import org.springframework.validation.ObjectError;
  * </dl>
  * 
  * @author matt.magoffin
- * @version 1.0
+ * @version 1.1
  */
 public class MediaBizImpl implements MediaBiz {
 
@@ -208,39 +208,22 @@ public class MediaBizImpl implements MediaBiz {
 		// nothing to do
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.MediaBiz#isFileSupported(java.io.File)
-	 */
+	@Override
 	public boolean isFileSupported(File file) {
 		return this.mediaHandlerFileExtensionMap.containsKey(getFileExtension(file.getName()));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.MediaBiz#getMediaHandler(java.io.File)
-	 */
+	@Override
 	public MediaHandler getMediaHandler(File file) {
 		return this.mediaHandlerFileExtensionMap.get(getFileExtension(file.getName()));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.MediaBiz#getMediaHandler(java.lang.String)
-	 */
+	@Override
 	public MediaHandler getMediaHandler(String mime) {
 		return this.mediaHandlerMimeMap.get(mime);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#getGeometry(magoffin.matt.ma2.MediaSize)
-	 */
+	@Override
 	public Geometry getGeometry(MediaSize size) {
 		if ( this.geometryMap != null && this.geometryMap.containsKey(size) ) {
 			return this.geometryMap.get(size);
@@ -248,13 +231,7 @@ public class MediaBizImpl implements MediaBiz {
 		return size.getGeometry();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#getQualityValue(magoffin.matt.ma2.MediaQuality
-	 * )
-	 */
+	@Override
 	public float getQualityValue(MediaQuality quality) {
 		if ( this.qualityMap != null && this.qualityMap.containsKey(quality) ) {
 			return this.qualityMap.get(quality);
@@ -262,12 +239,7 @@ public class MediaBizImpl implements MediaBiz {
 		return quality.getQualityValue();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.MediaBiz#storeMediaItemRating(java.lang.Long,
-	 * short, magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void storeMediaItemRating(Long[] itemIds, short rating, BizContext context) {
 		User actingUser = context.getActingUser();
@@ -294,12 +266,7 @@ public class MediaBizImpl implements MediaBiz {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.MediaBiz#storeMediaItemPoster(java.lang.Long,
-	 * java.lang.Long, magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public void storeMediaItemPoster(Long itemId, Long albumId, BizContext context) {
 		User actingUser = context.getActingUser();
 		MediaItem item = mediaItemDao.get(itemId);
@@ -316,13 +283,7 @@ public class MediaBizImpl implements MediaBiz {
 		albumDao.store(album);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#getMediaItemResource(magoffin.matt.ma2
-	 * .domain.MediaItem)
-	 */
+	@Override
 	public Resource getMediaItemResource(MediaItem item) {
 		Collection col = getMediaItemCollection(item);
 		File collectionDir = userBiz.getCollectionDirectory(col, null);
@@ -330,24 +291,12 @@ public class MediaBizImpl implements MediaBiz {
 		return new FileSystemResource(mediaItemFile);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#getMediaItemCollection(magoffin.matt.ma2
-	 * .domain.MediaItem)
-	 */
+	@Override
 	public Collection getMediaItemCollection(MediaItem item) {
 		return collectionDao.getCollectionForMediaItem(item.getItemId());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#getMediaItemsForCollection(magoffin.matt
-	 * .ma2.domain.Collection, magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public List<MediaItem> getMediaItemsForCollection(Collection collection, BizContext context) {
 		List<MediaItem> items = mediaItemDao.findItemsForCollection(collection.getCollectionId());
 		List<MediaItem> results = new ArrayList<MediaItem>(items.size());
@@ -357,13 +306,7 @@ public class MediaBizImpl implements MediaBiz {
 		return results;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#getMediaItemsForAlbum(magoffin.matt.ma2
-	 * .domain.Album, magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public List<MediaItem> getMediaItemsForAlbum(Album album, BizContext context) {
 		List<MediaItem> items = mediaItemDao.findItemsForAlbum(album.getAlbumId());
 		List<MediaItem> results = new ArrayList<MediaItem>(items.size());
@@ -373,13 +316,7 @@ public class MediaBizImpl implements MediaBiz {
 		return results;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#sortAlbumItems(magoffin.matt.ma2.domain
-	 * .Album)
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void sortAlbumItems(Album album) {
 		if ( album.getSortMode() != 0 ) {
@@ -414,13 +351,7 @@ public class MediaBizImpl implements MediaBiz {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#storeMediaItemOrdering(magoffin.matt.ma2
-	 * .support.SortMediaItemsCommand, magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void storeMediaItemOrdering(SortMediaItemsCommand command, BizContext context) {
 		Album parent = albumDao.get(command.getAlbumId());
@@ -428,6 +359,7 @@ public class MediaBizImpl implements MediaBiz {
 		final Long[] ordering = command.getItemIds();
 		Collections.sort(children, new Comparator<MediaItem>() {
 
+			@Override
 			public int compare(MediaItem o1, MediaItem o2) {
 				Integer pos1 = getPosition(o1.getItemId());
 				Integer pos2 = getPosition(o2.getItemId());
@@ -447,13 +379,7 @@ public class MediaBizImpl implements MediaBiz {
 		albumDao.store(parent);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#addMediaItemsToAlbum(magoffin.matt.ma2
-	 * .domain.Album, java.lang.Long[], magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public int addMediaItemsToAlbum(Album album, Long[] mediaItemIds, BizContext context) {
 		// don't add duplicate items to album
@@ -483,13 +409,7 @@ public class MediaBizImpl implements MediaBiz {
 		return added;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#deleteCollectionAndItems(java.lang.Long,
-	 * magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<MediaItem> deleteCollectionAndItems(Long collectionId, BizContext context) {
 		Collection collectionToDelete = collectionDao.get(collectionId);
@@ -524,13 +444,7 @@ public class MediaBizImpl implements MediaBiz {
 		return removedItems;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#getScaledGeometry(magoffin.matt.ma2.domain
-	 * .MediaItem, magoffin.matt.ma2.MediaRequest)
-	 */
+	@Override
 	public Geometry getScaledGeometry(MediaItem item, MediaRequest request) {
 		int imageWidth = item.getWidth();
 		int imageHeight = item.getHeight();
@@ -541,8 +455,8 @@ public class MediaBizImpl implements MediaBiz {
 		boolean rotate = false;
 		for ( MediaEffect effect : effects ) {
 			if ( effect.getKey().endsWith(MediaEffect.KEY_ROTATE) ) {
-				Object degrees = request.getParameters().get(
-						MediaEffect.MEDIA_REQUEST_PARAM_ROTATE_DEGREES);
+				Object degrees = request.getParameters()
+						.get(MediaEffect.MEDIA_REQUEST_PARAM_ROTATE_DEGREES);
 				if ( degrees instanceof Number ) {
 					Number deg = (Number) degrees;
 					if ( deg.intValue() != 0 && Math.abs(deg.intValue()) != 180 ) {
@@ -628,12 +542,7 @@ public class MediaBizImpl implements MediaBiz {
 		return resultGeometry;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.MediaBiz#getAlbumWithItems(java.lang.Long,
-	 * magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public Album getAlbumWithItems(Long albumId, BizContext context) {
 		Album result = albumDao.getAlbumWithItems(albumId);
 		if ( result == null )
@@ -641,12 +550,7 @@ public class MediaBizImpl implements MediaBiz {
 		return getAlbumAndItems(result);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.MediaBiz#getAlbum(java.lang.Long,
-	 * magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public Album getAlbum(Long albumId, BizContext context) {
 		Album album = albumDao.get(albumId);
 		if ( album == null )
@@ -654,23 +558,12 @@ public class MediaBizImpl implements MediaBiz {
 		return getAlbumCopy(album);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.MediaBiz#getMediaItemWithInfo(java.lang.Long,
-	 * magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public MediaItem getMediaItemWithInfo(Long itemId, BizContext context) {
 		return mediaItemDao.getMediaItemWithInfo(itemId);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#getCollectionWithItems(java.lang.Long,
-	 * magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public Collection getCollectionWithItems(Long collectionId, BizContext context) {
 		Collection original = collectionDao.getCollectionWithItems(collectionId);
@@ -684,13 +577,7 @@ public class MediaBizImpl implements MediaBiz {
 		return copy;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#removeMediaItemsFromAlbum(java.lang.Long,
-	 * java.lang.Long[], magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public int removeMediaItemsFromAlbum(Long albumId, Long[] itemIds, BizContext context) {
 		// get the album
@@ -718,12 +605,7 @@ public class MediaBizImpl implements MediaBiz {
 		return numRemoved;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.MediaBiz#deleteMediaItems(java.lang.Long[],
-	 * magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public int deleteMediaItems(Long[] itemIds, BizContext context) {
 		// physically delete the item resources
 		List<MediaItem> items = new ArrayList<MediaItem>(itemIds.length);
@@ -756,12 +638,7 @@ public class MediaBizImpl implements MediaBiz {
 		return removedItems.size();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.MediaBiz#shareAlbum(magoffin.matt.ma2.support.
-	 * ShareAlbumCommand, magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public String shareAlbum(ShareAlbumCommand command, BizContext context) {
 		Album album = albumDao.get(command.getAlbumId());
 		Album parent = getAlbumParent(album.getAlbumId(), context);
@@ -779,7 +656,8 @@ public class MediaBizImpl implements MediaBiz {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Album applyShareSettings(Album album, Theme theme, boolean setFeed, ShareAlbumCommand command) {
+	private Album applyShareSettings(Album album, Theme theme, boolean setFeed,
+			ShareAlbumCommand command) {
 		if ( theme != null ) {
 			album.setTheme(theme);
 		}
@@ -806,12 +684,7 @@ public class MediaBizImpl implements MediaBiz {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.MediaBiz#getSharedAlbum(java.lang.String,
-	 * magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public Album getSharedAlbum(String key, BizContext context) {
 		Album result = albumDao.getAlbumForKey(key);
 		if ( result == null )
@@ -861,12 +734,7 @@ public class MediaBizImpl implements MediaBiz {
 		return copy;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.MediaBiz#unShareAlbum(java.lang.Long,
-	 * magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public void unShareAlbum(Long albumId, BizContext context) {
 		Album a = albumDao.get(albumId);
 		if ( a == null ) {
@@ -881,12 +749,7 @@ public class MediaBizImpl implements MediaBiz {
 		applyShareSettings(a, null, true, command);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#incrementMediaItemHits(java.lang.Long)
-	 */
+	@Override
 	public synchronized int incrementMediaItemHits(Long itemId) {
 		MediaItem item = getMediaItemDao().get(itemId);
 		int hits = item.getHits() + 1;
@@ -895,12 +758,7 @@ public class MediaBizImpl implements MediaBiz {
 		return hits;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.MediaBiz#getAlbumParent(java.lang.Long,
-	 * magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public Album getAlbumParent(Long childAlbumId, BizContext context) {
 		Album parent = getAlbumDao().getParentAlbum(childAlbumId);
 		if ( parent != null ) {
@@ -909,12 +767,7 @@ public class MediaBizImpl implements MediaBiz {
 		return parent;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.MediaBiz#storeAlbumParent(java.lang.Long,
-	 * java.lang.Long, magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void storeAlbumParent(Long childAlbumId, Long parentAlbumId, BizContext context) {
 		Album child = getAlbumDao().get(childAlbumId);
@@ -924,8 +777,8 @@ public class MediaBizImpl implements MediaBiz {
 			if ( parent == null ) {
 				BindException errors = new BindException(child, "childAlbum");
 				errors.addError(new ObjectError("childAlbum",
-						new String[] { "error.remove.parent.album.notfound" }, new Object[] { child
-								.getName() }, "The album has no parent."));
+						new String[] { "error.remove.parent.album.notfound" },
+						new Object[] { child.getName() }, "The album has no parent."));
 				throw new ValidationException(errors);
 			}
 			parent.getAlbum().remove(child);
@@ -939,8 +792,8 @@ public class MediaBizImpl implements MediaBiz {
 		if ( parent != null ) {
 			BindException errors = new BindException(child, "childAlbum");
 			errors.addError(new ObjectError("childAlbum",
-					new String[] { "error.add.parent.album.as.child" }, new Object[] { child.getName(),
-							parent.getName() },
+					new String[] { "error.add.parent.album.as.child" },
+					new Object[] { child.getName(), parent.getName() },
 					"You cannot add that album as a child to the other because it is already its parent"));
 			throw new ValidationException(errors);
 		}
@@ -949,12 +802,7 @@ public class MediaBizImpl implements MediaBiz {
 		storeAlbum(parent, context);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.MediaBiz#deleteAlbum(java.lang.Long,
-	 * magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public Album deleteAlbum(Long albumId, BizContext context) {
 		Album a = getAlbumDao().get(albumId);
 		if ( a == null ) {
@@ -978,34 +826,29 @@ public class MediaBizImpl implements MediaBiz {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#storeMediaItemInfo(magoffin.matt.ma2.util
-	 * .MediaInfoCommand, magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public void storeMediaItemInfo(MediaInfoCommand command, final BizContext context) {
 		final Long[] itemIds = command.getItemIds();
 		if ( log.isDebugEnabled() ) {
 			log.debug("Saving MediaItem infos for items " + Arrays.toString(itemIds));
 		}
 		final String name = StringUtils.hasText(command.getName()) ? command.getName().trim() : null;
-		final String comments = StringUtils.hasText(command.getComments()) ? command.getComments()
-				.trim() : null;
+		final String comments = StringUtils.hasText(command.getComments()) ? command.getComments().trim()
+				: null;
 		final Calendar itemDate = command.getDate();
 		final String tags = StringUtils.hasText(command.getTags()) ? command.getTags().trim() : null;
-		final magoffin.matt.ma2.domain.TimeZone mediaTimeZone = command.getMediaTimeZone() == null ? getSystemBiz()
-				.getDefaultTimeZone() : getSystemBiz().getTimeZoneForCode(
-				command.getMediaTimeZone().getID());
-		final magoffin.matt.ma2.domain.TimeZone displayTimeZone = command.getDisplayTimeZone() == null ? getSystemBiz()
-				.getDefaultTimeZone() : getSystemBiz().getTimeZoneForCode(
-				command.getDisplayTimeZone().getID());
-		BasicBatchOptions batchOptions = new BasicBatchOptions(
-				MediaItemDao.BATCH_NAME_PROCESS_MEDIA_IDS, BatchMode.LIVE);
+		final magoffin.matt.ma2.domain.TimeZone mediaTimeZone = command.getMediaTimeZone() == null
+				? getSystemBiz().getDefaultTimeZone()
+				: getSystemBiz().getTimeZoneForCode(command.getMediaTimeZone().getID());
+		final magoffin.matt.ma2.domain.TimeZone displayTimeZone = command.getDisplayTimeZone() == null
+				? getSystemBiz().getDefaultTimeZone()
+				: getSystemBiz().getTimeZoneForCode(command.getDisplayTimeZone().getID());
+		BasicBatchOptions batchOptions = new BasicBatchOptions(MediaItemDao.BATCH_NAME_PROCESS_MEDIA_IDS,
+				BatchMode.LIVE);
 		batchOptions.getParameters().put(MediaItemDao.BATCH_PROCESS_PARAM_MEDIA_IDS_LIST, itemIds);
 		BatchResult batchResult = mediaItemDao.batchProcess(new BatchCallback<MediaItem>() {
 
+			@Override
 			@SuppressWarnings("unchecked")
 			public BatchCallbackResult handle(MediaItem mediaItem) {
 
@@ -1102,13 +945,7 @@ public class MediaBizImpl implements MediaBiz {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#storeAlbum(magoffin.matt.ma2.domain.Album,
-	 * magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public Long storeAlbum(Album album, BizContext context) {
 		Album albumToStore = album.getAlbumId() == null ? album : getAlbumDao().get(album.getAlbumId());
 		if ( album != albumToStore ) {
@@ -1127,13 +964,7 @@ public class MediaBizImpl implements MediaBiz {
 		return fileName.toLowerCase();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#getAlbumSortTypes(magoffin.matt.ma2.biz
-	 * .BizContext)
-	 */
+	@Override
 	public List<KeyNameType> getAlbumSortTypes(BizContext context) {
 		List<KeyNameType> sortModes = new LinkedList<KeyNameType>();
 		if ( sortModeMap == null ) {
@@ -1167,13 +998,7 @@ public class MediaBizImpl implements MediaBiz {
 		return sortModes;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#storeAlbumOrdering(magoffin.matt.ma2.support
-	 * .SortAlbumsCommand, magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void storeAlbumOrdering(SortAlbumsCommand command, BizContext context) {
 		Album parent = albumDao.get(command.getAlbumId());
@@ -1181,6 +1006,7 @@ public class MediaBizImpl implements MediaBiz {
 		final Long[] ordering = command.getChildAlbumIds();
 		Collections.sort(children, new Comparator<Album>() {
 
+			@Override
 			public int compare(Album o1, Album o2) {
 				Integer pos1 = getPosition(o1.getAlbumId());
 				Integer pos2 = getPosition(o2.getAlbumId());
@@ -1199,13 +1025,7 @@ public class MediaBizImpl implements MediaBiz {
 		albumDao.store(parent);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#moveMediaItems(magoffin.matt.ma2.support
-	 * .MoveItemsCommand, magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void moveMediaItems(MoveItemsCommand command, BizContext context) {
 		List<MediaItem> itemsToMove = new LinkedList<MediaItem>();
@@ -1228,13 +1048,7 @@ public class MediaBizImpl implements MediaBiz {
 		collectionDao.store(moveTo);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.MediaBiz#storeMediaItemUserComment(magoffin.matt
-	 * .ma2.support.UserCommentCommand, magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void storeMediaItemUserComment(UserCommentCommand command, BizContext context) {
 		if ( !StringUtils.hasText(command.getComment()) ) {

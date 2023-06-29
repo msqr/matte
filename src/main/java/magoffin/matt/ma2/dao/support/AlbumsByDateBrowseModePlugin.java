@@ -36,7 +36,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
+import org.springframework.context.ApplicationContext;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import magoffin.matt.ma2.domain.AlbumSearchResult;
 import magoffin.matt.ma2.domain.PaginationCriteria;
 import magoffin.matt.ma2.domain.PaginationIndex;
@@ -47,14 +50,9 @@ import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.plugin.BrowseModePlugin;
 import magoffin.matt.ma2.support.BrowseAlbumsCommand;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.ResultSetExtractor;
-
 /**
- * Implementation of {@link BrowseModePlugin} for a
- * "browse user albums by date".
+ * Implementation of {@link BrowseModePlugin} for a "browse user albums by
+ * date".
  * 
  * <p>
  * Also supports the "album feed" mode, for returning only items shareable in
@@ -62,7 +60,7 @@ import org.springframework.jdbc.core.ResultSetExtractor;
  * </p>
  *
  * @author matt
- * @version 1.0
+ * @version 1.1
  */
 public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 
@@ -78,6 +76,7 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 
 	private MessageFormat sqlBrowseTemplate;
 
+	@Override
 	public boolean supportsMode(String mode) {
 		return BrowseAlbumsCommand.MODE_ALBUMS.equals(mode)
 				|| BrowseAlbumsCommand.MODE_ALBUM_FEED.equals(mode);
@@ -89,10 +88,12 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 		init();
 	}
 
+	@Override
 	public String[] getMessageResourceNames() {
 		return null;
 	}
 
+	@Override
 	public String[] getSupportedModes() {
 		return SUPPORTED_MODES;
 	}
@@ -108,6 +109,7 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 		this.sqlBrowseTemplate = new MessageFormat(this.sqlBrowse);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public SearchResults find(final BrowseAlbumsCommand command, PaginationCriteria pagination) {
 		final SearchResults results = getDomainObjectFactory().newSearchResultsInstance();
@@ -120,7 +122,9 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 			if ( command.getSection() != null ) {
 				String latestYear = getJdbcTemplate().query(new PreparedStatementCreator() {
 
-					public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+					@Override
+					public PreparedStatement createPreparedStatement(Connection con)
+							throws SQLException {
 						PreparedStatement stmt = con.prepareStatement(sqlBrowseFindYears);
 						stmt.setLong(1, user.getUserId().longValue());
 						stmt.setBoolean(2, true); // anonymous
@@ -129,6 +133,7 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 					}
 				}, new ResultSetExtractor<String>() {
 
+					@Override
 					public String extractData(ResultSet rs) throws SQLException, DataAccessException {
 						String result = null;
 						while ( rs.next() ) {
@@ -138,8 +143,8 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 							section.setIndexKey(year);
 							if ( result == null ) {
 								result = year;
-								if ( BrowseAlbumsCommand.SECTION_LATEST.equalsIgnoreCase(command
-										.getSection()) ) {
+								if ( BrowseAlbumsCommand.SECTION_LATEST
+										.equalsIgnoreCase(command.getSection()) ) {
 									section.setSelected(true);
 								}
 							}
@@ -202,6 +207,7 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 		final List<Long> currentAlbumIds = new LinkedList<Long>();
 		getJdbcTemplate().query(new PreparedStatementCreator() {
 
+			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				Object[] sqlBrowseParameters = new String[3];
 				if ( parentAlbumIds == null ) {
@@ -237,20 +243,20 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 				List<Object> sqlParams = new ArrayList<Object>(8);
 				sqlParams.add(userId);
 				sqlParams.add(true);
-				if (browseOnly) {
+				if ( browseOnly ) {
 					sqlParams.add(browseOnly);
 				}
-				if (feedOnly) {
+				if ( feedOnly ) {
 					sqlParams.add(feedOnly);
 				}
-				if (cmd.getSection() != null && parentAlbumIds == null) {
+				if ( cmd.getSection() != null && parentAlbumIds == null ) {
 					Integer year = null;
 					try {
 						year = Integer.valueOf(cmd.getSection());
-					} catch (NumberFormatException e) {
+					} catch ( NumberFormatException e ) {
 						// ignore this
 					}
-					if (year != null) {
+					if ( year != null ) {
 						Calendar c = Calendar.getInstance();
 						c.set(year, Calendar.JANUARY, 1, 0, 0, 0);
 						c.set(Calendar.MILLISECOND, 0);
@@ -259,22 +265,23 @@ public class AlbumsByDateBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 						sqlParams.add(new Timestamp(c.getTimeInMillis()));
 					}
 				}
-				if (log.isDebugEnabled()) {
-					log.debug("searchForAlbumsForUserByDate with SQL [" + sql
-							+ "]\n\tparams: " + sqlParams);
+				if ( log.isDebugEnabled() ) {
+					log.debug("searchForAlbumsForUserByDate with SQL [" + sql + "]\n\tparams: "
+							+ sqlParams);
 				}
 				PreparedStatement psmt = con.prepareStatement(sql);
 				int pos = 0;
-				for (Object param : sqlParams) {
+				for ( Object param : sqlParams ) {
 					psmt.setObject(++pos, param);
 				}
-				if (parentAlbumIds == null && cmd.getMaxEntries() > 0) {
+				if ( parentAlbumIds == null && cmd.getMaxEntries() > 0 ) {
 					psmt.setMaxRows(cmd.getMaxEntries());
 				}
 				return psmt;
 			}
 		}, new ResultSetExtractor<Object>() {
 
+			@Override
 			@SuppressWarnings("unchecked")
 			public Object extractData(ResultSet rs) throws SQLException, DataAccessException {
 				while ( rs.next() ) {

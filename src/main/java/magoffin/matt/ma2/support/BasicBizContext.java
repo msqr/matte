@@ -27,7 +27,6 @@ package magoffin.matt.ma2.support;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
-
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.domain.User;
 import magoffin.matt.xweb.util.AppContextSupport;
@@ -35,110 +34,106 @@ import magoffin.matt.xweb.util.AppContextSupport;
 /**
  * Basic implementation of BizContext interface.
  * 
- * <p>Note this implementation is not thread safe.</p>
+ * <p>
+ * Note this implementation is not thread safe.
+ * </p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class BasicBizContext implements BizContext {
-	
+
 	private User actingUser;
 	private AppContextSupport appContextSupport;
-	private Map<String,Object> attributes;
+	private Map<String, Object> attributes;
 	private Locale locale;
-	
+
 	/**
 	 * Constructor.
-	 * @param appContextSupport the application context
+	 * 
+	 * @param appContextSupport
+	 *        the application context
 	 */
 	public BasicBizContext(AppContextSupport appContextSupport) {
 		this.appContextSupport = appContextSupport;
 	}
-	
+
 	/**
 	 * Default constructor.
 	 */
 	public BasicBizContext() {
 		// nothing to do here
 	}
-	
+
 	/**
 	 * Set the acting user.
+	 * 
 	 * @param user
 	 */
 	public void setActingUser(User user) {
 		actingUser = user;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ieat.biz.BizContext#getActingUser()
-	 */
+	@Override
 	public User getActingUser() {
 		return actingUser;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ieat.biz.BizContext#getAppContextSupport()
-	 */
+	@Override
 	public AppContextSupport getAppContextSupport() {
 		return appContextSupport;
 	}
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.biz.BizContext#getLocale()
-	 */
+
+	@Override
 	public Locale getLocale() {
-		if ( actingUser != null && actingUser.getLanguage() != null 
+		if ( actingUser != null && actingUser.getLanguage() != null
 				&& actingUser.getCountry() != null ) {
-			return new Locale(actingUser.getLanguage(),actingUser.getCountry());
+			return new Locale(actingUser.getLanguage(), actingUser.getCountry());
 		}
-		if ( locale != null ) return locale;
+		if ( locale != null )
+			return locale;
 		return Locale.getDefault();
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.biz.BizContext#isFeatureEnabled(magoffin.matt.ma2.biz.BizContext.Feature)
-	 */
+	@Override
 	public boolean isFeatureEnabled(Feature feature) {
 		// look for feature in AppContextSupport
 		AppContextSupport support = getAppContextSupport();
-		return support.isParameterTrue(
-				"feature."+feature.toString().toLowerCase());
+		return support.isParameterTrue("feature." + feature.toString().toLowerCase());
 	}
 
 	/**
 	 * Set the locale.
 	 * 
-	 * @param locale the locale to set
+	 * @param locale
+	 *        the locale to set
 	 */
 	protected void setLocale(Locale locale) {
 		this.locale = locale;
 	}
-	
+
 	/**
 	 * Set the AppContextSupport.
+	 * 
 	 * @param appContextSupport
 	 */
 	protected void setAppContextSupport(AppContextSupport appContextSupport) {
 		this.appContextSupport = appContextSupport;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ieat.biz.BizContext#getAttribute(java.lang.String)
-	 */
+	@Override
 	public Object getAttribute(String key) {
-		if ( attributes == null ) return null;
+		if ( attributes == null )
+			return null;
 		return attributes.get(key);
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ieat.biz.BizContext#setAttribute(java.lang.String, java.lang.Object)
-	 */
+	@Override
 	public void setAttribute(String key, Object value) {
 		if ( attributes == null ) {
-			attributes = new LinkedHashMap<String,Object>();
+			attributes = new LinkedHashMap<String, Object>();
 		}
-		attributes.put(key,value);
+		attributes.put(key, value);
 	}
 
 }

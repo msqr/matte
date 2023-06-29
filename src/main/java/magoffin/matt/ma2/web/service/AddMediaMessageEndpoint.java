@@ -28,12 +28,17 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.StringReader;
 import java.util.Iterator;
-
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.transform.Result;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
-
+import org.apache.log4j.Logger;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.mime.Attachment;
+import org.springframework.ws.mime.MimeMessage;
+import org.springframework.ws.server.endpoint.MessageEndpoint;
 import magoffin.matt.ma2.SystemConstants;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.IOBiz;
@@ -43,61 +48,52 @@ import magoffin.matt.ma2.util.BizContextUtil;
 import magoffin.matt.ma2.util.XmlHelper;
 import magoffin.matt.util.FileBasedTemporaryFile;
 
-import org.apache.log4j.Logger;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.mime.Attachment;
-import org.springframework.ws.mime.MimeMessage;
-import org.springframework.ws.server.endpoint.MessageEndpoint;
-
 /**
  * Implementation of AddMediaRequest web service that uses SOAP attachments for
  * the media data.
  * 
- * <p>This works better than {@link AddMediaEndpoint} in the default configuration 
+ * <p>
+ * This works better than {@link AddMediaEndpoint} in the default configuration
  * of Spring-WS, which does not seem to handle large text element content well
- * (as in, large base64 encoded element content).</p>
+ * (as in, large base64 encoded element content).
+ * </p>
  *
  * @author matt
- * @version 1.0
+ * @version 1.1
  */
 public class AddMediaMessageEndpoint implements MessageEndpoint {
-	
+
 	private final Logger log = Logger.getLogger(getClass());
 
 	private IOBiz ioBiz = null;
 	private XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 	private XmlHelper xmlHelper = null;
 
-	/* (non-Javadoc)
-	 * @see org.springframework.ws.server.endpoint.MessageEndpoint#invoke(org.springframework.ws.context.MessageContext)
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void invoke(MessageContext messageContext) throws Exception {
 		WebServiceMessage msg = messageContext.getRequest();
 		if ( !(msg instanceof MimeMessage) ) {
 			throw new IllegalArgumentException("Only MimeMessage is supported");
 		}
-		
+
 		File xmlFile = File.createTempFile("matte-add-media-", ".xml");
 		if ( log.isDebugEnabled() ) {
-			log.debug("Creating <m:collection-import> document at " 
-					+xmlFile.getAbsolutePath());
+			log.debug("Creating <m:collection-import> document at " + xmlFile.getAbsolutePath());
 		}
 		File mediaFile = File.createTempFile("matte-add-media-", ".zip");
 		if ( log.isDebugEnabled() ) {
-			log.debug("Decoding <m:media-data> to "  +mediaFile.getAbsolutePath());
+			log.debug("Decoding <m:media-data> to " + mediaFile.getAbsolutePath());
 		}
-		
+
 		// re-use the SAX content handler used by AddMediaEndpoint, even though
 		// it won't find the <m:media-data> data, as it's an attachment here
-		AddMediaContentHandler addContentHander = new AddMediaContentHandler(
-				xmlFile, mediaFile, this.outputFactory);
+		AddMediaContentHandler addContentHander = new AddMediaContentHandler(xmlFile, mediaFile,
+				this.outputFactory);
 		SAXResult result = new SAXResult(addContentHander);
 		xmlHelper.transformXml(msg.getPayloadSource(), result);
 
-		MimeMessage mimeRequest = (MimeMessage)msg;
+		MimeMessage mimeRequest = (MimeMessage) msg;
 		Iterator<Attachment> itr = mimeRequest.getAttachments();
 		Attachment media = null;
 		while ( itr.hasNext() ) {
@@ -112,33 +108,29 @@ public class AddMediaMessageEndpoint implements MessageEndpoint {
 		if ( media == null ) {
 			throw new IllegalArgumentException("Media not attached.");
 		}
-		
+
 		// copy media to tmp file
 		FileCopyUtils.copy(media.getInputStream(), new FileOutputStream(mediaFile));
-		
+
 		AddMediaCommand command = new AddMediaCommand();
 		command.setAutoAlbum(true);
 		command.setCollectionId(addContentHander.getCollectionId());
 		command.setLocalTz(addContentHander.getLocalTz());
 		command.setMediaTz(addContentHander.getMediaTz());
-		command.setTempFile(new FileBasedTemporaryFile(addContentHander.getMediaFile(), 
-				"application/zip"));
-		command.setMetaXmlFile(new FileBasedTemporaryFile(addContentHander.getXmlFile(), 
-				"text/xml"));
+		command.setTempFile(
+				new FileBasedTemporaryFile(addContentHander.getMediaFile(), "application/zip"));
+		command.setMetaXmlFile(new FileBasedTemporaryFile(addContentHander.getXmlFile(), "text/xml"));
 		BizContext context = BizContextUtil.getBizContext();
 		WorkInfo workInfo = ioBiz.importMedia(command, context);
 		StringBuilder buf = new StringBuilder();
-		buf.append("<m:AddMediaResponse xmlns:m=\"")
-			.append(SystemConstants.MATTE_XML_NAMESPACE_URI)
-			.append("\" success=\"")
-			.append(true).append("\" ticket=\"")
-			.append(workInfo.getTicket()).append("\">");
-		
+		buf.append("<m:AddMediaResponse xmlns:m=\"").append(SystemConstants.MATTE_XML_NAMESPACE_URI)
+				.append("\" success=\"").append(true).append("\" ticket=\"").append(workInfo.getTicket())
+				.append("\">");
+
 		buf.append("</m:AddMediaResponse>");
-		
+
 		Result response = messageContext.getResponse().getPayloadResult();
-		xmlHelper.transformXml(new StreamSource(
-				new StringReader(buf.toString())), response);
+		xmlHelper.transformXml(new StreamSource(new StringReader(buf.toString())), response);
 	}
 
 	/**
@@ -149,7 +141,8 @@ public class AddMediaMessageEndpoint implements MessageEndpoint {
 	}
 
 	/**
-	 * @param ioBiz the ioBiz to set
+	 * @param ioBiz
+	 *        the ioBiz to set
 	 */
 	public void setIoBiz(IOBiz ioBiz) {
 		this.ioBiz = ioBiz;
@@ -163,7 +156,8 @@ public class AddMediaMessageEndpoint implements MessageEndpoint {
 	}
 
 	/**
-	 * @param outputFactory the outputFactory to set
+	 * @param outputFactory
+	 *        the outputFactory to set
 	 */
 	public void setOutputFactory(XMLOutputFactory outputFactory) {
 		this.outputFactory = outputFactory;
@@ -177,7 +171,8 @@ public class AddMediaMessageEndpoint implements MessageEndpoint {
 	}
 
 	/**
-	 * @param xmlHelper the xmlHelper to set
+	 * @param xmlHelper
+	 *        the xmlHelper to set
 	 */
 	public void setXmlHelper(XmlHelper xmlHelper) {
 		this.xmlHelper = xmlHelper;

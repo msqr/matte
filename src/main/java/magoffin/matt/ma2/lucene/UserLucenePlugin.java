@@ -27,6 +27,10 @@ package magoffin.matt.ma2.lucene;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import org.apache.log4j.Logger;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexWriter;
 import magoffin.matt.dao.BasicBatchOptions;
 import magoffin.matt.dao.BatchableDao.BatchCallbackResult;
 import magoffin.matt.lucene.IndexEvent;
@@ -40,16 +44,12 @@ import magoffin.matt.ma2.dao.UserDao;
 import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.domain.UserSearchResult;
 import magoffin.matt.util.DelegatingInvocationHandler;
-import org.apache.log4j.Logger;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.index.IndexWriter;
 
 /**
  * Lucene search plugin implementation for User objects.
  * 
  * @author matt.magoffin
- * @version 1.1
+ * @version 1.2
  */
 public class UserLucenePlugin extends AbstractLucenePlugin {
 
@@ -65,11 +65,7 @@ public class UserLucenePlugin extends AbstractLucenePlugin {
 		setIndexType(IndexType.USER.toString());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.lucene.LucenePlugin#getIdForObject(java.lang.Object)
-	 */
+	@Override
 	public Object getIdForObject(Object object) {
 		if ( object instanceof User ) {
 			return ((User) object).getUserId();
@@ -77,15 +73,18 @@ public class UserLucenePlugin extends AbstractLucenePlugin {
 		return null;
 	}
 
+	@Override
 	public void index(Object objectId, IndexWriter writer) {
 		User user = userDao.get((Long) objectId);
 		indexUser(user, writer);
 	}
 
+	@Override
 	public void indexObject(Object object, IndexWriter writer) {
 		indexUser((User) object, writer);
 	}
 
+	@Override
 	public IndexResults reindex() {
 		final UserIndexResultsCallback results = new UserIndexResultsCallback();
 		final BasicBatchOptions batchOptions = new BasicBatchOptions(MediaItemDao.BATCH_NAME_INDEX);
@@ -93,6 +92,7 @@ public class UserLucenePlugin extends AbstractLucenePlugin {
 			try {
 				getLucene().doIndexWriterOp(getIndexType(), true, false, true, new IndexWriterOp() {
 
+					@Override
 					public void doWriterOp(String type, IndexWriter writer) {
 						results.setWriter(writer);
 						userDao.batchProcess(results, batchOptions);
@@ -104,11 +104,13 @@ public class UserLucenePlugin extends AbstractLucenePlugin {
 		} else {
 			new Thread(new Runnable() {
 
+				@Override
 				public void run() {
 					try {
 						getLucene().doIndexWriterOp(getIndexType(), true, false, true,
 								new IndexWriterOp() {
 
+									@Override
 									public void doWriterOp(String type, IndexWriter writer) {
 										results.setWriter(writer);
 										userDao.batchProcess(results, batchOptions);
@@ -123,18 +125,22 @@ public class UserLucenePlugin extends AbstractLucenePlugin {
 		return results;
 	}
 
+	@Override
 	public IndexResults reindex(SearchCriteria criteria) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public void index(Iterable<?> data) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public List<SearchMatch> search(SearchCriteria criteria) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public Object getNativeQuery(SearchCriteria criteria) {
 		throw new UnsupportedOperationException();
 	}
@@ -142,10 +148,10 @@ public class UserLucenePlugin extends AbstractLucenePlugin {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * magoffin.matt.lucene.LucenePlugin#build(org.apache.lucene.document.Document
-	 * )
+	 * @see magoffin.matt.lucene.LucenePlugin#build(org.apache.lucene.document.
+	 * Document )
 	 */
+	@Override
 	public SearchMatch build(Document doc) {
 		UserSearchResult searchResult = getDomainObjectFactory().newUserSearchResultInstance();
 		searchResult.setUserId(Long.valueOf(doc.get(IndexField.ITEM_ID.getFieldName())));
@@ -227,8 +233,9 @@ public class UserLucenePlugin extends AbstractLucenePlugin {
 						+ ",created=" + item.getCreationDate() + "}");
 			}
 			List<Object> indexErrors = UserLucenePlugin.this.indexUser(item, getWriter());
-			LuceneServiceUtils.publishIndexEvent(new IndexEvent(item.getUserId(),
-					IndexEvent.EventType.UPDATE, getIndexType()), getIndexEventListeners());
+			LuceneServiceUtils.publishIndexEvent(
+					new IndexEvent(item.getUserId(), IndexEvent.EventType.UPDATE, getIndexType()),
+					getIndexEventListeners());
 			if ( indexErrors.size() > 0 ) {
 				getErrorMap().put(item.getUserId(),
 						UserLucenePlugin.super.getIndexErrorMessage(indexErrors));

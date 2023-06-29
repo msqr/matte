@@ -30,7 +30,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 import java.util.regex.Pattern;
-import magoffin.matt.lucene.KeyTokenizer;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordTokenizer;
 import org.apache.lucene.analysis.LowerCaseFilter;
@@ -42,12 +41,13 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.snowball.SnowballFilter;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
+import magoffin.matt.lucene.KeyTokenizer;
 
 /**
  * Standard implementation of Analyzer for Matte.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.1
+ * @version 1.2
  */
 public class StandardMatteAnalyzer extends Analyzer {
 
@@ -58,6 +58,7 @@ public class StandardMatteAnalyzer extends Analyzer {
 	private Set<String> stopWords = null;
 	private int indexKeyLength = 1;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public TokenStream tokenStream(String field, Reader reader) {
 		TokenStream result = null;
@@ -109,6 +110,7 @@ public class StandardMatteAnalyzer extends Analyzer {
 		return result;
 	}
 
+	@SuppressWarnings("deprecation")
 	private TokenStream standardFilters(Reader reader) {
 		TokenStream result = new StandardTokenizer(reader);
 		result = new StandardFilter(result);
@@ -118,7 +120,6 @@ public class StandardMatteAnalyzer extends Analyzer {
 
 			Queue<Token> queue = new LinkedList<Token>();
 
-			@SuppressWarnings("deprecation")
 			@Override
 			public Token next() throws IOException {
 				if ( queue.size() > 0 ) {

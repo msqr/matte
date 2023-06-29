@@ -28,6 +28,11 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import org.apache.commons.lang.mutable.MutableInt;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.springframework.context.MessageSource;
 import magoffin.matt.lucene.BasicSearchResults;
 import magoffin.matt.lucene.IndexListener;
 import magoffin.matt.lucene.LucenePlugin;
@@ -36,18 +41,12 @@ import magoffin.matt.lucene.LuceneService.IndexQueryOp;
 import magoffin.matt.lucene.SearchCriteria;
 import magoffin.matt.lucene.SearchResults;
 import magoffin.matt.ma2.biz.DomainObjectFactory;
-import org.apache.commons.lang.mutable.MutableInt;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TopDocCollector;
-import org.springframework.context.MessageSource;
 
 /**
  * Base implementation for LucenePlugin implementations.
  * 
  * @author matt.magoffin
- * @version 1.1
+ * @version 1.2
  */
 public abstract class AbstractLucenePlugin implements LucenePlugin {
 
@@ -66,13 +65,7 @@ public abstract class AbstractLucenePlugin implements LucenePlugin {
 	private DomainObjectFactory domainObjectFactory;
 	private String indexType = null;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.lucene.LucenePlugin#init(magoffin.matt.lucene.LuceneService
-	 * , java.util.Set)
-	 */
+	@Override
 	public final LuceneIndexConfig init(LuceneService luceneService,
 			Set<IndexListener> indexEventListenersSet) {
 		this.lucene = luceneService;
@@ -138,14 +131,17 @@ public abstract class AbstractLucenePlugin implements LucenePlugin {
 		return msg;
 	}
 
+	@Override
 	public SearchResults find(final SearchCriteria criteria) {
 		Query q = (Query) getNativeQuery(criteria);
 		final MutableInt totalResults = new MutableInt(0);
 		final List<Object> matches = new LinkedList<Object>();
 		getLucene().doIndexQueryOp(getIndexType(), q, false, new IndexQueryOp() {
 
+			@SuppressWarnings("deprecation")
+			@Override
 			public void doSearcherOp(String type, IndexSearcher searcher, Query query,
-					TopDocCollector hits) throws IOException {
+					org.apache.lucene.search.TopDocCollector hits) throws IOException {
 				totalResults.setValue(hits.getTotalHits());
 				int start = 0;
 				if ( criteria.getPage() > 1 ) {
@@ -194,6 +190,7 @@ public abstract class AbstractLucenePlugin implements LucenePlugin {
 		this.infoReindexCount = infoReindexCount;
 	}
 
+	@Override
 	public Analyzer getAnalyzer() {
 		return this.analyzer;
 	}
@@ -251,6 +248,7 @@ public abstract class AbstractLucenePlugin implements LucenePlugin {
 		this.domainObjectFactory = domainObjectFactory;
 	}
 
+	@Override
 	public String getIndexType() {
 		return this.indexType;
 	}

@@ -27,32 +27,26 @@ package magoffin.matt.ma2.support;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import org.springframework.util.StringUtils;
-
 import magoffin.matt.ma2.MediaMetadata;
 
 /**
  * Basic implementation of {@link MediaMetadata}.
  * 
  * @author matt.magoffin
- * @version 1.0
+ * @version 1.1
  */
 public abstract class AbstractMediaMetadata implements MediaMetadata {
-	
-	private Date creationDate;
-	private Map<String,String> metadataMap = new LinkedHashMap<String,String>();
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaMetadata#getCreationDate()
-	 */
+	private Date creationDate;
+	private Map<String, String> metadataMap = new LinkedHashMap<String, String>();
+
+	@Override
 	public Date getCreationDate() {
 		return this.creationDate;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaMetadata#getMetadataMap()
-	 */
+	@Override
 	public Map<String, String> getMetadataMap() {
 		return this.metadataMap;
 	}
@@ -60,27 +54,34 @@ public abstract class AbstractMediaMetadata implements MediaMetadata {
 	/**
 	 * Add a non-null value to the metadata Map.
 	 * 
-	 * <p>If the <code>value</code> is <em>null</em> then nothing
-	 * will be added to the Map. The {@link Object#toString()} method
-	 * is called on the <code>key</code> to add to the Map.</p>
+	 * <p>
+	 * If the <code>value</code> is <em>null</em> then nothing will be added to
+	 * the Map. The {@link Object#toString()} method is called on the
+	 * <code>key</code> to add to the Map.
+	 * </p>
 	 * 
-	 * @param key the Map key
-	 * @param value the Map value
+	 * @param key
+	 *        the Map key
+	 * @param value
+	 *        the Map value
 	 */
 	protected void addToMap(Object key, String value) {
-		if ( !StringUtils.hasText(value) || key == null ) return;
-		getMetadataMap().put(key.toString(),value);
+		if ( !StringUtils.hasText(value) || key == null )
+			return;
+		getMetadataMap().put(key.toString(), value);
 	}
 
 	/**
-	 * @param creationDate The creationDate to set.
+	 * @param creationDate
+	 *        The creationDate to set.
 	 */
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
 
 	/**
-	 * @param metadataMap The metadataMap to set.
+	 * @param metadataMap
+	 *        The metadataMap to set.
 	 */
 	public void setMetadataMap(Map<String, String> metadataMap) {
 		this.metadataMap = metadataMap;

@@ -29,10 +29,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.validation.BindException;
+import org.springframework.validation.Errors;
+import org.springframework.web.servlet.ModelAndView;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.MediaBiz;
 import magoffin.matt.ma2.biz.SearchBiz;
@@ -44,42 +49,35 @@ import magoffin.matt.ma2.support.BasicAlbumSearchCriteria;
 import magoffin.matt.ma2.support.SortAlbumsCommand;
 import magoffin.matt.ma2.web.util.WebConstants;
 
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.context.MessageSourceResolvable;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
-import org.springframework.web.servlet.ModelAndView;
-
 /**
  * Controller to save the ordering of child albums within an album.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class SortAlbumsForm extends AbstractForm {
-	
+
 	private MediaBiz mediaBiz;
 	private SearchBiz searchBiz;
-	
+
 	/**
 	 * Command class.
 	 */
 	public static class Command {
-		
+
 		private Long albumId = null;
 		private AlbumData[] children = new AlbumData[0];
-		
+
 		/**
 		 * @return the children
 		 */
 		public AlbumData[] getChildren() {
 			return children;
 		}
-		
+
 		/**
-		 * @param children the children to set
+		 * @param children
+		 *        the children to set
 		 */
 		public void setChildren(AlbumData[] children) {
 			this.children = children;
@@ -91,74 +89,82 @@ public class SortAlbumsForm extends AbstractForm {
 		public Long getAlbumId() {
 			return albumId;
 		}
-		
+
 		/**
-		 * @param albumId the albumId to set
+		 * @param albumId
+		 *        the albumId to set
 		 */
 		public void setAlbumId(Long albumId) {
 			this.albumId = albumId;
 		}
-		
+
 	}
-	
+
 	/**
 	 * Album sort data structure.
 	 */
 	public static class AlbumData {
+
 		private Long albumId = null;
 		private Long posterId = null;
 		private Integer order = null;
-		
+
 		/**
 		 * @return the albumId
 		 */
 		public Long getAlbumId() {
 			return albumId;
 		}
-		
+
 		/**
-		 * @param albumId the albumId to set
+		 * @param albumId
+		 *        the albumId to set
 		 */
 		public void setAlbumId(Long albumId) {
 			this.albumId = albumId;
 		}
-		
+
 		/**
 		 * @return the order
 		 */
 		public Integer getOrder() {
 			return order;
 		}
-		
+
 		/**
-		 * @param order the order to set
+		 * @param order
+		 *        the order to set
 		 */
 		public void setOrder(Integer order) {
 			this.order = order;
 		}
-		
+
 		/**
 		 * @return the posterId
 		 */
 		public Long getPosterId() {
 			return posterId;
 		}
-		
+
 		/**
-		 * @param posterId the posterId to set
+		 * @param posterId
+		 *        the posterId to set
 		 */
 		public void setPosterId(Long posterId) {
 			this.posterId = posterId;
 		}
-		
+
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.web.servlet.mvc.AbstractFormController#formBackingObject(javax.servlet.http.HttpServletRequest)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.web.servlet.mvc.AbstractFormController#
+	 * formBackingObject(javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
 	protected Object formBackingObject(HttpServletRequest request) throws Exception {
-		BizContext context = getWebHelper().getBizContext(request,true);
+		BizContext context = getWebHelper().getBizContext(request, true);
 		Command cmd = new Command();
 		if ( request.getParameter("albumId") != null ) {
 			BeanWrapper wrapper = new BeanWrapperImpl(cmd);
@@ -174,26 +180,25 @@ public class SortAlbumsForm extends AbstractForm {
 	}
 
 	@Override
-	protected void onBindOnNewForm(HttpServletRequest request, Object command) 
-	throws Exception {
-		BizContext context = getWebHelper().getBizContext(request,true);
-		
+	protected void onBindOnNewForm(HttpServletRequest request, Object command) throws Exception {
+		BizContext context = getWebHelper().getBizContext(request, true);
+
 		// populate album data from albumIds
-		Command cmd = (Command)command;
+		Command cmd = (Command) command;
 		if ( cmd.getAlbumId() == null ) {
 			return;
 		}
 		Album a = this.mediaBiz.getAlbum(cmd.getAlbumId(), context);
 		AlbumData[] albumData = cmd.getChildren();
 		for ( int i = 0; i < cmd.children.length; i++ ) {
-			Album child = (Album)a.getAlbum().get(i);
+			Album child = (Album) a.getAlbum().get(i);
 			AlbumData data = new AlbumData();
 			data.setAlbumId(child.getAlbumId());
 			data.setOrder(i);
 			if ( a.getPoster() != null ) {
 				data.setPosterId(a.getPoster().getItemId());
 			} else if ( a.getItem().size() > 0 ) {
-				data.setPosterId(((MediaItem)a.getItem().get(0)).getItemId());
+				data.setPosterId(((MediaItem) a.getItem().get(0)).getItemId());
 			}
 			albumData[i] = data;
 		}
@@ -201,29 +206,29 @@ public class SortAlbumsForm extends AbstractForm {
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	protected Map referenceData(HttpServletRequest request, Object command, Errors errors) throws Exception {
-		Command cmd = (Command)command;
+	protected Map referenceData(HttpServletRequest request, Object command, Errors errors)
+			throws Exception {
+		Command cmd = (Command) command;
 		BizContext context = getWebHelper().getBizContext(request, true);
 		Map<String, Object> viewModel = new HashMap<String, Object>();
 		Model model = getDomainObjectFactory().newModelInstance();
-			
+
 		// we use search API here for performance, so we don't load all items in album
 		BasicAlbumSearchCriteria criteria = new BasicAlbumSearchCriteria(cmd.getAlbumId());
-		SearchResults searchResults = searchBiz.findAlbums(criteria, 
-				null, context);
+		SearchResults searchResults = searchBiz.findAlbums(criteria, null, context);
 		model.setSearchResults(searchResults);
 
 		viewModel.put(WebConstants.DEFALUT_MODEL_OBJECT, model);
 		return viewModel;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	protected ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command,	BindException errors)
-			throws Exception {
-		BizContext context = getWebHelper().getBizContext(request,true);
-		Command cmd = (Command)command;
-		
+	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response,
+			Object command, BindException errors) throws Exception {
+		BizContext context = getWebHelper().getBizContext(request, true);
+		Command cmd = (Command) command;
+
 		SortAlbumsCommand sortCmd = new SortAlbumsCommand();
 		sortCmd.setAlbumId(cmd.getAlbumId());
 		SortedMap<Integer, Long> orderedChildren = new TreeMap<Integer, Long>();
@@ -235,41 +240,43 @@ public class SortAlbumsForm extends AbstractForm {
 		Long[] childrenIds = orderedChildren.values().toArray(new Long[0]);
 		sortCmd.setChildAlbumIds(childrenIds);
 		this.mediaBiz.storeAlbumOrdering(sortCmd, context);
-		
+
 		Map<String, Object> viewModel = new LinkedHashMap<String, Object>();
 		MessageSourceResolvable msg = new DefaultMessageSourceResolvable(
-				new String[] {"save.album.ordering.success"}, 
-				null, "The album ordering has been saved.");
+				new String[] { "save.album.ordering.success" }, null,
+				"The album ordering has been saved.");
 		viewModel.put(WebConstants.ALERT_MESSAGES_OBJECT, msg);
 		return new ModelAndView(getSuccessView(), viewModel);
 	}
-	
+
 	/**
 	 * @return the mediaBiz
 	 */
 	public MediaBiz getMediaBiz() {
 		return mediaBiz;
 	}
-	
+
 	/**
-	 * @param mediaBiz the mediaBiz to set
+	 * @param mediaBiz
+	 *        the mediaBiz to set
 	 */
 	public void setMediaBiz(MediaBiz mediaBiz) {
 		this.mediaBiz = mediaBiz;
 	}
-	
+
 	/**
 	 * @return the searchBiz
 	 */
 	public SearchBiz getSearchBiz() {
 		return searchBiz;
 	}
-	
+
 	/**
-	 * @param searchBiz the searchBiz to set
+	 * @param searchBiz
+	 *        the searchBiz to set
 	 */
 	public void setSearchBiz(SearchBiz searchBiz) {
 		this.searchBiz = searchBiz;
 	}
-	
+
 }

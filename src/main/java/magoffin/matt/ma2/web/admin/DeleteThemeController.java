@@ -25,45 +25,39 @@
 package magoffin.matt.ma2.web.admin;
 
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.validation.BindException;
+import org.springframework.web.servlet.ModelAndView;
 import magoffin.matt.ma2.ValidationException;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.domain.Theme;
 import magoffin.matt.ma2.web.AbstractCommandController;
 import magoffin.matt.ma2.web.util.WebConstants;
 
-import org.springframework.context.MessageSourceResolvable;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.validation.BindException;
-import org.springframework.web.servlet.ModelAndView;
-
 /**
  * Controller to delete a Theme.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class DeleteThemeController extends AbstractCommandController {
 
-	@SuppressWarnings("unchecked")
 	@Override
-	protected ModelAndView handle(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
-			throws Exception {
+	protected ModelAndView handle(HttpServletRequest request, HttpServletResponse response,
+			Object command, BindException errors) throws Exception {
 		BizContext context = getWebHelper().getAdminBizContext(request);
-		Command cmd = (Command)command;
+		Command cmd = (Command) command;
 		Theme theme = getSystemBiz().getThemeById(cmd.themeId);
-		
+
 		Map<String, Object> viewModel = errors.getModel();
 		try {
 			getSystemBiz().deleteTheme(theme, context);
 			MessageSourceResolvable msg = new DefaultMessageSourceResolvable(
-					new String[] {"delete.theme.success"},
-					new Object[] {theme.getName()},
-					"Theme [" +theme.getName() +"] has been deleted");
+					new String[] { "delete.theme.success" }, new Object[] { theme.getName() },
+					"Theme [" + theme.getName() + "] has been deleted");
 			viewModel.put(WebConstants.ALERT_MESSAGES_OBJECT, msg);
 		} catch ( ValidationException e ) {
 			// in case tried to delete internal theme
@@ -76,6 +70,7 @@ public class DeleteThemeController extends AbstractCommandController {
 	 * Command class.
 	 */
 	public static class Command {
+
 		private Long themeId;
 
 		/**
@@ -84,14 +79,15 @@ public class DeleteThemeController extends AbstractCommandController {
 		public Long getThemeId() {
 			return themeId;
 		}
-		
+
 		/**
-		 * @param themeId the themeId to set
+		 * @param themeId
+		 *        the themeId to set
 		 */
 		public void setThemeId(Long themeId) {
 			this.themeId = themeId;
 		}
-		
+
 	}
 
 }

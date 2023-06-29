@@ -24,29 +24,27 @@
 
 package magoffin.matt.ma2.validation;
 
-import magoffin.matt.ma2.support.AddMediaCommand;
-
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+import magoffin.matt.ma2.support.AddMediaCommand;
 
 /**
  * Validator for AddMediaCommand objects.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class AddMediaValidator implements Validator {
 
+	@Override
 	public boolean supports(@SuppressWarnings("rawtypes") Class clazz) {
 		return AddMediaCommand.class.isAssignableFrom(clazz);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
-	 */
+	@Override
 	public void validate(Object obj, Errors errors) {
-		AddMediaCommand cmd = (AddMediaCommand)obj;
+		AddMediaCommand cmd = (AddMediaCommand) obj;
 		if ( cmd.getCollectionId() == null ) {
 			errors.rejectValue("collectionId", "error.required", null, "collection.displayName");
 		}

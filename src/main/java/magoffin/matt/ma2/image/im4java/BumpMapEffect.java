@@ -26,21 +26,19 @@ package magoffin.matt.ma2.image.im4java;
 
 import java.io.File;
 import java.io.IOException;
-
-import magoffin.matt.ma2.MediaEffect;
-import magoffin.matt.ma2.MediaRequest;
-import magoffin.matt.ma2.domain.MediaItem;
-
 import org.im4java.core.CompositeCmd;
 import org.im4java.core.IMOperation;
 import org.springframework.core.io.Resource;
+import magoffin.matt.ma2.MediaEffect;
+import magoffin.matt.ma2.MediaRequest;
+import magoffin.matt.ma2.domain.MediaItem;
 
 /**
  * A watermark effect for IM4Java based processing, that creates a 3D bump map
  * from the watermark image.
  * 
  * @author matt
- * @version 1.0
+ * @version 1.1
  */
 public class BumpMapEffect extends BaseIM4JavaMediaEffect {
 
@@ -48,16 +46,14 @@ public class BumpMapEffect extends BaseIM4JavaMediaEffect {
 	 * Default constructor.
 	 */
 	public BumpMapEffect() {
-		super("bump." +MediaEffect.KEY_WATERMARK);
+		super("bump." + MediaEffect.KEY_WATERMARK);
 	}
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.image.im4java.IM4JavaMediaEffect#applyEffect(magoffin.matt.ma2.domain.MediaItem, magoffin.matt.ma2.MediaRequest, org.im4java.core.IMOperation)
-	 */
+
+	@Override
 	public ImageCommandAndOperation applyEffect(MediaItem item, MediaRequest request,
 			IMOperation baseOperation) {
-		Resource watermarkResource = (Resource)request.getParameters().get(
-				MediaEffect.MEDIA_REQUEST_PARAM_WATERMARK_RESOURCE);
+		Resource watermarkResource = (Resource) request.getParameters()
+				.get(MediaEffect.MEDIA_REQUEST_PARAM_WATERMARK_RESOURCE);
 		if ( watermarkResource == null || !watermarkResource.exists() ) {
 			return null;
 		}

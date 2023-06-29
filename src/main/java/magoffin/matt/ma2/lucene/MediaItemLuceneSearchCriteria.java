@@ -32,7 +32,7 @@ import magoffin.matt.ma2.domain.PaginationCriteria;
  * Lucene search criteria for media items.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class MediaItemLuceneSearchCriteria implements SearchCriteria {
 
@@ -41,21 +41,26 @@ public class MediaItemLuceneSearchCriteria implements SearchCriteria {
 	private int page = 1;
 	private boolean countOnly = false;
 	private SearchBiz.MediaItemSearchCriteria mediaItemCriteria;
-	
+
 	/**
 	 * Construct with a MediaItemSearchCriteria.
-	 * @param mediaItemCriteria the criteria
+	 * 
+	 * @param mediaItemCriteria
+	 *        the criteria
 	 */
 	public MediaItemLuceneSearchCriteria(SearchBiz.MediaItemSearchCriteria mediaItemCriteria) {
 		this(mediaItemCriteria, null);
 	}
-	
+
 	/**
 	 * Construct with a MediaItemSearchCriteria and pagination.
-	 * @param mediaItemCriteria the criteria
-	 * @param pagination the pagination
+	 * 
+	 * @param mediaItemCriteria
+	 *        the criteria
+	 * @param pagination
+	 *        the pagination
 	 */
-	public MediaItemLuceneSearchCriteria(SearchBiz.MediaItemSearchCriteria mediaItemCriteria, 
+	public MediaItemLuceneSearchCriteria(SearchBiz.MediaItemSearchCriteria mediaItemCriteria,
 			PaginationCriteria pagination) {
 		this.mediaItemCriteria = mediaItemCriteria;
 		this.countOnly = mediaItemCriteria.isCountOnly();
@@ -71,76 +76,75 @@ public class MediaItemLuceneSearchCriteria implements SearchCriteria {
 			}
 		}
 	}
-	
+
 	/**
 	 * @return the maxResults
 	 */
+	@Override
 	public int getMaxResults() {
 		return maxResults;
 	}
-	
+
 	/**
-	 * @param maxResults the maxResults to set
+	 * @param maxResults
+	 *        the maxResults to set
 	 */
 	public void setMaxResults(int maxResults) {
 		this.maxResults = maxResults;
 	}
-	
+
 	/**
 	 * @return the mediaItemCriteria
 	 */
 	public SearchBiz.MediaItemSearchCriteria getMediaItemCriteria() {
 		return mediaItemCriteria;
 	}
-	
+
 	/**
-	 * @param mediaItemCriteria the mediaItemCriteria to set
+	 * @param mediaItemCriteria
+	 *        the mediaItemCriteria to set
 	 */
-	public void setMediaItemCriteria(
-			SearchBiz.MediaItemSearchCriteria mediaItemCriteria) {
+	public void setMediaItemCriteria(SearchBiz.MediaItemSearchCriteria mediaItemCriteria) {
 		this.mediaItemCriteria = mediaItemCriteria;
 	}
-	
-	/**
-	 * @return the page
-	 */
+
+	@Override
 	public int getPage() {
 		return page;
 	}
-	
+
 	/**
-	 * @param page the page to set
+	 * @param page
+	 *        the page to set
 	 */
 	public void setPage(int page) {
 		this.page = page;
 	}
-	
-	/**
-	 * @return the pageSize
-	 */
+
+	@Override
 	public int getPageSize() {
 		return pageSize;
 	}
-	
+
 	/**
-	 * @param pageSize the pageSize to set
+	 * @param pageSize
+	 *        the pageSize to set
 	 */
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
 	}
-	
-	/**
-	 * @return the countOnly
-	 */
+
+	@Override
 	public boolean isCountOnly() {
 		return countOnly;
 	}
-	
+
 	/**
-	 * @param countOnly the countOnly to set
+	 * @param countOnly
+	 *        the countOnly to set
 	 */
 	public void setCountOnly(boolean countOnly) {
 		this.countOnly = countOnly;
 	}
-	
+
 }

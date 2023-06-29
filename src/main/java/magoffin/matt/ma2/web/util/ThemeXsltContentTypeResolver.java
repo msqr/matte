@@ -25,24 +25,22 @@
 package magoffin.matt.ma2.web.util;
 
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
 import magoffin.matt.xweb.util.ContentTypeResolver;
 
 /**
  * Resolve the XSLT content type for theme resources.
  *
  * @author matt
- * @version 1.0
+ * @version 1.1
  */
 public class ThemeXsltContentTypeResolver implements ContentTypeResolver {
-	
+
 	private String defaultType = "text/plain";
 
-	public String resolveContentType(HttpServletRequest request,
-			Map<String, ?> model) {
-		String type = (String)request.getAttribute(WebConstants.REQ_KEY_THEME_RESOURCE_CONTENT_TYPE);
+	@Override
+	public String resolveContentType(HttpServletRequest request, Map<String, ?> model) {
+		String type = (String) request.getAttribute(WebConstants.REQ_KEY_THEME_RESOURCE_CONTENT_TYPE);
 		return type == null ? defaultType : type;
 	}
 
@@ -54,7 +52,8 @@ public class ThemeXsltContentTypeResolver implements ContentTypeResolver {
 	}
 
 	/**
-	 * @param defaultType the defaultType to set
+	 * @param defaultType
+	 *        the defaultType to set
 	 */
 	public void setDefaultType(String defaultType) {
 		this.defaultType = defaultType;

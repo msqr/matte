@@ -27,10 +27,14 @@ package magoffin.matt.ma2.web;
 import java.lang.reflect.Constructor;
 import java.util.Calendar;
 import java.util.TimeZone;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindException;
+import org.springframework.validation.DataBinder;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.WebUtils;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.DomainObjectFactory;
 import magoffin.matt.ma2.biz.SystemBiz;
@@ -40,25 +44,18 @@ import magoffin.matt.util.CalendarEditor;
 import magoffin.matt.util.ThreadSafeDateFormat;
 import magoffin.matt.xweb.util.ServletRequestDataBinderTemplate;
 
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindException;
-import org.springframework.validation.DataBinder;
-import org.springframework.web.bind.ServletRequestDataBinder;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.SimpleFormController;
-import org.springframework.web.util.WebUtils;
-
 /**
  * Abstract base class for form controllers.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
-public abstract class AbstractForm extends SimpleFormController {
-	
+@SuppressWarnings("deprecation")
+public abstract class AbstractForm extends org.springframework.web.servlet.mvc.SimpleFormController {
+
 	/**
-	 * Parameter triggering the cancel action.
-	 * Can be called from any wizard page!
+	 * Parameter triggering the cancel action. Can be called from any wizard
+	 * page!
 	 */
 	public static final String PARAM_CANCEL = "_cancel";
 
@@ -70,7 +67,7 @@ public abstract class AbstractForm extends SimpleFormController {
 	private SystemBiz systemBiz = null;
 	private WebHelper webHelper = null;
 	private ServletRequestDataBinderTemplate binderTemplate = null;
-    
+
 	@Override
 	protected void initApplicationContext() {
 		super.initApplicationContext();
@@ -82,25 +79,23 @@ public abstract class AbstractForm extends SimpleFormController {
 	}
 
 	@Override
-	protected ServletRequestDataBinder createBinder(HttpServletRequest request,
-			Object command) throws Exception {
-		if (binderTemplate == null) {
+	protected ServletRequestDataBinder createBinder(HttpServletRequest request, Object command)
+			throws Exception {
+		if ( binderTemplate == null ) {
 			return super.createBinder(request, command);
 		}
-		Constructor<? extends ServletRequestDataBinderTemplate> c = binderTemplate
-				.getClass().getConstructor(
-				new Class[] { Object.class, String.class, DataBinder.class });
+		Constructor<? extends ServletRequestDataBinderTemplate> c = binderTemplate.getClass()
+				.getConstructor(new Class<?>[] { Object.class, String.class, DataBinder.class });
 		ServletRequestDataBinder binder = (ServletRequestDataBinder) c
-				.newInstance(new Object[] { command, getCommandName(),
-						binderTemplate });
-		if (getMessageCodesResolver() != null) {
+				.newInstance(new Object[] { command, getCommandName(), binderTemplate });
+		if ( getMessageCodesResolver() != null ) {
 			binder.setMessageCodesResolver(getMessageCodesResolver());
 		}
-		if (getBindingErrorProcessor() != null) {
+		if ( getBindingErrorProcessor() != null ) {
 			binder.setBindingErrorProcessor(getBindingErrorProcessor());
 		}
-		if (getPropertyEditorRegistrars() != null) {
-			for (int i = 0; i < getPropertyEditorRegistrars().length; i++) {
+		if ( getPropertyEditorRegistrars() != null ) {
+			for ( int i = 0; i < getPropertyEditorRegistrars().length; i++ ) {
 				getPropertyEditorRegistrars()[i].registerCustomEditors(binder);
 			}
 		}
@@ -109,29 +104,37 @@ public abstract class AbstractForm extends SimpleFormController {
 	}
 
 	/**
-	 * Register a {@link CalendarEditor} property editor for Calendar bean properties.
+	 * Register a {@link CalendarEditor} property editor for Calendar bean
+	 * properties.
 	 * 
-	 * @param binder the binder
-	 * @param context the current context, or <em>null</em> to not use User's time zone
-	 * @param format the date format to use
-	 * @param zone the time zone to use, or <em>null</em> for default
+	 * @param binder
+	 *        the binder
+	 * @param context
+	 *        the current context, or <em>null</em> to not use User's time zone
+	 * @param format
+	 *        the date format to use
+	 * @param zone
+	 *        the time zone to use, or <em>null</em> for default
 	 */
-	protected void registerCalendarEditor(ServletRequestDataBinder binder, 
-			BizContext context, ThreadSafeDateFormat format, TimeZone zone) {
-		if ( zone == null && context != null && context.getActingUser().getTz()  != null ) {
+	protected void registerCalendarEditor(ServletRequestDataBinder binder, BizContext context,
+			ThreadSafeDateFormat format, TimeZone zone) {
+		if ( zone == null && context != null && context.getActingUser().getTz() != null ) {
 			zone = TimeZone.getTimeZone(context.getActingUser().getTz().getCode());
 		}
-		
+
 		// register our Calendar binder...
 		binder.registerCustomEditor(Calendar.class, new CalendarEditor(format, zone, true));
 	}
-	
+
 	/**
 	 * Return if cancel action is specified in the request.
 	 * 
-	 * <p>Default implementation looks for "_cancel" parameter in the request.</p>
+	 * <p>
+	 * Default implementation looks for "_cancel" parameter in the request.
+	 * </p>
 	 * 
-	 * @param request current HTTP request
+	 * @param request
+	 *        current HTTP request
 	 * @return <em>true</em> if user canceled action
 	 * @see #PARAM_CANCEL
 	 */
@@ -141,31 +144,36 @@ public abstract class AbstractForm extends SimpleFormController {
 
 	@Override
 	protected ModelAndView processFormSubmission(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
-			throws Exception {
+			HttpServletResponse response, Object command, BindException errors) throws Exception {
 		// check for 'cancel' request, otherwise defer to super implementation
 		if ( isCancel(request) ) {
-			return processCancel(request,response,command,errors);
+			return processCancel(request, response, command, errors);
 		}
 		return super.processFormSubmission(request, response, command, errors);
 	}
-	
+
 	/**
 	 * Perform a cancel form submit request.
 	 * 
-	 * <p>This method is called by {@link #processFormSubmission(HttpServletRequest, HttpServletResponse, Object, BindException)}
-	 * if the {@link #isCancel(HttpServletRequest)} method returns <em>true</em>.</p>
+	 * <p>
+	 * This method is called by
+	 * {@link #processFormSubmission(HttpServletRequest, HttpServletResponse, Object, BindException)}
+	 * if the {@link #isCancel(HttpServletRequest)} method returns
+	 * <em>true</em>.
+	 * </p>
 	 * 
-	 * @param request the current request
-	 * @param response the response
-	 * @param command the command
-	 * @param errors the errors
+	 * @param request
+	 *        the current request
+	 * @param response
+	 *        the response
+	 * @param command
+	 *        the command
+	 * @param errors
+	 *        the errors
 	 * @return a ModelAndView for handling the cancel request
 	 */
-	protected ModelAndView processCancel(HttpServletRequest request, 
-			HttpServletResponse response, 
-			Object command, 
-			BindException errors) {
+	protected ModelAndView processCancel(HttpServletRequest request, HttpServletResponse response,
+			Object command, BindException errors) {
 		// default implementation is to simply return cancel view
 		return new ModelAndView(getCancelView());
 	}
@@ -178,7 +186,8 @@ public abstract class AbstractForm extends SimpleFormController {
 	}
 
 	/**
-	 * @param cancelView The cancelView to set.
+	 * @param cancelView
+	 *        The cancelView to set.
 	 */
 	public void setCancelView(String cancelView) {
 		this.cancelView = cancelView;
@@ -192,7 +201,8 @@ public abstract class AbstractForm extends SimpleFormController {
 	}
 
 	/**
-	 * @param domainObjectFactory The domainObjectFactory to set.
+	 * @param domainObjectFactory
+	 *        The domainObjectFactory to set.
 	 */
 	public void setDomainObjectFactory(DomainObjectFactory domainObjectFactory) {
 		this.domainObjectFactory = domainObjectFactory;
@@ -206,7 +216,8 @@ public abstract class AbstractForm extends SimpleFormController {
 	}
 
 	/**
-	 * @param systemBiz The systemBiz to set.
+	 * @param systemBiz
+	 *        The systemBiz to set.
 	 */
 	public void setSystemBiz(SystemBiz systemBiz) {
 		this.systemBiz = systemBiz;
@@ -220,12 +231,13 @@ public abstract class AbstractForm extends SimpleFormController {
 	}
 
 	/**
-	 * @param webHelper The webHelper to set.
+	 * @param webHelper
+	 *        The webHelper to set.
 	 */
 	public void setWebHelper(WebHelper webHelper) {
 		this.webHelper = webHelper;
 	}
-	
+
 	/**
 	 * @return the binderTemplate
 	 */
@@ -234,10 +246,11 @@ public abstract class AbstractForm extends SimpleFormController {
 	}
 
 	/**
-	 * @param binderTemplate the binderTemplate to set
+	 * @param binderTemplate
+	 *        the binderTemplate to set
 	 */
 	public void setBinderTemplate(ServletRequestDataBinderTemplate binderTemplate) {
 		this.binderTemplate = binderTemplate;
 	}
-	
+
 }

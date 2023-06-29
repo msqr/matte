@@ -28,9 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.lang.math.Range;
-
 import magoffin.matt.ma2.MediaEffect;
 import magoffin.matt.ma2.MediaQuality;
 import magoffin.matt.ma2.MediaRequest;
@@ -40,28 +38,30 @@ import magoffin.matt.ma2.MediaSize;
  * Basic implementation of MediaRequest.
  * 
  * @author matt.magoffin
- * @version 1.0
+ * @version 1.1
  */
 public class BasicMediaRequest implements MediaRequest {
-	
+
 	private Long mediaItemId = null;
 	private boolean original = false;
 	private MediaSize size = MediaSize.NORMAL;
 	private MediaQuality quality = MediaQuality.GOOD;
-	private Map<String,Object> parameters = new LinkedHashMap<String,Object>();
+	private Map<String, Object> parameters = new LinkedHashMap<String, Object>();
 	private List<MediaEffect> effects = new LinkedList<MediaEffect>();
 	private Range partialContentByteRange = null;
-	
+
 	/**
 	 * Default constructor.
 	 */
 	public BasicMediaRequest() {
 		// nothing to do
 	}
-	
+
 	/**
 	 * Copy constructor.
-	 * @param request the request to copy
+	 * 
+	 * @param request
+	 *        the request to copy
 	 */
 	public BasicMediaRequest(MediaRequest request) {
 		this.mediaItemId = request.getMediaItemId();
@@ -71,11 +71,12 @@ public class BasicMediaRequest implements MediaRequest {
 		this.parameters.putAll(request.getParameters());
 		this.effects = request.getEffects();
 	}
-	
+
 	/**
 	 * Construct with some parameters.
 	 * 
-	 * @param id the media item ID
+	 * @param id
+	 *        the media item ID
 	 */
 	public BasicMediaRequest(Long id) {
 		mediaItemId = id;
@@ -84,9 +85,12 @@ public class BasicMediaRequest implements MediaRequest {
 	/**
 	 * Construct with some parameters.
 	 * 
-	 * @param id the media item ID
-	 * @param size the size
-	 * @param quality the quality
+	 * @param id
+	 *        the media item ID
+	 * @param size
+	 *        the size
+	 * @param quality
+	 *        the quality
 	 */
 	public BasicMediaRequest(Long id, MediaSize size, MediaQuality quality) {
 		mediaItemId = id;
@@ -94,44 +98,32 @@ public class BasicMediaRequest implements MediaRequest {
 		this.quality = quality;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaRequest#getMediaItemId()
-	 */
+	@Override
 	public Long getMediaItemId() {
 		return mediaItemId;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaRequest#isOriginal()
-	 */
+	@Override
 	public boolean isOriginal() {
 		return original;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaRequest#getSize()
-	 */
+	@Override
 	public MediaSize getSize() {
 		return size;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaRequest#getQuality()
-	 */
+	@Override
 	public MediaQuality getQuality() {
 		return quality;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaRequest#getParameters()
-	 */
+	@Override
 	public Map<String, Object> getParameters() {
 		return parameters;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaRequest#partialContentByteRange()
-	 */
+	@Override
 	public Range getPartialContentByteRange() {
 		return partialContentByteRange;
 	}
@@ -139,10 +131,11 @@ public class BasicMediaRequest implements MediaRequest {
 	/**
 	 * Generates a cache key based on the item's ID, size, and quality.
 	 */
+	@Override
 	public String getCacheKey() {
 		StringBuilder sb = new StringBuilder(getMediaItemId().toString());
 		sb.append("_");
-		sb.append( size == null ? "#" : size.toString());
+		sb.append(size == null ? "#" : size.toString());
 		sb.append("_");
 		sb.append(quality == null ? "#" : quality.toString());
 		// possibly parameters, effects as part of key in future?
@@ -150,56 +143,61 @@ public class BasicMediaRequest implements MediaRequest {
 	}
 
 	/**
-	 * @param mediaItemId The mediaItemId to set.
+	 * @param mediaItemId
+	 *        The mediaItemId to set.
 	 */
 	public void setMediaItemId(Long mediaItemId) {
 		this.mediaItemId = mediaItemId;
 	}
 
 	/**
-	 * @param original The original to set.
+	 * @param original
+	 *        The original to set.
 	 */
 	public void setOriginal(boolean original) {
 		this.original = original;
 	}
 
 	/**
-	 * @param parameters The parameters to set.
+	 * @param parameters
+	 *        The parameters to set.
 	 */
 	public void setParameters(Map<String, Object> parameters) {
 		this.parameters = parameters;
 	}
 
 	/**
-	 * @param quality The quality to set.
+	 * @param quality
+	 *        The quality to set.
 	 */
 	public void setQuality(MediaQuality quality) {
 		this.quality = quality;
 	}
 
 	/**
-	 * @param size The size to set.
+	 * @param size
+	 *        The size to set.
 	 */
 	public void setSize(MediaSize size) {
 		this.size = size;
 	}
 
-	/**
-	 * @return Returns the effects.
-	 */
+	@Override
 	public List<MediaEffect> getEffects() {
 		return effects;
 	}
-	
+
 	/**
-	 * @param effects The effects to set.
+	 * @param effects
+	 *        The effects to set.
 	 */
 	public void setEffects(List<MediaEffect> effects) {
 		this.effects = effects;
 	}
 
 	/**
-	 * @param partialContentByteRange the partialContentByteRange to set
+	 * @param partialContentByteRange
+	 *        the partialContentByteRange to set
 	 */
 	public void setPartialContentByteRange(Range partialContentByteRange) {
 		this.partialContentByteRange = partialContentByteRange;

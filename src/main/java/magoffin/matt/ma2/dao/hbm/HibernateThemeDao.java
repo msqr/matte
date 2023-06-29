@@ -36,7 +36,7 @@ import magoffin.matt.ma2.domain.Theme;
  * Hibernate impolementation of ThemeDao.
  * 
  * @author matt.magoffin
- * @version 1.1
+ * @version 1.2
  */
 public class HibernateThemeDao extends GenericIndexableHibernateDao<Theme, Long> implements ThemeDao {
 
@@ -66,10 +66,12 @@ public class HibernateThemeDao extends GenericIndexableHibernateDao<Theme, Long>
 		callbackData.setId(new Long(rs.getLong(getIndexObjectIdColumnName())));
 	}
 
+	@Override
 	public List<Theme> findAllThemes() {
 		return findByNamedQuery(QUERY_THEME_ALL);
 	}
 
+	@Override
 	public Theme getThemeForName(String name) {
 		List<Theme> results = findByNamedQuery(QUERY_THEME_BY_NAME, new Object[] { name });
 		if ( results.size() < 1 )

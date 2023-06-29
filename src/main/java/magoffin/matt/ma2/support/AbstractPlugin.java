@@ -24,7 +24,6 @@
 
 package magoffin.matt.ma2.support;
 
-import magoffin.matt.ma2.plugin.Plugin;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.FatalBeanException;
@@ -32,6 +31,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.ClassUtils;
+import magoffin.matt.ma2.plugin.Plugin;
 
 /**
  * Abstract base {@link Plugin} implementation that provides a standardized
@@ -43,9 +43,8 @@ import org.springframework.util.ClassUtils;
  * </p>
  * 
  * <ol>
- * <li>Calls the {@link #getConfigName()} method to determine the
- * <em>base config
- *   name</em> to look for.</li>
+ * <li>Calls the {@link #getConfigName()} method to determine the <em>base
+ * config name</em> to look for.</li>
  * 
  * <li>Looks for a classpath resource named <b><em>base config name</em>
  * Context.xml</b>. For example, if the base config name is <em>MyPlugin</em>
@@ -65,9 +64,9 @@ import org.springframework.util.ClassUtils;
  * in the {@code ApplicationContext} passed to this method.</li>
  * 
  * <li>Calls {@link ClassPathXmlApplicationContext#refresh()} to initialize the
- * context. This context should define a bean named the <em>full class
- *   name of this plugin implementation</em>. This bean should be a
- * fully-configured instance of this plugin.</li>
+ * context. This context should define a bean named the <em>full class name of
+ * this plugin implementation</em>. This bean should be a fully-configured
+ * instance of this plugin.</li>
  * 
  * <li>Gets the class-plugin bean from the
  * {@code ClassPathXmlApplicationContext} and uses
@@ -84,17 +83,18 @@ import org.springframework.util.ClassUtils;
  * </p>
  *
  * @author matt
- * @version 1.1
+ * @version 1.2
  */
 public abstract class AbstractPlugin implements Plugin {
 
 	/** A class-level logger. */
 	protected final Logger log = Logger.getLogger(getClass());
 
+	@Override
 	public final void initialize(ApplicationContext application) {
 		if ( !(application instanceof ConfigurableApplicationContext) ) {
-			throw new RuntimeException("Only a [" + ConfigurableApplicationContext.class
-					+ "] is suppored");
+			throw new RuntimeException(
+					"Only a [" + ConfigurableApplicationContext.class + "] is suppored");
 		}
 		ConfigurableApplicationContext parent = (ConfigurableApplicationContext) application;
 

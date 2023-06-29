@@ -28,7 +28,10 @@ import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-
+import org.springframework.context.MessageSource;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.WorkBiz;
 import magoffin.matt.ma2.biz.WorkBiz.WorkInfo;
@@ -39,141 +42,139 @@ import magoffin.matt.ma2.domain.MediaItem;
 import magoffin.matt.ma2.support.MediaInfoCommand;
 import magoffin.matt.ma2.support.ShareAlbumCommand;
 
-import org.springframework.context.MessageSource;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
-import org.springframework.transaction.support.TransactionTemplate;
-
 /**
- * Interceptor to support automatic indexing of updated MediaItem domain objects.
+ * Interceptor to support automatic indexing of updated MediaItem domain
+ * objects.
  * 
- * <p>This interceptor supports any of the following:</p>
+ * <p>
+ * This interceptor supports any of the following:
+ * </p>
  * 
  * <ol>
- *   <li>A {@link magoffin.matt.ma2.domain.MediaItem} domain object as the
- *   <em>returnValue</em></li>
- *   
- *   <li>A <code>Long</code> MediaItem ID as the <em>returnValue</em></li>
- *   
- *   <li>A {@link MediaInfoCommand} intance as a method argument</li>
+ * <li>A {@link magoffin.matt.ma2.domain.MediaItem} domain object as the
+ * <em>returnValue</em></li>
+ * 
+ * <li>A <code>Long</code> MediaItem ID as the <em>returnValue</em></li>
+ * 
+ * <li>A {@link MediaInfoCommand} intance as a method argument</li>
  * </ol>
  * 
- * <p>Using the <code>itemId</code> of the found object, or the list of 
- * item IDs, this class will call the 
- * {@link magoffin.matt.ma2.biz.IndexBiz#indexMediaItem(Long)} 
- * method to index the item.</p>
+ * <p>
+ * Using the <code>itemId</code> of the found object, or the list of item IDs,
+ * this class will call the
+ * {@link magoffin.matt.ma2.biz.IndexBiz#indexMediaItem(Long)} method to index
+ * the item.
+ * </p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class MediaItemIndexInterceptor extends AbstractIndexInterceptor {
-	
+
 	private WorkBiz workBiz;
 	private MessageSource messages;
 	private AlbumDao albumDao;
 	private TransactionTemplate transactionTemplate;
-	
-	/* (non-Javadoc)
-	 * @see org.springframework.aop.AfterReturningAdvice#afterReturning(java.lang.Object, java.lang.reflect.Method, java.lang.Object[], java.lang.Object)
-	 */
+
+	@Override
 	@SuppressWarnings("unchecked")
-	public void afterReturning(Object returnValue, Method method,
-			Object[] args, Object target) throws Throwable {
+	public void afterReturning(Object returnValue, Method method, Object[] args, Object target)
+			throws Throwable {
 		Long[] itemIds = null;
 		BizContext context = null;
 		if ( args != null ) {
 			for ( Object o : args ) {
 				if ( o instanceof BizContext ) {
-					context = (BizContext)o;
+					context = (BizContext) o;
 					break;
 				}
 			}
 		}
-		
+
 		if ( returnValue instanceof MediaItem ) {
-			itemIds = new Long[] {((MediaItem)returnValue).getItemId()};
-		} else if ( returnValue instanceof Long 
-				&& !method.getName().contains("Album") ) {
-			itemIds = new Long[] {(Long)returnValue};
+			itemIds = new Long[] { ((MediaItem) returnValue).getItemId() };
+		} else if ( returnValue instanceof Long && !method.getName().contains("Album") ) {
+			itemIds = new Long[] { (Long) returnValue };
 		} else if ( returnValue instanceof WorkInfo ) {
 			// submit a new work request to index the item IDs returned
 			// from the WorkInfo
-			final WorkInfo work = (WorkInfo)returnValue;
+			final WorkInfo work = (WorkInfo) returnValue;
 			final Locale locale = context != null ? context.getLocale() : null;
 			workBiz.submitWork(new WorkRequest() {
-				
+
 				private float completed = 0.0f;
 				private int numIndexed = 0;
 
+				@Override
 				public float getAmountCompleted() {
 					return completed;
 				}
 
+				@Override
 				public String getDisplayName() {
-					return messages.getMessage(
-							"index.media.work.displayName", null,
-							"Indexing media", locale);
+					return messages.getMessage("index.media.work.displayName", null, "Indexing media",
+							locale);
 				}
 
+				@Override
 				public String getMessage() {
-					return messages.getMessage(
-							"index.media.work.message", 
-							new Object[]{numIndexed, work.getObjectIds().size()},
-							"Indexed " +numIndexed +" items", locale);
+					return messages.getMessage("index.media.work.message",
+							new Object[] { numIndexed, work.getObjectIds().size() },
+							"Indexed " + numIndexed + " items", locale);
 				}
 
+				@Override
 				public List<Long> getObjectIdList() {
 					return work.getObjectIds();
 				}
 
+				@Override
 				public Integer getPriority() {
 					return WorkBiz.LOW_PRIORITY;
 				}
 
+				@Override
 				public boolean canStart() {
 					return work.isDone() && work.getException() == null;
 				}
 
+				@Override
 				public boolean isTransactional() {
 					return true;
 				}
 
+				@Override
 				public void startWork() throws Exception {
 					for ( Long itemId : work.getObjectIds() ) {
 						getIndexBiz().indexMediaItem(itemId);
 						numIndexed++;
-						completed = ((float)numIndexed) 
-							/ ((float)work.getObjectIds().size());
+						completed = ((float) numIndexed) / ((float) work.getObjectIds().size());
 					}
 				}
-				
+
 			});
-		} else if ( args != null) {
+		} else if ( args != null ) {
 			// look through args for MediaInfoCommand
 			Long albumId = null;
 			for ( Object arg : args ) {
 				if ( arg instanceof MediaInfoCommand ) {
-					itemIds = ((MediaInfoCommand)arg).getItemIds();
+					itemIds = ((MediaInfoCommand) arg).getItemIds();
 					break;
 				} else if ( arg instanceof ShareAlbumCommand ) {
-					final ShareAlbumCommand cmd = (ShareAlbumCommand)arg;
+					final ShareAlbumCommand cmd = (ShareAlbumCommand) arg;
 					albumId = cmd.getAlbumId();
 					break;
-				} else if ( method.getName().startsWith("storeMediaItem")
-						&& arg instanceof Long[]) {
-					itemIds = (Long[])arg;
+				} else if ( method.getName().startsWith("storeMediaItem") && arg instanceof Long[] ) {
+					itemIds = (Long[]) arg;
 					break;
-				} else if ( method.getName().endsWith("Album") 
-						&& arg instanceof Long[] ) {
-					itemIds = (Long[])arg;
+				} else if ( method.getName().endsWith("Album") && arg instanceof Long[] ) {
+					itemIds = (Long[]) arg;
 					break;
-				} else if ( method.getName().endsWith("Album") 
-						&& arg instanceof Album ) {
-					albumId = ((Album)arg).getAlbumId();
+				} else if ( method.getName().endsWith("Album") && arg instanceof Album ) {
+					albumId = ((Album) arg).getAlbumId();
 					break;
-				} else if ( method.getName().equals("unShareAlbum")
-						&& arg instanceof Long) {
-					albumId = (Long)arg;
+				} else if ( method.getName().equals("unShareAlbum") && arg instanceof Long ) {
+					albumId = (Long) arg;
 					break;
 				}
 			}
@@ -181,10 +182,11 @@ public class MediaItemIndexInterceptor extends AbstractIndexInterceptor {
 				final Long tmpId = albumId;
 				final List<Long> itemIdList = new LinkedList<Long>();
 				getTransactionTemplate().execute(new TransactionCallbackWithoutResult() {
+
 					@Override
 					protected void doInTransactionWithoutResult(TransactionStatus status) {
 						Album a = albumDao.getAlbumWithItems(tmpId);
-						for ( MediaItem item : (List<MediaItem>)a.getItem() ) {
+						for ( MediaItem item : (List<MediaItem>) a.getItem() ) {
 							itemIdList.add(item.getItemId());
 						}
 					}
@@ -194,65 +196,69 @@ public class MediaItemIndexInterceptor extends AbstractIndexInterceptor {
 		}
 
 		if ( itemIds != null ) {
-			for ( Long id  : itemIds ) {
+			for ( Long id : itemIds ) {
 				getIndexBiz().indexMediaItem(id);
 			}
 		} else if ( log.isDebugEnabled() ) {
-			log.debug("MediaItem ID(s) not found from Method [" +method +"]");
+			log.debug("MediaItem ID(s) not found from Method [" + method + "]");
 		}
 	}
-	
+
 	/**
 	 * @return the messages
 	 */
 	public MessageSource getMessages() {
 		return messages;
 	}
-	
+
 	/**
-	 * @param messages the messages to set
+	 * @param messages
+	 *        the messages to set
 	 */
 	public void setMessages(MessageSource messages) {
 		this.messages = messages;
 	}
-	
+
 	/**
 	 * @return the workBiz
 	 */
 	public WorkBiz getWorkBiz() {
 		return workBiz;
 	}
-	
+
 	/**
-	 * @param workBiz the workBiz to set
+	 * @param workBiz
+	 *        the workBiz to set
 	 */
 	public void setWorkBiz(WorkBiz workBiz) {
 		this.workBiz = workBiz;
 	}
-	
+
 	/**
 	 * @return the albumDao
 	 */
 	public AlbumDao getAlbumDao() {
 		return albumDao;
 	}
-	
+
 	/**
-	 * @param albumDao the albumDao to set
+	 * @param albumDao
+	 *        the albumDao to set
 	 */
 	public void setAlbumDao(AlbumDao albumDao) {
 		this.albumDao = albumDao;
 	}
-	
+
 	/**
 	 * @return the transactionTemplate
 	 */
 	public TransactionTemplate getTransactionTemplate() {
 		return transactionTemplate;
 	}
-	
+
 	/**
-	 * @param transactionTemplate the transactionTemplate to set
+	 * @param transactionTemplate
+	 *        the transactionTemplate to set
 	 */
 	public void setTransactionTemplate(TransactionTemplate transactionTemplate) {
 		this.transactionTemplate = transactionTemplate;

@@ -25,35 +25,36 @@
 package magoffin.matt.ma2.aop;
 
 import java.lang.reflect.Method;
-
 import magoffin.matt.ma2.domain.User;
 
 /**
  * Interceptor to support automatic indexing of updated User domain objects.
  * 
- * <p>This interceptor expects a {@link magoffin.matt.ma2.domain.User}
- * domain object (or a <code>Long</code> User ID) to be the 
- * <code>returnValue</code> passed to the 
- * {@link #afterReturning(Object, Method, Object[], Object)} method. 
- * Using the <code>userId</code> of that User object (or the Long 
- * User ID directly) it will call the 
- * {@link magoffin.matt.ma2.biz.IndexBiz#indexUser(Long)}
- * method to index the user.</p>
+ * <p>
+ * This interceptor expects a {@link magoffin.matt.ma2.domain.User} domain
+ * object (or a <code>Long</code> User ID) to be the <code>returnValue</code>
+ * passed to the {@link #afterReturning(Object, Method, Object[], Object)}
+ * method. Using the <code>userId</code> of that User object (or the Long User
+ * ID directly) it will call the
+ * {@link magoffin.matt.ma2.biz.IndexBiz#indexUser(Long)} method to index the
+ * user.
+ * </p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class UserIndexInterceptor extends AbstractIndexInterceptor {
 
-	public void afterReturning(Object returnValue, Method method,
-			Object[] args, Object target) throws Throwable {
+	@Override
+	public void afterReturning(Object returnValue, Method method, Object[] args, Object target)
+			throws Throwable {
 		Long userId = null;
 		if ( returnValue instanceof Long ) {
-			userId = (Long)returnValue;
+			userId = (Long) returnValue;
 		} else if ( returnValue instanceof User ) {
-			userId = ((User)returnValue).getUserId();
+			userId = ((User) returnValue).getUserId();
 		}
-		
+
 		if ( userId != null ) {
 			getIndexBiz().indexUser(userId);
 		}

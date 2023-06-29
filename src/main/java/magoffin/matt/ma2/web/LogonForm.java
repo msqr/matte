@@ -25,50 +25,47 @@
 package magoffin.matt.ma2.web;
 
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.springframework.validation.BindException;
+import org.springframework.validation.Errors;
+import org.springframework.web.servlet.ModelAndView;
 import magoffin.matt.ma2.AuthorizationException;
 import magoffin.matt.ma2.biz.UserBiz;
 import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.support.LogonCommand;
 
-import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
-import org.springframework.web.servlet.ModelAndView;
-
 /**
  * Form controller for logging into the application.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class LogonForm extends AbstractForm {
-	
+
 	private UserBiz userBiz;
-	
+
 	@SuppressWarnings("rawtypes")
 	@Override
-	protected Map referenceData(HttpServletRequest request, Object command,
-			Errors errors) throws Exception {
-		LogonCommand cmd = (LogonCommand)command;
+	protected Map referenceData(HttpServletRequest request, Object command, Errors errors)
+			throws Exception {
+		LogonCommand cmd = (LogonCommand) command;
 		if ( cmd.getErrorMsg() != null ) {
 			errors.reject(cmd.getErrorMsg(), cmd.getErrorMsg());
 		}
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	protected ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
-			throws Exception {
+	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response,
+			Object command, BindException errors) throws Exception {
 		getWebHelper().clearUserSessionData(request);
-		LogonCommand form = (LogonCommand)command;
+		LogonCommand form = (LogonCommand) command;
 		ModelAndView result = null;
 		try {
-			User user = userBiz.logonUser(form.getLogin(),form.getPassword());
-			getWebHelper().saveUserSession(request,user);
+			User user = userBiz.logonUser(form.getLogin(), form.getPassword());
+			getWebHelper().saveUserSession(request, user);
 			if ( getWebHelper().getSavedRequestURL(request) != null ) {
 				String savedUrl = getWebHelper().getSavedRequestURL(request);
 				getWebHelper().clearSavedRequestURL(request);
@@ -82,7 +79,7 @@ public class LogonForm extends AbstractForm {
 			} else {
 				errors.reject("error.logon.auth", "Authorization error.");
 			}
-			result = showForm(request,response,errors);
+			result = showForm(request, response, errors);
 		}
 		return result;
 	}
@@ -95,10 +92,11 @@ public class LogonForm extends AbstractForm {
 	}
 
 	/**
-	 * @param userBiz The userBiz to set.
+	 * @param userBiz
+	 *        The userBiz to set.
 	 */
 	public void setUserBiz(UserBiz userBiz) {
 		this.userBiz = userBiz;
 	}
-	
+
 }

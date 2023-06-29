@@ -28,7 +28,9 @@ import java.awt.Dimension;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Map;
-
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.util.FileCopyUtils;
 import magick.ImageInfo;
 import magick.InterlaceType;
 import magick.MagickException;
@@ -41,39 +43,39 @@ import magoffin.matt.ma2.domain.MediaItem;
 import magoffin.matt.ma2.image.BaseImageMediaHandler;
 import magoffin.matt.ma2.support.Geometry;
 
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.FileCopyUtils;
-
 /**
- * Base implementation of {@link magoffin.matt.ma2.MediaHandler} that uses the JMagick
- * for image processing.
+ * Base implementation of {@link magoffin.matt.ma2.MediaHandler} that uses the
+ * JMagick for image processing.
  * 
- * <p>The configurable properties of this class are:</p>
+ * <p>
+ * The configurable properties of this class are:
+ * </p>
  * 
  * <dl class="class-properties">
- *   <dt>outputDepth</dt>
- *   <dd>Force the otuput depth to a specific value. Defaults to 8.</dd>
- *   
- *   
- *   <dt>jmagickMediaEffectMap</dt>
- *   <dd>A Map of effect keys to {@link JMagickMediaEffect} implementations.</dd>
+ * <dt>outputDepth</dt>
+ * <dd>Force the otuput depth to a specific value. Defaults to 8.</dd>
+ * 
+ * 
+ * <dt>jmagickMediaEffectMap</dt>
+ * <dd>A Map of effect keys to {@link JMagickMediaEffect} implementations.</dd>
  * </dl>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public abstract class BaseJMagickMediaHandler extends BaseImageMediaHandler {
-	
+
 	/** The default value for the <code>outputDepth</code> property. */
 	public static final int DEFAULT_OUTPUT_DEPTH = 8;
 
 	private Map<String, JMagickMediaEffect> jmagickMediaEffectMap;
 	private int outputDepth = DEFAULT_OUTPUT_DEPTH;
-	
+
 	/**
 	 * Construct with a MIME type.
-	 * @param mime the MIME type
+	 * 
+	 * @param mime
+	 *        the MIME type
 	 */
 	public BaseJMagickMediaHandler(String mime) {
 		super(mime);
@@ -92,28 +94,31 @@ public abstract class BaseJMagickMediaHandler extends BaseImageMediaHandler {
 	}
 
 	/**
-	 * @param jmagickMediaEffectMap the jmagickMediaEffectMap to set
+	 * @param jmagickMediaEffectMap
+	 *        the jmagickMediaEffectMap to set
 	 */
-	public void setJmagickMediaEffectMap(
-			Map<String, JMagickMediaEffect> jmagickMediaEffectMap) {
+	public void setJmagickMediaEffectMap(Map<String, JMagickMediaEffect> jmagickMediaEffectMap) {
 		this.jmagickMediaEffectMap = jmagickMediaEffectMap;
 	}
 
 	/**
 	 * Basic JMagick implementation of createNewMediaItem.
 	 * 
-	 * <p>This implementation creates a new MediaItem instance and then
-	 * calls {@link #setupBaseItemProperties(MediaItem, ImageInfo)}
-	 * followed by {@link #handleMetadata(MediaRequest, Resource, MediaItem)}.</p>
+	 * <p>
+	 * This implementation creates a new MediaItem instance and then calls
+	 * {@link #setupBaseItemProperties(MediaItem, ImageInfo)} followed by
+	 * {@link #handleMetadata(MediaRequest, Resource, MediaItem)}.
+	 * </p>
 	 */
+	@Override
 	public MediaItem createNewMediaItem(File inputFile) {
 		MediaItem item = getDomainObjectFactory().newMediaItemInstance();
 		ImageInfo info = null;
 		try {
 			info = new ImageInfo(inputFile.getAbsolutePath());
-			
+
 			setupBaseItemProperties(item, info);
-			
+
 			handleMetadata(null, new FileSystemResource(inputFile), item);
 
 		} catch ( MagickException e ) {
@@ -125,22 +130,29 @@ public abstract class BaseJMagickMediaHandler extends BaseImageMediaHandler {
 	/**
 	 * Basic JMagick implementation of handleMediaRequest.
 	 * 
-	 * <p>This implementation simply calls 
-	 * {@link #defaultHandleRequest(MediaItem, MediaRequest, MediaResponse)}.</p>
+	 * <p>
+	 * This implementation simply calls
+	 * {@link #defaultHandleRequest(MediaItem, MediaRequest, MediaResponse)}.
+	 * </p>
 	 */
-	public void handleMediaRequest(MediaItem item, MediaRequest request,
-			MediaResponse response) {
+	@Override
+	public void handleMediaRequest(MediaItem item, MediaRequest request, MediaResponse response) {
 		defaultHandleRequest(item, request, response);
 	}
-	
+
 	/**
 	 * Setup some basic properties from an ImageReader.
 	 * 
-	 * <p>This will set up the item's width, height, and MIME type.</p>
+	 * <p>
+	 * This will set up the item's width, height, and MIME type.
+	 * </p>
 	 * 
-	 * @param item the MediaItem to setup
-	 * @param info the JMagick image
-	 * @throws MagickException if a JMagick error occurs
+	 * @param item
+	 *        the MediaItem to setup
+	 * @param info
+	 *        the JMagick image
+	 * @throws MagickException
+	 *         if a JMagick error occurs
 	 */
 	protected void setupBaseItemProperties(MediaItem item, ImageInfo info) throws MagickException {
 		// set width, height
@@ -153,68 +165,82 @@ public abstract class BaseJMagickMediaHandler extends BaseImageMediaHandler {
 			// load image and see
 			MagickImage image = new MagickImage(info);
 			Dimension dim = image.getDimension();
-			item.setWidth((int)dim.getWidth());
-			item.setHeight((int)dim.getHeight());
+			item.setWidth((int) dim.getWidth());
+			item.setHeight((int) dim.getHeight());
 		}
 
 		// set MIME
 		item.setMime(getMime());
 	}
-	
+
 	/**
 	 * Default handler for JMagick requests.
 	 * 
-	 * <p>This implementation gets a {@link Resource} via 
-	 * {@link MediaBiz#getMediaItemResource(MediaItem)} and passes that 
-	 * to {@link #defaultHandleResource(MediaItem, MediaRequest, MediaResponse, Resource)}.</p>
+	 * <p>
+	 * This implementation gets a {@link Resource} via
+	 * {@link MediaBiz#getMediaItemResource(MediaItem)} and passes that to
+	 * {@link #defaultHandleResource(MediaItem, MediaRequest, MediaResponse, Resource)}.
+	 * </p>
 	 * 
-	 * @param item the item
-	 * @param request the request
-	 * @param response the response
+	 * @param item
+	 *        the item
+	 * @param request
+	 *        the request
+	 * @param response
+	 *        the response
 	 */
-	protected void defaultHandleRequest(MediaItem item, MediaRequest request,
-			MediaResponse response) {
+	protected void defaultHandleRequest(MediaItem item, MediaRequest request, MediaResponse response) {
 		Resource itemResource = getMediaBiz().getMediaItemResource(item);
 		defaultHandleResource(item, request, response, itemResource);
 
 	}
-	
+
 	/**
 	 * Get the MIME type to set in the response.
 	 * 
-	 * <p>This implementation merely calls {@link #getMime()} but extending classes
-	 * may need to override this.</p>
+	 * <p>
+	 * This implementation merely calls {@link #getMime()} but extending classes
+	 * may need to override this.
+	 * </p>
 	 * 
-	 * @param item the MediaItem being processed
-	 * @param request the request
-	 * @param itemResource the item resource being processed
+	 * @param item
+	 *        the MediaItem being processed
+	 * @param request
+	 *        the request
+	 * @param itemResource
+	 *        the item resource being processed
 	 * @return MIME
 	 */
-	protected String getResponseMime(
-			MediaItem item, 
-			MediaRequest request, 
-			Resource itemResource) {
+	protected String getResponseMime(MediaItem item, MediaRequest request, Resource itemResource) {
 		return getMime();
 	}
 
 	/**
 	 * Default handler for JMagick resource request.
 	 * 
-	 * <p>This can be used to service {@link magoffin.matt.ma2.MediaHandlerDelegate}
-	 * requests, if extending classes wish to support that API.</p>
+	 * <p>
+	 * This can be used to service
+	 * {@link magoffin.matt.ma2.MediaHandlerDelegate} requests, if extending
+	 * classes wish to support that API.
+	 * </p>
 	 * 
-	 * @param item the item
-	 * @param request the request
-	 * @param response the response
-	 * @param itemResource the media resource being operated on
+	 * @param item
+	 *        the item
+	 * @param request
+	 *        the request
+	 * @param response
+	 *        the response
+	 * @param itemResource
+	 *        the media resource being operated on
 	 */
-	protected void defaultHandleResource(MediaItem item, MediaRequest request, MediaResponse response, Resource itemResource) {
+	protected void defaultHandleResource(MediaItem item, MediaRequest request, MediaResponse response,
+			Resource itemResource) {
 		try {
 			if ( !needToAlter(item, request) ) {
 				defaultHandleRequestOriginal(item, itemResource, request, response);
 				return;
 			}
-			
+
 			// set response MIME
 			response.setMimeType(getResponseMime(item, request, itemResource));
 
@@ -225,34 +251,34 @@ public abstract class BaseJMagickMediaHandler extends BaseImageMediaHandler {
 			inInfo.setQuality(quality);
 			inInfo.setSize(geometry.toString()); // as hint to reading image
 			if ( log.isDebugEnabled() ) {
-				log.debug("Size: " +geometry.toString() +", quality: " +quality);
+				log.debug("Size: " + geometry.toString() + ", quality: " + quality);
 			}
-			
+
 			// read image into memory
 			MagickImage image = new MagickImage(inInfo);
 			MagickImage result = image;
-			
+
 			// stash ImageInfo, MagickImage (in) and MagickImage (result) onto request
 			request.getParameters().put(JMagickMediaEffect.INPUT_IMAGE_INFO_KEY, inInfo);
 			request.getParameters().put(JMagickMediaEffect.INPUT_MAGICK_IMAGE_KEY, image);
 			request.getParameters().put(JMagickMediaEffect.OUTPUT_MAGICK_IMAGE_KEY, result);
-			
+
 			needToRotate(item, request);
 			applyEffects(item, request, response);
-			
-			result = (MagickImage)request.getParameters().get(JMagickMediaEffect.OUTPUT_MAGICK_IMAGE_KEY);
-			
+
+			result = (MagickImage) request.getParameters()
+					.get(JMagickMediaEffect.OUTPUT_MAGICK_IMAGE_KEY);
+
 			// set filename for output
 			File outFile = null;
 			if ( request.getParameters().containsKey(MediaRequest.OUTPUT_FILE_KEY) ) {
-				outFile = (File)request.getParameters().get(MediaRequest.OUTPUT_FILE_KEY);
+				outFile = (File) request.getParameters().get(MediaRequest.OUTPUT_FILE_KEY);
 			} else {
 				// use temp file
-				outFile = File.createTempFile("JMagickTemp-", 
-						"."+getFileExtension(item, request));
+				outFile = File.createTempFile("JMagickTemp-", "." + getFileExtension(item, request));
 			}
 			result.setFileName(outFile.getAbsolutePath());
-			
+
 			// write output image
 			ImageInfo outInfo = new ImageInfo();
 			outInfo.setQuality(quality);
@@ -260,7 +286,7 @@ public abstract class BaseJMagickMediaHandler extends BaseImageMediaHandler {
 			outInfo.setSize(geometry.toString());
 			outInfo.setInterlace(InterlaceType.PlaneInterlace); // make configurable?
 			result.writeImage(outInfo);
-			
+
 			// if used temp file, then copy to output stream and delete now
 			if ( !request.getParameters().containsKey(MediaRequest.OUTPUT_FILE_KEY) ) {
 				try {
@@ -270,19 +296,20 @@ public abstract class BaseJMagickMediaHandler extends BaseImageMediaHandler {
 				}
 			}
 		} catch ( Exception e ) {
-			throw new RuntimeException("Exception writing media: "+e, e);
+			throw new RuntimeException("Exception writing media: " + e, e);
 		}
 	}
-	
+
 	/**
 	 * @return the outputDepth
 	 */
 	public int getOutputDepth() {
 		return outputDepth;
 	}
-	
+
 	/**
-	 * @param outputDepth the outputDepth to set
+	 * @param outputDepth
+	 *        the outputDepth to set
 	 */
 	public void setOutputDepth(int outputDepth) {
 		this.outputDepth = outputDepth;

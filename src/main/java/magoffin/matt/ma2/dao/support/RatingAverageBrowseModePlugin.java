@@ -31,6 +31,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.MessageSource;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.util.StringUtils;
 import magoffin.matt.ma2.domain.AlbumSearchResult;
 import magoffin.matt.ma2.domain.MediaItemSearchResult;
 import magoffin.matt.ma2.domain.PaginationCriteria;
@@ -40,12 +46,6 @@ import magoffin.matt.ma2.domain.PosterSearchResult;
 import magoffin.matt.ma2.domain.SearchResults;
 import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.support.BrowseAlbumsCommand;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.MessageSource;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.util.StringUtils;
 
 /**
  * Browse mode based on average media item ratings.
@@ -94,8 +94,10 @@ import org.springframework.util.StringUtils;
  * <li>User ID (long) - the user to display the browsable items for</li>
  * <li>allow anonymous flag (boolean) - will be set to <em>true</em></li>
  * <li>allow browse flag (boolean) - will be set to <em>true</em></li>
- * <li>average rating section (float) - the average rating section to display</li>
- * <li>average rating section (float) - the average rating section to display</li>
+ * <li>average rating section (float) - the average rating section to
+ * display</li>
+ * <li>average rating section (float) - the average rating section to
+ * display</li>
  * </ol>
  * 
  * <p>
@@ -129,7 +131,7 @@ import org.springframework.util.StringUtils;
  * </dl>
  * 
  * @author matt.magoffin
- * @version 1.1
+ * @version 1.2
  */
 public class RatingAverageBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 
@@ -145,7 +147,8 @@ public class RatingAverageBrowseModePlugin extends AbstractJdbcBrowseModePlugin 
 	/** The message key for an album title with more than one item in it. */
 	public static final String MESSAGE_KEY_ALBUM_TITLE_MULTI = "rating.album.range.title";
 	private static final String[] SUPPORTED_MODES = new String[] { MODE_RATING_AVERAGE };
-	private static final String[] MESSAGE_RESOURCE_NAMES = new String[] { "META-INF/RatingAverageBrowseModePlugin-messages" };
+	private static final String[] MESSAGE_RESOURCE_NAMES = new String[] {
+			"META-INF/RatingAverageBrowseModePlugin-messages" };
 	private static final Pattern VIRTUAL_ALBUM_INDEX_KEY = Pattern.compile("(^[0-9.]+):(\\d+)$");
 
 	private String sqlBrowse;
@@ -154,6 +157,7 @@ public class RatingAverageBrowseModePlugin extends AbstractJdbcBrowseModePlugin 
 
 	private MessageSource messages;
 
+	@Override
 	public boolean supportsMode(String mode) {
 		return MODE_RATING_AVERAGE.equalsIgnoreCase(mode);
 	}
@@ -164,10 +168,12 @@ public class RatingAverageBrowseModePlugin extends AbstractJdbcBrowseModePlugin 
 		init();
 	}
 
+	@Override
 	public String[] getMessageResourceNames() {
 		return MESSAGE_RESOURCE_NAMES;
 	}
 
+	@Override
 	public String[] getSupportedModes() {
 		return SUPPORTED_MODES;
 	}
@@ -183,6 +189,7 @@ public class RatingAverageBrowseModePlugin extends AbstractJdbcBrowseModePlugin 
 		// nothing to do
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public SearchResults find(BrowseAlbumsCommand command, PaginationCriteria pagination) {
 		final SearchResults results = getDomainObjectFactory().newSearchResultsInstance();
@@ -190,8 +197,10 @@ public class RatingAverageBrowseModePlugin extends AbstractJdbcBrowseModePlugin 
 		results.setIndex(index);
 		final User user = getUserBiz().getUserByAnonymousKey(command.getUserKey());
 		final List<AlbumSearchResult> albums = new LinkedList<AlbumSearchResult>();
-		Matcher m = VIRTUAL_ALBUM_INDEX_KEY.matcher(pagination != null
-				&& StringUtils.hasText(pagination.getIndexKey()) ? pagination.getIndexKey() : "");
+		Matcher m = VIRTUAL_ALBUM_INDEX_KEY
+				.matcher(pagination != null && StringUtils.hasText(pagination.getIndexKey())
+						? pagination.getIndexKey()
+						: "");
 		if ( m.matches() ) {
 			float avgRatingKey = Float.parseFloat(m.group(1));
 			int pageOffset = Integer.parseInt(m.group(2));
@@ -216,6 +225,7 @@ public class RatingAverageBrowseModePlugin extends AbstractJdbcBrowseModePlugin 
 		// first populate index
 		getJdbcTemplate().query(new PreparedStatementCreator() {
 
+			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				if ( log.isDebugEnabled() ) {
 					log.debug("AvgRating search with SQL [" + sqlBrowse + "]");
@@ -229,6 +239,7 @@ public class RatingAverageBrowseModePlugin extends AbstractJdbcBrowseModePlugin 
 			}
 		}, new ResultSetExtractor<Object>() {
 
+			@Override
 			public Object extractData(ResultSet rs) throws SQLException, DataAccessException {
 				PaginationIndexSection section = null;
 				while ( rs.next() ) {
@@ -264,6 +275,7 @@ public class RatingAverageBrowseModePlugin extends AbstractJdbcBrowseModePlugin 
 			final int singleAlbumOffset) {
 		getJdbcTemplate().query(new PreparedStatementCreator() {
 
+			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				if ( log.isDebugEnabled() ) {
 					log.debug("AvgRating section search with SQL [" + sqlBrowseSection + "]");
@@ -284,6 +296,7 @@ public class RatingAverageBrowseModePlugin extends AbstractJdbcBrowseModePlugin 
 			}
 		}, new ResultSetExtractor<Object>() {
 
+			@Override
 			@SuppressWarnings("unchecked")
 			public Object extractData(ResultSet rs) throws SQLException, DataAccessException {
 				AlbumSearchResult currAlbum = null;
@@ -348,11 +361,11 @@ public class RatingAverageBrowseModePlugin extends AbstractJdbcBrowseModePlugin 
 		int startPos = (1 + (albums.size() * sectionAlbumMaxSize));
 		int endPos = startPos + albumItemCount - 1;
 		if ( albumItemCount == 1 ) {
-			album.setName(messages.getMessage(MESSAGE_KEY_ALBUM_TITLE_SINGLE, new Object[] { sectionKey,
-					startPos }, locale));
+			album.setName(messages.getMessage(MESSAGE_KEY_ALBUM_TITLE_SINGLE,
+					new Object[] { sectionKey, startPos }, locale));
 		} else {
-			album.setName(messages.getMessage(MESSAGE_KEY_ALBUM_TITLE_MULTI, new Object[] { sectionKey,
-					startPos, endPos }, locale));
+			album.setName(messages.getMessage(MESSAGE_KEY_ALBUM_TITLE_MULTI,
+					new Object[] { sectionKey, startPos, endPos }, locale));
 		}
 		album.setItemCount(Long.valueOf(albumItemCount));
 		album.setAnonymousKey(sectionKey + ":" + albums.size());

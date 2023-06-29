@@ -28,23 +28,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
-
-import magoffin.matt.ma2.MediaRequest;
-import magoffin.matt.ma2.MediaResponse;
-import magoffin.matt.ma2.domain.MediaItem;
-import magoffin.matt.ma2.support.Geometry;
-
 import org.apache.batik.transcoder.Transcoder;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.ImageTranscoder;
 import org.springframework.core.io.Resource;
+import magoffin.matt.ma2.MediaRequest;
+import magoffin.matt.ma2.MediaResponse;
+import magoffin.matt.ma2.domain.MediaItem;
+import magoffin.matt.ma2.support.Geometry;
 
 /**
  * SVG media handler using Apache Batik.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class SvgMediaHandler extends BaseImageMediaHandler {
 
@@ -60,9 +58,7 @@ public class SvgMediaHandler extends BaseImageMediaHandler {
 		setPreferredFileExtension(ImageConstants.DEFAULT_SVG_FILE_EXTENSION);
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaHandler#createNewMediaItem(java.io.File)
-	 */
+	@Override
 	public MediaItem createNewMediaItem(File inputFile) {
 		MediaItem item = getDomainObjectFactory().newMediaItemInstance();
 		item.setMime(getMime());
@@ -77,34 +73,30 @@ public class SvgMediaHandler extends BaseImageMediaHandler {
 		return rasterFileExtension;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaHandler#handleMediaRequest(magoffin.matt.ma2.domain.MediaItem, magoffin.matt.ma2.MediaRequest, magoffin.matt.ma2.MediaResponse)
-	 */
-	public void handleMediaRequest(MediaItem item, MediaRequest request,
-			MediaResponse response) {
+	@Override
+	public void handleMediaRequest(MediaItem item, MediaRequest request, MediaResponse response) {
 		Resource itemResource = getMediaBiz().getMediaItemResource(item);
 		if ( request.isOriginal() ) {
 			defaultHandleRequestOriginal(item, itemResource, request, response);
 			return;
 		}
-		
+
 		// rasterize SVG into image
 		try {
 			Transcoder transcoder = transcoderClass.newInstance();
 			transcoder.setTranscodingHints(getTranscoderHints());
-			
+
 			// set output size
 			Geometry geometry = getMediaBiz().getGeometry(request.getSize());
-			transcoder.addTranscodingHint(ImageTranscoder.KEY_WIDTH, 
-					new Float(geometry.getWidth()));
-			transcoder.addTranscodingHint(ImageTranscoder.KEY_MAX_HEIGHT, 
+			transcoder.addTranscodingHint(ImageTranscoder.KEY_WIDTH, new Float(geometry.getWidth()));
+			transcoder.addTranscodingHint(ImageTranscoder.KEY_MAX_HEIGHT,
 					new Float(geometry.getHeight()));
-			
-			transcoder.transcode(new TranscoderInput(itemResource.getInputStream()), 
-				new TranscoderOutput(response.getOutputStream()));
+
+			transcoder.transcode(new TranscoderInput(itemResource.getInputStream()),
+					new TranscoderOutput(response.getOutputStream()));
 		} catch ( IOException e ) {
-			log.warn("IOException rasterizing SVG: " +e);
-		} catch (Exception e) {
+			log.warn("IOException rasterizing SVG: " + e);
+		} catch ( Exception e ) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -115,37 +107,40 @@ public class SvgMediaHandler extends BaseImageMediaHandler {
 	public String getRasterFileExtension() {
 		return rasterFileExtension;
 	}
-	
+
 	/**
-	 * @param rasterFileExtension the rasterFileExtension to set
+	 * @param rasterFileExtension
+	 *        the rasterFileExtension to set
 	 */
 	public void setRasterFileExtension(String rasterFileExtension) {
 		this.rasterFileExtension = rasterFileExtension;
 	}
-	
+
 	/**
 	 * @return the transcoderClass
 	 */
 	public Class<Transcoder> getTranscoderClass() {
 		return transcoderClass;
 	}
-	
+
 	/**
-	 * @param transcoderClass the transcoderClass to set
+	 * @param transcoderClass
+	 *        the transcoderClass to set
 	 */
 	public void setTranscoderClass(Class<Transcoder> transcoderClass) {
 		this.transcoderClass = transcoderClass;
 	}
-	
+
 	/**
 	 * @return the transcoderHints
 	 */
 	public Map<Object, Object> getTranscoderHints() {
 		return transcoderHints;
 	}
-	
+
 	/**
-	 * @param transcoderHints the transcoderHints to set
+	 * @param transcoderHints
+	 *        the transcoderHints to set
 	 */
 	public void setTranscoderHints(Map<Object, Object> transcoderHints) {
 		this.transcoderHints = transcoderHints;

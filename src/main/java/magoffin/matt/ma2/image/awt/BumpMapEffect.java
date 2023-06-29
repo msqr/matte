@@ -29,44 +29,40 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageReader;
-
+import org.springframework.core.io.Resource;
+import com.sun.glf.goodies.DirectionalLight;
+import com.sun.glf.goodies.ElevationMap;
+import com.sun.glf.goodies.LightOp;
+import com.sun.glf.goodies.LitSurface;
 import magoffin.matt.ma2.MediaEffect;
 import magoffin.matt.ma2.MediaRequest;
 import magoffin.matt.ma2.domain.MediaItem;
 import magoffin.matt.ma2.image.ImageMediaHelper;
 
-import org.springframework.core.io.Resource;
-
-import com.sun.glf.goodies.DirectionalLight;
-import com.sun.glf.goodies.ElevationMap;
-import com.sun.glf.goodies.LightOp;
-import com.sun.glf.goodies.LitSurface;
-
 /**
- * A watermark effect for AWT based processing, that creates a 3D bump map
- * from the watermark image.
+ * A watermark effect for AWT based processing, that creates a 3D bump map from
+ * the watermark image.
  *
  * @author matt
- * @version 1.0
+ * @version 1.1
  */
 public class BumpMapEffect extends BaseAwtMediaEffect {
-	
+
 	/**
 	 * The key for this effect.
 	 */
-	public static final String BUMP_MAP_KEY = "image.awt.bump." +MediaEffect.KEY_WATERMARK;
+	public static final String BUMP_MAP_KEY = "image.awt.bump." + MediaEffect.KEY_WATERMARK;
 
 	/** Default value for the {@code light} property. */
-	public static final double[] DEFAULT_LIGHT = {-1,-1,1};
-	
+	public static final double[] DEFAULT_LIGHT = { -1, -1, 1 };
+
 	/** Default value for the {@code intensity} property. */
 	public static final float DEFAULT_INTENSITY = 1.0f;
-	
+
 	/** Default value for the {@code color} property. */
 	public static final Color DEFAULT_COLOR = Color.WHITE;
-	
+
 	/** Default value for the {@code elevationScale} property. */
 	public static final int DEFAULT_ELEVATION_SCALE = 1;
 
@@ -75,14 +71,11 @@ public class BumpMapEffect extends BaseAwtMediaEffect {
 	private Integer elevationScale = DEFAULT_ELEVATION_SCALE;
 	private Float intensity = DEFAULT_INTENSITY;
 	private double[] light = DEFAULT_LIGHT;
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.image.awt.AwtMediaEffect#applyEffect(magoffin.matt.ma2.domain.MediaItem, magoffin.matt.ma2.MediaRequest, java.awt.image.BufferedImage)
-	 */
-	public BufferedImage applyEffect(MediaItem item, MediaRequest request,
-			BufferedImage source) {
-		Resource watermarkResource = (Resource)request.getParameters().get(
-				MediaEffect.MEDIA_REQUEST_PARAM_WATERMARK_RESOURCE);
+
+	@Override
+	public BufferedImage applyEffect(MediaItem item, MediaRequest request, BufferedImage source) {
+		Resource watermarkResource = (Resource) request.getParameters()
+				.get(MediaEffect.MEDIA_REQUEST_PARAM_WATERMARK_RESOURCE);
 		if ( watermarkResource == null || !watermarkResource.exists() ) {
 			return source;
 		}
@@ -99,18 +92,17 @@ public class BumpMapEffect extends BaseAwtMediaEffect {
 		int wmY = source.getHeight() - watermark.getHeight();
 
 		if ( log.isDebugEnabled() ) {
-			log.debug("Setting bump map watermark for item [" +request.getMediaItemId() +']');
+			log.debug("Setting bump map watermark for item [" + request.getMediaItemId() + ']');
 		}
-		
+
 		// create a new buffered image the same size as out output image
-		BufferedImage tmp = new BufferedImage(source.getWidth(),
-				source.getHeight(), source.getType());
-		
+		BufferedImage tmp = new BufferedImage(source.getWidth(), source.getHeight(), source.getType());
+
 		// paint the watermark image into tmp image
 		Graphics2D tmp2D = tmp.createGraphics();
-		tmp2D.drawImage(watermark,wmX,wmY,null);
+		tmp2D.drawImage(watermark, wmX, wmY, null);
 		tmp2D.dispose();
-		
+
 		// create bump map op
 		DirectionalLight dirLight = new DirectionalLight(light, intensity, color);
 		ElevationMap texture = new ElevationMap(tmp, true, elevationScale);
@@ -118,19 +110,17 @@ public class BumpMapEffect extends BaseAwtMediaEffect {
 		litSurface.addLight(dirLight);
 		litSurface.setElevationMap(texture);
 		LightOp lightOp = new LightOp(litSurface);
-		
+
 		BufferedImage result = lightOp.filter(source, null);
-		
+
 		if ( log.isDebugEnabled() ) {
-			log.debug("Bump map watermark complete for item [" +request.getMediaItemId() +']');
+			log.debug("Bump map watermark complete for item [" + request.getMediaItemId() + ']');
 		}
-		
+
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaEffect#getKey()
-	 */
+	@Override
 	public String getKey() {
 		return BUMP_MAP_KEY;
 	}
@@ -143,7 +133,8 @@ public class BumpMapEffect extends BaseAwtMediaEffect {
 	}
 
 	/**
-	 * @param imageMediaHelper the imageMediaHelper to set
+	 * @param imageMediaHelper
+	 *        the imageMediaHelper to set
 	 */
 	public void setImageMediaHelper(ImageMediaHelper imageMediaHelper) {
 		this.imageMediaHelper = imageMediaHelper;
@@ -157,7 +148,8 @@ public class BumpMapEffect extends BaseAwtMediaEffect {
 	}
 
 	/**
-	 * @param color the color to set
+	 * @param color
+	 *        the color to set
 	 */
 	public void setColor(Color color) {
 		this.color = color;
@@ -171,7 +163,8 @@ public class BumpMapEffect extends BaseAwtMediaEffect {
 	}
 
 	/**
-	 * @param elevationScale the elevationScale to set
+	 * @param elevationScale
+	 *        the elevationScale to set
 	 */
 	public void setElevationScale(Integer elevationScale) {
 		this.elevationScale = elevationScale;
@@ -185,7 +178,8 @@ public class BumpMapEffect extends BaseAwtMediaEffect {
 	}
 
 	/**
-	 * @param intensity the intensity to set
+	 * @param intensity
+	 *        the intensity to set
 	 */
 	public void setIntensity(Float intensity) {
 		this.intensity = intensity;
@@ -199,7 +193,8 @@ public class BumpMapEffect extends BaseAwtMediaEffect {
 	}
 
 	/**
-	 * @param light the light to set
+	 * @param light
+	 *        the light to set
 	 */
 	public void setLight(double[] light) {
 		this.light = light;

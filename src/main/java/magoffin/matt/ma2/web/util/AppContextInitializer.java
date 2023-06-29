@@ -23,45 +23,39 @@
 package magoffin.matt.ma2.web.util;
 
 import java.util.Map;
-
-import magoffin.matt.ma2.biz.DomainObjectFactory;
-import magoffin.matt.xweb.XAppContext;
-import magoffin.matt.xweb.XwebParameter;
-import magoffin.matt.xweb.util.AppContextSupport;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.context.WebApplicationContext;
+import magoffin.matt.ma2.biz.DomainObjectFactory;
+import magoffin.matt.xweb.XAppContext;
+import magoffin.matt.xweb.XwebParameter;
+import magoffin.matt.xweb.util.AppContextSupport;
 
 /**
  * Initialzie the application {@link AppContextSupport} instance.
  * 
  * @author matt.magoffin
- * @version 1.0
+ * @version 1.1
  */
 public class AppContextInitializer implements ApplicationContextAware {
-	
+
 	private DomainObjectFactory domainObjectFactory;
 	private Map<String, String> applicationProperties;
-	
+
 	private final Logger log = Logger.getLogger(AppContextInitializer.class);
 
-	/* (non-Javadoc)
-	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
-	public void setApplicationContext(ApplicationContext context)
-			throws BeansException {
+	public void setApplicationContext(ApplicationContext context) throws BeansException {
 		if ( !(context instanceof WebApplicationContext) ) {
-			throw new RuntimeException("Only a " 
-					+WebApplicationContext.class 
-					+" ApplicationContext is supported.");
+			throw new RuntimeException(
+					"Only a " + WebApplicationContext.class + " ApplicationContext is supported.");
 		}
-		
-		WebApplicationContext webAppCtx = (WebApplicationContext)context;
-		
+
+		WebApplicationContext webAppCtx = (WebApplicationContext) context;
+
 		XAppContext appCtx = domainObjectFactory.newXAppContextInstance();
 		for ( String key : applicationProperties.keySet() ) {
 			XwebParameter param = domainObjectFactory.newXwebParameterInstance();
@@ -72,14 +66,12 @@ public class AppContextInitializer implements ApplicationContextAware {
 
 		AppContextSupport appCtxSupport = new AppContextSupport(appCtx);
 		if ( log.isDebugEnabled() ) {
-			log.debug("Storing XAppContext [" +appCtx +"] with " 
-					+applicationProperties.size() 
-					+" properties in the servlet context at ["
-					+WebConstants.APP_KEY_APP_CONTEXT +"]");
+			log.debug("Storing XAppContext [" + appCtx + "] with " + applicationProperties.size()
+					+ " properties in the servlet context at [" + WebConstants.APP_KEY_APP_CONTEXT
+					+ "]");
 		}
-		
-		webAppCtx.getServletContext().setAttribute(
-				WebConstants.APP_KEY_APP_CONTEXT, appCtxSupport);
+
+		webAppCtx.getServletContext().setAttribute(WebConstants.APP_KEY_APP_CONTEXT, appCtxSupport);
 	}
 
 	/**
@@ -90,7 +82,8 @@ public class AppContextInitializer implements ApplicationContextAware {
 	}
 
 	/**
-	 * @param domainObjectFactory the domainObjectFactory to set
+	 * @param domainObjectFactory
+	 *        the domainObjectFactory to set
 	 */
 	public void setDomainObjectFactory(DomainObjectFactory domainObjectFactory) {
 		this.domainObjectFactory = domainObjectFactory;
@@ -104,7 +97,8 @@ public class AppContextInitializer implements ApplicationContextAware {
 	}
 
 	/**
-	 * @param applicationProperties the applicationProperties to set
+	 * @param applicationProperties
+	 *        the applicationProperties to set
 	 */
 	public void setApplicationProperties(Map<String, String> applicationProperties) {
 		this.applicationProperties = applicationProperties;

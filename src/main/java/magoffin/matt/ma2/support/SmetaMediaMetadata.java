@@ -35,7 +35,9 @@ import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
-
+import org.apache.log4j.Logger;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import magoffin.matt.ma2.MediaMetadata;
 import magoffin.matt.ma2.image.EmbeddedImageMetadata;
 import magoffin.matt.meta.MetadataImage;
@@ -44,68 +46,58 @@ import magoffin.matt.meta.MetadataResource;
 import magoffin.matt.meta.MetadataResourceFactory;
 import magoffin.matt.meta.MetadataResourceFactoryManager;
 
-import org.apache.log4j.Logger;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-
 /**
  * General purpose {@link MediaMetadata} using sMeta.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
-public class SmetaMediaMetadata extends AbstractMediaMetadata 
-implements MediaMetadata, EmbeddedImageMetadata {
-	
+public class SmetaMediaMetadata extends AbstractMediaMetadata
+		implements MediaMetadata, EmbeddedImageMetadata {
+
 	private static final Logger LOG = Logger.getLogger(SmetaMediaMetadata.class);
-	
-	private MetadataResourceFactoryManager factoryManager
-		= MetadataResourceFactoryManager.getDefaultManagerInstance();
+
+	private MetadataResourceFactoryManager factoryManager = MetadataResourceFactoryManager
+			.getDefaultManagerInstance();
 	private String creationDateKey = "DATE_TAKEN";
 	private String embeddedImageKey = null;
 	private MetadataResource metaResource = null;
-	private Set<Class<?>> treatAsStrings = new LinkedHashSet<Class<?>>(
-			Arrays.asList(new Class<?>[] {
-			String.class, Integer.class, Long.class, Float.class,
-			Double.class
-			}));
+	private Set<Class<?>> treatAsStrings = new LinkedHashSet<Class<?>>(Arrays.asList(
+			new Class<?>[] { String.class, Integer.class, Long.class, Float.class, Double.class }));
 	private Locale locale = Locale.getDefault();
-	
+
 	/**
 	 * Default consstructor.
 	 */
 	public SmetaMediaMetadata() {
 		super();
 	}
-	
+
 	/**
 	 * Construct with a specific locale.
-	 * @param locale the Locale to use
+	 * 
+	 * @param locale
+	 *        the Locale to use
 	 */
 	public SmetaMediaMetadata(Locale locale) {
 		this.locale = locale;
 	}
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.image.EmbeddedImageMetadata#hasEmbeddedImage()
-	 */
+
+	@Override
 	public boolean hasEmbeddedImage() {
 		return findMetadataImage() != null;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaMetadata#setMediaResource(org.springframework.core.io.Resource)
-	 */
+	@Override
 	public MediaMetadata setMediaResource(Resource resource) {
 		try {
 			File mediaFile = resource.getFile();
-			MetadataResourceFactory resourceFactory 
-				= factoryManager.getMetadataResourceFactory(mediaFile);
+			MetadataResourceFactory resourceFactory = factoryManager
+					.getMetadataResourceFactory(mediaFile);
 			if ( resourceFactory == null ) {
 				return this;
 			}
-			metaResource 
-				= resourceFactory.getMetadataResourceInstance(mediaFile);
+			metaResource = resourceFactory.getMetadataResourceInstance(mediaFile);
 		} catch ( IOException e ) {
 			throw new RuntimeException(e);
 		} catch ( MetadataNotSupportedException e ) {
@@ -115,16 +107,15 @@ implements MediaMetadata, EmbeddedImageMetadata {
 			} catch ( IOException ioe ) {
 				// ignore this
 			}
-			LOG.debug("Smeta metadata not supported for [" +fileName +"]", e);
+			LOG.debug("Smeta metadata not supported for [" + fileName + "]", e);
 			return this;
 		}
-		
+
 		// parse out all primitive types and creation date, if possible
 		for ( String key : metaResource.getParsedKeys() ) {
 			Object value = metaResource.getValue(key, this.locale);
-			if ( creationDateKey != null && creationDateKey.equals(key) 
-					&& (value instanceof Date) ) {
-				setCreationDate((Date)value);
+			if ( creationDateKey != null && creationDateKey.equals(key) && (value instanceof Date) ) {
+				setCreationDate((Date) value);
 				continue;
 			}
 			if ( treatAsStrings.contains(value.getClass()) ) {
@@ -132,14 +123,14 @@ implements MediaMetadata, EmbeddedImageMetadata {
 				continue;
 			}
 			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("Ignoring metadata key [" +key +"]; value ["
-						+value +"]");
+				LOG.debug("Ignoring metadata key [" + key + "]; value [" + value + "]");
 			}
 		}
-		
+
 		return this;
 	}
-	
+
+	@Override
 	public int getEmbeddedImageHeight() {
 		MetadataImage metaImage = findMetadataImage();
 		if ( metaImage == null ) {
@@ -148,6 +139,7 @@ implements MediaMetadata, EmbeddedImageMetadata {
 		return metaImage.getAsBufferedImage().getHeight();
 	}
 
+	@Override
 	public int getEmbeddedImageWidth() {
 		MetadataImage metaImage = findMetadataImage();
 		if ( metaImage == null ) {
@@ -156,12 +148,13 @@ implements MediaMetadata, EmbeddedImageMetadata {
 		return metaImage.getAsBufferedImage().getWidth();
 	}
 
+	@Override
 	public Resource getEmbeddedImageResource() {
 		MetadataImage metaImage = findMetadataImage();
 		if ( metaImage == null ) {
 			return null;
 		}
-		
+
 		File tmpFile = null;
 		OutputStream out = null;
 		try {
@@ -178,15 +171,16 @@ implements MediaMetadata, EmbeddedImageMetadata {
 					out.flush();
 					out.close();
 				} catch ( IOException e ) {
-					LOG.warn("IOException closing image stream: " +e);
+					LOG.warn("IOException closing image stream: " + e);
 				}
 			}
 		}
-		
+
 		// return file resource
 		return new FileSystemResource(tmpFile);
 	}
 
+	@Override
 	public String getEmbeddedImageMimeType() {
 		MetadataImage metaImage = findMetadataImage();
 		if ( metaImage == null ) {
@@ -195,17 +189,19 @@ implements MediaMetadata, EmbeddedImageMetadata {
 		return metaImage.getMimeType();
 	}
 
+	@Override
 	public BufferedImage getEmbeddedImage() {
 		MetadataImage metaImage = findMetadataImage();
 		if ( metaImage == null ) {
 			return null;
 		}
-		
+
 		try {
 			return metaImage.getAsBufferedImage();
 		} catch ( UnsupportedOperationException e ) {
-			LOG.warn("MetadataImage found, but getAsBufferedImage() threw UnsupportedOperationException: "
-					+e);
+			LOG.warn(
+					"MetadataImage found, but getAsBufferedImage() threw UnsupportedOperationException: "
+							+ e);
 			return null;
 		}
 	}
@@ -218,7 +214,7 @@ implements MediaMetadata, EmbeddedImageMetadata {
 		if ( embeddedImageKey != null ) {
 			Object o = metaResource.getValue(embeddedImageKey, Locale.getDefault());
 			if ( o instanceof MetadataImage ) {
-				metaImage = (MetadataImage)o;
+				metaImage = (MetadataImage) o;
 			}
 		} else {
 			// search for image
@@ -226,17 +222,16 @@ implements MediaMetadata, EmbeddedImageMetadata {
 				Object o = metaResource.getValue(key, Locale.getDefault());
 				if ( o instanceof MetadataImage ) {
 					if ( LOG.isDebugEnabled() ) {
-						LOG.debug("Found MetadataImage at key [" +key +"]");
+						LOG.debug("Found MetadataImage at key [" + key + "]");
 					}
-					metaImage = (MetadataImage)o;
+					metaImage = (MetadataImage) o;
 					break;
 				}
 			}
 		}
 		if ( metaImage == null ) {
 			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("No MetadataImage found in MetadataResource ["
-						+metaResource +"]");
+				LOG.debug("No MetadataImage found in MetadataResource [" + metaResource + "]");
 			}
 		}
 		return metaImage;
@@ -248,51 +243,55 @@ implements MediaMetadata, EmbeddedImageMetadata {
 	public MetadataResourceFactoryManager getFactoryManager() {
 		return factoryManager;
 	}
-	
+
 	/**
-	 * @param factoryManager the factoryManager to set
+	 * @param factoryManager
+	 *        the factoryManager to set
 	 */
 	public void setFactoryManager(MetadataResourceFactoryManager factoryManager) {
 		this.factoryManager = factoryManager;
 	}
-	
+
 	/**
 	 * @return the creationDateKey
 	 */
 	public String getCreationDateKey() {
 		return creationDateKey;
 	}
-	
+
 	/**
-	 * @param creationDateKey the creationDateKey to set
+	 * @param creationDateKey
+	 *        the creationDateKey to set
 	 */
 	public void setCreationDateKey(String creationDateKey) {
 		this.creationDateKey = creationDateKey;
 	}
-	
+
 	/**
 	 * @return the treatAsStrings
 	 */
 	public Set<Class<?>> getTreatAsStrings() {
 		return treatAsStrings;
 	}
-	
+
 	/**
-	 * @param treatAsStrings the treatAsStrings to set
+	 * @param treatAsStrings
+	 *        the treatAsStrings to set
 	 */
 	public void setTreatAsStrings(Set<Class<?>> treatAsStrings) {
 		this.treatAsStrings = treatAsStrings;
 	}
-	
+
 	/**
 	 * @return the embeddedImageKey
 	 */
 	public String getEmbeddedImageKey() {
 		return embeddedImageKey;
 	}
-	
+
 	/**
-	 * @param embeddedImageKey the embeddedImageKey to set
+	 * @param embeddedImageKey
+	 *        the embeddedImageKey to set
 	 */
 	public void setEmbeddedImageKey(String embeddedImageKey) {
 		this.embeddedImageKey = embeddedImageKey;

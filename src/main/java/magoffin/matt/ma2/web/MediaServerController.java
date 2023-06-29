@@ -35,6 +35,13 @@ import java.util.concurrent.TimeoutException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.lang.math.LongRange;
+import org.apache.commons.lang.mutable.MutableLong;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.LastModified;
 import magoffin.matt.ma2.MediaQuality;
 import magoffin.matt.ma2.MediaRequest;
 import magoffin.matt.ma2.MediaResponse;
@@ -47,19 +54,12 @@ import magoffin.matt.ma2.domain.MediaItem;
 import magoffin.matt.ma2.support.BasicMediaRequest;
 import magoffin.matt.ma2.web.util.WebConstants;
 import magoffin.matt.ma2.web.util.WebMediaResponse;
-import org.apache.commons.lang.math.LongRange;
-import org.apache.commons.lang.mutable.MutableLong;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindException;
-import org.springframework.web.bind.ServletRequestDataBinder;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.LastModified;
 
 /**
  * Controller for serving up media items.
  * 
  * @author matt.magoffin
- * @version 1.1
+ * @version 1.2
  */
 public class MediaServerController extends AbstractCommandController implements LastModified {
 
@@ -71,6 +71,7 @@ public class MediaServerController extends AbstractCommandController implements 
 	private static final EnumSet<MediaSize> THUMB_SIZES = EnumSet.of(MediaSize.THUMB_BIG,
 			MediaSize.THUMB_BIGGER, MediaSize.THUMB_NORMAL, MediaSize.THUMB_SMALL);
 
+	@Override
 	public long getLastModified(HttpServletRequest request) {
 		BizContext context = getWebHelper().getBizContext(request, false);
 		Command cmd = new Command();
@@ -86,34 +87,42 @@ public class MediaServerController extends AbstractCommandController implements 
 		final MutableLong result = new MutableLong(System.currentTimeMillis());
 		WorkInfo info = ioBiz.exportMedia(mediaRequest, new MediaResponse() {
 
+			@Override
 			public void setMimeType(String mime) {
 				// ignore
 			}
 
+			@Override
 			public void setMediaLength(long length) {
 				// ignore
 			}
 
+			@Override
 			public void setModifiedDate(long date) {
 				result.setValue(date);
 			}
 
+			@Override
 			public void setItem(MediaItem item) {
 				// ignore
 			}
 
+			@Override
 			public OutputStream getOutputStream() {
 				return null;
 			}
 
+			@Override
 			public void setFilename(String filename) {
 				// ignore
 			}
 
+			@Override
 			public void setPartialResponse(long start, long end, long total) {
 				// ignore
 			}
 
+			@Override
 			public boolean hasOutputStream() {
 				return false;
 			}
@@ -255,6 +264,7 @@ public class MediaServerController extends AbstractCommandController implements 
 		}
 		executorService.submit(new Runnable() {
 
+			@Override
 			public void run() {
 				getMediaBiz().incrementMediaItemHits(mediaItemId);
 			}

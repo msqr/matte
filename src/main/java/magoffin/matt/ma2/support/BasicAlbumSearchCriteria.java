@@ -30,7 +30,7 @@ import magoffin.matt.ma2.biz.SearchBiz.AlbumSearchCriteria;
  * Basic implementation of {@link AlbumSearchCriteria}.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.1
+ * @version 1.2
  */
 public class BasicAlbumSearchCriteria implements AlbumSearchCriteria {
 
@@ -64,6 +64,7 @@ public class BasicAlbumSearchCriteria implements AlbumSearchCriteria {
 		this.anonymousKey = anonymousKey;
 	}
 
+	@Override
 	public Long getAlbumId() {
 		return this.albumId;
 	}
@@ -72,6 +73,7 @@ public class BasicAlbumSearchCriteria implements AlbumSearchCriteria {
 		this.albumId = albumId;
 	}
 
+	@Override
 	public String getAnonymousKey() {
 		return anonymousKey;
 	}

@@ -26,30 +26,29 @@ package magoffin.matt.ma2.web.util;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import javax.servlet.ServletContext;
-
-import magoffin.matt.ma2.domain.Theme;
-
 import org.apache.log4j.Logger;
 import org.springframework.web.context.ServletContextAware;
+import magoffin.matt.ma2.domain.Theme;
 
 /**
  * ClassLoader implementation that is able to load theme resources.
  * 
- * <p>This class loader allows themes to have their own message resources.</p>
+ * <p>
+ * This class loader allows themes to have their own message resources.
+ * </p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class ThemeAwareResourceLoader extends ClassLoader implements ServletContextAware {
-	
+
 	private WebHelper webHelper;
 	private String baseThemePath = "/WEB-INF/themes";
 	private ServletContext servletContext;
-	
+
 	private final Logger log = Logger.getLogger(ThemeAwareResourceLoader.class);
-	
+
 	/**
 	 * Constrcutor.
 	 */
@@ -57,6 +56,7 @@ public class ThemeAwareResourceLoader extends ClassLoader implements ServletCont
 		super(Thread.currentThread().getContextClassLoader());
 	}
 
+	@Override
 	public void setServletContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
 	}
@@ -66,12 +66,12 @@ public class ThemeAwareResourceLoader extends ClassLoader implements ServletCont
 		Theme theme = webHelper.getRequestTheme();
 		URL resource = null;
 		if ( theme != null ) {
-			String path = baseThemePath +theme.getBasePath()
-				+(name.startsWith("/") ? name : "/"+name);
+			String path = baseThemePath + theme.getBasePath()
+					+ (name.startsWith("/") ? name : "/" + name);
 			try {
 				resource = servletContext.getResource(path);
-			} catch (MalformedURLException e) {
-				log.warn("MalformedURLException loading resource [" +path +"]");
+			} catch ( MalformedURLException e ) {
+				log.warn("MalformedURLException loading resource [" + path + "]");
 			}
 		}
 		return resource;
@@ -85,7 +85,8 @@ public class ThemeAwareResourceLoader extends ClassLoader implements ServletCont
 	}
 
 	/**
-	 * @param baseThemePath the baseThemePath to set
+	 * @param baseThemePath
+	 *        the baseThemePath to set
 	 */
 	public void setBaseThemePath(String baseThemePath) {
 		this.baseThemePath = baseThemePath;
@@ -99,7 +100,8 @@ public class ThemeAwareResourceLoader extends ClassLoader implements ServletCont
 	}
 
 	/**
-	 * @param webHelper the webHelper to set
+	 * @param webHelper
+	 *        the webHelper to set
 	 */
 	public void setWebHelper(WebHelper webHelper) {
 		this.webHelper = webHelper;

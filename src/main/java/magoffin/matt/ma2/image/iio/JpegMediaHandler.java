@@ -27,29 +27,26 @@ package magoffin.matt.ma2.image.iio;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageReader;
-
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import magoffin.matt.ma2.MediaHandlerDelegate;
 import magoffin.matt.ma2.MediaRequest;
 import magoffin.matt.ma2.MediaResponse;
 import magoffin.matt.ma2.domain.MediaItem;
 import magoffin.matt.ma2.image.ImageConstants;
 
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-
 /**
  * JPEG media handler using ImageIO.
  * 
  * @author matt.magoffin
- * @version 1.0
+ * @version 1.1
  */
 public class JpegMediaHandler extends BaseImageIOMediaHandler implements MediaHandlerDelegate {
 
 	/** The ImageIO JPEG format name constant. */
 	public static final String FORMAT_NAME_IIO_JPEG_1_0 = "javax_imageio_jpeg_image_1.0";
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -60,23 +57,23 @@ public class JpegMediaHandler extends BaseImageIOMediaHandler implements MediaHa
 
 	/**
 	 * Construct with a different MIME type.
-	 * @param mimeType the MIME type
+	 * 
+	 * @param mimeType
+	 *        the MIME type
 	 */
 	protected JpegMediaHandler(String mimeType) {
 		super(mimeType);
 		setPreferredFileExtension(ImageConstants.DEFAULT_JPEG_FILE_EXTENSION);
 	}
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaHandler#createNewMediaItem(java.io.File)
-	 */
+
+	@Override
 	public MediaItem createNewMediaItem(File inputFile) {
 		MediaItem item = getDomainObjectFactory().newMediaItemInstance();
 		ImageReader reader = null;
 		try {
 			reader = getImageMediaHelper().getReaderForFile(inputFile);
 			setupBaseItemProperties(item, reader);
-			handleMetadata(null, new FileSystemResource(inputFile), item);			
+			handleMetadata(null, new FileSystemResource(inputFile), item);
 		} catch ( IOException e ) {
 			throw new RuntimeException("Exception reading image", e);
 		} finally {
@@ -87,38 +84,35 @@ public class JpegMediaHandler extends BaseImageIOMediaHandler implements MediaHa
 		return item;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaHandlerDelegate#handleDelegateMediaRequest(org.springframework.core.io.Resource, java.lang.String, magoffin.matt.ma2.domain.MediaItem, magoffin.matt.ma2.MediaRequest, magoffin.matt.ma2.MediaResponse)
-	 */
-	public void handleDelegateMediaRequest(Resource mediaResource, String mimeType, 
-			MediaItem item, MediaRequest request, MediaResponse response) {
-		BufferedImage image = defaultHandleDelegateRequest(mediaResource, mimeType, item, request, response);	
+	@Override
+	public void handleDelegateMediaRequest(Resource mediaResource, String mimeType, MediaItem item,
+			MediaRequest request, MediaResponse response) {
+		BufferedImage image = defaultHandleDelegateRequest(mediaResource, mimeType, item, request,
+				response);
 		writeJpegStream(item, request, response, image);
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaHandlerDelegate#getDelegateFileExtension(org.springframework.core.io.Resource, java.lang.String, magoffin.matt.ma2.domain.MediaItem, magoffin.matt.ma2.MediaRequest)
-	 */
-	public String getDelegateFileExtension(Resource mediaResource, String mimeType, MediaItem item, MediaRequest request) {
+	@Override
+	public String getDelegateFileExtension(Resource mediaResource, String mimeType, MediaItem item,
+			MediaRequest request) {
 		return getPreferredFileExtension();
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaHandler#handleMediaRequest(magoffin.matt.ma2.domain.MediaItem, magoffin.matt.ma2.MediaRequest, magoffin.matt.ma2.MediaResponse)
-	 */
+	@Override
 	public void handleMediaRequest(MediaItem item, MediaRequest request, MediaResponse response) {
-		BufferedImage image = defaultHandleRequest(item,request,
-				getMediaBiz().getMediaItemResource(item),response);
+		BufferedImage image = defaultHandleRequest(item, request,
+				getMediaBiz().getMediaItemResource(item), response);
 		writeJpegStream(item, request, response, image);
 	}
-	
-	private void writeJpegStream(MediaItem item, MediaRequest request, MediaResponse response, BufferedImage image) {
+
+	private void writeJpegStream(MediaItem item, MediaRequest request, MediaResponse response,
+			BufferedImage image) {
 		if ( image == null ) {
 			return;
 		}
 		response.setMimeType(getMime());
 		int quality = Math.round(getMediaBiz().getQualityValue(request.getQuality()) * 100.0f);
-		getImageMediaHelper().writeJpegStream(image, item.getItemId(), quality, 
+		getImageMediaHelper().writeJpegStream(image, item.getItemId(), quality,
 				response.getOutputStream());
 	}
 

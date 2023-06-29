@@ -122,7 +122,7 @@ import magoffin.matt.ma2.util.BizContextUtil;
  * </dl>
  * 
  * @author matt.magoffin
- * @version 1.2
+ * @version 1.3
  */
 public abstract class AbstractMediaHandler implements MediaHandler {
 
@@ -319,16 +319,12 @@ public abstract class AbstractMediaHandler implements MediaHandler {
 	 * Extending class may override this for request-specific handling.
 	 * </p>
 	 */
+	@Override
 	public String getFileExtension(MediaItem item, MediaRequest request) {
 		return getPreferredFileExtension();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.MediaHandler#getEffect(java.lang.String,
-	 * java.util.Map)
-	 */
+	@Override
 	public MediaEffect getEffect(String key, Map<String, ?> effectParameters) {
 		return null;
 	}

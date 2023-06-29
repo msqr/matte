@@ -24,41 +24,39 @@ package magoffin.matt.ma2.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.springframework.validation.BindException;
+import org.springframework.web.servlet.ModelAndView;
 import magoffin.matt.ma2.AuthorizationException;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.UserBiz;
 import magoffin.matt.ma2.support.LogonCommand;
 
-import org.springframework.validation.BindException;
-import org.springframework.web.servlet.ModelAndView;
-
 /**
  * Form controller for resetting a user's password.
  * 
  * @author matt.magoffin
- * @version 1.0
+ * @version 1.1
  */
 public class ForgotPasswordForm extends AbstractForm {
-	
+
 	private UserBiz userBiz;
-	
+
+	@SuppressWarnings("deprecation")
 	@Override
-    protected ModelAndView onSubmit(HttpServletRequest request,
-            HttpServletResponse response, Object command, BindException errors)
-            throws Exception {
-		LogonCommand form = (LogonCommand)command;
+	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response,
+			Object command, BindException errors) throws Exception {
+		LogonCommand form = (LogonCommand) command;
 		BizContext context = getWebHelper().getAnonymousBizContext(request);
 		ModelAndView result = null;
 		try {
-			userBiz.forgotPassword(form.getLogin(),context);
-			result = new ModelAndView(getSuccessView(),errors.getModel());
+			userBiz.forgotPassword(form.getLogin(), context);
+			result = new ModelAndView(getSuccessView(), errors.getModel());
 		} catch ( AuthorizationException e ) {
 			errors.reject("error.unknown.login", "Authorization error.");
-			result = showForm(request,response,errors);
+			result = showForm(request, response, errors);
 		}
 		return result;
-    }
+	}
 
 	/**
 	 * @return the userBiz
@@ -68,7 +66,8 @@ public class ForgotPasswordForm extends AbstractForm {
 	}
 
 	/**
-	 * @param userBiz the userBiz to set
+	 * @param userBiz
+	 *        the userBiz to set
 	 */
 	public void setUserBiz(UserBiz userBiz) {
 		this.userBiz = userBiz;

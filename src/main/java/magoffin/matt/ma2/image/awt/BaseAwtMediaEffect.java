@@ -25,9 +25,7 @@
 package magoffin.matt.ma2.image.awt;
 
 import java.awt.image.BufferedImage;
-
 import org.apache.log4j.Logger;
-
 import magoffin.matt.ma2.MediaRequest;
 import magoffin.matt.ma2.MediaResponse;
 import magoffin.matt.ma2.biz.MediaBiz;
@@ -36,29 +34,28 @@ import magoffin.matt.ma2.domain.MediaItem;
 /**
  * Base implementation of {@link magoffin.matt.ma2.image.awt.AwtMediaEffect}.
  * 
- * <p>The configurable properties of this class are:</p>
+ * <p>
+ * The configurable properties of this class are:
+ * </p>
  * 
  * <dl class="class-properties">
- *   <dt>mediaBiz</dt>
- *   <dd>The {@link MediaBiz} implementation to use.</dd>
+ * <dt>mediaBiz</dt>
+ * <dd>The {@link MediaBiz} implementation to use.</dd>
  * </dl>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public abstract class BaseAwtMediaEffect implements AwtMediaEffect {
 
 	/** A class logger. */
 	protected final Logger log = Logger.getLogger(getClass());
-	
+
 	private MediaBiz mediaBiz;
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaEffect#apply(magoffin.matt.ma2.domain.MediaItem, magoffin.matt.ma2.MediaRequest, magoffin.matt.ma2.MediaResponse)
-	 */
+
+	@Override
 	public void apply(MediaItem item, MediaRequest request, MediaResponse response) {
-		BufferedImage input = (BufferedImage)request.getParameters().get(
-				INPUT_BUFFERED_IMAGE_KEY);
+		BufferedImage input = (BufferedImage) request.getParameters().get(INPUT_BUFFERED_IMAGE_KEY);
 		if ( input == null ) {
 			throw new RuntimeException("BufferedImage not available on MediaRequest");
 		}
@@ -72,12 +69,13 @@ public abstract class BaseAwtMediaEffect implements AwtMediaEffect {
 	public MediaBiz getMediaBiz() {
 		return mediaBiz;
 	}
-	
+
 	/**
-	 * @param mediaBiz The mediaBiz to set.
+	 * @param mediaBiz
+	 *        The mediaBiz to set.
 	 */
 	public void setMediaBiz(MediaBiz mediaBiz) {
 		this.mediaBiz = mediaBiz;
 	}
-	
+
 }

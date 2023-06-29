@@ -43,18 +43,21 @@ import magoffin.matt.xweb.util.XwebConstants;
  * Filter that attaches a {@link WebBizContext} to the request thread.
  * 
  * @author matt
- * @version 1.0
+ * @version 1.1
  */
 public class WebBizContextFilter implements Filter {
 
+	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		// nothing to do
 	}
 
+	@Override
 	public void destroy() {
 		// nothing to do
 	}
 
+	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		BizContext activeContext = BizContextUtil.getBizContext();

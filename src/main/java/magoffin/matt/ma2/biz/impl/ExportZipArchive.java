@@ -32,12 +32,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
+import org.springframework.util.StringUtils;
 import magoffin.matt.ma2.MediaRequest;
 import magoffin.matt.ma2.MediaResponse;
 import magoffin.matt.ma2.biz.BizContext;
-import magoffin.matt.ma2.biz.WorkBiz;
 import magoffin.matt.ma2.biz.IOBiz.TwoPhaseExportRequest;
+import magoffin.matt.ma2.biz.WorkBiz;
 import magoffin.matt.ma2.domain.Album;
 import magoffin.matt.ma2.domain.AlbumImportType;
 import magoffin.matt.ma2.domain.Collection;
@@ -52,17 +52,15 @@ import magoffin.matt.ma2.domain.UserTag;
 import magoffin.matt.ma2.support.BasicMediaRequest;
 import magoffin.matt.util.NonClosingOutputStream;
 
-import org.springframework.util.StringUtils;
-
 /**
  * Helper class for the {@link IOBizImpl} class to export Zip archives.
  * 
  * @author matt
- * @version 1.0
+ * @version 1.1
  * @see IOBizImpl
  */
 class ExportZipArchive implements TwoPhaseExportRequest {
-	
+
 	private final IOBizImpl ioBizImpl;
 	private final Long[] itemIds;
 	private final BizContext context;
@@ -71,13 +69,13 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 	private Album album;
 	private CollectionImport metadata;
 	private MediaItem currItem = null;
-	private List<Long> processedItems = new LinkedList<Long>();
-	private String exportMessage;
+	private final List<Long> processedItems = new LinkedList<Long>();
+	private final String exportMessage;
 	private Long workTicket = null;
-	private Set<String> zipNames = new LinkedHashSet<String>();
-	
-	ExportZipArchive(IOBizImpl ioBizImpl, Long[] itemIds, String exportMessage, 
-			MediaRequest request, MediaResponse response, BizContext context) {
+	private final Set<String> zipNames = new LinkedHashSet<String>();
+
+	ExportZipArchive(IOBizImpl ioBizImpl, Long[] itemIds, String exportMessage, MediaRequest request,
+			MediaResponse response, BizContext context) {
 		this.ioBizImpl = ioBizImpl;
 		this.request = request;
 		this.response = response;
@@ -85,48 +83,60 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 		this.exportMessage = exportMessage;
 		this.context = context;
 	}
-	
+
+	@Override
 	public void setMediaResponse(MediaResponse response) {
 		this.response = response;
 		if ( workTicket != null ) {
 			ioBizImpl.getWorkBiz().workReadyNow(workTicket);
 		}
 	}
+
+	@Override
 	public float getAmountCompleted() {
-		return itemIds == null ? 0f 
-				: (float)processedItems.size() / (float)itemIds.length;
+		return itemIds == null ? 0f : (float) processedItems.size() / (float) itemIds.length;
 	}
+
+	@Override
 	public String getDisplayName() {
 		return exportMessage;
 	}
+
+	@Override
 	public String getMessage() {
-		return currItem == null ? "" : 
-			ioBizImpl.getMessages().getMessage("export.items.message", 
-				new Object[] {
-					this.processedItems.size(),
-					this.itemIds.length,
-					currItem.getPath(),
-				}, context.getLocale());
+		return currItem == null ? ""
+				: ioBizImpl.getMessages().getMessage("export.items.message", new Object[] {
+						this.processedItems.size(), this.itemIds.length, currItem.getPath(), },
+						context.getLocale());
 	}
+
+	@Override
 	public List<Long> getObjectIdList() {
 		return processedItems;
 	}
+
+	@Override
 	public Integer getPriority() {
 		return WorkBiz.DEFAULT_PRIORITY;
 	}
+
+	@Override
 	public boolean canStart() {
 		return this.response != null;
 	}
+
+	@Override
 	public boolean isTransactional() {
 		return true;
 	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public void startWork() throws Exception {
 		response.setMimeType(ioBizImpl.getZipMimeType());
 		final ZipOutputStream zout = new ZipOutputStream(response.getOutputStream());
-		String zipPathFormat = (album == null 
-			? "%s/%s" 
-			: "%s/%0" +String.valueOf(itemIds.length).length() + "d_%s" );
+		String zipPathFormat = (album == null ? "%s/%s"
+				: "%s/%0" + String.valueOf(itemIds.length).length() + "d_%s");
 		try {
 			int itemCount = 0;
 			AlbumImportType albumMetadata = null;
@@ -137,18 +147,16 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 				itemCount++;
 				final MediaItem item = ioBizImpl.getMediaItemDao().get(itemId);
 				currItem = item;
-				
+
 				// construct zip path from collection + item path
 				String zipPath = null;
 				if ( album == null ) {
-					Collection col = ioBizImpl.getCollectionDao().getCollectionForMediaItem(
-							item.getItemId());
-					zipPath = String.format(zipPathFormat, 
-							col.getName().replace('/', '_'),item.getPath());
+					Collection col = ioBizImpl.getCollectionDao()
+							.getCollectionForMediaItem(item.getItemId());
+					zipPath = String.format(zipPathFormat, col.getName().replace('/', '_'),
+							item.getPath());
 				} else {
-					zipPath = String.format(zipPathFormat, 
-							album.getName().replace('/','_'),  
-							itemCount, 
+					zipPath = String.format(zipPathFormat, album.getName().replace('/', '_'), itemCount,
 							StringUtils.getFilename(item.getPath()));
 				}
 				if ( zipNames.contains(zipPath) ) {
@@ -157,10 +165,9 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 						count++;
 						int idx = zipPath.lastIndexOf('.');
 						if ( idx >= 0 ) {
-							zipPath = zipPath.substring(0, idx)
-								+'_' +count +zipPath.substring(idx);
+							zipPath = zipPath.substring(0, idx) + '_' + count + zipPath.substring(idx);
 						} else {
-							zipPath += '_' +count;
+							zipPath += '_' + count;
 						}
 						if ( !zipNames.contains(zipPath) ) {
 							break;
@@ -177,28 +184,43 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 				BasicMediaRequest itemRequest = new BasicMediaRequest(request);
 				itemRequest.setMediaItemId(item.getItemId());
 				ioBizImpl.exportSingleMediaItem(itemRequest, new MediaResponse() {
+
+					@Override
 					public OutputStream getOutputStream() {
 						return new NonClosingOutputStream(zout);
 					}
+
+					@Override
 					public void setItem(MediaItem responseItem) {
 						// ignore
 					}
+
+					@Override
 					public void setMediaLength(long length) {
 						// ignore
 					}
+
+					@Override
 					public void setMimeType(String mime) {
 						// ignore
 					}
+
+					@Override
 					public void setModifiedDate(long date) {
 						// ignore
 					}
+
+					@Override
 					public void setFilename(String filename) {
 						// ignore
 					}
-					public void setPartialResponse(long start, long end,
-							long total) {
+
+					@Override
+					public void setPartialResponse(long start, long end, long total) {
 						// ignore
 					}
+
+					@Override
 					public boolean hasOutputStream() {
 						return true;
 					}
@@ -208,8 +230,7 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 			if ( this.metadata != null ) {
 				ZipEntry entry = new ZipEntry("metadata.xml");
 				zout.putNextEntry(entry);
-				this.ioBizImpl.getXmlHelper().getMarshaller()
-					.marshal(this.metadata, zout);
+				this.ioBizImpl.getXmlHelper().getMarshaller().marshal(this.metadata, zout);
 			}
 		} catch ( IOException e ) {
 			throw new RuntimeException(e);
@@ -219,7 +240,7 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 				zout.finish();
 				zout.close();
 			} catch ( IOException e ) {
-				ioBizImpl.log.warn("IOException closing zip output stream: " +e);
+				ioBizImpl.log.warn("IOException closing zip output stream: " + e);
 			}
 		}
 	}
@@ -227,7 +248,7 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 	@SuppressWarnings("unchecked")
 	private ItemImportType setupItemMetadata(String zipPath) {
 		ItemImportType itemMetadata = this.ioBizImpl.getDomainObjectFactory()
-			.newItemImportTypeInstance();
+				.newItemImportTypeInstance();
 		itemMetadata.setArchivePath(zipPath);
 		itemMetadata.setComment(this.currItem.getDescription());
 		itemMetadata.setName(this.currItem.getName());
@@ -243,25 +264,24 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 			}
 			itemMetadata.setKeywords(buf.toString());
 		}
-		
+
 		List<MediaItemRating> ratingList = this.currItem.getUserRating();
 		if ( ratingList != null && ratingList.size() > 0 ) {
-			Collection col = ioBizImpl.getCollectionDao().getCollectionForMediaItem(
-					this.currItem.getItemId());
+			Collection col = ioBizImpl.getCollectionDao()
+					.getCollectionForMediaItem(this.currItem.getItemId());
 			for ( MediaItemRating rating : ratingList ) {
-				if ( rating.getRatingUser().getUserId().equals(
-						col.getOwner().getUserId()) ) {
+				if ( rating.getRatingUser().getUserId().equals(col.getOwner().getUserId()) ) {
 					itemMetadata.setRating(rating.getRating());
 					break;
 				}
 			}
 		}
-		
+
 		List<Metadata> metaList = this.currItem.getMetadata();
 		if ( metaList != null && metaList.size() > 0 ) {
 			for ( Metadata meta : metaList ) {
 				MetadataImportType metaImport = ioBizImpl.getDomainObjectFactory()
-					.newMetadataImportTypeInstance();
+						.newMetadataImportTypeInstance();
 				metaImport.setName(meta.getKey());
 				metaImport.setValue(meta.getValue());
 				itemMetadata.getMeta().add(metaImport);
@@ -274,15 +294,14 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 	@SuppressWarnings("unchecked")
 	private AlbumImportType setupAlbumMetadata() {
 		AlbumImportType albumMetadata = this.ioBizImpl.getDomainObjectFactory()
-			.newAlbumImportTypeInstance();
+				.newAlbumImportTypeInstance();
 		albumMetadata.setAlbumDate(this.album.getAlbumDate());
 		albumMetadata.setComment(this.album.getComment());
 		albumMetadata.setCreationDate(this.album.getCreationDate());
 		albumMetadata.setModifyDate(this.album.getModifyDate());
 		albumMetadata.setName(this.album.getName());
-		
-		List<KeyNameType> sortModes = this.ioBizImpl.getMediaBiz()
-			.getAlbumSortTypes(this.context);
+
+		List<KeyNameType> sortModes = this.ioBizImpl.getMediaBiz().getAlbumSortTypes(this.context);
 		for ( KeyNameType sortMode : sortModes ) {
 			if ( sortMode.getKey() == this.album.getSortMode() ) {
 				albumMetadata.setSort(sortMode.getName());
@@ -295,19 +314,20 @@ class ExportZipArchive implements TwoPhaseExportRequest {
 	}
 
 	/**
-	 * @param album the album to set
+	 * @param album
+	 *        the album to set
 	 */
 	void setAlbum(Album album) {
 		this.album = album;
-		this.metadata = this.ioBizImpl.getDomainObjectFactory()
-			.newCollectionImportInstance();
+		this.metadata = this.ioBizImpl.getDomainObjectFactory().newCollectionImportInstance();
 	}
 
 	/**
-	 * @param workTicket the workTicket to set
+	 * @param workTicket
+	 *        the workTicket to set
 	 */
 	void setWorkTicket(Long workTicket) {
 		this.workTicket = workTicket;
 	}
-	
+
 }

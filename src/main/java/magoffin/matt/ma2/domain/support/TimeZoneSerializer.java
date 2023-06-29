@@ -25,19 +25,21 @@
 package magoffin.matt.ma2.domain.support;
 
 import java.io.IOException;
-import magoffin.matt.ma2.domain.TimeZone;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer;
+import magoffin.matt.ma2.domain.TimeZone;
 
 /**
  * JSON serializer for {@link TimeZone} objects.
  *
  * @author matt
- * @version 1.0
+ * @version 1.1
  */
 public class TimeZoneSerializer extends StdScalarSerializer<TimeZone> {
+
+	private static final long serialVersionUID = 1796334785323377056L;
 
 	/**
 	 * Default constructor.

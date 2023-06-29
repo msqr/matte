@@ -36,10 +36,10 @@ import magoffin.matt.ma2.domain.Collection;
  * Hibernate implementation of {@link magoffin.matt.ma2.dao.CollectionDao}.
  * 
  * @author matt.magoffin
- * @version 1.1
+ * @version 1.2
  */
-public class HibernateCollectionDao extends GenericIndexableHibernateDao<Collection, Long> implements
-		CollectionDao {
+public class HibernateCollectionDao extends GenericIndexableHibernateDao<Collection, Long>
+		implements CollectionDao {
 
 	/** Find all Collections for a User ID. */
 	public static final String QUERY_COLLECTIONS_FOR_USER_ID = "CollectionsForUserId";
@@ -67,10 +67,12 @@ public class HibernateCollectionDao extends GenericIndexableHibernateDao<Collect
 		callbackData.setId(new Long(rs.getLong(getIndexObjectIdColumnName())));
 	}
 
+	@Override
 	public List<Collection> findCollectionsForUser(Long userId) {
 		return findByNamedQuery(QUERY_COLLECTIONS_FOR_USER_ID, new Object[] { userId });
 	}
 
+	@Override
 	public Collection getCollectionForMediaItem(Long mediaItemId) {
 		List<Collection> results = findByNamedQuery(QUERY_COLLECTION_FOR_ITEM_ID,
 				new Object[] { mediaItemId });
@@ -79,6 +81,7 @@ public class HibernateCollectionDao extends GenericIndexableHibernateDao<Collect
 		return results.get(0);
 	}
 
+	@Override
 	public Collection getCollectionWithItems(Long collectionId) {
 		Collection c = get(collectionId);
 		if ( c != null ) {

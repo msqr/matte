@@ -25,21 +25,23 @@
 package magoffin.matt.ma2.domain.support;
 
 import java.io.IOException;
-import magoffin.matt.ma2.biz.BizContext;
-import magoffin.matt.ma2.domain.User;
-import magoffin.matt.ma2.util.BizContextUtil;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer;
+import magoffin.matt.ma2.biz.BizContext;
+import magoffin.matt.ma2.domain.User;
+import magoffin.matt.ma2.util.BizContextUtil;
 
 /**
  * JSON serializer for User objects.
  *
  * @author matt
- * @version 1.0
+ * @version 1.1
  */
 public class UserSerializer extends StdScalarSerializer<User> {
+
+	private static final long serialVersionUID = 9222326161665784885L;
 
 	/**
 	 * Default constructor.

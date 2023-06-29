@@ -27,10 +27,8 @@ package magoffin.matt.ma2.image.im4java;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
-
 import org.springframework.core.io.Resource;
 import org.springframework.util.CollectionUtils;
-
 import magoffin.matt.ma2.MediaHandlerDelegate;
 import magoffin.matt.ma2.MediaRequest;
 import magoffin.matt.ma2.MediaResponse;
@@ -40,32 +38,34 @@ import magoffin.matt.ma2.image.ImageConstants;
 /**
  * JPEG media handler using IM4Java.
  * 
- * <p>The configurable properties of this class are:</p>
+ * <p>
+ * The configurable properties of this class are:
+ * </p>
  * 
  * <dl class="class-properties">
- *   <dt>useJpeg2000</dt>
- *   <dd>If <em>true</em> then serve re-sized images as JPEG2000 files (.jp2).
- *   Otherwise serve re-sized iamges as normal JPEG files. Defaults to 
- *   <em>false</em>.</dd>
- *   
- *   <dt>jpeg2000UserAgentPatterns</dt>
- *   <dd>If configured, then only serve JPEG2000 files to user agents that 
- *   match any of the regular expressions configured in this list. This list
- *   can also be set via the <code>jpeg2000UserAgentRegExp</code> property. 
- *   If not configured then all re-sized images will be served as JPEG2000
- *   (assuming the <code>useJpeg200</code> property is configured as 
- *   <em>true</em>). The regular expression matching will use the 
- *   {@link java.util.regex.Matcher#find()} method for evauluation.</dd>
+ * <dt>useJpeg2000</dt>
+ * <dd>If <em>true</em> then serve re-sized images as JPEG2000 files (.jp2).
+ * Otherwise serve re-sized iamges as normal JPEG files. Defaults to
+ * <em>false</em>.</dd>
+ * 
+ * <dt>jpeg2000UserAgentPatterns</dt>
+ * <dd>If configured, then only serve JPEG2000 files to user agents that match
+ * any of the regular expressions configured in this list. This list can also be
+ * set via the <code>jpeg2000UserAgentRegExp</code> property. If not configured
+ * then all re-sized images will be served as JPEG2000 (assuming the
+ * <code>useJpeg200</code> property is configured as <em>true</em>). The regular
+ * expression matching will use the {@link java.util.regex.Matcher#find()}
+ * method for evauluation.</dd>
  * </dl>
  *
  * @author matt
- * @version 1.0
+ * @version 1.1
  */
 public class JpegMediaHandler extends BaseIM4JavaMediaHandler implements MediaHandlerDelegate {
 
 	private boolean useJpeg2000 = false;
 	private List<Pattern> jpeg2000UserAgentPatterns;
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -73,27 +73,27 @@ public class JpegMediaHandler extends BaseIM4JavaMediaHandler implements MediaHa
 		super(ImageConstants.JPEG_MIME);
 		setPreferredFileExtension(ImageConstants.DEFAULT_JPEG_FILE_EXTENSION);
 	}
-	
+
 	/**
 	 * Construct with a different MIME type.
-	 * @param mimeType the MIME type
+	 * 
+	 * @param mimeType
+	 *        the MIME type
 	 */
 	protected JpegMediaHandler(String mimeType) {
 		super(mimeType);
 		setPreferredFileExtension(ImageConstants.DEFAULT_JPEG_FILE_EXTENSION);
 	}
-	
+
 	@Override
 	public String getFileExtension(MediaItem item, MediaRequest request) {
-		return useJpeg2000(request) ? ImageConstants.DEFAULT_JPEG2000_FILE_EXTENSION 
+		return useJpeg2000(request) ? ImageConstants.DEFAULT_JPEG2000_FILE_EXTENSION
 				: super.getFileExtension(item, request);
 	}
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaHandlerDelegate#handleDelegateMediaRequest(org.springframework.core.io.Resource, java.lang.String, magoffin.matt.ma2.domain.MediaItem, magoffin.matt.ma2.MediaRequest, magoffin.matt.ma2.MediaResponse)
-	 */
-	public void handleDelegateMediaRequest(Resource mediaResource, String mimeType, 
-			MediaItem item, MediaRequest request, MediaResponse response) {
+
+	@Override
+	public void handleDelegateMediaRequest(Resource mediaResource, String mimeType, MediaItem item,
+			MediaRequest request, MediaResponse response) {
 		defaultHandleResource(item, request, response, mediaResource);
 	}
 
@@ -102,11 +102,9 @@ public class JpegMediaHandler extends BaseIM4JavaMediaHandler implements MediaHa
 		return useJpeg2000(request) ? ImageConstants.JPEG2000_MIME : ImageConstants.JPEG_MIME;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaHandlerDelegate#getDelegateFileExtension(org.springframework.core.io.Resource, java.lang.String, magoffin.matt.ma2.domain.MediaItem, magoffin.matt.ma2.MediaRequest)
-	 */
-	public String getDelegateFileExtension(Resource mediaResource, String mimeType, 
-			MediaItem item, MediaRequest request) {
+	@Override
+	public String getDelegateFileExtension(Resource mediaResource, String mimeType, MediaItem item,
+			MediaRequest request) {
 		if ( useJpeg2000(request) ) {
 			return ImageConstants.DEFAULT_JPEG2000_FILE_EXTENSION;
 		}
@@ -119,7 +117,7 @@ public class JpegMediaHandler extends BaseIM4JavaMediaHandler implements MediaHa
 			if ( CollectionUtils.isEmpty(jpeg2000UserAgentPatterns) ) {
 				return true;
 			} else if ( request.getParameters().containsKey(MediaRequest.USER_AGENT_KEY) ) {
-				String ua = (String)request.getParameters().get(MediaRequest.USER_AGENT_KEY);
+				String ua = (String) request.getParameters().get(MediaRequest.USER_AGENT_KEY);
 				for ( Pattern pat : jpeg2000UserAgentPatterns ) {
 					if ( pat.matcher(ua).find() ) {
 						return true;
@@ -131,15 +129,17 @@ public class JpegMediaHandler extends BaseIM4JavaMediaHandler implements MediaHa
 	}
 
 	/**
-	 * Set the JPEG2000 user agent regular expression matches as a String
-	 * array.
+	 * Set the JPEG2000 user agent regular expression matches as a String array.
 	 * 
-	 * <p>This will compile each string into a {@link Pattern} and place that onto
-	 * the {@link #getJpeg2000UserAgentPatterns()} list. This is mostly for the 
+	 * <p>
+	 * This will compile each string into a {@link Pattern} and place that onto
+	 * the {@link #getJpeg2000UserAgentPatterns()} list. This is mostly for the
 	 * benefit of configuring the patterns. The regular expressions are compiled
-	 * with the {@link Pattern#CASE_INSENSITIVE} flag.</p>
+	 * with the {@link Pattern#CASE_INSENSITIVE} flag.
+	 * </p>
 	 * 
-	 * @param regExps the regular expression patterns to use
+	 * @param regExps
+	 *        the regular expression patterns to use
 	 */
 	public void setJpeg2000UserAgentRegExp(String[] regExps) {
 		List<Pattern> pats = new LinkedList<Pattern>();
@@ -149,31 +149,32 @@ public class JpegMediaHandler extends BaseIM4JavaMediaHandler implements MediaHa
 		}
 		setJpeg2000UserAgentPatterns(pats);
 	}
-	
+
 	/**
 	 * @return the jpeg2000UserAgentPatterns
 	 */
 	public List<Pattern> getJpeg2000UserAgentPatterns() {
 		return jpeg2000UserAgentPatterns;
 	}
-	
+
 	/**
-	 * @param jpeg2000UserAgentPatterns the jpeg2000UserAgentPatterns to set
+	 * @param jpeg2000UserAgentPatterns
+	 *        the jpeg2000UserAgentPatterns to set
 	 */
-	public void setJpeg2000UserAgentPatterns(
-			List<Pattern> jpeg2000UserAgentPatterns) {
+	public void setJpeg2000UserAgentPatterns(List<Pattern> jpeg2000UserAgentPatterns) {
 		this.jpeg2000UserAgentPatterns = jpeg2000UserAgentPatterns;
 	}
-	
+
 	/**
 	 * @return the useJpeg2000
 	 */
 	public boolean isUseJpeg2000() {
 		return useJpeg2000;
 	}
-	
+
 	/**
-	 * @param useJpeg2000 the useJpeg2000 to set
+	 * @param useJpeg2000
+	 *        the useJpeg2000 to set
 	 */
 	public void setUseJpeg2000(boolean useJpeg2000) {
 		this.useJpeg2000 = useJpeg2000;

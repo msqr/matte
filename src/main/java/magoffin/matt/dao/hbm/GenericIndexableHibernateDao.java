@@ -33,9 +33,6 @@ import java.text.Format;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
-import magoffin.matt.dao.BasicIndexData;
-import magoffin.matt.dao.IndexCallback;
-import magoffin.matt.dao.IndexableDao;
 import org.apache.commons.lang.mutable.MutableInt;
 import org.apache.commons.lang.time.FastDateFormat;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
@@ -43,6 +40,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
+import magoffin.matt.dao.BasicIndexData;
+import magoffin.matt.dao.IndexCallback;
+import magoffin.matt.dao.IndexableDao;
 
 /**
  * Extension of GenericHibernateDao with indexing support.
@@ -52,10 +52,10 @@ import org.springframework.jdbc.core.RowMapper;
  * @param <PK>
  *        the primary key type
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.1
+ * @version 1.2
  */
-public abstract class GenericIndexableHibernateDao<T, PK extends Serializable> extends
-		GenericHibernateDao<T, PK> implements IndexableDao<PK> {
+public abstract class GenericIndexableHibernateDao<T, PK extends Serializable>
+		extends GenericHibernateDao<T, PK> implements IndexableDao<PK> {
 
 	/** The default value for the <code>indexBatchSize</code> property. */
 	public static final int DEFAULT_INDEX_BATCH_SIZE = 1000;
@@ -66,13 +66,19 @@ public abstract class GenericIndexableHibernateDao<T, PK extends Serializable> e
 	/** Find all objects and related data for reindexing. */
 	private String sqlIndexAll;
 
-	/** Find all objects and related data for reindexing, within a date range. */
+	/**
+	 * Find all objects and related data for reindexing, within a date range.
+	 */
 	private String sqlIndexDateRange;
 
-	/** The maximum number of objects to index at one time, to conserve memory. */
+	/**
+	 * The maximum number of objects to index at one time, to conserve memory.
+	 */
 	private int indexBatchSize = DEFAULT_INDEX_BATCH_SIZE;
 
-	/** The SQL parameter index for the object ID in the date range SQL query. */
+	/**
+	 * The SQL parameter index for the object ID in the date range SQL query.
+	 */
 	private int sqlParamIdxWithDateRange = DEFAULT_SQL_PARAM_ID_WITH_DATE_RANGE;
 
 	private RowMapper<Map<String, Object>> indexRowMapper = new ColumnMapRowMapper();
@@ -102,6 +108,7 @@ public abstract class GenericIndexableHibernateDao<T, PK extends Serializable> e
 		super(type);
 	}
 
+	@Override
 	@SuppressWarnings("deprecation")
 	public void index(final IndexCallback<PK> callback) {
 		// flush Session in case not flushed to table yet
@@ -115,15 +122,15 @@ public abstract class GenericIndexableHibernateDao<T, PK extends Serializable> e
 			numRowsProcessed.setValue(0); // reset count to 0
 			jdbcTemplate.query(new PreparedStatementCreator() {
 
+				@Override
 				public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 					PreparedStatement psmt = null;
 					if ( callback.getStartDate() != null && callback.getEndDate() != null ) {
 						String sql = sqlIndexDateRange;
 						if ( callbackData.getId() != null ) {
 							// append "and id > x" to query
-							sql = INSERT_BEFORE_ORDER_BY.matcher(sql).replaceFirst(
-									"$1 and " + indexObjectTableAlias + "." + indexObjectIdColumnName
-											+ " > ?$2");
+							sql = INSERT_BEFORE_ORDER_BY.matcher(sql).replaceFirst("$1 and "
+									+ indexObjectTableAlias + "." + indexObjectIdColumnName + " > ?$2");
 						}
 						Format ymdFormat = FastDateFormat.getInstance("yyyy-MM-dd", indexTimeZone);
 						if ( log.isInfoEnabled() ) {
@@ -145,9 +152,8 @@ public abstract class GenericIndexableHibernateDao<T, PK extends Serializable> e
 						String sql = sqlIndexAll;
 						if ( callbackData.getId() != null ) {
 							// append "where id > x" to query
-							sql = INSERT_BEFORE_ORDER_BY.matcher(sql).replaceFirst(
-									"$1 where " + indexObjectTableAlias + "." + indexObjectIdColumnName
-											+ " > ?$2");
+							sql = INSERT_BEFORE_ORDER_BY.matcher(sql).replaceFirst("$1 where "
+									+ indexObjectTableAlias + "." + indexObjectIdColumnName + " > ?$2");
 						}
 						if ( log.isInfoEnabled() ) {
 							log.info("Executing query to index  with batch size [" + indexBatchSize
@@ -167,6 +173,7 @@ public abstract class GenericIndexableHibernateDao<T, PK extends Serializable> e
 
 				private ResultSet myRs;
 
+				@Override
 				public void processRow(ResultSet rs) throws SQLException {
 					numRowsProcessed.setValue(numRowsProcessed.intValue() + 1);
 					if ( myRs == null ) {

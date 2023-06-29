@@ -35,15 +35,11 @@ import magoffin.matt.ma2.domain.TimeZone;
 /**
  * Hibernate implementation of {@link magoffin.matt.ma2.dao.TimeZoneDao}.
  * 
- * <p>
- * info
- * </p>
- * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.1
+ * @version 1.2
  */
-public class HibernateTimeZoneDao extends GenericIndexableHibernateDao<TimeZone, String> implements
-		TimeZoneDao {
+public class HibernateTimeZoneDao extends GenericIndexableHibernateDao<TimeZone, String>
+		implements TimeZoneDao {
 
 	/** Find all time zones. */
 	public static final String QUERY_TIME_ZONE_ALL = "TimeZoneAll";
@@ -68,6 +64,7 @@ public class HibernateTimeZoneDao extends GenericIndexableHibernateDao<TimeZone,
 		callbackData.setId(rs.getString(getIndexObjectIdColumnName()));
 	}
 
+	@Override
 	public List<TimeZone> findAllTimeZones() {
 		return findByNamedQuery(QUERY_TIME_ZONE_ALL);
 	}

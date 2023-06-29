@@ -25,84 +25,83 @@
 package magoffin.matt.ma2.image.im4java;
 
 import java.util.List;
-
+import org.apache.log4j.Logger;
+import org.im4java.core.IMOperation;
 import magoffin.matt.ma2.MediaRequest;
 import magoffin.matt.ma2.MediaResponse;
 import magoffin.matt.ma2.biz.MediaBiz;
 import magoffin.matt.ma2.domain.MediaItem;
 
-import org.apache.log4j.Logger;
-import org.im4java.core.IMOperation;
-
 /**
- * Base implementation of {@link magoffin.matt.ma2.image.im4java.IM4JavaMediaEffect}.
+ * Base implementation of
+ * {@link magoffin.matt.ma2.image.im4java.IM4JavaMediaEffect}.
  * 
- * <p>The configurable properties of this class are:</p>
+ * <p>
+ * The configurable properties of this class are:
+ * </p>
  * 
  * <dl class="class-properties">
- *   <dt>mediaBiz</dt>
- *   <dd>The {@link MediaBiz} implementation to use.</dd>
+ * <dt>mediaBiz</dt>
+ * <dd>The {@link MediaBiz} implementation to use.</dd>
  * </dl>
  *
  * @author matt
- * @version 1.0
+ * @version 1.1
  */
 public abstract class BaseIM4JavaMediaEffect implements IM4JavaMediaEffect {
 
-	private String key;
+	private final String key;
 	private MediaBiz mediaBiz;
 
 	/** A class logger. */
 	protected final Logger log = Logger.getLogger(getClass());
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaEffect#apply(magoffin.matt.ma2.domain.MediaItem, magoffin.matt.ma2.MediaRequest, magoffin.matt.ma2.MediaResponse)
-	 */
+
+	@Override
 	public final void apply(MediaItem item, MediaRequest request, MediaResponse response) {
-		IMOperation baseOperation = (IMOperation)request.getParameters().get(IM_OPERATION);
+		IMOperation baseOperation = (IMOperation) request.getParameters().get(IM_OPERATION);
 		if ( baseOperation == null ) {
 			throw new RuntimeException("IMOperation not available on request");
 		}
 		ImageCommandAndOperation cmd = applyEffect(item, request, baseOperation);
 		if ( cmd != null ) {
 			@SuppressWarnings("unchecked")
-			List<ImageCommandAndOperation> list = (List<ImageCommandAndOperation>)
-				request.getParameters().get(SUB_COMMAND_LIST);
+			List<ImageCommandAndOperation> list = (List<ImageCommandAndOperation>) request
+					.getParameters().get(SUB_COMMAND_LIST);
 			if ( list == null ) {
 				throw new RuntimeException("Sub command list not available on request.");
 			}
 			list.add(cmd);
 		}
 	}
-	
+
 	/**
 	 * Constructor.
 	 * 
-	 * @param key the key to use
+	 * @param key
+	 *        the key to use
 	 */
 	public BaseIM4JavaMediaEffect(String key) {
-		this.key = "image.im4java." +key;
+		this.key = "image.im4java." + key;
 	}
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaEffect#getKey()
-	 */
+
+	@Override
 	public final String getKey() {
 		return key;
 	}
-	
+
 	/**
 	 * @return the mediaBiz
 	 */
 	public MediaBiz getMediaBiz() {
 		return mediaBiz;
 	}
-	
+
 	/**
-	 * @param mediaBiz the mediaBiz to set
+	 * @param mediaBiz
+	 *        the mediaBiz to set
 	 */
 	public void setMediaBiz(MediaBiz mediaBiz) {
 		this.mediaBiz = mediaBiz;
-	}	
-	
+	}
+
 }

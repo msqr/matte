@@ -45,6 +45,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.xpath.XPathConstants;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import magoffin.matt.ma2.MediaHandler;
 import magoffin.matt.ma2.MediaQuality;
 import magoffin.matt.ma2.MediaSize;
@@ -64,27 +69,22 @@ import magoffin.matt.ma2.support.BasicMediaRequest;
 import magoffin.matt.ma2.support.BasicMediaResponse;
 import magoffin.matt.ma2.util.BizContextUtil;
 import magoffin.matt.ma2.util.DateTimeUtil;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 /**
  * Helper class for {@link IOBizImpl} to import media items.
  *
  * @author matt
- * @version 1.0
+ * @version 1.1
  * @see IOBizImpl
  */
 class ImportWorkRequest implements WorkRequest {
-	
+
 	private final IOBizImpl ioBizImpl;
 	private final BizContext context;
 	private final AddMediaCommand command;
 	private final File collectionDir;
 	private final File srcFile;
-	
+
 	private float amountCompleted = 0;
 	private int numProcessed = 0;
 	private int numExported = 0;
@@ -92,53 +92,57 @@ class ImportWorkRequest implements WorkRequest {
 	private URI collectionDirURI;
 	private Collection collection;
 	private final List<MediaItem> itemsAddedToCollection = new LinkedList<MediaItem>();
-	private final List<Long> savedItemIdList = Collections.synchronizedList(
-			new LinkedList<Long>());
+	private final List<Long> savedItemIdList = Collections.synchronizedList(new LinkedList<Long>());
 	private User collectionOwner;
 	private final Map<String, Long> archiveAlbumPathMapping = new HashMap<String, Long>();
-	
-	ImportWorkRequest(IOBizImpl bizImpl, BizContext context, AddMediaCommand command,
-			File collectionDir, File srcFile) {
+
+	ImportWorkRequest(IOBizImpl bizImpl, BizContext context, AddMediaCommand command, File collectionDir,
+			File srcFile) {
 		ioBizImpl = bizImpl;
 		this.context = context;
 		this.command = command;
 		this.collectionDir = collectionDir;
 		this.srcFile = srcFile;
 	}
-	
+
+	@Override
 	public String getDisplayName() {
-		return ioBizImpl.getMessages().getMessage(
-				"import.media.work.displayName", null,
+		return ioBizImpl.getMessages().getMessage("import.media.work.displayName", null,
 				"Importing media", context.getLocale());
 	}
 
+	@Override
 	public String getMessage() {
 		if ( this.amountCompleted >= 0.5 ) {
-			return ioBizImpl.getMessages().getMessage(
-					"add.work.export.message", new Object[]{numExported,numProcessed},
-					"Generating thumbnails", context.getLocale());
+			return ioBizImpl.getMessages().getMessage("add.work.export.message",
+					new Object[] { numExported, numProcessed }, "Generating thumbnails",
+					context.getLocale());
 		}
-		return ioBizImpl.getMessages().getMessage(
-				"add.work.message", new Object[]{numProcessed},
-				"Processed " +numProcessed +" items", context.getLocale());
+		return ioBizImpl.getMessages().getMessage("add.work.message", new Object[] { numProcessed },
+				"Processed " + numProcessed + " items", context.getLocale());
 	}
 
+	@Override
 	public Integer getPriority() {
 		return WorkBiz.DEFAULT_PRIORITY;
 	}
 
+	@Override
 	public List<Long> getObjectIdList() {
 		return savedItemIdList;
 	}
 
+	@Override
 	public boolean canStart() {
 		return true;
 	}
 
+	@Override
 	public boolean isTransactional() {
 		return true;
 	}
-	
+
+	@Override
 	public void startWork() throws Exception {
 		try {
 			// attach thread local BizContext
@@ -149,27 +153,27 @@ class ImportWorkRequest implements WorkRequest {
 			BizContextUtil.removeBizContext();
 		}
 	}
-	
+
 	private void doWork() throws Exception {
 		collectionDirURI = collectionDir.toURI();
-		
+
 		collection = ioBizImpl.getCollectionDao().get(command.getCollectionId());
 		collectionOwner = collection.getOwner();
-		
+
 		float numZipEntries = 0f;
-		
+
 		// 2: is this a zip archive?
-		if ( command.getTempFile().getName().toLowerCase().endsWith(".zip") 
+		if ( command.getTempFile().getName().toLowerCase().endsWith(".zip")
 				|| ioBizImpl.getZipContentTypes().contains(command.getTempFile().getContentType()) ) {
 
 			// a zipped media item(s) ... copy file and process
 			ZipFile zipFile = null;
 			try {
 				zipFile = new ZipFile(srcFile);
-			
+
 				numZipEntries = zipFile.size(); // float for %completed
 				float currEntry = 0.0f;
-				
+
 				// look for metadata entry
 				Enumeration<? extends ZipEntry> zipEnum = zipFile.entries();
 				Document metadata = null;
@@ -179,8 +183,8 @@ class ImportWorkRequest implements WorkRequest {
 						numZipEntries--;
 						continue;
 					}
-					if ( metadata == null 
-							&& IOBizImpl.IMPORT_MEDIA_XML_METADATA_NAME.equalsIgnoreCase(entry.getName())) {
+					if ( metadata == null && IOBizImpl.IMPORT_MEDIA_XML_METADATA_NAME
+							.equalsIgnoreCase(entry.getName()) ) {
 						// load into DOM so can query with XPath later
 						metadata = ioBizImpl.getXmlHelper().getDocument(zipFile.getInputStream(entry));
 						numZipEntries--;
@@ -189,22 +193,23 @@ class ImportWorkRequest implements WorkRequest {
 					if ( ioBizImpl.shouldIgnoreZipResource(entry.getName()) ) {
 						numZipEntries--;
 						if ( ioBizImpl.log.isDebugEnabled() ) {
-							ioBizImpl.log.debug("Ignoring zip resource [" +entry.getName() +']');
+							ioBizImpl.log.debug("Ignoring zip resource [" + entry.getName() + ']');
 						}
 						continue;
 					}
 				}
-				
+
 				// also support metadata document from command directly
 				if ( command.getMetaXmlFile() != null ) {
-					metadata = ioBizImpl.getXmlHelper().getDocument(
-							command.getMetaXmlFile().getInputStream());
+					metadata = ioBizImpl.getXmlHelper()
+							.getDocument(command.getMetaXmlFile().getInputStream());
 				}
-				
+
 				if ( metadata != null && ioBizImpl.getMetadataSchemaResource() != null ) {
-					ioBizImpl.getXmlHelper().validateXml(new DOMSource(metadata), ioBizImpl.getMetadataSchemaResource());
+					ioBizImpl.getXmlHelper().validateXml(new DOMSource(metadata),
+							ioBizImpl.getMetadataSchemaResource());
 				}
-				
+
 				zipEnum = zipFile.entries();
 				while ( zipEnum.hasMoreElements() ) {
 					ZipEntry entry = zipEnum.nextElement();
@@ -214,16 +219,16 @@ class ImportWorkRequest implements WorkRequest {
 						if ( entry.isDirectory() || ioBizImpl.shouldIgnoreZipResource(zipEntryName) ) {
 							continue;
 						}
-						
+
 						// remove leading slash, if present
 						if ( zipEntryName.charAt(0) == '/' ) {
 							zipEntryName = zipEntryName.substring(1);
 						}
-						
-						File currOutputFile = new File(collectionDir,zipEntryName);
+
+						File currOutputFile = new File(collectionDir, zipEntryName);
 						currOutputFile.getParentFile().mkdirs();
 						if ( ioBizImpl.log.isDebugEnabled() ) {
-							ioBizImpl.log.debug("Unzipping file " +currOutputFile.getAbsolutePath());
+							ioBizImpl.log.debug("Unzipping file " + currOutputFile.getAbsolutePath());
 						}
 						FileCopyUtils.copy(zipFile.getInputStream(entry),
 								new FileOutputStream(currOutputFile));
@@ -245,10 +250,10 @@ class ImportWorkRequest implements WorkRequest {
 						}
 					}
 				}
-				
+
 				// delete the original zip file
 				if ( !srcFile.delete() ) {
-					ioBizImpl.log.warn("Unable to delete file [" +srcFile +"]");
+					ioBizImpl.log.warn("Unable to delete file [" + srcFile + "]");
 				}
 			} finally {
 				if ( zipFile != null ) {
@@ -260,18 +265,18 @@ class ImportWorkRequest implements WorkRequest {
 			this.amountCompleted = 0.5f;
 			handleNewMediaItem(srcFile);
 		}
-		
+
 		// now save collection and items
 		ioBizImpl.getCollectionDao().store(collection);
 		this.numProcessed = itemsAddedToCollection.size();
 		for ( MediaItem item : itemsAddedToCollection ) {
 			// find out what the saved MediaItem IDs are via their paths
-			MediaItem savedItem = ioBizImpl.getMediaItemDao().getItemForPath(
-					collection.getCollectionId(), item.getPath());
+			MediaItem savedItem = ioBizImpl.getMediaItemDao()
+					.getItemForPath(collection.getCollectionId(), item.getPath());
 			Long savedItemId = savedItem.getItemId();
-			
+
 			this.savedItemIdList.add(savedItemId);
-			
+
 			// if caching enabled, generate normal thumbnail image now
 			if ( ioBizImpl.getSystemBiz().getCacheDirectory() != null ) {
 				BasicMediaRequest request = new BasicMediaRequest(savedItemId);
@@ -287,68 +292,66 @@ class ImportWorkRequest implements WorkRequest {
 							thumbQuality = MediaQuality.valueOf(thumbSpec.getQuality());
 						} catch ( IllegalArgumentException e ) {
 							ioBizImpl.log.warn("Ignoring invalid media size/quality MediaSpec "
-									+thumbSpec.getSize() +"/" +thumbSpec.getQuality());
+									+ thumbSpec.getSize() + "/" + thumbSpec.getQuality());
 						}
 					}
 				}
 				request.setQuality(thumbQuality);
 				request.setSize(thumbSize);
 				BasicMediaResponse response = new BasicMediaResponse();
-				ioBizImpl.exportSingleMediaItem(request, response, 
-						new ImportBizContext(collection));
+				ioBizImpl.exportSingleMediaItem(request, response, new ImportBizContext(collection));
 				this.numExported++;
 			}
-			
+
 			this.amountCompleted += 1f / (this.numProcessed * 2f);
 		}
-		
+
 		this.amountCompleted = 1.0f;
 	}
 
 	@SuppressWarnings("unchecked")
 	private void handleMetadata(String zipEntryName, MediaItem item, Document metadata) {
 		String[] itemPath = zipEntryName.split("/");
-		
+
 		// look for item via XPath
-		String itemXPath = "//m:item[@archive-path=\"" 
-			+ioBizImpl.escapeItemNameForXPath(zipEntryName) +"\"]";
-		NodeList itemNodes = (NodeList)ioBizImpl.getXmlHelper().evaluateXPath(
-				metadata.getDocumentElement(), 
-				itemXPath, XPathConstants.NODESET);
+		String itemXPath = "//m:item[@archive-path=\"" + ioBizImpl.escapeItemNameForXPath(zipEntryName)
+				+ "\"]";
+		NodeList itemNodes = (NodeList) ioBizImpl.getXmlHelper()
+				.evaluateXPath(metadata.getDocumentElement(), itemXPath, XPathConstants.NODESET);
 		if ( itemNodes == null || itemNodes.getLength() < 1 ) {
 			handleAutoAlbum(itemPath, item);
 			return;
 		}
-		
+
 		// handle albums
 		Element itemNode = null;
 		for ( int i = 0, len = itemNodes.getLength(); i < len; i++ ) {
-			Element currItemNode = (Element)itemNodes.item(i);
+			Element currItemNode = (Element) itemNodes.item(i);
 			if ( i == 0 ) {
 				itemNode = currItemNode;
 			}
-			
+
 			// create item path from <album> elements, because zip path
 			// might point to an item also in another album, i.e. one
 			// item shared between multiple albums
-			Element albumNode = (Element)currItemNode.getParentNode();
+			Element albumNode = (Element) currItemNode.getParentNode();
 			Element currNode = albumNode;
 			Deque<String> albums = new LinkedList<String>();
 			while ( currNode.getLocalName().equals("album") ) {
 				albums.addFirst(currNode.getAttribute("name"));
-				currNode = (Element)currNode.getParentNode();
+				currNode = (Element) currNode.getParentNode();
 				if ( currNode.getParentNode() == null ) {
 					break;
 				}
 			}
-			albums.addLast(itemPath[itemPath.length-1]);
+			albums.addLast(itemPath[itemPath.length - 1]);
 			String[] albumPath = albums.toArray(new String[albums.size()]);
-			
+
 			Album album = handleAutoAlbum(albumPath, item);
 			if ( album != null ) {
 				// Don't set album name... messes up auto album
 				if ( !StringUtils.hasText(album.getComment()) ) {
-					String comment = (String)ioBizImpl.getXmlHelper().evaluateXPath(albumNode, 
+					String comment = (String) ioBizImpl.getXmlHelper().evaluateXPath(albumNode,
 							"normalize-space(m:comment)", XPathConstants.STRING);
 					if ( StringUtils.hasText(comment) ) {
 						album.setComment(comment);
@@ -365,16 +368,16 @@ class ImportWorkRequest implements WorkRequest {
 				}
 			}
 		}
-		
+
 		if ( itemNode == null ) {
 			return;
 		}
-		
+
 		// set name
 		if ( itemNode.hasAttribute("name") ) {
 			item.setName(itemNode.getAttribute("name"));
 		}
-		
+
 		// set rating
 		if ( itemNode.hasAttribute("rating") ) {
 			try {
@@ -393,19 +396,19 @@ class ImportWorkRequest implements WorkRequest {
 					userRating.setCreationDate(Calendar.getInstance());
 					ratingList.add(userRating);
 				}
-				userRating.setRating((short)ratingValue);
+				userRating.setRating((short) ratingValue);
 			} catch ( Exception e ) {
-				ioBizImpl.log.warn("Exception parsing rating: " +e.toString());
+				ioBizImpl.log.warn("Exception parsing rating: " + e.toString());
 			}
 		}
-		
+
 		// set description
-		String comment = (String)ioBizImpl.getXmlHelper().evaluateXPath(itemNode, 
+		String comment = (String) ioBizImpl.getXmlHelper().evaluateXPath(itemNode,
 				"normalize-space(m:comment)", XPathConstants.STRING);
 		if ( StringUtils.hasText(comment) ) {
 			item.setDescription(comment);
 		}
-		
+
 		if ( itemNode.hasAttribute("item-date") ) {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 			sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -420,9 +423,9 @@ class ImportWorkRequest implements WorkRequest {
 		}
 
 		// handle keywords
-		String keywords = (String)ioBizImpl.getXmlHelper().evaluateXPath(itemNode, 
+		String keywords = (String) ioBizImpl.getXmlHelper().evaluateXPath(itemNode,
 				"normalize-space(m:keywords)", XPathConstants.STRING);
-		if ( keywords != null && keywords.length() > 0) {
+		if ( keywords != null && keywords.length() > 0 ) {
 			List<UserTag> tagList = item.getUserTag();
 			UserTag tag = null;
 			for ( UserTag userTag : tagList ) {
@@ -439,15 +442,15 @@ class ImportWorkRequest implements WorkRequest {
 			}
 			tag.setTag(keywords);
 		}
-		
+
 		// handle metadata
-		NodeList metaNodeList = (NodeList)ioBizImpl.getXmlHelper().evaluateXPath(itemNode,
-				"m:meta", XPathConstants.NODESET);
+		NodeList metaNodeList = (NodeList) ioBizImpl.getXmlHelper().evaluateXPath(itemNode, "m:meta",
+				XPathConstants.NODESET);
 		if ( metaNodeList.getLength() > 0 ) {
 			List<Metadata> metaList = item.getMetadata();
 			Map<String, Element> metaElementMap = new LinkedHashMap<String, Element>();
 			for ( int nodeIdx = 0; nodeIdx < metaNodeList.getLength(); nodeIdx++ ) {
-				Element elem = (Element)metaNodeList.item(nodeIdx);
+				Element elem = (Element) metaNodeList.item(nodeIdx);
 				metaElementMap.put(elem.getAttribute("name"), elem);
 			}
 			for ( Metadata meta : metaList ) {
@@ -473,11 +476,11 @@ class ImportWorkRequest implements WorkRequest {
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private Album handleAutoAlbum(String[] albumNames, MediaItem item) {
 		Album album = null;
-		if ( albumNames != null && albumNames.length > 1 ) {				
+		if ( albumNames != null && albumNames.length > 1 ) {
 			StringBuilder buf = new StringBuilder(albumNames[0]);
 			for ( int i = 1, len = albumNames.length - 1; i < len; i++ ) {
 				buf.append('/').append(albumNames[i]);
@@ -485,25 +488,25 @@ class ImportWorkRequest implements WorkRequest {
 			String archiveAlbumPath = buf.toString();
 			if ( archiveAlbumPathMapping.containsKey(archiveAlbumPath) ) {
 				album = ioBizImpl.getAlbumDao().get(archiveAlbumPathMapping.get(archiveAlbumPath));
-			} else {						
+			} else {
 				// get the root album
-				List<Album> albums = ioBizImpl.getAlbumDao().findAlbumsForUserAndName(
-						collectionOwner.getUserId(), albumNames[0]);
+				List<Album> albums = ioBizImpl.getAlbumDao()
+						.findAlbumsForUserAndName(collectionOwner.getUserId(), albumNames[0]);
 				if ( albums.size() < 1 ) {
 					// create new album
 					album = ioBizImpl.getDomainObjectFactory().newAlbumInstance();
 					album.setOwner(collectionOwner);
 					album.setName(albumNames[0]);
-					album = ioBizImpl.getAlbumDao().get(ioBizImpl.getMediaBiz().storeAlbum(
-							album, context));
+					album = ioBizImpl.getAlbumDao()
+							.get(ioBizImpl.getMediaBiz().storeAlbum(album, context));
 				} else {
 					album = albums.get(0);
 				}
-				
+
 				for ( int i = 1; i < albumNames.length - 1; i++ ) {
 					String oneAlbumName = albumNames[i];
 					Album childAlbum = null;
-					for ( Album oneChildAlbum : (List<Album>)album.getAlbum() ) {
+					for ( Album oneChildAlbum : (List<Album>) album.getAlbum() ) {
 						if ( oneAlbumName.equals(oneChildAlbum.getName()) ) {
 							childAlbum = oneChildAlbum;
 							break;
@@ -514,8 +517,8 @@ class ImportWorkRequest implements WorkRequest {
 						childAlbum = ioBizImpl.getDomainObjectFactory().newAlbumInstance();
 						childAlbum.setOwner(collectionOwner);
 						childAlbum.setName(oneAlbumName);
-						childAlbum = ioBizImpl.getAlbumDao().get(ioBizImpl.getMediaBiz().storeAlbum(
-								childAlbum, context));
+						childAlbum = ioBizImpl.getAlbumDao()
+								.get(ioBizImpl.getMediaBiz().storeAlbum(childAlbum, context));
 						album.getAlbum().add(childAlbum);
 						ioBizImpl.getAlbumDao().store(album);
 					}
@@ -529,7 +532,7 @@ class ImportWorkRequest implements WorkRequest {
 		if ( album != null ) {
 			// only add to album if not already there
 			boolean found = false;
-			for ( MediaItem albumItem : (List<MediaItem>)album.getItem() ) {
+			for ( MediaItem albumItem : (List<MediaItem>) album.getItem() ) {
 				if ( albumItem.getPath().equals(item.getPath()) ) {
 					found = true;
 					break;
@@ -543,20 +546,18 @@ class ImportWorkRequest implements WorkRequest {
 		}
 		return album;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private MediaItem handleNewMediaItem(File mediaFile) throws Exception {
 		if ( !ioBizImpl.getMediaBiz().isFileSupported(mediaFile) ) {
-			this.errors.add(ioBizImpl.getMessages().getMessage(
-					"media.not.supported",
-					new Object[]{mediaFile.getName()},
-					"The media file [" +mediaFile.getName() 
-					+"] is not a supported type.",
+			this.errors.add(ioBizImpl.getMessages().getMessage("media.not.supported",
+					new Object[] { mediaFile.getName() },
+					"The media file [" + mediaFile.getName() + "] is not a supported type.",
 					context.getLocale()));
 			mediaFile.delete();
 			if ( ioBizImpl.log.isDebugEnabled() ) {
-				ioBizImpl.log.debug("ERROR importing media item: The media file [" 
-						+mediaFile.getName() +"] is not a supported type.");
+				ioBizImpl.log.debug("ERROR importing media item: The media file [" + mediaFile.getName()
+						+ "] is not a supported type.");
 			}
 			return null;
 		}
@@ -568,7 +569,7 @@ class ImportWorkRequest implements WorkRequest {
 		}
 		item.setFileSize(mediaFile.length());
 		item.setHits(0);
-		
+
 		// set the path using URLs so path normalized between OSes
 		URI fileUri = collectionDirURI.relativize(mediaFile.toURI());
 		String path = URLDecoder.decode(fileUri.toString(), "UTF-8");
@@ -576,9 +577,9 @@ class ImportWorkRequest implements WorkRequest {
 		if ( item.getName() == null ) {
 			item.setName(StringUtils.getFilename(path));
 		}
-		
+
 		//item.setCollection(collection);
-		
+
 		// set the time zones
 		if ( StringUtils.hasText(command.getMediaTz()) ) {
 			item.setTz(ioBizImpl.getSystemBiz().getTimeZoneForCode(command.getMediaTz()));
@@ -590,7 +591,7 @@ class ImportWorkRequest implements WorkRequest {
 		} else {
 			item.setTzDisplay(collectionOwner.getTz());
 		}
-		
+
 		// the item's date is in the server's local time zone
 		// so adjust it to the specified media tz if available
 		if ( item.getItemDate() != null ) {
@@ -600,13 +601,13 @@ class ImportWorkRequest implements WorkRequest {
 				DateTimeUtil.adjustItemDateTimeZone(item, mediaTz, displayTz);
 			}
 		}
-		
+
 		// see if this item is actually already saved, via the path
-		MediaItem currItem = ioBizImpl.getMediaItemDao().getItemForPath(
-				collection.getCollectionId(), path);
-		if ( currItem != null) {
+		MediaItem currItem = ioBizImpl.getMediaItemDao().getItemForPath(collection.getCollectionId(),
+				path);
+		if ( currItem != null ) {
 			// item already there, so just copy data to the persisted object for saving
-			
+
 			currItem.setCreationDate(item.getCreationDate());
 			if ( item.getItemDate() != null ) {
 				currItem.setItemDate(item.getItemDate());
@@ -620,7 +621,7 @@ class ImportWorkRequest implements WorkRequest {
 			currItem.setMime(item.getMime());
 			currItem.setTz(item.getTz());
 			currItem.setTzDisplay(item.getTzDisplay());
-			
+
 			item = currItem;
 		} else {
 			collection.getItem().add(item);
@@ -629,8 +630,9 @@ class ImportWorkRequest implements WorkRequest {
 		return item;
 	}
 
+	@Override
 	public float getAmountCompleted() {
 		return amountCompleted;
 	}
-	
+
 }

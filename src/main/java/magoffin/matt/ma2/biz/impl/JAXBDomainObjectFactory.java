@@ -25,6 +25,7 @@
 package magoffin.matt.ma2.biz.impl;
 
 import javax.xml.bind.JAXBException;
+import org.springframework.beans.BeanUtils;
 import magoffin.matt.ma2.biz.DomainObjectFactory;
 import magoffin.matt.ma2.domain.Album;
 import magoffin.matt.ma2.domain.AlbumImportType;
@@ -63,13 +64,12 @@ import magoffin.matt.ma2.domain.UserSearchResult;
 import magoffin.matt.ma2.domain.UserTag;
 import magoffin.matt.xweb.XAppContext;
 import magoffin.matt.xweb.XwebParameter;
-import org.springframework.beans.BeanUtils;
 
 /**
  * JAXB implementation of {@link magoffin.matt.ma2.biz.DomainObjectFactory}.
  * 
  * @author matt.magoffin
- * @version 1.0
+ * @version 1.1
  */
 public class JAXBDomainObjectFactory implements DomainObjectFactory {
 
@@ -82,6 +82,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 			"userRating", "userTag" };
 	private final String[] userPropertiesDoNotClone = new String[0];
 
+	@Override
 	public Album newAlbumInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createAlbum();
@@ -90,6 +91,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public AlbumImportType newAlbumImportTypeInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createAlbumImportType();
@@ -98,6 +100,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public AlbumSearchResult newAlbumSearchResultInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createAlbumSearchResult();
@@ -106,6 +109,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public Collection newCollectionInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createCollection();
@@ -114,6 +118,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public CollectionImport newCollectionImportInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createCollectionImport();
@@ -122,6 +127,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public User newUserInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createUser();
@@ -130,6 +136,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public UserSearchResult newUserSearchResultInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createUserSearchResult();
@@ -138,6 +145,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public MediaItemSearchResult newMediaItemSearchResultInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createMediaItemSearchResult();
@@ -146,6 +154,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public XAppContext newXAppContextInstance() {
 		try {
 			return XWEB_OBJECT_FACTORY.createXAppContext();
@@ -154,6 +163,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public Edit newEditInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createEdit();
@@ -162,6 +172,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public JobInfo newJobInfoInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createJobInfo();
@@ -170,6 +181,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public MediaItem newMediaItemInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createMediaItem();
@@ -178,6 +190,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public MediaSpec newMediaSpecInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createMediaSpec();
@@ -186,6 +199,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public MediaSizeDefinition newMediaSizeDefinitionInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createMediaSizeDefinition();
@@ -194,6 +208,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public Metadata newMetadataInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createMetadata();
@@ -202,6 +217,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public MetadataImportType newMetadataImportTypeInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createMetadataImportType();
@@ -210,6 +226,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public Model newModelInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createModel();
@@ -218,6 +235,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public Session newSessionInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createSession();
@@ -226,6 +244,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public SharedAlbumSearchResult newSharedAlbumSearchResultInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createSharedAlbumSearchResult();
@@ -234,6 +253,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public TimeZone newTimeZoneInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createTimeZone();
@@ -242,6 +262,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public MediaItemRating newMediaItemRatingInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createMediaItemRating();
@@ -250,6 +271,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public Theme newThemeInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createTheme();
@@ -258,6 +280,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public PaginationCriteria newPaginationCriteriaInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createPaginationCriteria();
@@ -266,6 +289,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public PaginationIndex newPaginationIndexInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createPaginationIndex();
@@ -274,6 +298,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public PaginationIndexSection newPaginationIndexSectionInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createPaginationIndexSection();
@@ -282,6 +307,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public PosterSearchResult newPosterSearchResultInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createPosterSearchResult();
@@ -290,6 +316,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public SearchResults newSearchResultsInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createSearchResults();
@@ -298,6 +325,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public UserComment newUserCommentInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createUserComment();
@@ -306,6 +334,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public UserTag newUserTagInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createUserTag();
@@ -314,6 +343,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public KeyNameType newKeyNameTypeInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createKeyNameType();
@@ -322,6 +352,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public Locale newLocaleInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createLocale();
@@ -330,6 +361,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public XwebParameter newXwebParameterInstance() {
 		try {
 			return XWEB_OBJECT_FACTORY.createXwebParameter();
@@ -338,6 +370,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public GetCollectionListRequest newGetCollectionListRequestInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createGetCollectionListRequest();
@@ -346,6 +379,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public GetCollectionListResponse newGetCollectionListResponseInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createGetCollectionListResponse();
@@ -354,6 +388,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public ItemImportType newItemImportTypeInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createItemImportType();
@@ -362,6 +397,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public CollectionListItemType newCollectionListItemTypeInstance() {
 		try {
 			return MA2_OBJECT_FACTORY.createCollectionListItemType();
@@ -370,6 +406,7 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 		}
 	}
 
+	@Override
 	public Object clone(Object original) {
 		if ( original == null ) {
 			return null;
@@ -385,8 +422,8 @@ public class JAXBDomainObjectFactory implements DomainObjectFactory {
 			return clone((Album) original);
 		}
 
-		throw new IllegalArgumentException("The object [" + original.getClass().getName()
-				+ "] is not supported for cloneing.");
+		throw new IllegalArgumentException(
+				"The object [" + original.getClass().getName() + "] is not supported for cloneing.");
 	}
 
 	@SuppressWarnings("unchecked")

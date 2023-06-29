@@ -30,24 +30,24 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import magoffin.matt.dao.BasicIndexData;
-import magoffin.matt.dao.hbm.GenericIndexableHibernateDao;
-import magoffin.matt.ma2.dao.AlbumDao;
-import magoffin.matt.ma2.domain.Album;
-import magoffin.matt.ma2.domain.MediaItem;
-import magoffin.matt.ma2.domain.Theme;
 import org.hibernate.CacheMode;
 import org.hibernate.HibernateException;
 import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
+import magoffin.matt.dao.BasicIndexData;
+import magoffin.matt.dao.hbm.GenericIndexableHibernateDao;
+import magoffin.matt.ma2.dao.AlbumDao;
+import magoffin.matt.ma2.domain.Album;
+import magoffin.matt.ma2.domain.MediaItem;
+import magoffin.matt.ma2.domain.Theme;
 
 /**
  * Hibernate implementation of {@link magoffin.matt.ma2.dao.AlbumDao}.
  * 
  * @author matt.magoffin
- * @version 1.1
+ * @version 1.2
  */
 public class HibernateAlbumDao extends GenericIndexableHibernateDao<Album, Long> implements AlbumDao {
 
@@ -142,15 +142,18 @@ public class HibernateAlbumDao extends GenericIndexableHibernateDao<Album, Long>
 		callbackData.setId(new Long(rs.getLong(getIndexObjectIdColumnName())));
 	}
 
+	@Override
 	public List<Album> findAlbumsForUser(Long userId) {
 		return findByNamedQuery(QUERY_ALBUMS_FOR_USER_ID, new Object[] { userId });
 	}
 
+	@Override
 	public List<Album> findAlbumsForUserAndName(Long userId, String name) {
 		return findByNamedQuery(QUERY_ALBUMS_FOR_USER_ID_AND_NAME,
 				new Object[] { userId, name.toLowerCase() });
 	}
 
+	@Override
 	public Album getParentAlbum(Long childAlbumId) {
 		List<Album> results = findByNamedQuery(QUERY_PARENT_ALBUM_FOR_ALBUM,
 				new Object[] { childAlbumId });
@@ -171,12 +174,14 @@ public class HibernateAlbumDao extends GenericIndexableHibernateDao<Album, Long>
 		super.delete(domainObject);
 	}
 
+	@Override
 	public List<Album> findSharedAlbumsContainingItem(MediaItem item) {
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
 		params.put(QUERY_PARAM_ITEM_ID, item.getItemId());
 		return findByNamedQuery(QUERY_SHARED_ALBUMS_FOR_MEDIA_ITEM, params);
 	}
 
+	@Override
 	public List<Album> findAlbumsForUserByDate(Long userId, Calendar since, boolean anonymousOnly,
 			boolean browseOnly, boolean feedOnly) {
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
@@ -185,6 +190,7 @@ public class HibernateAlbumDao extends GenericIndexableHibernateDao<Album, Long>
 		return findByNamedQuery(QUERY_ALBUMS_FOR_USER_ID_BY_DATE_SINCE, params);
 	}
 
+	@Override
 	public List<Album> findAlbumsForUserByDate(Long userId, int max, boolean anonymousOnly,
 			boolean browseOnly, boolean feedOnly) {
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
@@ -196,6 +202,7 @@ public class HibernateAlbumDao extends GenericIndexableHibernateDao<Album, Long>
 		return findByNamedQuery(queryName, params, 0, max);
 	}
 
+	@Override
 	public Album getAlbumForKey(String anonymousKey) {
 		List<Album> results = findByNamedQuery(QUERY_ALBUM_FOR_KEY, new Object[] { anonymousKey });
 		if ( results.size() < 1 )
@@ -203,6 +210,7 @@ public class HibernateAlbumDao extends GenericIndexableHibernateDao<Album, Long>
 		return results.get(0);
 	}
 
+	@Override
 	public Album getAlbumWithItems(Long albumId) {
 		Album a = get(albumId);
 		if ( a != null ) {
@@ -211,9 +219,11 @@ public class HibernateAlbumDao extends GenericIndexableHibernateDao<Album, Long>
 		return a;
 	}
 
+	@Override
 	public int reassignAlbumsUsingTheme(final Theme oldTheme, final Theme newTheme) {
 		return getHibernateTemplate().execute(new HibernateCallback<Integer>() {
 
+			@Override
 			public Integer doInHibernate(Session session) throws HibernateException, SQLException {
 				ScrollableResults albums = session.getNamedQuery(QUERY_ALBUMS_FOR_THEME_ID)
 						.setLong("themeId", oldTheme.getThemeId()).setCacheMode(CacheMode.IGNORE)

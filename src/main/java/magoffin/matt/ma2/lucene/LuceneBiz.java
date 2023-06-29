@@ -30,6 +30,11 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
+import org.springframework.context.MessageSource;
 import magoffin.matt.lucene.IndexEvent;
 import magoffin.matt.lucene.IndexEvent.EventType;
 import magoffin.matt.lucene.IndexListener;
@@ -51,22 +56,18 @@ import magoffin.matt.ma2.domain.SearchResults;
 import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.domain.UserSearchResult;
 import magoffin.matt.ma2.support.BasicMediaItemSearchCriteria;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TopDocCollector;
-import org.springframework.context.MessageSource;
 
 /**
  * Lucene implementation of SearchBiz and IndexBiz.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.1
+ * @version 1.2
  */
 public class LuceneBiz extends AbstractSearchBiz implements SearchBiz, IndexBiz {
 
-	/** Default value for the {@code reindexWaitForFinishThreadSleep} property. */
+	/**
+	 * Default value for the {@code reindexWaitForFinishThreadSleep} property.
+	 */
 	public static final long DEFAULT_THREAD_SLEEP = 5000;
 
 	private LuceneService lucene;
@@ -76,13 +77,7 @@ public class LuceneBiz extends AbstractSearchBiz implements SearchBiz, IndexBiz 
 	private WorkBiz workBiz;
 	private long reindexWaitForFinishThreadSleep = DEFAULT_THREAD_SLEEP;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.SearchBiz#findUsersForIndex(magoffin.matt.ma2.domain
-	 * .PaginationCriteria, magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public SearchResults findUsersForIndex(final PaginationCriteria pagination, BizContext context) {
 
 		final Set<String> indexKeys = lucene.getFieldTerms(userIndexType,
@@ -93,12 +88,13 @@ public class LuceneBiz extends AbstractSearchBiz implements SearchBiz, IndexBiz 
 
 		lucene.doIndexSearcherOp(userIndexType, new IndexSearcherOp() {
 
-			@SuppressWarnings("unchecked")
+			@Override
+			@SuppressWarnings({ "unchecked", "deprecation" })
 			public void doSearcherOp(String type, IndexSearcher searcher) throws IOException {
 				for ( String indexKey : indexKeys ) {
-					Query indexQuery = new TermQuery(new Term(IndexField.ITEM_INDEX_KEY.getFieldName(),
-							indexKey));
-					TopDocCollector hits = new TopDocCollector(
+					Query indexQuery = new TermQuery(
+							new Term(IndexField.ITEM_INDEX_KEY.getFieldName(), indexKey));
+					org.apache.lucene.search.TopDocCollector hits = new org.apache.lucene.search.TopDocCollector(
 							LuceneSearchService.DEFAULT_MAX_SEARCH_RESULTS);
 					searcher.search(indexQuery, hits);
 					PaginationIndexSection indexSection = getDomainObjectFactory()
@@ -133,6 +129,7 @@ public class LuceneBiz extends AbstractSearchBiz implements SearchBiz, IndexBiz 
 	 * magoffin.matt.ma2.domain.PaginationCriteria,
 	 * magoffin.matt.ma2.biz.BizContext)
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public SearchResults findMediaItems(MediaItemSearchCriteria criteria, PaginationCriteria pagination,
 			BizContext context) {
@@ -183,26 +180,32 @@ public class LuceneBiz extends AbstractSearchBiz implements SearchBiz, IndexBiz 
 		return results;
 	}
 
+	@Override
 	public void indexUser(Long userId) {
 		lucene.indexObjectById(userIndexType, userId);
 	}
 
+	@Override
 	public WorkInfo recreateUserIndex(BizContext context) {
 		return workBiz.submitWork(new ReindexWorkRequest(context, userIndexType));
 	}
 
+	@Override
 	public void removeUserFromIndex(Long userId) {
 		lucene.deleteObjectById(userIndexType, userId);
 	}
 
+	@Override
 	public void indexMediaItem(Long itemId) {
 		lucene.indexObjectById(mediaItemIndexType, itemId);
 	}
 
+	@Override
 	public WorkInfo recreateMediaItemIndex(BizContext context) {
 		return workBiz.submitWork(new ReindexWorkRequest(context, mediaItemIndexType));
 	}
 
+	@Override
 	public void removeMediaItemFromIndex(Long itemId) {
 		lucene.deleteObjectById(mediaItemIndexType, itemId);
 	}
@@ -219,43 +222,52 @@ public class LuceneBiz extends AbstractSearchBiz implements SearchBiz, IndexBiz 
 			this.indexType = indexType;
 		}
 
+		@Override
 		public String getDisplayName() {
-			return messages.getMessage("reindex.work.displayName", null, "Reindexing [" + this.indexType
-					+ "]", context.getLocale());
+			return messages.getMessage("reindex.work.displayName", null,
+					"Reindexing [" + this.indexType + "]", context.getLocale());
 		}
 
+		@Override
 		public String getMessage() {
 			Object[] args = new Object[] { 0 };
 			if ( this.indexingCallback != null && this.indexingCallback.getIndexResults() != null ) {
 				args[0] = this.indexingCallback.getIndexResults().getNumProcessed();
 			}
-			return messages.getMessage("reindex.work.message", args, "Reindexing [" + this.indexType
-					+ "]", context.getLocale());
+			return messages.getMessage("reindex.work.message", args,
+					"Reindexing [" + this.indexType + "]", context.getLocale());
 		}
 
+		@Override
 		public Integer getPriority() {
 			return WorkBiz.DEFAULT_PRIORITY;
 		}
 
+		@Override
 		public List<Long> getObjectIdList() {
 			return Collections.unmodifiableList(this.updatedObjectIds);
 		}
 
+		@Override
 		public boolean canStart() {
 			return true;
 		}
 
+		@Override
 		public boolean isTransactional() {
 			// transactions managed not by work biz, but by BatchableDao
 			return false;
 		}
 
+		@Override
 		public void startWork() throws Exception {
 			final Set<Long> updatedIds = new LinkedHashSet<Long>();
 			IndexListener listener = new IndexListener() {
 
+				@Override
 				public void onIndexEvent(IndexEvent event) {
-					if ( event.getType() == EventType.UPDATE && indexType.equals(event.getIndexType()) ) {
+					if ( event.getType() == EventType.UPDATE
+							&& indexType.equals(event.getIndexType()) ) {
 						Object source = event.getSource();
 						if ( source instanceof Long ) {
 							updatedIds.add((Long) source);
@@ -282,6 +294,7 @@ public class LuceneBiz extends AbstractSearchBiz implements SearchBiz, IndexBiz 
 			}
 		}
 
+		@Override
 		public float getAmountCompleted() {
 			return this.indexingCallback != null && this.indexingCallback.getIndexResults() != null
 					&& this.indexingCallback.getIndexResults().isFinished() ? 1 : 0;

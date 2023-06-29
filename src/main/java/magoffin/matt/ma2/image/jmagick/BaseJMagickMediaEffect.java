@@ -24,6 +24,7 @@
 
 package magoffin.matt.ma2.image.jmagick;
 
+import org.apache.log4j.Logger;
 import magick.ImageInfo;
 import magick.MagickImage;
 import magoffin.matt.ma2.MediaRequest;
@@ -31,39 +32,36 @@ import magoffin.matt.ma2.MediaResponse;
 import magoffin.matt.ma2.biz.MediaBiz;
 import magoffin.matt.ma2.domain.MediaItem;
 
-import org.apache.log4j.Logger;
-
 /**
- * Base implementation of {@link magoffin.matt.ma2.image.jmagick.JMagickMediaEffect}.
+ * Base implementation of
+ * {@link magoffin.matt.ma2.image.jmagick.JMagickMediaEffect}.
  * 
- * <p>The configurable properties of this class are:</p>
+ * <p>
+ * The configurable properties of this class are:
+ * </p>
  * 
  * <dl class="class-properties">
- *   <dt>mediaBiz</dt>
- *   <dd>The {@link MediaBiz} implementation to use.</dd>
+ * <dt>mediaBiz</dt>
+ * <dd>The {@link MediaBiz} implementation to use.</dd>
  * </dl>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public abstract class BaseJMagickMediaEffect implements JMagickMediaEffect {
 
 	/** A class logger. */
 	protected final Logger log = Logger.getLogger(getClass());
-	
+
 	private MediaBiz mediaBiz;
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaEffect#apply(magoffin.matt.ma2.domain.MediaItem, magoffin.matt.ma2.MediaRequest, magoffin.matt.ma2.MediaResponse)
-	 */
+
+	@Override
 	public void apply(MediaItem item, MediaRequest request, MediaResponse response) {
-		MagickImage source = (MagickImage)request.getParameters().get(
-				OUTPUT_MAGICK_IMAGE_KEY);
+		MagickImage source = (MagickImage) request.getParameters().get(OUTPUT_MAGICK_IMAGE_KEY);
 		if ( source == null ) {
 			throw new RuntimeException("MagickImage not available on request");
 		}
-		ImageInfo info = (ImageInfo)request.getParameters().get(
-				INPUT_IMAGE_INFO_KEY);
+		ImageInfo info = (ImageInfo) request.getParameters().get(INPUT_IMAGE_INFO_KEY);
 		if ( info == null ) {
 			throw new RuntimeException("ImageInfo not available on request");
 		}
@@ -77,12 +75,13 @@ public abstract class BaseJMagickMediaEffect implements JMagickMediaEffect {
 	public MediaBiz getMediaBiz() {
 		return mediaBiz;
 	}
-	
+
 	/**
-	 * @param mediaBiz The mediaBiz to set.
+	 * @param mediaBiz
+	 *        The mediaBiz to set.
 	 */
 	public void setMediaBiz(MediaBiz mediaBiz) {
 		this.mediaBiz = mediaBiz;
 	}
-	
+
 }

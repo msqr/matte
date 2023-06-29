@@ -25,19 +25,21 @@
 package magoffin.matt.ma2.domain.support;
 
 import java.io.IOException;
-import magoffin.matt.ma2.domain.Metadata;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer;
+import magoffin.matt.ma2.domain.Metadata;
 
 /**
  * JSON serializer for {@link Metadata} objects.
  *
  * @author matt
- * @version 1.0
+ * @version 1.1
  */
 public class MetadataSerializer extends StdScalarSerializer<Metadata> {
+
+	private static final long serialVersionUID = 2007074971687971289L;
 
 	/**
 	 * Default constructor.

@@ -28,7 +28,6 @@ import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-
 import magoffin.matt.ma2.MediaEffect;
 import magoffin.matt.ma2.MediaRequest;
 import magoffin.matt.ma2.domain.MediaItem;
@@ -37,71 +36,68 @@ import magoffin.matt.ma2.support.Geometry;
 /**
  * Effect that scales an image to the size specified on the request.
  * 
- * <p>Note this effect assumes a rotate effect has not been applied
- * before this effect is applied.</p>
+ * <p>
+ * Note this effect assumes a rotate effect has not been applied before this
+ * effect is applied.
+ * </p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class ScaleEffect extends BaseAwtMediaEffect {
-	
+
 	/**
 	 * The default <code>RenderingHints</code> applied to the scale operation.
 	 * 
-	 * <p>The default hins contain:</p>
+	 * <p>
+	 * The default hins contain:
+	 * </p>
 	 * 
-	 *  <dl class="class-properties">
-	 *    <dt><code>RenderingHints.KEY_INTERPOLATION</code></dt>
-	 *    <dd><code>RenderingHints.VALUE_INTERPOLATION_BICUBIC</code></dd>
-	 *  </dl>
+	 * <dl class="class-properties">
+	 * <dt><code>RenderingHints.KEY_INTERPOLATION</code></dt>
+	 * <dd><code>RenderingHints.VALUE_INTERPOLATION_BICUBIC</code></dd>
+	 * </dl>
 	 */
 	public static final RenderingHints DEFAULT_RENDERING_HINTS = new RenderingHints(
-			RenderingHints.KEY_INTERPOLATION,
-			RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-	
+			RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+
 	/**
 	 * The key for this effect.
 	 */
-	public static final String SCALE_KEY = "image.awt." +MediaEffect.KEY_SCALE;
-	
+	public static final String SCALE_KEY = "image.awt." + MediaEffect.KEY_SCALE;
+
 	private RenderingHints renderingHints = DEFAULT_RENDERING_HINTS;
-	
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.image.awt.AwtMediaEffect#applyEffect(magoffin.matt.ma2.domain.MediaItem, magoffin.matt.ma2.MediaRequest, java.awt.image.BufferedImage)
-	 */
+
+	@Override
 	public BufferedImage applyEffect(MediaItem item, MediaRequest request, BufferedImage source) {
 		Geometry geometry = getMediaBiz().getScaledGeometry(item, request);
-		
+
 		// this assumes rotate has NOT been applied yet!
-		
+
 		int width = geometry.getWidth();
 		int height = geometry.getHeight();
-		
-		if ( width != source.getWidth() || height != source.getHeight() ) {	
-			double sx = (double)width / (double)source.getWidth();
-			double sy = (double)height / (double)source.getHeight();
-			
-			AffineTransformOp op = new AffineTransformOp(
-					AffineTransform.getScaleInstance(sx,sy), renderingHints);
+
+		if ( width != source.getWidth() || height != source.getHeight() ) {
+			double sx = (double) width / (double) source.getWidth();
+			double sy = (double) height / (double) source.getHeight();
+
+			AffineTransformOp op = new AffineTransformOp(AffineTransform.getScaleInstance(sx, sy),
+					renderingHints);
 			if ( log.isDebugEnabled() ) {
-				log.debug("Applying scale effect on item [" +item.getItemId() +"] from " 
-						+item.getWidth() +"x" +item.getHeight()
-						+" to " +width +"x" +height);
+				log.debug("Applying scale effect on item [" + item.getItemId() + "] from "
+						+ item.getWidth() + "x" + item.getHeight() + " to " + width + "x" + height);
 			}
-			BufferedImage result = op.filter(source,null);
+			BufferedImage result = op.filter(source, null);
 			if ( log.isDebugEnabled() ) {
-				log.debug("Scale effect complete on item [" +item.getItemId() 
-						+"] to " 
-						+result.getWidth() +"x" +result.getHeight());
+				log.debug("Scale effect complete on item [" + item.getItemId() + "] to "
+						+ result.getWidth() + "x" + result.getHeight());
 			}
 			return result;
 		}
 		return source;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaEffect#getKey()
-	 */
+	@Override
 	public String getKey() {
 		return SCALE_KEY;
 	}
@@ -112,9 +108,10 @@ public class ScaleEffect extends BaseAwtMediaEffect {
 	public RenderingHints getRenderingHints() {
 		return renderingHints;
 	}
-	
+
 	/**
-	 * @param renderingHints The renderingHints to set.
+	 * @param renderingHints
+	 *        The renderingHints to set.
 	 */
 	public void setRenderingHints(RenderingHints renderingHints) {
 		this.renderingHints = renderingHints;

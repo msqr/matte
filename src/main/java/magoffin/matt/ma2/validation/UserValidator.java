@@ -24,29 +24,28 @@
 
 package magoffin.matt.ma2.validation;
 
-import magoffin.matt.ma2.domain.User;
-
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+import magoffin.matt.ma2.domain.User;
 
 /**
  * Validation for a user object.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class UserValidator implements Validator {
 
+	@Override
 	public boolean supports(@SuppressWarnings("rawtypes") Class clazz) {
 		return User.class.isAssignableFrom(clazz);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
-	 */
+	@Override
 	public void validate(Object obj, Errors errors) {
-		User user = (User)obj;
-		if ( user == null ) return;
+		User user = (User) obj;
+		if ( user == null )
+			return;
 		if ( user.getName() == null || user.getName().trim().length() < 1 ) {
 			errors.rejectValue("user.name", "error.required", null, "name.displayName");
 		}

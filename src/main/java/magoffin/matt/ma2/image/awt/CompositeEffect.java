@@ -27,11 +27,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageReader;
-
 import org.springframework.core.io.Resource;
-
 import magoffin.matt.ma2.MediaEffect;
 import magoffin.matt.ma2.MediaRequest;
 import magoffin.matt.ma2.domain.MediaItem;
@@ -42,25 +39,21 @@ import magoffin.matt.ma2.image.ImageMediaHelper;
  * image on top of the media image.
  * 
  * @author matt.magoffin
- * @version 1.0
+ * @version 1.1
  */
 public class CompositeEffect extends BaseAwtMediaEffect {
 
 	/**
 	 * The key for this effect.
 	 */
-	public static final String COMPOSITE_KEY 
-		= "image.awt.composite." +MediaEffect.KEY_WATERMARK;
+	public static final String COMPOSITE_KEY = "image.awt.composite." + MediaEffect.KEY_WATERMARK;
 
 	private ImageMediaHelper imageMediaHelper = null;
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.image.awt.AwtMediaEffect#applyEffect(magoffin.matt.ma2.domain.MediaItem, magoffin.matt.ma2.MediaRequest, java.awt.image.BufferedImage)
-	 */
-	public BufferedImage applyEffect(MediaItem item, MediaRequest request,
-			BufferedImage source) {
-		Resource watermarkResource = (Resource)request.getParameters().get(
-				MediaEffect.MEDIA_REQUEST_PARAM_WATERMARK_RESOURCE);
+	@Override
+	public BufferedImage applyEffect(MediaItem item, MediaRequest request, BufferedImage source) {
+		Resource watermarkResource = (Resource) request.getParameters()
+				.get(MediaEffect.MEDIA_REQUEST_PARAM_WATERMARK_RESOURCE);
 		if ( watermarkResource == null || !watermarkResource.exists() ) {
 			return source;
 		}
@@ -77,23 +70,19 @@ public class CompositeEffect extends BaseAwtMediaEffect {
 		int wmY = source.getHeight() - watermark.getHeight();
 
 		if ( log.isDebugEnabled() ) {
-			log.debug("Setting composite watermark for item [" 
-					+request.getMediaItemId() +']');
+			log.debug("Setting composite watermark for item [" + request.getMediaItemId() + ']');
 		}
 		Graphics2D g = source.createGraphics();
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
 		g.drawImage(watermark, wmX, wmY, null);
 		g.dispose();
 		if ( log.isDebugEnabled() ) {
-			log.debug("Composite watermark complete for item [" 
-					+request.getMediaItemId() +']');
+			log.debug("Composite watermark complete for item [" + request.getMediaItemId() + ']');
 		}
 		return source;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.MediaEffect#getKey()
-	 */
+	@Override
 	public String getKey() {
 		return COMPOSITE_KEY;
 	}
@@ -106,7 +95,8 @@ public class CompositeEffect extends BaseAwtMediaEffect {
 	}
 
 	/**
-	 * @param imageMediaHelper the imageMediaHelper to set
+	 * @param imageMediaHelper
+	 *        the imageMediaHelper to set
 	 */
 	public void setImageMediaHelper(ImageMediaHelper imageMediaHelper) {
 		this.imageMediaHelper = imageMediaHelper;

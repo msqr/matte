@@ -38,14 +38,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import magoffin.matt.ma2.MediaEffect;
-import magoffin.matt.ma2.MediaRequest;
-import magoffin.matt.ma2.MediaResponse;
-import magoffin.matt.ma2.MediaSize;
-import magoffin.matt.ma2.biz.MediaBiz;
-import magoffin.matt.ma2.domain.MediaItem;
-import magoffin.matt.ma2.image.BaseImageMediaHandler;
-import magoffin.matt.ma2.support.Geometry;
 import org.im4java.core.ConvertCmd;
 import org.im4java.core.IM4JavaException;
 import org.im4java.core.IMOperation;
@@ -55,6 +47,14 @@ import org.im4java.process.ArrayListOutputConsumer;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
+import magoffin.matt.ma2.MediaEffect;
+import magoffin.matt.ma2.MediaRequest;
+import magoffin.matt.ma2.MediaResponse;
+import magoffin.matt.ma2.MediaSize;
+import magoffin.matt.ma2.biz.MediaBiz;
+import magoffin.matt.ma2.domain.MediaItem;
+import magoffin.matt.ma2.image.BaseImageMediaHandler;
+import magoffin.matt.ma2.support.Geometry;
 
 /**
  * Base implementation of {@link magoffin.matt.ma2.MediaHandler} that uses the
@@ -101,7 +101,7 @@ import org.springframework.util.FileCopyUtils;
  * </dl>
  *
  * @author matt
- * @version 1.1
+ * @version 1.2
  */
 public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 
@@ -143,6 +143,7 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 	 * {@link #handleMetadata(MediaRequest, Resource, MediaItem)}.
 	 * </p>
 	 */
+	@Override
 	public MediaItem createNewMediaItem(File inputFile) {
 		MediaItem item = getDomainObjectFactory().newMediaItemInstance();
 		try {
@@ -166,6 +167,7 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 	 * {@link #defaultHandleRequest(MediaItem, MediaRequest, MediaResponse)}.
 	 * </p>
 	 */
+	@Override
 	public void handleMediaRequest(MediaItem item, MediaRequest request, MediaResponse response) {
 		defaultHandleRequest(item, request, response);
 	}
@@ -188,8 +190,8 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 	 * @throws IOException
 	 *         if an IO error occurs
 	 */
-	protected void setupBaseItemProperties(MediaItem item, File inputFile) throws IM4JavaException,
-			InterruptedException, IOException {
+	protected void setupBaseItemProperties(MediaItem item, File inputFile)
+			throws IM4JavaException, InterruptedException, IOException {
 		ArrayListOutputConsumer result = new ArrayListOutputConsumer();
 		IdentifyCmd cmd = new IdentifyCmd();
 		IMOperation op = new IMOperation();
@@ -308,8 +310,8 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 			IMOperation baseOperation = new IMOperation();
 
 			// if a scale effect has been used, add a size hint to efficiently read large images
-			if ( (useSizeHint || useJpegSizeHint)
-					&& (geometry.getWidth() < item.getWidth() || geometry.getHeight() < item.getHeight()) ) {
+			if ( (useSizeHint || useJpegSizeHint) && (geometry.getWidth() < item.getWidth()
+					|| geometry.getHeight() < item.getHeight()) ) {
 				int hintWidth = geometry.getWidth() * 2;
 				int hintHeight = geometry.getHeight() * 2;
 				if ( useSizeHint ) {
@@ -364,14 +366,14 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 				if ( cmdItr.hasNext() ) {
 					// we still have other secondary commands to process, so use a
 					// temporary MIFF file to hold the intermediate transformation
-					secondaryOutFile = File.createTempFile("IM4JavaTemp-"
-							+ secondaryCmd.getCommand().getCommand() + "-", ".miff");
+					secondaryOutFile = File.createTempFile(
+							"IM4JavaTemp-" + secondaryCmd.getCommand().getCommand() + "-", ".miff");
 				} else if ( request.getParameters().containsKey(MediaRequest.OUTPUT_FILE_KEY) ) {
 					secondaryOutFile = (File) request.getParameters().get(MediaRequest.OUTPUT_FILE_KEY);
 				} else {
 					// use temp file with desired output encoding
-					secondaryOutFile = File.createTempFile("IM4JavaTemp-encode-", "."
-							+ getFileExtension(item, request));
+					secondaryOutFile = File.createTempFile("IM4JavaTemp-encode-",
+							"." + getFileExtension(item, request));
 				}
 
 				IMOperation secondaryOp = new IMOperation();
@@ -388,9 +390,8 @@ public abstract class BaseIM4JavaMediaHandler extends BaseImageMediaHandler {
 						secondaryOutFile.getAbsolutePath());
 
 				/*
-				 * if (
-				 * !request.getParameters().containsKey(MediaRequest.OUTPUT_FILE_KEY
-				 * ) ) { secondaryOutFile =
+				 * if ( !request.getParameters().containsKey(MediaRequest.
+				 * OUTPUT_FILE_KEY ) ) { secondaryOutFile =
 				 * (File)request.getParameters().get(MediaRequest
 				 * .OUTPUT_FILE_KEY); } else { // use temp file with desired
 				 * output encoding secondaryOutFile =

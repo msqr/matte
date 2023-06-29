@@ -22,28 +22,26 @@
 
 package magoffin.matt.ma2.validation;
 
-import magoffin.matt.ma2.support.LogonCommand;
-
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+import magoffin.matt.ma2.support.LogonCommand;
 
 /**
  * Validator for LogonCommand objects.
  * 
  * @author Matt Magoffin (mmagoffi@yahoo.com)
- * @version 1.0
+ * @version 1.1
  */
 public class LogonValidator implements Validator {
 
+	@Override
 	public boolean supports(@SuppressWarnings("rawtypes") Class clazz) {
 		return LogonCommand.class.isAssignableFrom(clazz);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
-	 */
+	@Override
 	public void validate(Object obj, Errors errors) {
-		LogonCommand logon = (LogonCommand)obj;
+		LogonCommand logon = (LogonCommand) obj;
 		if ( logon.getLogin() == null || logon.getLogin().trim().length() < 1 ) {
 			errors.rejectValue("login", "error.required", null, "login.displayName");
 		}

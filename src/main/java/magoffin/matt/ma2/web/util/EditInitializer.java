@@ -32,33 +32,31 @@ import magoffin.matt.xweb.util.DynamicInitializer;
  * DynamicInitializer for {@link Album} albums.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class EditInitializer implements DynamicInitializer {
-	
+
 	private DomainObjectFactory domainObjectFactory;
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.xweb.util.DynamicInitializer#newInstance(java.lang.Object, java.lang.String)
-	 */
+	@Override
 	public Object newInstance(Object bean, String property) {
 		if ( property.equals("uiMetadata") ) {
 			return domainObjectFactory.newMetadataInstance();
 		}
-		throw new UnsupportedOperationException("The property " +property 
-				+" is not supported for " 
-				+(bean == null ? "(null)" : bean.getClass().getName()) );
+		throw new UnsupportedOperationException("The property " + property + " is not supported for "
+				+ (bean == null ? "(null)" : bean.getClass().getName()));
 	}
-	
+
 	/**
 	 * @return the domainObjectFactory
 	 */
 	public DomainObjectFactory getDomainObjectFactory() {
 		return domainObjectFactory;
 	}
-	
+
 	/**
-	 * @param domainObjectFactory the domainObjectFactory to set
+	 * @param domainObjectFactory
+	 *        the domainObjectFactory to set
 	 */
 	public void setDomainObjectFactory(DomainObjectFactory domainObjectFactory) {
 		this.domainObjectFactory = domainObjectFactory;

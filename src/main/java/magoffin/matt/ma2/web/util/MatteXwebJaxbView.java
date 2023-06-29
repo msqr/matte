@@ -30,11 +30,11 @@ import java.util.Map;
 import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.transform.TransformerException;
-import magoffin.matt.xweb.util.ContentTypeResolver;
-import magoffin.matt.xweb.util.XwebJaxbView;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.SimpleTransformErrorListener;
+import magoffin.matt.xweb.util.ContentTypeResolver;
+import magoffin.matt.xweb.util.XwebJaxbView;
 
 /**
  * Extension of {@link XwebJaxbView} to support custom XSLT content types.
@@ -50,11 +50,13 @@ import org.springframework.util.xml.SimpleTransformErrorListener;
  * </p>
  *
  * @author matt
- * @version 1.0
+ * @version 1.1
  */
 public class MatteXwebJaxbView extends XwebJaxbView implements ContentTypeResolver {
 
-	/** The property name for a HTTP Content-Type value to use for the response. */
+	/**
+	 * The property name for a HTTP Content-Type value to use for the response.
+	 */
 	public static final String PROP_HTTP_CONTENT_TYPE = "http.contentType";
 
 	private boolean cacheProperties = true;
@@ -81,6 +83,7 @@ public class MatteXwebJaxbView extends XwebJaxbView implements ContentTypeResolv
 		});
 	}
 
+	@Override
 	public String resolveContentType(HttpServletRequest request, Map<String, ?> model) {
 		if ( propsLoaded == false ) {
 			Properties p = new Properties();

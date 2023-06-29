@@ -26,10 +26,14 @@ package magoffin.matt.ma2.web;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.validation.BindException;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.servlet.ModelAndView;
 import magoffin.matt.ma2.biz.BizContext;
 import magoffin.matt.ma2.biz.UserBiz;
 import magoffin.matt.ma2.domain.Model;
@@ -39,42 +43,36 @@ import magoffin.matt.ma2.web.util.WebConstants;
 import magoffin.matt.util.TemporaryFile;
 import magoffin.matt.util.TemporaryFileMultipartFileEditor;
 
-import org.springframework.context.MessageSourceResolvable;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.ServletRequestDataBinder;
-import org.springframework.web.servlet.ModelAndView;
-
 /**
  * Form controller for editing overall user preferences.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public class PreferencesForm extends AbstractForm {
-	
+
 	private UserBiz userBiz;
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	protected Map referenceData(HttpServletRequest request, Object command, 
-			Errors errors) throws Exception {
+	protected Map referenceData(HttpServletRequest request, Object command, Errors errors)
+			throws Exception {
 		getWebHelper().getBizContext(request, true);
-		
+
 		Model model = getDomainObjectFactory().newModelInstance();
 		model.getTheme().addAll(getSystemBiz().getAvailableThemes());
 		model.getTimeZone().addAll(getSystemBiz().getAvailableTimeZones());
 		model.getLocale().addAll(getSystemBiz().getAvailableLocales());
-		
+
 		Map<String, Object> viewModel = new LinkedHashMap<String, Object>();
 		viewModel.put(WebConstants.DEFALUT_REFERENCE_DATA_OBJECT, model);
 		return viewModel;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected Object formBackingObject(HttpServletRequest request) throws Exception {
-		PreferencesCommand cmd = (PreferencesCommand)super.formBackingObject(request);
+		PreferencesCommand cmd = (PreferencesCommand) super.formBackingObject(request);
 		BizContext context = getWebHelper().getBizContext(request, true);
 		if ( cmd.getThumb() == null ) {
 			cmd.setThumb(context.getActingUser().getThumbnailSetting());
@@ -88,48 +86,49 @@ public class PreferencesForm extends AbstractForm {
 		return cmd;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	protected void initBinder(HttpServletRequest request,
-			ServletRequestDataBinder binder) throws Exception {
+	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder)
+			throws Exception {
 		super.initBinder(request, binder);
-		
+
 		// register our Multipart TemporaryFile binder...
-		binder.registerCustomEditor(TemporaryFile.class, 
-				new TemporaryFileMultipartFileEditor(true));
+		binder.registerCustomEditor(TemporaryFile.class, new TemporaryFileMultipartFileEditor(true));
 	}
-	
+
+	@SuppressWarnings("deprecation")
 	@Override
-	protected ModelAndView onSubmit(HttpServletRequest request, 
-			HttpServletResponse response, Object command, BindException errors) throws Exception {
+	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response,
+			Object command, BindException errors) throws Exception {
 		BizContext context = getWebHelper().getBizContext(request, true);
-		PreferencesCommand cmd = (PreferencesCommand)command;
-		
+		PreferencesCommand cmd = (PreferencesCommand) command;
+
 		// force userId to the current user
 		cmd.setUserId(context.getActingUser().getUserId());
-		
+
 		getUserBiz().storeUserPreferences(cmd, context);
-		
+
 		// reload context user data
 		User user = getUserBiz().getUserById(cmd.getUserId(), context);
 		getWebHelper().saveUserSession(request, user);
 
-		Map<String,Object> model = new LinkedHashMap<String,Object>();
+		Map<String, Object> model = new LinkedHashMap<String, Object>();
 		MessageSourceResolvable msg = new DefaultMessageSourceResolvable(
-				new String[] {"user.prefs.saved"}, null,
-				"The settings have been saved.");
-		model.put(WebConstants.ALERT_MESSAGES_OBJECT,msg);
-		return new ModelAndView(getSuccessView(),model);
+				new String[] { "user.prefs.saved" }, null, "The settings have been saved.");
+		model.put(WebConstants.ALERT_MESSAGES_OBJECT, msg);
+		return new ModelAndView(getSuccessView(), model);
 	}
-	
+
 	/**
 	 * @return the userBiz
 	 */
 	public UserBiz getUserBiz() {
 		return userBiz;
 	}
-	
+
 	/**
-	 * @param userBiz the userBiz to set
+	 * @param userBiz
+	 *        the userBiz to set
 	 */
 	public void setUserBiz(UserBiz userBiz) {
 		this.userBiz = userBiz;

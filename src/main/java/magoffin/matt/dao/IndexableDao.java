@@ -26,22 +26,22 @@ package magoffin.matt.dao;
 
 import java.io.Serializable;
 
-import magoffin.matt.dao.IndexCallback;
-
 /**
  * DAO with indexing support.
  * 
- * @param <PK> the primary key type
+ * @param <PK>
+ *        the primary key type
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.0
+ * @version 1.1
  */
 public interface IndexableDao<PK extends Serializable> {
 
 	/**
 	 * Index domain data.
 	 * 
-	 * @param callback the callback
+	 * @param callback
+	 *        the callback
 	 */
 	void index(IndexCallback<PK> callback);
-	
+
 }

@@ -22,34 +22,31 @@
 
 package magoffin.matt.ma2.dao.support;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import magoffin.matt.ma2.biz.DomainObjectFactory;
 import magoffin.matt.ma2.biz.UserBiz;
 import magoffin.matt.ma2.plugin.BrowseModePlugin;
 import magoffin.matt.ma2.plugin.Plugin;
 import magoffin.matt.ma2.support.AbstractPlugin;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-
 /**
  * Base class for JDBC based implementations of {@link BrowseModePlugin}.
  * 
- * <p>The class is a useful class to extend for JDBC-based implementations of
- * the {@link BrowseModePlugin} API. This class provides a common framework for 
- * initializing the plugin instance with a Spring context file. 
+ * <p>
+ * The class is a useful class to extend for JDBC-based implementations of the
+ * {@link BrowseModePlugin} API. This class provides a common framework for
+ * initializing the plugin instance with a Spring context file.
  * 
  * @author matt.magoffin
- * @version 1.0
+ * @version 1.1
  */
-public abstract class AbstractJdbcBrowseModePlugin extends AbstractPlugin 
-implements BrowseModePlugin {
+public abstract class AbstractJdbcBrowseModePlugin extends AbstractPlugin implements BrowseModePlugin {
 
 	private UserBiz userBiz;
 	private JdbcTemplate jdbcTemplate;
 	private DomainObjectFactory domainObjectFactory;
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.plugin.Plugin#getPluginType()
-	 */
+	@Override
 	public Class<? extends Plugin> getPluginType() {
 		return BrowseModePlugin.class;
 	}
@@ -62,7 +59,8 @@ implements BrowseModePlugin {
 	}
 
 	/**
-	 * @param userBiz the userBiz to set
+	 * @param userBiz
+	 *        the userBiz to set
 	 */
 	public void setUserBiz(UserBiz userBiz) {
 		this.userBiz = userBiz;
@@ -76,7 +74,8 @@ implements BrowseModePlugin {
 	}
 
 	/**
-	 * @param jdbcTemplate the jdbcTemplate to set
+	 * @param jdbcTemplate
+	 *        the jdbcTemplate to set
 	 */
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
@@ -90,7 +89,8 @@ implements BrowseModePlugin {
 	}
 
 	/**
-	 * @param domainObjectFactory the domainObjectFactory to set
+	 * @param domainObjectFactory
+	 *        the domainObjectFactory to set
 	 */
 	public void setDomainObjectFactory(DomainObjectFactory domainObjectFactory) {
 		this.domainObjectFactory = domainObjectFactory;

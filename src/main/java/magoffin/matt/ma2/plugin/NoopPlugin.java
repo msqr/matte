@@ -29,30 +29,26 @@ import org.springframework.context.ApplicationContext;
 /**
  * Plugin implementation that does nothing.
  * 
- * <p>This plugin exists just to be able to test plugin infrastructure.</p>
+ * <p>
+ * This plugin exists just to be able to test plugin infrastructure.
+ * </p>
  *
  * @author matt
- * @version 1.0
+ * @version 1.1
  */
 public class NoopPlugin implements Plugin {
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.plugin.Plugin#getPluginType()
-	 */
+	@Override
 	public Class<? extends Plugin> getPluginType() {
 		return Plugin.class;
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.plugin.Plugin#initialize(org.springframework.context.ApplicationContext)
-	 */
+	@Override
 	public void initialize(ApplicationContext application) {
 		// nothing
 	}
 
-	/* (non-Javadoc)
-	 * @see magoffin.matt.ma2.plugin.Plugin#getMessageResourceNames()
-	 */
+	@Override
 	public String[] getMessageResourceNames() {
 		return null;
 	}

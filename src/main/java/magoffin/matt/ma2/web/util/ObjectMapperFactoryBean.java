@@ -81,7 +81,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
  * </dl>
  * 
  * @author matt
- * @version 1.2
+ * @version 1.3
  */
 public class ObjectMapperFactoryBean implements FactoryBean<ObjectMapper> {
 
@@ -100,6 +100,7 @@ public class ObjectMapperFactoryBean implements FactoryBean<ObjectMapper> {
 		module.addDeserializer(deserType, stdDeserializer);
 	}
 
+	@Override
 	public ObjectMapper getObject() throws Exception {
 		if ( mapper == null ) {
 			mapper = new ObjectMapper();
@@ -139,10 +140,12 @@ public class ObjectMapperFactoryBean implements FactoryBean<ObjectMapper> {
 		}
 	}
 
+	@Override
 	public Class<?> getObjectType() {
 		return ObjectMapper.class;
 	}
 
+	@Override
 	public boolean isSingleton() {
 		return true;
 	}

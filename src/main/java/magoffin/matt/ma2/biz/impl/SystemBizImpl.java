@@ -49,6 +49,19 @@ import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.validation.BindException;
+import org.springframework.validation.ObjectError;
 import magoffin.matt.ma2.ConfigurationException;
 import magoffin.matt.ma2.ValidationException;
 import magoffin.matt.ma2.biz.BizContext;
@@ -67,19 +80,6 @@ import magoffin.matt.util.StringMerger;
 import magoffin.matt.xweb.XwebParameter;
 import magoffin.matt.xweb.util.MessagesSource;
 import magoffin.matt.xweb.util.XwebParamDao;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.validation.BindException;
-import org.springframework.validation.ObjectError;
 
 /**
  * Standard implementation of {@link magoffin.matt.ma2.biz.UserBiz}.
@@ -123,10 +123,10 @@ import org.springframework.validation.ObjectError;
  * </dl>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version 1.1
+ * @version 1.2
  */
-public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
-		ApplicationListener<ContextRefreshedEvent> {
+public class SystemBizImpl
+		implements SystemBiz, ApplicationContextAware, ApplicationListener<ContextRefreshedEvent> {
 
 	/** The theme created date property date format. */
 	public static final String THEME_PROPERTY_CREATED_DATE_FORMAT = "yyyy-MM-dd";
@@ -164,10 +164,12 @@ public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
 
 	private final Logger log = LoggerFactory.getLogger(SystemBizImpl.class);
 
+	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
 
+	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		if ( !(event.getApplicationContext() == this.applicationContext) ) {
 			return;
@@ -266,6 +268,7 @@ public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
 		List<magoffin.matt.ma2.domain.Locale> localeList = new LinkedList<magoffin.matt.ma2.domain.Locale>();
 		Arrays.sort(locales, new Comparator<Locale>() {
 
+			@Override
 			public int compare(Locale o1, Locale o2) {
 				return o1.toString().compareTo(o2.toString());
 			}
@@ -320,8 +323,8 @@ public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
 	}
 
 	private void registerPlugins() throws IOException {
-		Enumeration<URL> pluginConfigs = getClass().getClassLoader().getResources(
-				"META-INF/matte-plugin.properties");
+		Enumeration<URL> pluginConfigs = getClass().getClassLoader()
+				.getResources("META-INF/matte-plugin.properties");
 		int numConfigs = 0;
 		int numPlugins = 0;
 		while ( pluginConfigs.hasMoreElements() ) {
@@ -388,11 +391,7 @@ public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.SystemBiz#getPluginsOfType(java.lang.Class)
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public <T extends Plugin> List<T> getPluginsOfType(Class<T> pluginType) {
 		if ( this.plugins.containsKey(pluginType) ) {
@@ -408,123 +407,70 @@ public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
 		this.myTimeZones = Collections.emptyList();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.SystemBiz#isApplicationConfigured()
-	 */
+	@Override
 	public boolean isApplicationConfigured() {
 		return setupComplete;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.SystemBiz#getAvailableThemes()
-	 */
+	@Override
 	public List<Theme> getAvailableThemes() {
 		return themeDao.findAllThemes();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.SystemBiz#getThemeById(java.lang.Long)
-	 */
+	@Override
 	public Theme getThemeById(Long themeId) {
 		return themeDao.get(themeId);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.SystemBiz#getAvailableTimeZones()
-	 */
+	@Override
 	public List<TimeZone> getAvailableTimeZones() {
 		return this.myTimeZones;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.SystemBiz#getAvailableLocales()
-	 */
+	@Override
 	public List<magoffin.matt.ma2.domain.Locale> getAvailableLocales() {
 		return myLocales;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.SystemBiz#getTimeZoneForCode(java.lang.String)
-	 */
+	@Override
 	public TimeZone getTimeZoneForCode(String code) {
 		return timeZoneDao.get(code);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.SystemBiz#getDefaultTimeZone()
-	 */
+	@Override
 	public TimeZone getDefaultTimeZone() {
 		return this.myDefaultTimeZone;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.SystemBiz#getCollectionRootDirectory()
-	 */
+	@Override
 	public File getCollectionRootDirectory() {
 		return this.collectionRootDirectory;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.SystemBiz#getThemeResource(magoffin.matt.ma2.domain
-	 * .Theme, java.lang.String, magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public Resource getThemeResource(Theme theme, String path, BizContext context) {
 		String resourcePath = this.externalThemeDirFile.getAbsolutePath() + theme.getBasePath()
 				+ (path.startsWith("/") ? path : "/" + path);
 		return new FileSystemResource(resourcePath);
 	}
 
+	@Override
 	public File getCacheDirectory() {
 		return cacheDirectory;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.SystemBiz#getDefaultTheme()
-	 */
+	@Override
 	public Theme getDefaultTheme() {
 		return myDefaultTheme;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.SystemBiz#storeTheme(magoffin.matt.ma2.domain.Theme
-	 * , magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public Long storeTheme(Theme theme, BizContext context) {
 		prepareThemeForStore(theme, context);
 		return themeDao.store(theme);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.SystemBiz#getSharedAlbumUrl(magoffin.matt.ma2.domain
-	 * .Album, magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public String getSharedAlbumUrl(Album album, BizContext context) {
 		Map<String, Object> model = new LinkedHashMap<String, Object>();
 		model.put(SHARED_ALBUM_TEMPLATE_KEY, album);
@@ -550,12 +496,7 @@ public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see magoffin.matt.ma2.biz.SystemBiz#storeTheme(magoffin.matt.ma2.util.
-	 * AddThemeCommand, magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public Long storeTheme(AddThemeCommand themeCommand, BizContext context) {
 		Theme theme = themeCommand.getTheme();
 		if ( theme == null ) {
@@ -620,8 +561,8 @@ public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
 				if ( entry.isDirectory() ) {
 					continue;
 				}
-				File outputFile = new File(this.externalThemeDirFile, theme.getBasePath() + "/"
-						+ entry.getName());
+				File outputFile = new File(this.externalThemeDirFile,
+						theme.getBasePath() + "/" + entry.getName());
 				outputFile.getParentFile().mkdirs();
 				if ( log.isDebugEnabled() ) {
 					log.debug("Saving theme resource [" + outputFile.getAbsolutePath() + "]");
@@ -644,8 +585,8 @@ public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
 			}
 			if ( !hasXslt ) {
 				BindException errors = new BindException(themeCommand, "theme");
-				errors.addError(new ObjectError("theme", new String[] { "theme.add.missing.xslt" },
-						null, "No XSLT provided with theme"));
+				errors.addError(new ObjectError("theme", new String[] { "theme.add.missing.xslt" }, null,
+						"No XSLT provided with theme"));
 				throw new ValidationException(errors);
 			}
 		} catch ( IOException e ) {
@@ -662,14 +603,7 @@ public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
 		return themeId;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.SystemBiz#exportTheme(magoffin.matt.ma2.domain.
-	 * Theme, java.io.OutputStream, java.io.File,
-	 * magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public void exportTheme(Theme theme, OutputStream out, File baseDirectory, BizContext context) {
 		if ( baseDirectory == null ) {
 			baseDirectory = this.externalThemeDirFile;
@@ -680,6 +614,7 @@ public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
 			exportThemeFiles(baseDirectory, baseDirectory, zout);
 			File[] themeProps = baseDirectory.listFiles(new FilenameFilter() {
 
+				@Override
 				public boolean accept(File file, String name) {
 					return THEME_PROPERTIES_FILE_NAME.equals(name);
 				}
@@ -731,13 +666,7 @@ public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * magoffin.matt.ma2.biz.SystemBiz#deleteTheme(magoffin.matt.ma2.domain.
-	 * Theme, magoffin.matt.ma2.biz.BizContext)
-	 */
+	@Override
 	public void deleteTheme(Theme theme, BizContext context) {
 		File themeDir = new File(this.externalThemeDirFile, theme.getBasePath());
 		if ( !themeDir.exists() ) {
@@ -872,6 +801,7 @@ public class SystemBizImpl implements SystemBiz, ApplicationContextAware,
 		this.settingsDao = settingsDao;
 	}
 
+	@Override
 	public File getResourceDirectory() {
 		return resourceDirectory;
 	}

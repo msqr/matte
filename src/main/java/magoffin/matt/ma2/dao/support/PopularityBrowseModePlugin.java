@@ -32,6 +32,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.MessageSource;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.util.StringUtils;
 import magoffin.matt.ma2.domain.AlbumSearchResult;
 import magoffin.matt.ma2.domain.MediaItemSearchResult;
 import magoffin.matt.ma2.domain.PaginationCriteria;
@@ -41,12 +47,6 @@ import magoffin.matt.ma2.domain.PosterSearchResult;
 import magoffin.matt.ma2.domain.SearchResults;
 import magoffin.matt.ma2.domain.User;
 import magoffin.matt.ma2.support.BrowseAlbumsCommand;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.MessageSource;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.util.StringUtils;
 
 /**
  * Browse mode based on media item popularity (hits).
@@ -129,7 +129,7 @@ import org.springframework.util.StringUtils;
  * </dl>
  * 
  * @author matt.magoffin
- * @version 1.1
+ * @version 1.2
  */
 public class PopularityBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 
@@ -148,7 +148,8 @@ public class PopularityBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 	/** The message key for an album title with more than one item in it. */
 	public static final String MESSAGE_KEY_ALBUM_TITLE_MULTI = "popularity.album.range.title";
 
-	private static final String[] MESSAGE_RESOURCE_NAMES = new String[] { "META-INF/PopularityBrowseModePlugin-messages" };
+	private static final String[] MESSAGE_RESOURCE_NAMES = new String[] {
+			"META-INF/PopularityBrowseModePlugin-messages" };
 	private static final String[] SUPPORTED_MODES = new String[] { MODE_POPULARITY };
 	private static final Pattern INDEX_KEY = Pattern.compile("^(\\d+) - \\d+$");
 	private static final Pattern VIRTUAL_ALBUM_INDEX_KEY = Pattern.compile("^(\\d+) - \\d+:(\\d+)$");
@@ -161,6 +162,7 @@ public class PopularityBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 	private MessageFormat sqlBrowseTemplate;
 	private MessageSource messages;
 
+	@Override
 	public boolean supportsMode(String mode) {
 		return MODE_POPULARITY.equalsIgnoreCase(mode);
 	}
@@ -171,10 +173,12 @@ public class PopularityBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 		init();
 	}
 
+	@Override
 	public String[] getMessageResourceNames() {
 		return MESSAGE_RESOURCE_NAMES;
 	}
 
+	@Override
 	public String[] getSupportedModes() {
 		return SUPPORTED_MODES;
 	}
@@ -190,6 +194,7 @@ public class PopularityBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 		this.sqlBrowseTemplate = new MessageFormat(this.sqlBrowse);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public SearchResults find(BrowseAlbumsCommand command, PaginationCriteria pagination) {
 		final SearchResults results = getDomainObjectFactory().newSearchResultsInstance();
@@ -197,8 +202,10 @@ public class PopularityBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 		results.setIndex(index);
 		final User user = getUserBiz().getUserByAnonymousKey(command.getUserKey());
 		final List<AlbumSearchResult> albums = new LinkedList<AlbumSearchResult>();
-		Matcher m = VIRTUAL_ALBUM_INDEX_KEY.matcher(pagination != null
-				&& StringUtils.hasText(pagination.getIndexKey()) ? pagination.getIndexKey() : "");
+		Matcher m = VIRTUAL_ALBUM_INDEX_KEY
+				.matcher(pagination != null && StringUtils.hasText(pagination.getIndexKey())
+						? pagination.getIndexKey()
+						: "");
 		if ( m.matches() ) {
 			int bucketKey = Integer.parseInt(m.group(1));
 			int pageOffset = Integer.parseInt(m.group(2));
@@ -221,6 +228,7 @@ public class PopularityBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 		// first populate index
 		getJdbcTemplate().query(new PreparedStatementCreator() {
 
+			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				Object[] sqlBrowseParameters = new Object[] { popularityBucketSize };
 				String sql = sqlBrowseTemplate.format(sqlBrowseParameters);
@@ -236,6 +244,7 @@ public class PopularityBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 			}
 		}, new ResultSetExtractor<Object>() {
 
+			@Override
 			public Object extractData(ResultSet rs) throws SQLException, DataAccessException {
 				PaginationIndexSection section = null;
 				while ( rs.next() ) {
@@ -279,6 +288,7 @@ public class PopularityBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 			final Locale locale, final int sectionBucket, final int singleAlbumOffset) {
 		getJdbcTemplate().query(new PreparedStatementCreator() {
 
+			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				if ( log.isDebugEnabled() ) {
 					log.debug("Popularity section search with SQL [" + sqlBrowseSection + "]");
@@ -299,6 +309,7 @@ public class PopularityBrowseModePlugin extends AbstractJdbcBrowseModePlugin {
 			}
 		}, new ResultSetExtractor<Object>() {
 
+			@Override
 			@SuppressWarnings("unchecked")
 			public Object extractData(ResultSet rs) throws SQLException, DataAccessException {
 				AlbumSearchResult currAlbum = null;

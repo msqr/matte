@@ -26,15 +26,10 @@ package magoffin.matt.ma2.web;
 
 import java.io.IOException;
 import java.net.URL;
-
 import javax.activation.FileTypeMap;
 import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import magoffin.matt.ma2.biz.BizContext;
-import magoffin.matt.ma2.domain.Theme;
-
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.util.FileCopyUtils;
@@ -42,23 +37,24 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.LastModified;
+import magoffin.matt.ma2.biz.BizContext;
+import magoffin.matt.ma2.domain.Theme;
 
 /**
  * Controller for returning Matte theme resources.
  * 
  * @author matt.magoffin
- * @version 1.0
+ * @version 1.1
  */
 public class ThemeResourceController extends AbstractCommandController implements LastModified {
-	
+
 	private String baseThemePath = "/WEB-INF/themes";
 	private FileTypeMap fileTypeMap = new MimetypesFileTypeMap();
-	
+
 	@Override
-	protected ModelAndView handle(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
-			throws Exception {
-		Command cmd = (Command)command;
+	protected ModelAndView handle(HttpServletRequest request, HttpServletResponse response,
+			Object command, BindException errors) throws Exception {
+		Command cmd = (Command) command;
 		if ( cmd.themeId == null ) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			return null;
@@ -81,21 +77,20 @@ public class ThemeResourceController extends AbstractCommandController implement
 		if ( mime != null ) {
 			response.setContentType(mime);
 		}
-		FileCopyUtils.copy(url.openStream(),response.getOutputStream());
+		FileCopyUtils.copy(url.openStream(), response.getOutputStream());
 		return null;
 	}
-	
-	private URL getThemeResource(HttpServletRequest request, Command cmd, Theme theme) 
-	throws IOException {
+
+	private URL getThemeResource(HttpServletRequest request, Command cmd, Theme theme)
+			throws IOException {
 		String resourcePath = cmd.getResource();
-		resourcePath = baseThemePath +theme.getBasePath()
-			+(resourcePath.startsWith("/") ? resourcePath : "/"+resourcePath);
+		resourcePath = baseThemePath + theme.getBasePath()
+				+ (resourcePath.startsWith("/") ? resourcePath : "/" + resourcePath);
 		URL url = getServletContext().getResource(resourcePath);
 		if ( url == null ) {
 			// try external resource
 			BizContext context = getWebHelper().getBizContext(request, false);
-			Resource themeResource = getSystemBiz().getThemeResource(theme, 
-					cmd.getResource(), context);
+			Resource themeResource = getSystemBiz().getThemeResource(theme, cmd.getResource(), context);
 			if ( !themeResource.exists() ) {
 				return null;
 			}
@@ -104,6 +99,8 @@ public class ThemeResourceController extends AbstractCommandController implement
 		return url;
 	}
 
+	@SuppressWarnings("deprecation")
+	@Override
 	public long getLastModified(HttpServletRequest request) {
 		Command cmd = new Command();
 		try {
@@ -124,45 +121,48 @@ public class ThemeResourceController extends AbstractCommandController implement
 			}
 		} catch ( IOException e ) {
 			if ( logger.isDebugEnabled() ) {
-				logger.debug("IOException checking last-modified: " +e);
+				logger.debug("IOException checking last-modified: " + e);
 			}
 		}
 		return -1;
 	}
-	
+
 	/** Command object. */
 	public static class Command {
+
 		private Long themeId;
 		private String resource;
-		
+
 		/**
 		 * @return Returns the resource.
 		 */
 		public String getResource() {
 			return resource;
 		}
-		
+
 		/**
-		 * @param resource The resource to set.
+		 * @param resource
+		 *        The resource to set.
 		 */
 		public void setResource(String resource) {
 			this.resource = resource;
 		}
-		
+
 		/**
 		 * @return Returns the themeId.
 		 */
 		public Long getThemeId() {
 			return themeId;
 		}
-		
+
 		/**
-		 * @param themeId The themeId to set.
+		 * @param themeId
+		 *        The themeId to set.
 		 */
 		public void setThemeId(Long themeId) {
 			this.themeId = themeId;
 		}
-		
+
 	}
 
 	/**
@@ -173,7 +173,8 @@ public class ThemeResourceController extends AbstractCommandController implement
 	}
 
 	/**
-	 * @param baseThemePath The baseThemePath to set.
+	 * @param baseThemePath
+	 *        The baseThemePath to set.
 	 */
 	public void setBaseThemePath(String baseThemePath) {
 		this.baseThemePath = baseThemePath;
@@ -187,7 +188,8 @@ public class ThemeResourceController extends AbstractCommandController implement
 	}
 
 	/**
-	 * @param fileTypeMap The fileTypeMap to set.
+	 * @param fileTypeMap
+	 *        The fileTypeMap to set.
 	 */
 	public void setFileTypeMap(FileTypeMap fileTypeMap) {
 		this.fileTypeMap = fileTypeMap;
