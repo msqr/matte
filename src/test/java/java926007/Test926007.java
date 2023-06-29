@@ -33,9 +33,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.junit.Test;
 import org.springframework.test.annotation.IfProfileValue;
-
-import junit.framework.TestCase;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 /**
  * Test case for the Java incident 926007.
@@ -44,7 +44,7 @@ import junit.framework.TestCase;
  * @version 1.0
  */
 @IfProfileValue(name = "Test926007", value = "true")
-public class Test926007 extends TestCase {
+public class Test926007 extends AbstractJUnit4SpringContextTests {
 
 	/**
 	 * Test able to transform.
@@ -55,6 +55,7 @@ public class Test926007 extends TestCase {
 	 * 
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void test926007_1() throws Exception {
 		TransformerFactory factory = TransformerFactory.newInstance();
 		File f = new File(getClass().getResource("logon.xsl").getPath());
@@ -76,6 +77,7 @@ public class Test926007 extends TestCase {
 	 * 
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void test926007_2() throws Exception {
 		TransformerFactory factory = TransformerFactory.newInstance();
 		File f = new File(getClass().getResource("home.xsl").getPath());
@@ -97,6 +99,7 @@ public class Test926007 extends TestCase {
 	 * 
 	 * @throws Exception if an error occurs
 	 */
+	@Test
 	public void test926007_3() throws Exception {
 		TransformerFactory factory = TransformerFactory.newInstance();
 		File f = new File(getClass().getResource("upload-media.xsl").getPath());
