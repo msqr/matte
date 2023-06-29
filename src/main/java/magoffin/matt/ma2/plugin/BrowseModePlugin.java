@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.plugin;
@@ -37,7 +35,7 @@ import magoffin.matt.ma2.support.BrowseAlbumsCommand;
  * user. It implements some query that can geneate a browse search results object.</p>
  *
  * @author matt
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public interface BrowseModePlugin extends Plugin {
 	

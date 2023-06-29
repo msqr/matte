@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.image.iio;
@@ -39,7 +37,7 @@ import magoffin.matt.ma2.image.ImageConstants;
  * requested, in which case the original PNG image is returned.</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public class PngMediaHandler extends JpegMediaHandler {
 

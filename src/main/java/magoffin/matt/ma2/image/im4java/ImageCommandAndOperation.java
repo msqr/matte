@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.image.im4java;
@@ -33,7 +31,7 @@ import org.im4java.core.ImageCommand;
  * An ImageCommand paired with an IMOperation to run.
  *
  * @author matt
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public class ImageCommandAndOperation {
 

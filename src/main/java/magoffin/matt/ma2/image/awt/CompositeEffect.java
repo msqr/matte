@@ -18,8 +18,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.image.awt;
@@ -44,7 +42,7 @@ import magoffin.matt.ma2.image.ImageMediaHelper;
  * image on top of the media image.
  * 
  * @author matt.magoffin
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public class CompositeEffect extends BaseAwtMediaEffect {
 

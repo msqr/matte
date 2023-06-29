@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.dao;
@@ -36,7 +34,7 @@ import magoffin.matt.ma2.domain.MediaItem;
  * DAO for MediaItem objects.
  * 
  * @author matt.magoffin
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public interface MediaItemDao extends GenericDao<MediaItem, Long>, BatchableDao<MediaItem> {
 	

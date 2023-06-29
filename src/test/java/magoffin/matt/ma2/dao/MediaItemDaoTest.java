@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.dao;
@@ -54,7 +52,7 @@ import org.junit.Test;
  * Unit test for the {@link MediaItemDao} class.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public class MediaItemDaoTest extends AbstractSpringEnabledTransactionalTest {
 

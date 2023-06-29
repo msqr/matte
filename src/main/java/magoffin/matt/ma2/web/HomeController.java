@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.web;
@@ -54,7 +52,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Home controller.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public class HomeController extends AbstractCommandController {
 
@@ -168,7 +166,7 @@ public class HomeController extends AbstractCommandController {
 	 * has the user's data (like collections, albums, etc) populated.
 	 * 
 	 * @author matt.magoffin
-	 * @version $Revision$ $Date$
+	 * @version 1.0
 	 */
 	public static class PostProcessor implements XDataPostProcessor {
 		

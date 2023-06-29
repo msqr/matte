@@ -18,8 +18,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.image.jmagick;
@@ -37,7 +35,7 @@ import magoffin.matt.ma2.domain.MediaItem;
  * parameter.
  * 
  * @author matt.magoffin
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public class RotateEffect extends BaseJMagickMediaEffect {
 

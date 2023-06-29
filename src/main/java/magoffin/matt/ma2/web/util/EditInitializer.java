@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.web.util;
@@ -34,7 +32,7 @@ import magoffin.matt.xweb.util.DynamicInitializer;
  * DynamicInitializer for {@link Album} albums.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public class EditInitializer implements DynamicInitializer {
 	

@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.dao;
@@ -37,7 +35,7 @@ import magoffin.matt.dao.IndexCallback.IndexData;
  * 
  * @param <PK> the primary key type
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public class BasicIndexData<PK extends Serializable> implements IndexData<PK> {
 	

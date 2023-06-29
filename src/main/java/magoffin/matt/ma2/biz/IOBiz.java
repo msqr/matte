@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.biz;
@@ -44,7 +42,7 @@ import magoffin.matt.ma2.support.ExportItemsCommand;
  * API for importing and exporting media.
  * 
  * @author matt.magoffin
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public interface IOBiz {
 	

@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.dao.support;
@@ -61,7 +59,7 @@ import magoffin.matt.ma2.support.BrowseAlbumsCommand;
  * Test case for the {@link PopularityBrowseModePlugin} class.
  *
  * @author matt
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 @ContextConfiguration
 public class PopularityBrowseModePluginTest

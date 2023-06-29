@@ -18,8 +18,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.dao.support;
@@ -40,7 +38,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * initializing the plugin instance with a Spring context file. 
  * 
  * @author matt.magoffin
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public abstract class AbstractJdbcBrowseModePlugin extends AbstractPlugin 
 implements BrowseModePlugin {

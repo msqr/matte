@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.biz.impl;
@@ -33,7 +31,7 @@ import magoffin.matt.ma2.support.InternalBizContext;
  * Helper class for {@link IOBizImpl} to import media items.
  * 
  * @author matt
- * @version $Revision$ $Date$
+ * @version 1.0
  * @see IOBizImpl
  */
 class ImportBizContext extends InternalBizContext {

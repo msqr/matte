@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.audio;
@@ -37,7 +35,7 @@ import org.springframework.core.io.Resource;
  * {@link magoffin.matt.ma2.MediaHandler} implementation for audio files.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public class BasicAudioMediaHandler extends BasicIconBasedMediaHandler {
 	

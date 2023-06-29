@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.web;
@@ -49,7 +47,7 @@ import org.springframework.web.servlet.mvc.LastModified;
  * Controller for returning Matte theme resources.
  * 
  * @author matt.magoffin
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public class ThemeResourceController extends AbstractCommandController implements LastModified {
 	

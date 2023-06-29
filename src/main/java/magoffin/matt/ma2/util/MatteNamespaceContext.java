@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.util;
@@ -39,7 +37,7 @@ import magoffin.matt.ma2.SystemConstants;
  * {@link NamespaceContext} implementation for Matte.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.0
  * @deprecated see {@link magoffin.matt.xweb.util.BasicNamespaceContext}
  * @see magoffin.matt.xweb.util.BasicNamespaceContext
  */

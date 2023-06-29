@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.image.iio;
@@ -48,7 +46,7 @@ import org.springframework.core.io.Resource;
  * using the Java ImageIO library for image operations.
  * 
  * @author matt.magoffin
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public abstract class BaseImageIOMediaHandler extends BaseAwtImageMediaHandler {
 

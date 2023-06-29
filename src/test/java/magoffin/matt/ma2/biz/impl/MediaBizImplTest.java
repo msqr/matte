@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.biz.impl;
@@ -81,7 +79,7 @@ import org.springframework.test.context.ContextConfiguration;
  * Test the {@link magoffin.matt.ma2.biz.impl.MediaBizImpl} class.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 @ContextConfiguration
 public class MediaBizImplTest extends AbstractSpringEnabledTransactionalTest {

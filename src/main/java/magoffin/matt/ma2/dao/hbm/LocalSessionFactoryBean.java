@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.dao.hbm;
@@ -46,7 +44,7 @@ import org.springframework.util.CollectionUtils;
  * </dl>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public class LocalSessionFactoryBean extends
 		org.springframework.orm.hibernate3.LocalSessionFactoryBean {

@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.dao.hbm;
@@ -43,7 +41,7 @@ import org.hibernate.engine.SessionFactoryImplementor;
  * <p>Where param1 and param2 are presumed to be integer types.</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.0
  * @see DerbyBitwiseAndSQLFunction
  */
 public class BitwiseAndFunctionSQLFunction extends BitwiseAndSQLFunction {

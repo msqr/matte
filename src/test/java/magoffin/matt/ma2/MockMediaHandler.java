@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2;
@@ -35,7 +33,7 @@ import magoffin.matt.ma2.domain.MediaItem;
  * Test implementation of MediaHandler.
  * 
  * @author matt.magoffin
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public class MockMediaHandler implements MediaHandler {
 

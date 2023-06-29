@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.web.service;
@@ -54,7 +52,7 @@ import org.springframework.test.context.ContextConfiguration;
  * Test case for the {@link GetCollectionListEndpoint} class.
  *
  * @author matt
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 @ContextConfiguration
 public class GetCollectionListEndpointTest extends AbstractSpringEnabledTransactionalTest {

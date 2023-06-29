@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.web.service;
@@ -72,7 +70,7 @@ import org.springframework.ws.server.endpoint.AbstractStaxStreamPayloadEndpoint;
  * prior to invoking this service, to pass the user authentication to the import.</p> 
  *
  * @author matt
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public class AddMediaStaxEndpoint extends AbstractStaxStreamPayloadEndpoint {
 

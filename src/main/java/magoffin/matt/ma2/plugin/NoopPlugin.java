@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.plugin;
@@ -34,7 +32,7 @@ import org.springframework.context.ApplicationContext;
  * <p>This plugin exists just to be able to test plugin infrastructure.</p>
  *
  * @author matt
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public class NoopPlugin implements Plugin {
 

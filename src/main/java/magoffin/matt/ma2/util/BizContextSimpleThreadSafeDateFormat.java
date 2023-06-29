@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.util;
@@ -38,7 +36,7 @@ import magoffin.matt.util.SimpleThreadSafeDateFormat;
  * {@link TimeZone} to format dates as.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public class BizContextSimpleThreadSafeDateFormat extends
 		SimpleThreadSafeDateFormat {

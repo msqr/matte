@@ -18,8 +18,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.web.applet;
@@ -35,7 +33,7 @@ import javax.xml.namespace.NamespaceContext;
  * Namespace context for the Matte upload applet.
  * 
  * @author matt.magoffin
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public class XmlNamespaceContext implements NamespaceContext {
 

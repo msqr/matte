@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.aop;
@@ -40,7 +38,7 @@ import org.apache.log4j.Logger;
  * Base AOP interceptor to validate security.
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public abstract class AbstractSecurityInterceptor implements MethodInterceptor {
 	

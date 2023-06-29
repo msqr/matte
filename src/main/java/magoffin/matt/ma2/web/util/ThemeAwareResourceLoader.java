@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.web.util;
@@ -42,7 +40,7 @@ import org.springframework.web.context.ServletContextAware;
  * <p>This class loader allows themes to have their own message resources.</p>
  * 
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public class ThemeAwareResourceLoader extends ClassLoader implements ServletContextAware {
 	

@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
  * 02111-1307 USA
  * ===================================================================
- * $Id$
- * ===================================================================
  */
 
 package magoffin.matt.ma2.lucene;
@@ -45,7 +43,7 @@ import org.springframework.context.MessageSource;
  * @param <T> the domain object type
  * @param <PK> the primary key type
  * @author Matt Magoffin (spamsqr@msqr.us)
- * @version $Revision$ $Date$
+ * @version 1.0
  */
 public abstract class AbstractIndexResultCallback<T, PK extends Serializable>
 implements IndexResults, magoffin.matt.dao.BatchableDao.BatchCallback<T> {
