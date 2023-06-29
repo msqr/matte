@@ -211,8 +211,8 @@ jar.manifest {
 javadoc.options {
     encoding = 'UTF-8'
     use = true
-    links 'https://docs.oracle.com/en/java/javase/17/docs/api/'
-    source = "17"
+    links 'https://docs.oracle.com/javase/8/docs/api/'
+    source = "8"
 }
 
 // Disable JavaDoc doclint on Java 8. It's annoying.
