@@ -33,6 +33,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.springframework.test.annotation.IfProfileValue;
+
 import junit.framework.TestCase;
 
 /**
@@ -41,12 +43,15 @@ import junit.framework.TestCase;
  * @author Matt Magoffin (spamsqr@msqr.us)
  * @version 1.0
  */
+@IfProfileValue(name = "Test926007", value = "true")
 public class Test926007 extends TestCase {
 
 	/**
 	 * Test able to transform.
 	 * 
-	 * <p>This works in Java 5 as well as Java 6</p>
+	 * <p>
+	 * This works in Java 5 as well as Java 6
+	 * </p>
 	 * 
 	 * @throws Exception if an error occurs
 	 */
@@ -57,17 +62,17 @@ public class Test926007 extends TestCase {
 		Transformer transformer = t.newTransformer();
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-		
-		transformer.transform(new StreamSource(
-				getClass().getResourceAsStream("src.xml")), 
+
+		transformer.transform(new StreamSource(getClass().getResourceAsStream("src.xml")),
 				new StreamResult(System.out));
 	}
-	
+
 	/**
 	 * Test able to transform.
 	 * 
-	 * <p>This works in Java 5, but fails in Java 6 with
-	 * a NullPointerException.</p>
+	 * <p>
+	 * This works in Java 5, but fails in Java 6 with a NullPointerException.
+	 * </p>
 	 * 
 	 * @throws Exception if an error occurs
 	 */
@@ -78,17 +83,17 @@ public class Test926007 extends TestCase {
 		Transformer transformer = t.newTransformer();
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-		
-		transformer.transform(new StreamSource(
-				getClass().getResourceAsStream("src.xml")), 
+
+		transformer.transform(new StreamSource(getClass().getResourceAsStream("src.xml")),
 				new StreamResult(System.out));
 	}
-	
+
 	/**
 	 * Test able to transform.
 	 * 
-	 * <p>This works in Java 5, but fails in Java 6 with
-	 * a NoSuchFieldError.</p>
+	 * <p>
+	 * This works in Java 5, but fails in Java 6 with a NoSuchFieldError.
+	 * </p>
 	 * 
 	 * @throws Exception if an error occurs
 	 */
@@ -99,10 +104,9 @@ public class Test926007 extends TestCase {
 		Transformer transformer = t.newTransformer();
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-		
-		transformer.transform(new StreamSource(
-				getClass().getResourceAsStream("src.xml")), 
+
+		transformer.transform(new StreamSource(getClass().getResourceAsStream("src.xml")),
 				new StreamResult(System.out));
 	}
-	
+
 }
